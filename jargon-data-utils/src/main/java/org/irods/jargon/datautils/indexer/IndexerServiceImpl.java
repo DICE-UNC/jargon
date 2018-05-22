@@ -25,18 +25,29 @@ public class IndexerServiceImpl extends AbstractJargonService {
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public IndexerServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
-	/**
-	 * 
-	 */
 	public IndexerServiceImpl() {
 	}
 
+	/**
+	 * Start the indexing process
+	 * 
+	 * @param startingCollectionPath
+	 *            {@code String} with starting point
+	 * @param visitor
+	 *            {@link AbstractIndexerVisitor} to receive callbacks
+	 * @throws DataNotFoundException
+	 *             {@link DataNotFoundException}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
 	public void launch(final String startingCollectionPath, final AbstractIndexerVisitor visitor)
 			throws DataNotFoundException, JargonException {
 		log.info("launch");

@@ -15,12 +15,13 @@ public interface UploadsService {
 	public static final String UPLOADS_DIR_DEFAULT_NAME = "uploads";
 
 	/**
-	 * Retrieve an 'uploads' directory under the user home directory, creating
-	 * it if it does not exist yet
+	 * Retrieve an 'uploads' directory under the user home directory, creating it if
+	 * it does not exist yet
 	 * 
-	 * @return {@link IRODSFile} which represents the uploads top level
-	 *         direcrory under the user home directory
+	 * @return {@link IRODSFile} which represents the uploads top level direcrory
+	 *         under the user home directory
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	IRODSFile getUploadsDirectory() throws JargonException;
 

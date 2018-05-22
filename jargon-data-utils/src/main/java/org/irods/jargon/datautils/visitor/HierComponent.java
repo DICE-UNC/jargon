@@ -23,6 +23,7 @@ public interface HierComponent {
 	 * @return {@code boolean} with an indication that the visitor said to leave the
 	 *         iteration and short-circuit the operation
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public boolean accept(HierVisitor visitor) throws JargonException;
 

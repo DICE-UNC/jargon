@@ -61,8 +61,11 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public AbstractIndexerVisitor(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount)
 			throws JargonException {
@@ -124,7 +127,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	/**
 	 * Indicate whether the visitor should enter a collection and process its
 	 * children. This processes the collection before any children are processed.
-	 * <p/>
+	 * <p>
 	 * Alternately, the implementation can wait until all children are processed in
 	 * the visitLeaveWithMetadata() method
 	 * 
@@ -134,8 +137,8 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	 * @param node
 	 *            {@link HierComposite} with the parent node to enter
 	 * @param metadataRollup
-	 *            {@link MetadataRolloup} with the metadata from the root down to
-	 *            the current node
+	 *            {@link MetadataRollup} with the metadata from the root down to the
+	 *            current node
 	 * @return {@code boolean} with a return of <code>true</code> if the visitor
 	 *         should enter the collection
 	 */
@@ -171,10 +174,10 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	 * @param node
 	 *            {@link HierComposite} with the parent node to enter
 	 * @param metadataRollup
-	 *            {@link MetadataRolloup} with the metadata from the root down to
-	 *            the current node
+	 *            {@link MetadataRollup} with the metadata from the root down to the
+	 *            current node
 	 * @param visitorEntered
-	 *            {@link boolean} indicating that the operation had been short
+	 *            {@code boolean} indicating that the operation had been short
 	 *            circuited (returning <code>false</code>). This indicates that the
 	 *            indexer may want to ignore any further indexing action on the
 	 *            visitLeave(). This is indexer-dependent. Note that the current
@@ -185,7 +188,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	 *         should enter the collection
 	 */
 	public abstract boolean visitLeaveWithMetadata(HierComposite node, MetadataRollup metadataRollup,
-			boolean vistorEntered);
+			boolean visitorEntered);
 
 	/*
 	 * (non-Javadoc)
@@ -235,7 +238,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		}
 
 	}
-	
+
 	@Override
 	public void launch(final String startingCollectionPath) {
 		log.info("launch");
@@ -247,8 +250,8 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 		IRODSFileImpl startingPoint;
 		try {
-			startingPoint = (IRODSFileImpl) this.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(startingCollectionPath);
+			startingPoint = (IRODSFileImpl) this.getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+					.instanceIRODSFile(startingCollectionPath);
 			if (!startingPoint.isDirectory()) {
 				log.info("starting point is not a leaf node:{}", startingPoint);
 				throw new JargonException("cannot start a crawl on a leaf node!");
@@ -262,7 +265,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 			log.error("error in obtaining metadata", e);
 			throw new JargonRuntimeException("error lauching visitor", e);
 		}
-		
+
 	}
 
 	/**
@@ -273,8 +276,8 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	 * @param hierLeaf
 	 *            {@link HierLeaf} with the leaf node (File) being visited
 	 * @param metadataRollup
-	 *            {@link MetadataRolloup} with the metadata from the root down to
-	 *            the current node
+	 *            {@link MetadataRollup} with the metadata from the root down to the
+	 *            current node
 	 * @return {@code boolean} with a return of <code>true</code> if the visitor
 	 *         should short circuit the rest of the siblings of the node
 	 */
@@ -296,7 +299,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		this.controlRod = controlRod;
 	}
 
-	/**
+	/*
 	 * Give a space for a pause or end of processing
 	 *
 	 */
@@ -310,7 +313,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 	}
 
-	/**
+	/*
 	 * Returns <code>true</code> if indexable otherwise it should be ignored
 	 */
 	private boolean checkIfIndexable(HierComponent component, MetadataRollup metadataRollup) {

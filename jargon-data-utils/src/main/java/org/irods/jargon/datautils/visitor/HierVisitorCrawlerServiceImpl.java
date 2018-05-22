@@ -26,15 +26,14 @@ public class HierVisitorCrawlerServiceImpl extends AbstractJargonService {
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public HierVisitorCrawlerServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
-	/**
-	 * 
-	 */
 	public HierVisitorCrawlerServiceImpl() {
 	}
 

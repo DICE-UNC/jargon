@@ -24,8 +24,11 @@ public abstract class IrodsFileItem extends IRODSFileImpl implements HierCompone
 
 	/**
 	 * @param pathName
+	 *            {@code String} with the file path
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsFileItem(String pathName, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(pathName, irodsFileSystemAO);
@@ -33,9 +36,13 @@ public abstract class IrodsFileItem extends IRODSFileImpl implements HierCompone
 
 	/**
 	 * @param parent
+	 *            {@code String} file parent path
 	 * @param child
+	 *            {@code String} file child name
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsFileItem(String parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(parent, child, irodsFileSystemAO);
@@ -43,9 +50,13 @@ public abstract class IrodsFileItem extends IRODSFileImpl implements HierCompone
 
 	/**
 	 * @param parent
+	 *            {@link File} file parent
 	 * @param child
+	 *            {@code String} file child name
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsFileItem(File parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(parent, child, irodsFileSystemAO);

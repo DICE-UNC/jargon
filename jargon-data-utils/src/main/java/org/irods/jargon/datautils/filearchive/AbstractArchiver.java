@@ -21,8 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractArchiver {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractArchiver.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractArchiver.class);
 
 	private final String sourceFileAbsolutePath;
 	private final String targetFileAbsolutePath;
@@ -36,17 +35,14 @@ public abstract class AbstractArchiver {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} with the absolute path to the target file
 	 */
-	public AbstractArchiver(final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath) {
+	public AbstractArchiver(final String sourceFileAbsolutePath, final String targetFileAbsolutePath) {
 
 		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty sourceFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty sourceFileAbsolutePath");
 		}
 
 		if (targetFileAbsolutePath == null || targetFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty targetFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty targetFileAbsolutePath");
 		}
 
 		this.sourceFileAbsolutePath = sourceFileAbsolutePath;
@@ -54,12 +50,16 @@ public abstract class AbstractArchiver {
 
 	}
 
-/**
-	 * Create an archive from the provided source file.  This may be a file or a collection
-	 * @return {@link
+	/**
+	 * Create an archive from the provided source file. This may be a file or a
+	 * collection
+	 * 
+	 * @return {@link File}
 	 * 
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public File createArchive() throws FileNotFoundException, JargonException {
 
@@ -90,17 +90,16 @@ public abstract class AbstractArchiver {
 	 * contained
 	 * 
 	 * @param sourceFile
-	 *            {@link File} that is the source for the archive, this will be
-	 *            a collection
+	 *            {@link File} that is the source for the archive, this will be a
+	 *            collection
 	 * @return {@link File} that is the completed bundle
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	protected File archiveCollection(final File sourceFile)
-			throws JargonException {
+	protected File archiveCollection(final File sourceFile) throws JargonException {
 
 		log.info("creating iterator for collection");
-		Iterator<File> fileIter = FileUtils.iterateFiles(sourceFile,
-				TrueFileFilter.TRUE, TrueFileFilter.TRUE);
+		Iterator<File> fileIter = FileUtils.iterateFiles(sourceFile, TrueFileFilter.TRUE, TrueFileFilter.TRUE);
 
 		while (fileIter.hasNext()) {
 			addFileToArchive(fileIter.next());
@@ -119,6 +118,7 @@ public abstract class AbstractArchiver {
 	 * @return {@link File} that is the completed archive, ready to use
 	 * 
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	protected abstract File completeArchiving() throws JargonException;
 
@@ -129,9 +129,9 @@ public abstract class AbstractArchiver {
 	 * @param file
 	 *            {@link File} that is the source for the archive
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	protected abstract void addFileToArchive(final File file)
-			throws JargonException;
+	protected abstract void addFileToArchive(final File file) throws JargonException;
 
 	/**
 	 * When the source is a single file, as opposed to a collection, this method
@@ -141,9 +141,9 @@ public abstract class AbstractArchiver {
 	 *            {@link File} that is the source for the archive
 	 * @return {@link File} that is the completed bundle
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	protected File archiveSingleFile(final File sourceFile)
-			throws JargonException {
+	protected File archiveSingleFile(final File sourceFile) throws JargonException {
 		log.info("adding file to archive");
 		addFileToArchive(sourceFile);
 		log.info("done!");
@@ -152,23 +152,18 @@ public abstract class AbstractArchiver {
 	}
 
 	/**
-	 * Subclasses should create whatever instance level objects needed to
-	 * produce the archive
+	 * Subclasses should create whatever instance level objects needed to produce
+	 * the archive
 	 * 
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	protected abstract void initializeTargetArchive() throws JargonException;
 
-	/**
-	 * @return the targetFileAbsolutePath
-	 */
 	public String getTargetFileAbsolutePath() {
 		return targetFileAbsolutePath;
 	}
 
-	/**
-	 * @return the sourceFileAbsolutePath
-	 */
 	public String getSourceFileAbsolutePath() {
 		return sourceFileAbsolutePath;
 	}

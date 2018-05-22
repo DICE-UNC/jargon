@@ -13,8 +13,7 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSStarredFileOrCollection extends
-		UserAnnotatedCatalogItem implements Serializable {
+public final class IRODSStarredFileOrCollection extends UserAnnotatedCatalogItem implements Serializable {
 
 	private static final long serialVersionUID = -6429439523354271218L;
 	private final String description;
@@ -28,23 +27,21 @@ public final class IRODSStarredFileOrCollection extends
 	 * providing a description.
 	 * 
 	 * @param metadataDomain
-	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
-	 *            that identifies the domain object type that is tagged (e.g.
-	 *            DataObject, Collection)
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
+	 *            identifies the domain object type that is tagged (e.g. DataObject,
+	 *            Collection)
 	 * @param domainUniqueName
-	 *            {@code String} with the unque name for the tagged data
-	 *            object (e.g. iRODS absolute path for a data object or
-	 *            collection).
+	 *            {@code String} with the unque name for the tagged data object
+	 *            (e.g. iRODS absolute path for a data object or collection).
 	 * @param description
 	 *            {@code String} with a description of the favorite.
 	 * @param userName
-	 *            {@code String} with the user name who is associated with
-	 *            the tags.
+	 *            {@code String} with the user name who is associated with the tags.
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public IRODSStarredFileOrCollection(final MetadataDomain metadataDomain,
-			final String domainUniqueName, final String description,
-			final String userName) throws JargonException {
+	public IRODSStarredFileOrCollection(final MetadataDomain metadataDomain, final String domainUniqueName,
+			final String description, final String userName) throws JargonException {
 
 		super(metadataDomain, domainUniqueName, userName);
 

@@ -38,7 +38,11 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
+	 * @param connectionTesterConfiguration
+	 *            {@link ConnectionTesterConfiguration}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public ConnectionTesterImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount,
 			ConnectionTesterConfiguration connectionTesterConfiguration) {
@@ -55,10 +59,12 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 	 * Run the given tests in the list, returning a result
 	 * 
 	 * @param testTypes
-	 *            {@code List} of type {
-	 * @TestType
+	 *            {@code List} of type
+	 *            {@link org.irods.jargon.datautils.connectiontester.ConnectionTester.TestType}
+	 * 
 	 * @return {@link ConnectionTestResult}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	@Override
 	public ConnectionTestResult runTests(final List<TestType> testTypes) throws JargonException {
@@ -88,8 +94,10 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 	 * Do a put and get and return the results
 	 * 
 	 * @param testType
-	 * @return
+	 *            {@link TestType}
+	 * @return {@code List} of {@link TestResultEntry}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	private List<TestResultEntry> processTest(TestType testType) throws JargonException {
 

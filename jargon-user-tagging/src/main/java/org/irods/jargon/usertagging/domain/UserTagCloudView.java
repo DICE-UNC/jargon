@@ -26,48 +26,39 @@ public final class UserTagCloudView implements Serializable {
 	/**
 	 * Static initializer creates an instance.
 	 * 
-	 * @param metadataDomain
-	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
-	 *            that describes the iRODS domain object being tagged (e.g.
-	 *            collection, data object)
+	 * 
 	 * @param userName
-	 *            {@code String} with the name of the user who owns the tag
-	 *            cloud.
+	 *            {@code String} with the name of the user who owns the tag cloud.
 	 * @param tagCloudEntries
-	 *            {@code Map} of
-	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
-	 *            the summary for the various tags.
+	 *            {@code Map} of {@link TagCloudEntry} with the summary for the
+	 *            various tags.
 	 * @return instance of {@code UserTagCloudView}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public static UserTagCloudView instance(final String userName,
-			final Map<IRODSTagValue, TagCloudEntry> tagCloudEntries)
-			throws JargonException {
+			final Map<IRODSTagValue, TagCloudEntry> tagCloudEntries) throws JargonException {
 		return new UserTagCloudView(userName, tagCloudEntries);
 	}
 
 	/**
-	 * Static initializer with separate tag clouds for collections and data
-	 * objects that will be put together in a union with counts for each.
+	 * Static initializer with separate tag clouds for collections and data objects
+	 * that will be put together in a union with counts for each.
 	 * 
 	 * @param userName
-	 *            {@code String} with the name of the user who owns the tag
-	 *            cloud.
+	 *            {@code String} with the name of the user who owns the tag cloud.
 	 * @param fileTagCloudEntries
-	 *            {@code List} of
-	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
-	 *            the summary for data objects.
+	 *            {@code List} of {@link TagCloudEntry} with the summary for data
+	 *            objects.
 	 * @param collectionTagCloudEntries
-	 *            {@code List} of
-	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
-	 *            the summary for collections.
+	 *            {@code List} of {@link TagCloudEntry} with the summary for
+	 *            collections.
 	 * @return {@link UserTagCloudView}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public static UserTagCloudView instance(final String userName,
-			final List<TagCloudEntry> fileTagCloudEntries,
-			final List<TagCloudEntry> collectionTagCloudEntries)
-			throws JargonException {
+	public static UserTagCloudView instance(final String userName, final List<TagCloudEntry> fileTagCloudEntries,
+			final List<TagCloudEntry> collectionTagCloudEntries) throws JargonException {
 
 		if (fileTagCloudEntries == null) {
 			throw new JargonException("null fileTagCloudEntries");
@@ -81,9 +72,8 @@ public final class UserTagCloudView implements Serializable {
 
 		// move over the file enties and counts
 		for (TagCloudEntry fileEntry : fileTagCloudEntries) {
-			tempTreeMap.put(fileEntry.getIrodsTagValue(), new TagCloudEntry(
-					fileEntry.getIrodsTagValue(), fileEntry.getCountOfFiles(),
-					0));
+			tempTreeMap.put(fileEntry.getIrodsTagValue(),
+					new TagCloudEntry(fileEntry.getIrodsTagValue(), fileEntry.getCountOfFiles(), 0));
 		}
 
 		// update entries with collection counts, if not found, add an entry
@@ -92,12 +82,10 @@ public final class UserTagCloudView implements Serializable {
 			foundEntry = tempTreeMap.get(collectionEntry.getIrodsTagValue());
 
 			if (foundEntry == null) {
-				tempTreeMap.put(collectionEntry.getIrodsTagValue(),
-						new TagCloudEntry(collectionEntry.getIrodsTagValue(),
-								0, collectionEntry.getCountOfCollections()));
+				tempTreeMap.put(collectionEntry.getIrodsTagValue(), new TagCloudEntry(
+						collectionEntry.getIrodsTagValue(), 0, collectionEntry.getCountOfCollections()));
 			} else {
-				foundEntry.setCountOfCollections(collectionEntry
-						.getCountOfCollections());
+				foundEntry.setCountOfCollections(collectionEntry.getCountOfCollections());
 			}
 		}
 
@@ -109,20 +97,18 @@ public final class UserTagCloudView implements Serializable {
 	 * Private constructor
 	 * 
 	 * @param metadataDomain
-	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
-	 *            that describes the iRODS domain object being tagged (e.g.
-	 *            collection, data object)
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
+	 *            describes the iRODS domain object being tagged (e.g. collection,
+	 *            data object)
 	 * @param userName
-	 *            {@code String} with the name of the user who owns the tag
-	 *            cloud.
+	 *            {@code String} with the name of the user who owns the tag cloud.
 	 * @param tagCloudEntries
 	 *            {@code Map} of
-	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
-	 *            the summary for the various tags.
+	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with the
+	 *            summary for the various tags.
 	 * @throws JargonException
 	 */
-	private UserTagCloudView(final String userName,
-			final Map<IRODSTagValue, TagCloudEntry> tagCloudEntries)
+	private UserTagCloudView(final String userName, final Map<IRODSTagValue, TagCloudEntry> tagCloudEntries)
 			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {

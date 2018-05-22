@@ -8,7 +8,7 @@ import org.irods.jargon.datautils.visitor.HierComponent;
 /**
  * Interface for controlling an indexer. This can cause an indexer to halt after
  * a certain amount of time, and can control waits and pauses to indexing.
- * <p/>
+ * <p>
  * Implementations can simply sleep between accesses, or could interrogate
  * server load to decide how active the indexer will be.
  * 

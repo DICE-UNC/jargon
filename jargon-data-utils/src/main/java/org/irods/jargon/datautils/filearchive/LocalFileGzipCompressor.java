@@ -29,28 +29,26 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalFileGzipCompressor {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(LocalFileGzipCompressor.class);
+	public static final Logger log = LoggerFactory.getLogger(LocalFileGzipCompressor.class);
 
 	/**
-	 * Take the given file and compress it to a gzip with a .gzip extension
-	 * added
+	 * Take the given file and compress it to a gzip with a .gzip extension added
 	 * 
 	 * @param inputFileAbsolutePath
-	 *            {@code String} with an absolute path to a file that is
-	 *            gzip compressed
+	 *            {@code String} with an absolute path to a file that is gzip
+	 *            compressed
 	 * @return {@link File} with the compressed gzip
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public File compress(final String inputFileAbsolutePath)
-			throws FileNotFoundException, JargonException {
+	public File compress(final String inputFileAbsolutePath) throws FileNotFoundException, JargonException {
 
 		log.info("compress");
 
 		if (inputFileAbsolutePath == null || inputFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty inputFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty inputFileAbsolutePath");
 		}
 
 		log.info("inputFileAbsolutePath:{}", inputFileAbsolutePath);
@@ -70,15 +68,12 @@ public class LocalFileGzipCompressor {
 			log.info("output file is:{}", outputFile);
 
 			log.info("creating input stream...");
-			InputStream inputStream = new BufferedInputStream(
-					new FileInputStream(inputFile));
+			InputStream inputStream = new BufferedInputStream(new FileInputStream(inputFile));
 
-			OutputStream outputStream = new BufferedOutputStream(
-					new FileOutputStream(outputFile));
+			OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
 
 			log.info("creating gzip streams..");
-			GzipCompressorOutputStream gzOut = new GzipCompressorOutputStream(
-					outputStream);
+			GzipCompressorOutputStream gzOut = new GzipCompressorOutputStream(outputStream);
 
 			log.info("stream copy");
 			IOUtils.copy(inputStream, gzOut);
@@ -104,20 +99,19 @@ public class LocalFileGzipCompressor {
 	 * 
 	 * @param inputFileAbsolutePath
 	 *            {@code String} with the absolute path to a .gzip file
-	 * @return {@link File} that is unzipped and has the .gzip removed to give
-	 *         the original extension, or if it can't figure it out it makes a
-	 *         tar
+	 * @return {@link File} that is unzipped and has the .gzip removed to give the
+	 *         original extension, or if it can't figure it out it makes a tar
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public File uncompress(final String inputFileAbsolutePath)
-			throws FileNotFoundException, JargonException {
+	public File uncompress(final String inputFileAbsolutePath) throws FileNotFoundException, JargonException {
 
 		log.info("uncompressToTar()");
 
 		if (inputFileAbsolutePath == null || inputFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty inputFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty inputFileAbsolutePath");
 		}
 
 		log.info("inputFileAbsolutePath:{}", inputFileAbsolutePath);
@@ -133,8 +127,7 @@ public class LocalFileGzipCompressor {
 
 			String fileName;
 			if (idxOfDotGzip == -1) {
-				fileName = LocalFileUtils.getFileNameUpToExtension(inputFile
-						.getName());
+				fileName = LocalFileUtils.getFileNameUpToExtension(inputFile.getName());
 
 				StringBuilder sb = new StringBuilder();
 				sb.append(fileName);
@@ -148,14 +141,11 @@ public class LocalFileGzipCompressor {
 			log.info("output file is:{}", outputFile);
 
 			log.info("creating input stream...");
-			InputStream inputStream = new BufferedInputStream(
-					new FileInputStream(inputFile));
+			InputStream inputStream = new BufferedInputStream(new FileInputStream(inputFile));
 
-			GzipCompressorInputStream gzIn = new GzipCompressorInputStream(
-					inputStream);
+			GzipCompressorInputStream gzIn = new GzipCompressorInputStream(inputStream);
 
-			OutputStream outputStream = new BufferedOutputStream(
-					new FileOutputStream(outputFile));
+			OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
 
 			log.info("stream copy");
 			IOUtils.copy(gzIn, outputStream);

@@ -18,15 +18,14 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public AbstractIrodsVisitorComponent(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
-	/**
-	 * 
-	 */
 	public AbstractIrodsVisitorComponent() {
 	}
 
@@ -51,7 +50,7 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 	 */
 	@Override
 	public abstract boolean visit(HierLeaf node);
-	
+
 	@Override
 	public abstract void launch(final String startingCollectionPath);
 

@@ -24,18 +24,27 @@ public class IrodsVisitedLeaf extends IrodsFileItem implements HierLeaf {
 
 	/**
 	 * @param pathName
+	 *            {@code String} with dir path
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
+	 * 
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
+
 	public IrodsVisitedLeaf(String pathName, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(pathName, irodsFileSystemAO);
 	}
 
 	/**
 	 * @param parent
+	 *            {@code String} with the parent
 	 * @param child
+	 *            {@code String} with the child
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsVisitedLeaf(String parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(parent, child, irodsFileSystemAO);
@@ -43,9 +52,13 @@ public class IrodsVisitedLeaf extends IrodsFileItem implements HierLeaf {
 
 	/**
 	 * @param parent
+	 *            {@link File} with the parent
 	 * @param child
+	 *            {@code String} with the child
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsVisitedLeaf(File parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(parent, child, irodsFileSystemAO);
@@ -58,6 +71,7 @@ public class IrodsVisitedLeaf extends IrodsFileItem implements HierLeaf {
 	 *            {@link IRODSFileImpl} that represents the iRODS file as a leaf
 	 *            node
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsVisitedLeaf(IRODSFileImpl irodsFile) throws JargonException {
 		this(irodsFile.getAbsolutePath(), irodsFile.getIrodsFileSystemAO());

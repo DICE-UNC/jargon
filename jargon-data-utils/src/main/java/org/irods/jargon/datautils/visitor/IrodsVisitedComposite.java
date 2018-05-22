@@ -22,25 +22,31 @@ public class IrodsVisitedComposite extends IrodsFileItem implements HierComposit
 
 	public static final Logger log = LoggerFactory.getLogger(IrodsVisitedComposite.class);
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2022187755904761797L;
 
 	/**
 	 * @param pathName
+	 *            {@code String} with dir path
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
+	 * 
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
+
 	public IrodsVisitedComposite(String pathName, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(pathName, irodsFileSystemAO);
 	}
 
 	/**
 	 * @param parent
+	 *            {@code String} with the parent
 	 * @param child
+	 *            {@code String} with the child
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsVisitedComposite(String parent, String child, IRODSFileSystemAO irodsFileSystemAO)
 			throws JargonException {
@@ -49,9 +55,13 @@ public class IrodsVisitedComposite extends IrodsFileItem implements HierComposit
 
 	/**
 	 * @param parent
+	 *            {@link File} with the parent
 	 * @param child
+	 *            {@code String} with the child
 	 * @param irodsFileSystemAO
+	 *            {@link IRODSFileSystemAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public IrodsVisitedComposite(File parent, String child, IRODSFileSystemAO irodsFileSystemAO)
 			throws JargonException {

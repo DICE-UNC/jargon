@@ -17,9 +17,9 @@ public class ShoppingCartEntry implements Serializable {
 	 * Static initializer creates a new shopping cart entry
 	 * 
 	 * @param fileName
-	 *            {@code String} with the file name for the entry in the
-	 *            shopping cart
-	 * @return
+	 *            {@code String} with the file name for the entry in the shopping
+	 *            cart
+	 * @return {@link ShoppingCartEntry}
 	 */
 	public static ShoppingCartEntry instance(final String fileName) {
 		return new ShoppingCartEntry(fileName);
@@ -40,9 +40,6 @@ public class ShoppingCartEntry implements Serializable {
 		return sb.toString();
 	}
 
-	/**
-	 * @return the fileName
-	 */
 	public String getFileName() {
 		return fileName;
 	}

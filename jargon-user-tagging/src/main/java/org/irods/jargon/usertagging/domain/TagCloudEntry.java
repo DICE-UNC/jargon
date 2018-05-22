@@ -26,18 +26,17 @@ public final class TagCloudEntry implements Serializable {
 	 * Private constructor.
 	 * 
 	 * @param irodsTagValue
-	 *            {@link org.irods.jargon.usertagging.IRODSTagValue} with
-	 *            information on the tag
+	 *            {@link IRODSTagValue} with information on the tag
 	 * @param countOfFiles
-	 *            {@code int} with a count of the number of occurrences of
-	 *            the tag for the given domain in files
+	 *            {@code int} with a count of the number of occurrences of the tag
+	 *            for the given domain in files
 	 * @param countOfCollections
-	 *            {@code int} with a count of the number of occurrences of
-	 *            the tag for the given domain in collections
+	 *            {@code int} with a count of the number of occurrences of the tag
+	 *            for the given domain in collections
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public TagCloudEntry(final IRODSTagValue irodsTagValue,
-			final int countOfFiles, final int countOfCollections)
+	public TagCloudEntry(final IRODSTagValue irodsTagValue, final int countOfFiles, final int countOfCollections)
 			throws JargonException {
 
 		if (irodsTagValue == null) {
@@ -61,8 +60,7 @@ public final class TagCloudEntry implements Serializable {
 	/**
 	 * Get the value of the iRODS tag for this entry
 	 * 
-	 * @return {@link org.irods.jargon.usertagging.domain.IRODSTagValue} for the
-	 *         given cloud entry.
+	 * @return {@link IRODSTagValue} for the given cloud entry.
 	 */
 	public IRODSTagValue getIrodsTagValue() {
 		return irodsTagValue;
@@ -71,7 +69,7 @@ public final class TagCloudEntry implements Serializable {
 	/**
 	 * Get the count of tag occurrences for files (data objects)
 	 * 
-	 * @return
+	 * @return {@code int}
 	 */
 	public int getCountOfFiles() {
 		return countOfFiles;
@@ -80,7 +78,7 @@ public final class TagCloudEntry implements Serializable {
 	/**
 	 * Get the count of tag occurrences for collections (directories)
 	 * 
-	 * @return
+	 * @return {@code int}
 	 */
 	public int getCountOfCollections() {
 		return countOfCollections;

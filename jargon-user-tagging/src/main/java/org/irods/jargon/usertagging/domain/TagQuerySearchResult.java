@@ -27,15 +27,14 @@ public class TagQuerySearchResult {
 	 * @param searchTags
 	 *            {@code String} with the free tags used to search.
 	 * @param queryResultEntries
-	 *            {@code List} of
-	 *            {@code CollectionAndDataObjectListingEntry} that has the
-	 *            query results.
+	 *            {@code List} of {@code CollectionAndDataObjectListingEntry} that
+	 *            has the query results.
 	 * @return instance of {@code TagQuerySearchResult}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public static TagQuerySearchResult instance(final String searchTags,
-			final List<CollectionAndDataObjectListingEntry> queryResultEntries)
-			throws JargonException {
+			final List<CollectionAndDataObjectListingEntry> queryResultEntries) throws JargonException {
 		return new TagQuerySearchResult(searchTags, queryResultEntries);
 	}
 
@@ -45,18 +44,16 @@ public class TagQuerySearchResult {
 	 * @param searchTags
 	 *            {@code String} with the free tags used to search.
 	 * @param queryResultEntries
-	 *            {@code List} of
-	 *            {@code CollectionAndDataObjectListingEntry} that has the
-	 *            query results.
+	 *            {@code List} of {@code CollectionAndDataObjectListingEntry} that
+	 *            has the query results.
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	private TagQuerySearchResult(final String searchTags,
-			final List<CollectionAndDataObjectListingEntry> queryResultEntries)
-			throws JargonException {
+			final List<CollectionAndDataObjectListingEntry> queryResultEntries) throws JargonException {
 
 		if (searchTags == null || searchTags.isEmpty()) {
-			throw new JargonException(
-					"null or empty searchTags, at least one search tag must be entered");
+			throw new JargonException("null or empty searchTags, at least one search tag must be entered");
 		}
 
 		if (queryResultEntries == null) {
@@ -64,8 +61,7 @@ public class TagQuerySearchResult {
 		}
 
 		this.searchTags = searchTags;
-		this.queryResultEntries = Collections
-				.unmodifiableList(queryResultEntries);
+		this.queryResultEntries = Collections.unmodifiableList(queryResultEntries);
 
 	}
 
@@ -81,8 +77,7 @@ public class TagQuerySearchResult {
 	/**
 	 * Get the objects that are in response to the query.
 	 * 
-	 * @return {@code List} of
-	 *         {@code CollectionAndDataObjectListingEntry}
+	 * @return {@code List} of {@code CollectionAndDataObjectListingEntry}
 	 */
 	public List<CollectionAndDataObjectListingEntry> getQueryResultEntries() {
 		return queryResultEntries;
@@ -108,8 +103,8 @@ public class TagQuerySearchResult {
 
 		TagQuerySearchResult otherSearchResult = (TagQuerySearchResult) obj;
 
-		return (searchTags.equals(otherSearchResult.getSearchTags()) && queryResultEntries == otherSearchResult
-				.getQueryResultEntries());
+		return (searchTags.equals(otherSearchResult.getSearchTags())
+				&& queryResultEntries == otherSearchResult.getQueryResultEntries());
 	}
 
 	@Override

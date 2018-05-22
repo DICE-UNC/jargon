@@ -31,18 +31,16 @@ public class FileShoppingCart implements Serializable {
 	}
 
 	/**
-	 * Serialize the contents of the shopping cart as a {@code String}
-	 * where each file in the cart is one line, followed by a carriage return
-	 * (\n) character. This is a suitable format for saving the shopping cart as
-	 * a text file.
+	 * Serialize the contents of the shopping cart as a {@code String} where each
+	 * file in the cart is one line, followed by a carriage return (\n) character.
+	 * This is a suitable format for saving the shopping cart as a text file.
 	 * 
-	 * @return {@code String} with one shopping cart file per line. The
-	 *         value will be blank if no files are in the cart
+	 * @return {@code String} with one shopping cart file per line. The value will
+	 *         be blank if no files are in the cart
 	 */
 	public String serializeShoppingCartContentsToStringOneItemPerLine() {
 		StringBuilder sb = new StringBuilder();
-		for (Entry<String, ShoppingCartEntry> entry : shoppingCartEntries
-				.entrySet()) {
+		for (Entry<String, ShoppingCartEntry> entry : shoppingCartEntries.entrySet()) {
 			sb.append(entry.getValue().getFileName());
 			sb.append("\n");
 		}
@@ -51,36 +49,35 @@ public class FileShoppingCart implements Serializable {
 
 	/**
 	 * Given a string representation (one file per line, separated by the \n
-	 * character, build a {@code FileShoppingCart}. The cart will be empty
-	 * if no files are in the serialized string form
+	 * character, build a {@code FileShoppingCart}. The cart will be empty if no
+	 * files are in the serialized string form
 	 * 
 	 * @param stringRepresentation
-	 *            {@code String} with a one line per file, separated by \n,
-	 *            as created by the
+	 *            {@code String} with a one line per file, separated by \n, as
+	 *            created by the
 	 *            {@code serializeShoppingCartContentsToStringOneItemPerLine()}
 	 *            method.
 	 * @return {@link FileShoppingCart} instance
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public static FileShoppingCart instanceFromSerializedStringRepresentation(
-			final String stringRepresentation) throws JargonException {
+	public static FileShoppingCart instanceFromSerializedStringRepresentation(final String stringRepresentation)
+			throws JargonException {
 
 		if (stringRepresentation == null) {
 			throw new IllegalArgumentException("Null string representation");
 		}
 
 		/*
-		 * Go through the entries by splitting on \n and create the new cart. An
-		 * empty cart is returned if no entries in the serialized string data
+		 * Go through the entries by splitting on \n and create the new cart. An empty
+		 * cart is returned if no entries in the serialized string data
 		 */
 
 		FileShoppingCart fileShoppingCart = new FileShoppingCart();
 		if (!stringRepresentation.isEmpty()) {
-			StringTokenizer tokenizer = new StringTokenizer(
-					stringRepresentation, "\n");
+			StringTokenizer tokenizer = new StringTokenizer(stringRepresentation, "\n");
 			while (tokenizer.hasMoreTokens()) {
-				fileShoppingCart.addAnItem(ShoppingCartEntry.instance(tokenizer
-						.nextToken()));
+				fileShoppingCart.addAnItem(ShoppingCartEntry.instance(tokenizer.nextToken()));
 			}
 		}
 
@@ -91,8 +88,7 @@ public class FileShoppingCart implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("FileShoppingCart");
-		for (Entry<String, ShoppingCartEntry> entry : shoppingCartEntries
-				.entrySet()) {
+		for (Entry<String, ShoppingCartEntry> entry : shoppingCartEntries.entrySet()) {
 			sb.append("\n");
 			sb.append(entry.getValue());
 		}
@@ -126,8 +122,7 @@ public class FileShoppingCart implements Serializable {
 			throw new IllegalArgumentException("null shoppingCartEntry");
 		}
 
-		shoppingCartEntries.put(shoppingCartEntry.getFileName(),
-				shoppingCartEntry);
+		shoppingCartEntries.put(shoppingCartEntry.getFileName(), shoppingCartEntry);
 	}
 
 	/**
@@ -135,8 +130,8 @@ public class FileShoppingCart implements Serializable {
 	 * there
 	 * 
 	 * @param fileName
-	 *            {@code String} with the absolute file path to the item to
-	 *            be removed from the cart
+	 *            {@code String} with the absolute file path to the item to be
+	 *            removed from the cart
 	 */
 	public void removeAnItem(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {

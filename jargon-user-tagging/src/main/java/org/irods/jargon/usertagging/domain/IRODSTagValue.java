@@ -26,12 +26,12 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	 * 
 	 * @param tagData
 	 *            {@code String} with the tag data value for the tag.
-	 * @param user
+	 * @param tagUser
 	 *            {@code String} with the user name that owns the tag.
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public IRODSTagValue(final String tagData, final String tagUser)
-			throws JargonException {
+	public IRODSTagValue(final String tagData, final String tagUser) throws JargonException {
 
 		if (tagData == null) {
 			throw new JargonException("null tagData");
@@ -47,24 +47,22 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	}
 
 	/**
-	 * Special constructor that can interpret AVU data as a tag. Note that the
-	 * tag is in the AVU attribute, and the user is in the AVU Value as
-	 * <code>user[username]
+	 * Special constructor that can interpret AVU data as a tag. Note that the tag
+	 * is in the AVU attribute, and the user is in the AVU value
 	 * 
 	 * @param metadataAndDomainData
-	 *            {@code MetaDataAndDomainData} object from Jargon that
-	 *            contains information from a raw AVU triple.
+	 *            {@code MetaDataAndDomainData} object from Jargon that contains
+	 *            information from a raw AVU triple.
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public IRODSTagValue(final MetaDataAndDomainData metadataAndDomainData)
-			throws JargonException {
+	public IRODSTagValue(final MetaDataAndDomainData metadataAndDomainData) throws JargonException {
 
 		if (metadataAndDomainData == null) {
 			throw new JargonException("null metadataAndDomainData");
 		}
 
-		if (metadataAndDomainData.getAvuValue() == null
-				|| metadataAndDomainData.getAvuValue().isEmpty()) {
+		if (metadataAndDomainData.getAvuValue() == null || metadataAndDomainData.getAvuValue().isEmpty()) {
 			throw new JargonException("no user supplied");
 		}
 
@@ -99,8 +97,7 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 		}
 
 		IRODSTagValue other = (IRODSTagValue) obj;
-		return (other.getTagData().equals(getTagData()) && other.getTagUser()
-				.equals(getTagUser()));
+		return (other.getTagData().equals(getTagData()) && other.getTagUser().equals(getTagUser()));
 
 	}
 
@@ -113,8 +110,7 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	public int compareTo(final Object o) {
 
 		if (!(o instanceof IRODSTagValue)) {
-			throw new ClassCastException(
-					"object is not an instance of IRODSTagValue");
+			throw new ClassCastException("object is not an instance of IRODSTagValue");
 		}
 
 		IRODSTagValue otherValue = (IRODSTagValue) o;

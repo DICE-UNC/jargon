@@ -31,15 +31,15 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	private File tarArchiveFile = null;
 	private TarArchiveOutputStream tarArchiveOutputStream = null;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(LocalTarFileArchiver.class);
+	public static final Logger log = LoggerFactory.getLogger(LocalTarFileArchiver.class);
 
 	/**
 	 * @param sourceFileAbsolutePath
+	 *            {@code String} with the source file
 	 * @param targetFileAbsolutePath
+	 *            {@code String} with the target file
 	 */
-	public LocalTarFileArchiver(final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath) {
+	public LocalTarFileArchiver(final String sourceFileAbsolutePath, final String targetFileAbsolutePath) {
 		super(sourceFileAbsolutePath, targetFileAbsolutePath);
 	}
 
@@ -47,8 +47,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.datautils.filearchive.AbstractArchiver#completeArchiving
-	 * ()
+	 * org.irods.jargon.datautils.filearchive.AbstractArchiver#completeArchiving ()
 	 */
 	@Override
 	protected File completeArchiving() throws JargonException {
@@ -68,8 +67,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.datautils.filearchive.AbstractArchiver#addFileToArchive
+	 * @see org.irods.jargon.datautils.filearchive.AbstractArchiver#addFileToArchive
 	 * (java.io.File)
 	 */
 	@Override
@@ -81,8 +79,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		entry.setSize(file.length());
 		try {
 			tarArchiveOutputStream.putArchiveEntry(entry);
-			InputStream fileIn = new BufferedInputStream(new FileInputStream(
-					file));
+			InputStream fileIn = new BufferedInputStream(new FileInputStream(file));
 			IOUtils.copy(fileIn, tarArchiveOutputStream);
 			tarArchiveOutputStream.closeArchiveEntry();
 			fileIn.close();
@@ -119,16 +116,14 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 			tarArchiveOutputStream = (TarArchiveOutputStream) new ArchiveStreamFactory()
 					.createArchiveOutputStream(ArchiveStreamFactory.TAR, fos);
-			tarArchiveOutputStream
-					.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+			tarArchiveOutputStream.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
 		} catch (FileNotFoundException e) {
 			log.error("fileNotFoundException initializing target archive", e);
 			throw new JargonException("cannot find target file");
 		} catch (ArchiveException e) {
 			log.error("archiveExcpetion creating archive for tar", e);
-			throw new JargonException("archiveexception creating archive type",
-					e);
+			throw new JargonException("archiveexception creating archive type", e);
 		}
 
 	}

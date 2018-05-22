@@ -17,15 +17,14 @@ import org.slf4j.LoggerFactory;
 
 public class CacheEncryptor {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(CacheEncryptor.class);
+	private static final Logger log = LoggerFactory.getLogger(CacheEncryptor.class);
 
 	Cipher ecipher;
 	Cipher dcipher;
 
 	// 8-byte Salt
-	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
-			(byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
+	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32, (byte) 0x56, (byte) 0x35, (byte) 0xE3,
+			(byte) 0x03 };
 
 	// Iteration count
 	int iterationCount = 19;
@@ -35,17 +34,14 @@ public class CacheEncryptor {
 		try {
 			log.info("create key");
 			// Create the key
-			KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt,
-					iterationCount);
-			SecretKey key = SecretKeyFactory.getInstance("PBEWithMD5AndDES")
-					.generateSecret(keySpec);
+			KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount);
+			SecretKey key = SecretKeyFactory.getInstance("PBEWithMD5AndDES").generateSecret(keySpec);
 			ecipher = Cipher.getInstance(key.getAlgorithm());
 			dcipher = Cipher.getInstance(key.getAlgorithm());
 
 			log.info("prepare the param to the ciphers");
 			// Prepare the parameter to the ciphers
-			AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt,
-					iterationCount);
+			AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt, iterationCount);
 
 			log.info("create cyphers");
 
@@ -79,8 +75,7 @@ public class CacheEncryptor {
 		} catch (javax.crypto.BadPaddingException e) {
 			throw new JargonException("BadPaddingException encrypting data", e);
 		} catch (IllegalBlockSizeException e) {
-			throw new JargonException(
-					"IllegalBlockSizeException encrypting data", e);
+			throw new JargonException("IllegalBlockSizeException encrypting data", e);
 		}
 	}
 
@@ -92,21 +87,21 @@ public class CacheEncryptor {
 		} catch (javax.crypto.BadPaddingException e) {
 			throw new JargonException("BadPaddingException decrypting data", e);
 		} catch (IllegalBlockSizeException e) {
-			throw new JargonException(
-					"IllegalBlockSizeException decrypting data", e);
+			throw new JargonException("IllegalBlockSizeException decrypting data", e);
 		}
 
 	}
 
 	/**
-	 * Takes a single String as an argument and returns an Encrypted version of
-	 * that String.
+	 * Takes a single String as an argument and returns an Encrypted version of that
+	 * String.
 	 * 
 	 * @param str
-	 *            String to be encrypted
+	 *            {@code String} String to be encrypted
 	 * @return {@code String} Encrypted version of the provided String
+	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	@SuppressWarnings("restriction")
 	public String encrypt(final String str) throws JargonException {
 		try {
 			// Encode the string into bytes using utf-8
@@ -125,14 +120,15 @@ public class CacheEncryptor {
 	}
 
 	/**
-	 * Takes a encrypted String as an argument, decrypts and returns the
-	 * decrypted String.
+	 * Takes a encrypted String as an argument, decrypts and returns the decrypted
+	 * String.
 	 * 
 	 * @param str
 	 *            Encrypted String to be decrypted
 	 * @return {@code String} Decrypted version of the provided String
+	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	@SuppressWarnings("restriction")
 	public String decrypt(final String str) throws JargonException {
 
 		try {

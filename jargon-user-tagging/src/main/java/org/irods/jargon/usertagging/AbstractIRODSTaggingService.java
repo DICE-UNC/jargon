@@ -14,18 +14,17 @@ public abstract class AbstractIRODSTaggingService {
 	protected final IRODSAccount irodsAccount;
 
 	/**
-	 * Private constructor that initializes the service with access to objects
-	 * that interact with iRODS.
+	 * Private constructor that initializes the service with access to objects that
+	 * interact with iRODS.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            {@code IRODSAccessObjectFactory} that can create various
-	 *            iRODS Access Objects.
+	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
+	 *            Access Objects.
 	 * @param irodsAccount
 	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 */
-	protected AbstractIRODSTaggingService(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	protected AbstractIRODSTaggingService(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 
 		if (irodsAccessObjectFactory == null) {
@@ -50,18 +49,22 @@ public abstract class AbstractIRODSTaggingService {
 	}
 
 	/**
+	 * Get the obj stat for a given path
+	 * 
 	 * @param irodsAbsolutePath
-	 * @return
+	 *            {@code String}
+	 * @return {@link ObjStat}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 */
 	protected ObjStat getObjStatForAbsolutePath(final String irodsAbsolutePath)
 			throws JargonException, FileNotFoundException {
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePath);
 
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 		return objStat;

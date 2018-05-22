@@ -45,6 +45,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 *            {@link IRODSProtocolManager} that gets the actual connected
 	 *            account that is subsequently cached
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager baseProtocolManager) throws JargonException {
@@ -135,9 +136,6 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	}
 
-	/**
-	 * @return the irodsAccount
-	 */
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
