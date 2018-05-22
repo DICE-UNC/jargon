@@ -463,6 +463,7 @@ public class LocalFileUtils {
 	 * files!)
 	 *
 	 * @param file
+	 *            {@link File} to turn to bytes
 	 * @return <code>byte[]</code> with file contents
 	 * @throws IOException
 	 *             {@link IOException}

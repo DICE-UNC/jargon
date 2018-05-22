@@ -19,11 +19,9 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class UploadsServiceImpl extends AbstractJargonService implements
-		UploadsService {
+public class UploadsServiceImpl extends AbstractJargonService implements UploadsService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(UploadsServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(UploadsServiceImpl.class);
 
 	/**
 	 * Constructor with information needed to connect to iRODS
@@ -33,8 +31,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */
-	public UploadsServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public UploadsServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -42,30 +39,26 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.datautils.uploads.UploadsService#getUploadsDirectory()
+	 * @see org.irods.jargon.datautils.uploads.UploadsService#getUploadsDirectory()
 	 */
 	@Override
 	public IRODSFile getUploadsDirectory() throws JargonException {
 		log.info("getUploadsDirectory()");
 		String homeDirectory = getUploadsDirName();
 		log.info("home directory is set to:{}", homeDirectory);
-		IRODSFile homeDirFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						homeDirectory);
+		IRODSFile homeDirFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(homeDirectory);
 		log.info("making uploads directory if it does not exist");
 		if (!homeDirFile.exists()) {
 			homeDirFile.mkdirs();
 		}
-		homeDirFile.reset();
 		return homeDirFile;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.datautils.uploads.UploadsService#deleteUploadsDirectory
+	 * @see org.irods.jargon.datautils.uploads.UploadsService#deleteUploadsDirectory
 	 * ()
 	 */
 	@Override
@@ -73,9 +66,8 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 		log.info("deleteUploadsDirectory()");
 		String homeDirectory = getUploadsDirName();
 		log.info("home directory is set to:{}", homeDirectory);
-		IRODSFile homeDirFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						homeDirectory);
+		IRODSFile homeDirFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(homeDirectory);
 		homeDirFile.deleteWithForceOption();
 		log.info("deleted");
 	}
@@ -88,8 +80,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 	private String getUploadsDirName() {
 
 		StringBuilder homeDirectory = new StringBuilder(
-				MiscIRODSUtils
-						.computeHomeDirectoryForIRODSAccount(getIrodsAccount()));
+				MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(getIrodsAccount()));
 		homeDirectory.append('/');
 		homeDirectory.append(UploadsService.UPLOADS_DIR_DEFAULT_NAME);
 		return homeDirectory.toString();

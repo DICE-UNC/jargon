@@ -38,6 +38,8 @@ public class PropertyUtils {
 	/**
 	 * Verify the given property exists and return as an {@code int}
 	 *
+	 * @param properties
+	 *            {@link Properties} to verify
 	 * @param propKey
 	 *            {@link String} with the key to retrieve
 	 * 

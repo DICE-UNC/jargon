@@ -57,6 +57,7 @@ public class FileGenerator {
 	 * @return {@code String} containing a random, though valid, file extension
 	 *         prepended with a '.' character
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	protected static String generateRandomExtension() throws TestConfigurationException {
 		return fileExtensions.get(generateRandomNumber(0, fileExtensions.size()));
@@ -96,6 +97,7 @@ public class FileGenerator {
 	 *            including the extension this will be appended)
 	 * @return {@code String} which is a random file name plus a random extension
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	protected static String generateRandomFileName(final int length) throws TestConfigurationException {
 		StringBuilder fileName = new StringBuilder();
@@ -112,10 +114,13 @@ public class FileGenerator {
 	 *            {@code String} containing a an absolute path to valid directory on
 	 *            the local file system. This absolute path must have a leading and
 	 *            trailing '/'.
+	 * @param fileName
+	 *            {@code String} with file name
 	 * @param length
 	 *            {@code long} containing the desired length of the file in bytes
 	 * @return {@code String} containing the full path to the generated file
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	public static String generateFileOfFixedLengthGivenName(final String fileDirectory, final String fileName,
 			final long length) throws TestConfigurationException {
@@ -215,17 +220,33 @@ public class FileGenerator {
 	 * and range parameters. This method can provide a test-bed for various
 	 * functional testing scenarios.
 	 *
+	 * @param absolutePathToLocalParentCollection
+	 *            {@code String} with the abs path to the parent collection of the
+	 *            generated subtree
 	 * @param collectionPrefix
+	 *            {@code String} with the first part of the collection name
 	 * @param numberOfCollectionsMin
+	 *            {@code int} with the min number of collections generated as
+	 *            children
 	 * @param numberOfCollectionsMax
+	 *            {@code int} with the max number of collections generated as
+	 *            children
 	 * @param depth
+	 *            {@code int} with the overall depth of the collection tree
 	 * @param filePrefix
+	 *            {@code String} with a file prefix for generated files
 	 * @param fileSuffix
+	 *            {@code String} with a file suffix for generated files
 	 * @param maxNumberOfFiles
+	 *            {@code int} with the max number of files generated as children
 	 * @param minNumberOfFiles
+	 *            {@code int} with the min number of files generated as children
 	 * @param fileLengthMin
+	 *            {@code int} min length in bytes of generated file
 	 * @param fileLengthMax
+	 *            {@code int} max length in bytes of generated file
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	public static void generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 			final String absolutePathToLocalParentCollection, final String collectionPrefix,

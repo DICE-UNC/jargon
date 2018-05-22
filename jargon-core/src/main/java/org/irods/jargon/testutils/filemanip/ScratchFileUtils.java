@@ -35,6 +35,9 @@ public class ScratchFileUtils {
 	 * already exist. * @param pathUnderScratch {@code String} giving the relative
 	 * path of the file/directory underneath the scratch area (no leading / delim is
 	 * necessary
+	 * 
+	 * @param pathUnderScratch
+	 *            {@code String}
 	 */
 	public void createScratchDirIfNotExists(final String pathUnderScratch) {
 		File scratchDir = new File(testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY) + pathUnderScratch);
@@ -110,7 +113,8 @@ public class ScratchFileUtils {
 	 * Convenience method to tack the relative path and file name to the known
 	 * scratch path, while creating any necessary intermediate directories
 	 *
-	 * @parampath {@code String} giving relative path (no leading '/') to the
+	 * @param path
+	 *            {@code String} giving relative path (no leading '/') to the
 	 *            desired new subdirectory file name. No leading '/' used
 	 * @return {@code String} absolute path to the file name, up to the last
 	 *         subdirectory, with a trailing '/'
@@ -131,8 +135,9 @@ public class ScratchFileUtils {
 	 * @param pathUnderScratch
 	 *            {@code String} with relative file path under scratch (no leading
 	 *            '/')
-	 * @return <code>long</code> with the file's checksum value
+	 * @return {@code long} with the file's checksum value
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	public byte[] computeFileCheckSum(final String pathUnderScratch) throws TestConfigurationException {
 
@@ -188,6 +193,7 @@ public class ScratchFileUtils {
 	 * 
 	 * @return {@code long} with the file's checksum value
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	public long computeFileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
 			throws TestConfigurationException {

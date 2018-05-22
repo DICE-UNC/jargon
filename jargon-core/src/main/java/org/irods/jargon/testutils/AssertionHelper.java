@@ -29,7 +29,6 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
  * Helpful assertions for unit testing IRODS
  *
  * @author Mike Conway, DICE (www.irods.org)
- * @since
  *
  */
 public class AssertionHelper {
@@ -51,6 +50,7 @@ public class AssertionHelper {
 	 *            {@code String} that gives the relative file path under scratch,
 	 *            with no leading separator character
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertLocalFileNotExistsInScratch(final String filePathRelativeToScratch)
 			throws IRODSTestAssertionException {
@@ -73,6 +73,7 @@ public class AssertionHelper {
 	 *            {@code String} that gives the relative file path under scratch,
 	 *            with no leading separator character
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertLocalFileExistsInScratch(final String filePathRelativeToScratch)
 			throws IRODSTestAssertionException {
@@ -97,6 +98,7 @@ public class AssertionHelper {
 	 * @param expectedLength
 	 *            {@code long} with length in KB of file that is expected
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertLocalScratchFileLengthEquals(final String filePathRelativeToScratch, final long expectedLength)
 			throws IRODSTestAssertionException {
@@ -127,6 +129,7 @@ public class AssertionHelper {
 	 * @param expectedChecksum
 	 *            {@code long} value with the anticipated MD5 checksum
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertLocalFileHasChecksum(final String filePathRelativeToScratch, final byte[] expectedChecksum)
 			throws IRODSTestAssertionException {
@@ -168,7 +171,12 @@ public class AssertionHelper {
 	 * @param absoluteIrodsPathUnderScratch
 	 *            {@code String} with absolute path (leading '/', or a path and
 	 *            filename to look for
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertIrodsFileOrCollectionExists(final String absoluteIrodsPathUnderScratch,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)
@@ -198,6 +206,7 @@ public class AssertionHelper {
 	 *            {@link IRODSAccount}
 	 *
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 *
 	 */
 	public void assertIrodsFileOrCollectionDoesNotExist(final String absoluteIrodsPathUnderScratch,
@@ -227,6 +236,7 @@ public class AssertionHelper {
 	 * @param dir2
 	 *            {@code String} with
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertLocalDirectoriesHaveSameData(final String dir1, final String dir2)
 			throws IRODSTestAssertionException {
@@ -289,6 +299,7 @@ public class AssertionHelper {
 	 * @param file2
 	 *            {@code File} with a file or directory
 	 * @throws IRODSTestAssertionException
+	 *             for test error
 	 */
 	public void assertTwoFilesAreEqualByRecursiveTreeComparison(final File file1, final File file2)
 			throws IRODSTestAssertionException {
@@ -355,9 +366,17 @@ public class AssertionHelper {
 	 * Assert that the given attribute is associated with the given data object
 	 *
 	 * @param irodsAbsolutePath
+	 *            {@code String}
 	 * @param avuAttribute
+	 *            {@code String}
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @throws IRODSTestAssertionException
+	 *             for test error
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public void assertDataObjectFlaggedWithAVU(final String irodsAbsolutePath, final String avuAttribute,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)

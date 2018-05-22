@@ -7,7 +7,6 @@ package org.irods.jargon.testutils;
  * Exception raised by an invalid assertion when unit testing
  *
  * @author Mike Conway, DICE (www.irods.org)
- * @since
  *
  */
 public class IRODSTestAssertionException extends Exception {

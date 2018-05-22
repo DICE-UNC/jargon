@@ -414,6 +414,8 @@ public class MiscIRODSUtils {
 	 * @param input
 	 *            {@code String} with the value to be converted to an MD5 Hash
 	 * @return {@code String} which is the MD5 has of the string.
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
 	public static String computeMD5HashOfAStringValue(final String input) throws JargonException {
@@ -490,6 +492,8 @@ public class MiscIRODSUtils {
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
+	 * @param irodsUserName
+	 *            {@code String}
 	 * @return {@code String} with a computed home directory path
 	 */
 	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(final IRODSAccount irodsAccount,
@@ -534,6 +538,8 @@ public class MiscIRODSUtils {
 	/**
 	 * Utility method to get the last part of the given absolute path
 	 *
+	 * @param collectionPath
+	 *            {@code String} to pull last path component from
 	 * @return {@code String} with the last component of the absolute path
 	 */
 	public static String getLastPathComponentForGiveAbsolutePath(final String collectionPath) {
@@ -682,7 +688,9 @@ public class MiscIRODSUtils {
 	 * creating lists in interfaces and for other purposes
 	 *
 	 * @param enumClass
-	 *            java {@code enum}
+	 *            generic type for class
+	 * @param <T>
+	 *            the type of class
 	 * @return {@code List<String>} of enum values
 	 * @throws JargonException
 	 *             for iRODS error

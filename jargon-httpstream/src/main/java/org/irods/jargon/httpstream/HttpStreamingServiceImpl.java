@@ -37,25 +37,22 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpStreamingServiceImpl implements HttpStreamingService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(HttpStreamingServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(HttpStreamingServiceImpl.class);
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private IRODSAccount irodsAccount;
 
 	/**
-	 * Default constructor takes the objects necessary to communicate with iRODS
-	 * via Access Objects
+	 * Default constructor takes the objects necessary to communicate with iRODS via
+	 * Access Objects
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} that can create various
-	 *            access objects
+	 *            {@link IRODSAccessObjectFactory} that can create various access
+	 *            objects
 	 * @param irodsAccount
-	 *            {@link IRODSAccount} with login information for the target
-	 *            grid
+	 *            {@link IRODSAccount} with login information for the target grid
 	 * @throws JargonException
 	 */
-	public HttpStreamingServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public HttpStreamingServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) throws JargonException {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
@@ -72,12 +69,9 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 	 */
 	@SuppressWarnings("resource")
 	@Override
-	public String streamHttpUrlContentsToIRODSFile(
-			final String sourceURL,
-			final IRODSFile irodsTargetFile,
+	public String streamHttpUrlContentsToIRODSFile(final String sourceURL, final IRODSFile irodsTargetFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock)
-			throws JargonException, HttpStreamingException {
+			final TransferControlBlock transferControlBlock) throws JargonException, HttpStreamingException {
 
 		log.info("streamHttpUrlContentsToIRODSFile()");
 
@@ -121,9 +115,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 			throw new HttpStreamingException("404 not found for URL");
 		} else if (statusLine.getStatusCode() > 200) {
 			log.error("invalid status code:{}", statusLine.getStatusCode());
-			throw new HttpStreamingException(
-					"invalid status from HTTP operation:"
-							+ statusLine.getStatusCode());
+			throw new HttpStreamingException("invalid status from HTTP operation:" + statusLine.getStatusCode());
 		}
 
 		// Get hold of the response entity
@@ -133,8 +125,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		// to worry about connection release
 		if (entity == null) {
 			log.error("no input stream available from URI");
-			throw new HttpStreamingException(
-					"no input stream available for URI");
+			throw new HttpStreamingException("no input stream available for URI");
 		}
 
 		InputStream instream = null;
@@ -164,19 +155,18 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		operativeTransferControlBlock.setTotalFilesToTransfer(1);
 
 		/*
-		 * Source URL is a file, target is either a collection, or specifies the
-		 * file. If the target exists, or the target parent exists, format the
-		 * appropriate call-back so that it depicts the resulting file
+		 * Source URL is a file, target is either a collection, or specifies the file.
+		 * If the target exists, or the target parent exists, format the appropriate
+		 * call-back so that it depicts the resulting file
 		 */
 
 		StringBuilder targetIrodsPathBuilder = new StringBuilder();
 
 		/*
-		 * Reset the iRODS file, as the directory may have been created prior to
-		 * the put operation. The reset clears the cache of the exists(),
-		 * isFile(), and other basic file stat info
+		 * Reset the iRODS file, as the directory may have been created prior to the put
+		 * operation. The reset clears the cache of the exists(), isFile(), and other
+		 * basic file stat info
 		 */
-		irodsTargetFile.reset();
 		if (irodsTargetFile.exists() && irodsTargetFile.isDirectory()) {
 			log.info("target is a directory, source is an url");
 			targetIrodsPathBuilder.append(irodsTargetFile.getAbsolutePath());
@@ -184,8 +174,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 			int slashIndex = sourceURL.lastIndexOf('/');
 			String urlFileName = sourceURL.substring(slashIndex + 1);
 			targetIrodsPathBuilder.append(urlFileName);
-		} else if (irodsTargetFile.getParentFile().exists()
-				&& irodsTargetFile.getParentFile().isDirectory()) {
+		} else if (irodsTargetFile.getParentFile().exists() && irodsTargetFile.getParentFile().isDirectory()) {
 			log.info("treating target as a file, using the whole path");
 			targetIrodsPathBuilder.append(irodsTargetFile.getAbsolutePath());
 		}
@@ -195,38 +184,30 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 
 		// send 0th file status callback that indicates startup
 		if (transferStatusCallbackListener != null) {
-			TransferStatus status = TransferStatus.instance(TransferType.PUT,
-					sourceURL, callbackTargetIrodsPath, "",
+			TransferStatus status = TransferStatus.instance(TransferType.PUT, sourceURL, callbackTargetIrodsPath, "",
 					operativeTransferControlBlock.getTotalBytesToTransfer(),
-					operativeTransferControlBlock
-							.getTotalBytesTransferredSoFar(),
-					operativeTransferControlBlock
-							.getTotalFilesTransferredSoFar(),
+					operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
+					operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
 					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
-					operativeTransferControlBlock.getTotalFilesToTransfer(),
-					TransferState.OVERALL_INITIATION, irodsAccount.getHost(),
-					irodsAccount.getZone());
+					operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.OVERALL_INITIATION,
+					irodsAccount.getHost(), irodsAccount.getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 
-		IRODSFile callbackTargetIrodsFile = irodsAccessObjectFactory
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						callbackTargetIrodsPath);
+		IRODSFile callbackTargetIrodsFile = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(callbackTargetIrodsPath);
 		callbackTargetIrodsFile.setResource(irodsTargetFile.getResource());
 
 		log.info("callbackTargetIrodsFile:{}", callbackTargetIrodsFile);
 
 		if (transferStatusCallbackListener != null) {
 
-			TransferStatus status = TransferStatus.instance(TransferType.PUT,
-					sourceURL, callbackTargetIrodsFile.getAbsolutePath(),
-					irodsTargetFile.getResource(), urlSize, urlSize,
-					operativeTransferControlBlock
-							.getTotalFilesTransferredSoFar(),
+			TransferStatus status = TransferStatus.instance(TransferType.PUT, sourceURL,
+					callbackTargetIrodsFile.getAbsolutePath(), irodsTargetFile.getResource(), urlSize, urlSize,
+					operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
 					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
-					operativeTransferControlBlock.getTotalFilesToTransfer(),
-					TransferState.IN_PROGRESS_START_FILE, irodsAccount
-							.getHost(), irodsAccount.getZone());
+					operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.IN_PROGRESS_START_FILE,
+					irodsAccount.getHost(), irodsAccount.getZone());
 
 			transferStatusCallbackListener.statusCallback(status);
 		}
@@ -234,53 +215,35 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 		if (transferStatusCallbackListener != null) {
 			log.info("setting up a callback listener for within stream progress");
 			ConnectionProgressStatusListener listener = DefaultIntraFileProgressCallbackListener
-					.instance(TransferType.PUT, urlSize, transferControlBlock,
-							transferStatusCallbackListener);
-			instream = new ByteCountingCallbackInputStreamWrapper(listener,
-					instream);
+					.instance(TransferType.PUT, urlSize, transferControlBlock, transferStatusCallbackListener);
+			instream = new ByteCountingCallbackInputStreamWrapper(listener, instream);
 		}
 
 		try {
 			log.debug("getting stream2streamAO");
-			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
-					.getStream2StreamAO(irodsAccount);
-			stream2StreamAO.transferStreamToFileUsingIOStreams(instream,
-					(File) callbackTargetIrodsFile, urlSize, 0);
+			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory.getStream2StreamAO(irodsAccount);
+			stream2StreamAO.transferStreamToFileUsingIOStreams(instream, (File) callbackTargetIrodsFile, urlSize, 0);
 
 			operativeTransferControlBlock.incrementFilesTransferredSoFar();
 
 			if (transferStatusCallbackListener != null) {
 
-				TransferStatus status = TransferStatus
-						.instance(TransferType.PUT, sourceURL,
-								callbackTargetIrodsFile.getAbsolutePath(),
-								irodsTargetFile.getResource(), urlSize,
-								urlSize, operativeTransferControlBlock
-										.getTotalFilesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesSkippedSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesToTransfer(),
-								TransferState.IN_PROGRESS_COMPLETE_FILE,
-								irodsAccount.getHost(), irodsAccount.getZone());
+				TransferStatus status = TransferStatus.instance(TransferType.PUT, sourceURL,
+						callbackTargetIrodsFile.getAbsolutePath(), irodsTargetFile.getResource(), urlSize, urlSize,
+						operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
+						operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
+						operativeTransferControlBlock.getTotalFilesToTransfer(),
+						TransferState.IN_PROGRESS_COMPLETE_FILE, irodsAccount.getHost(), irodsAccount.getZone());
 
 				transferStatusCallbackListener.statusCallback(status);
 
-				TransferStatus ostatus = TransferStatus
-						.instance(TransferType.PUT, sourceURL,
-								callbackTargetIrodsPath, "",
-								operativeTransferControlBlock
-										.getTotalBytesToTransfer(),
-								operativeTransferControlBlock
-										.getTotalBytesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesSkippedSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesToTransfer(),
-								TransferState.OVERALL_COMPLETION, irodsAccount
-										.getHost(), irodsAccount.getZone());
+				TransferStatus ostatus = TransferStatus.instance(TransferType.PUT, sourceURL, callbackTargetIrodsPath,
+						"", operativeTransferControlBlock.getTotalBytesToTransfer(),
+						operativeTransferControlBlock.getTotalBytesTransferredSoFar(),
+						operativeTransferControlBlock.getTotalFilesTransferredSoFar(),
+						operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
+						operativeTransferControlBlock.getTotalFilesToTransfer(), TransferState.OVERALL_COMPLETION,
+						irodsAccount.getHost(), irodsAccount.getZone());
 				transferStatusCallbackListener.overallStatusCallback(ostatus);
 			}
 
@@ -292,30 +255,23 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 			int totalFilesSoFar = 0;
 
 			operativeTransferControlBlock.reportErrorInTransfer();
-			totalFiles = operativeTransferControlBlock
-					.getTotalFilesToTransfer();
-			totalFilesSoFar = operativeTransferControlBlock
-					.getTotalFilesTransferredSoFar();
+			totalFiles = operativeTransferControlBlock.getTotalFilesToTransfer();
+			totalFilesSoFar = operativeTransferControlBlock.getTotalFilesTransferredSoFar();
 
 			if (transferStatusCallbackListener != null) {
 				log.error("exception will be passed back to existing callback listener");
 
-				TransferStatus status = TransferStatus.instanceForException(
-						TransferType.PUT, sourceURL, callbackTargetIrodsFile
-								.getAbsolutePath(), callbackTargetIrodsFile
-								.getResource(), urlSize, irodsTargetFile
-								.length(), totalFilesSoFar,
-						operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(), totalFiles, je,
+				TransferStatus status = TransferStatus.instanceForException(TransferType.PUT, sourceURL,
+						callbackTargetIrodsFile.getAbsolutePath(), callbackTargetIrodsFile.getResource(), urlSize,
+						irodsTargetFile.length(), totalFilesSoFar,
+						operativeTransferControlBlock.getTotalFilesSkippedSoFar(), totalFiles, je,
 						irodsAccount.getHost(), irodsAccount.getZone());
 
 				transferStatusCallbackListener.statusCallback(status);
 
 			} else {
 				log.error("exception will be re-thrown, as there is no status callback listener");
-				throw new JargonException(
-						"exception thrown in transfer process, no callback listener supplied",
-						je);
+				throw new JargonException("exception thrown in transfer process, no callback listener supplied", je);
 
 			}
 		} finally {
@@ -331,8 +287,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 			httpclient.getConnectionManager().shutdown();
 		}
 
-		log.info("contents streamed to:{}",
-				callbackTargetIrodsFile.getAbsolutePath());
+		log.info("contents streamed to:{}", callbackTargetIrodsFile.getAbsolutePath());
 		return callbackTargetIrodsFile.getAbsolutePath();
 
 	}
@@ -348,8 +303,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 	 * @param irodsAccessObjectFactory
 	 *            the irodsAccessObjectFactory to set
 	 */
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
