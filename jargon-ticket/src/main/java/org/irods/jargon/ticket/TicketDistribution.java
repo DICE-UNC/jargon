@@ -60,8 +60,7 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * Sets the URL that can be used to access the ticket via a mid-tier
-	 * service.
+	 * Sets the URL that can be used to access the ticket via a mid-tier service.
 	 * 
 	 * @param ticketURL
 	 *            the ticketURL to set
@@ -71,8 +70,7 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * Return a <ocde>URI</code> in irods:// format that desribes the target
-	 * data
+	 * Return a {@code URI} in irods:// format that describes the target data
 	 * 
 	 * @return the irodsAccessURI
 	 */
@@ -89,9 +87,9 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * @return the ticketURLWithLandingPage {@code URL} with parameters
-	 *         that denote that invoking that URL will return an intermediate
-	 *         web page appropriate to the given ticket
+	 * @return the ticketURLWithLandingPage {@code URL} with parameters that denote
+	 *         that invoking that URL will return an intermediate web page
+	 *         appropriate to the given ticket
 	 */
 	public URL getTicketURLWithLandingPage() {
 		return ticketURLWithLandingPage;
@@ -99,9 +97,9 @@ public class TicketDistribution {
 
 	/**
 	 * @param ticketURLWithLandingPage
-	 *            {@code URL} with parameters that denote that invoking
-	 *            that URL will return an intermediate web page appropriate to
-	 *            the given ticket
+	 *            {@code URL} with parameters that denote that invoking that URL
+	 *            will return an intermediate web page appropriate to the given
+	 *            ticket
 	 */
 	public void setTicketURLWithLandingPage(final URL ticketURLWithLandingPage) {
 		this.ticketURLWithLandingPage = ticketURLWithLandingPage;

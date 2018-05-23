@@ -17,12 +17,10 @@ public class TicketAdminInp extends TicketInp {
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "delete", ticketId,
-				BLANK, BLANK, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "delete", ticketId, BLANK, BLANK, BLANK, BLANK);
 	}
 
-	public static TicketAdminInp instanceForCreate(
-			final TicketCreateModeEnum mode, final String fullPath,
+	public static TicketAdminInp instanceForCreate(final TicketCreateModeEnum mode, final String fullPath,
 			final String ticketId) {
 
 		if (mode == null) {
@@ -36,8 +34,8 @@ public class TicketAdminInp extends TicketInp {
 			throw new IllegalArgumentException("null or empty full path name");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", ticketId,
-				mode.getTextValue(), fullPath, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "create", ticketId, mode.getTextValue(), fullPath, BLANK,
+				BLANK);
 	}
 
 	// TODO: create another method for create with no ticketId param? public
@@ -52,8 +50,7 @@ public class TicketAdminInp extends TicketInp {
 			id = ticketId;
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "list", id, BLANK,
-				BLANK, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "list", id, BLANK, BLANK, BLANK, BLANK);
 	}
 
 	// TODO: create another method for list with no param? public static
@@ -61,109 +58,94 @@ public class TicketAdminInp extends TicketInp {
 
 	public static TicketAdminInp instanceForListAll() {
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "list-all", BLANK,
-				BLANK, BLANK, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "list-all", BLANK, BLANK, BLANK, BLANK, BLANK);
 	}
 
-	public static TicketAdminInp instanceForModifyAddAccess(
-			final String ticketId,
-			final TicketModifyAddOrRemoveTypeEnum addTypeEnum,
-			final String modObject) {
+	public static TicketAdminInp instanceForModifyAddAccess(final String ticketId,
+			final TicketModifyAddOrRemoveTypeEnum addTypeEnum, final String modObject) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 		// check and see if add type is set
 		if (addTypeEnum == null) {
-			throw new IllegalArgumentException(
-					"null modify add permission type not set");
+			throw new IllegalArgumentException("null modify add permission type not set");
 		}
 		// check and see if action is set
 		if (modObject == null || modObject.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty modify add - user, group, or host");
+			throw new IllegalArgumentException("null or empty modify add - user, group, or host");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"add", addTypeEnum.getTextValue(), modObject, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "add", addTypeEnum.getTextValue(),
+				modObject, BLANK);
 	}
 
-	public static TicketAdminInp instanceForModifyRemoveAccess(
-			final String ticketId,
-			final TicketModifyAddOrRemoveTypeEnum addTypeEnum,
-			final String modObject) {
+	public static TicketAdminInp instanceForModifyRemoveAccess(final String ticketId,
+			final TicketModifyAddOrRemoveTypeEnum addTypeEnum, final String modObject) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 		// check and see if add type is set
 		if (addTypeEnum == null) {
-			throw new IllegalArgumentException(
-					"null modify remove permission type not set");
+			throw new IllegalArgumentException("null modify remove permission type not set");
 		}
 		// check and see if action is set
 		if (modObject == null || modObject.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty modify remove - user, group, or host");
+			throw new IllegalArgumentException("null or empty modify remove - user, group, or host");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"remove", addTypeEnum.getTextValue(), modObject, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "remove", addTypeEnum.getTextValue(),
+				modObject, BLANK);
 	}
 
-	public static TicketAdminInp instanceForModifyNumberOfUses(
-			final String ticketId, final Integer numberOfUses) {
+	public static TicketAdminInp instanceForModifyNumberOfUses(final String ticketId, final Integer numberOfUses) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 
 		if (numberOfUses < 0) {
-			throw new IllegalArgumentException(
-					"illegal integer for uses - must be 0 or greater");
+			throw new IllegalArgumentException("illegal integer for uses - must be 0 or greater");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"uses", numberOfUses.toString(), BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "uses", numberOfUses.toString(), BLANK,
+				BLANK);
 
 	}
 
-	public static TicketAdminInp instanceForModifyFileWriteNumber(
-			final String ticketId, final Integer numberOfFileWrites) {
+	public static TicketAdminInp instanceForModifyFileWriteNumber(final String ticketId,
+			final Integer numberOfFileWrites) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 
 		if (numberOfFileWrites < 0) {
-			throw new IllegalArgumentException(
-					"illegal integer for write-file - must be 0 or greater");
+			throw new IllegalArgumentException("illegal integer for write-file - must be 0 or greater");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"write-file", numberOfFileWrites.toString(), BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "write-file",
+				numberOfFileWrites.toString(), BLANK, BLANK);
 
 	}
 
-	public static TicketAdminInp instanceForModifyByteWriteNumber(
-			final String ticketId, final long byteWriteLimit) {
+	public static TicketAdminInp instanceForModifyByteWriteNumber(final String ticketId, final long byteWriteLimit) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
 		}
 
 		if (byteWriteLimit < 0) {
-			throw new IllegalArgumentException(
-					"illegal integer for write-byte - must be 0 or greater");
+			throw new IllegalArgumentException("illegal integer for write-byte - must be 0 or greater");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"write-byte", String.valueOf(byteWriteLimit), BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "write-byte",
+				String.valueOf(byteWriteLimit), BLANK, BLANK);
 
 	}
 
-	public static TicketAdminInp instanceForModifyExpiration(
-			final String ticketId, final String expirationDate) {
+	public static TicketAdminInp instanceForModifyExpiration(final String ticketId, final String expirationDate) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
@@ -178,23 +160,21 @@ public class TicketAdminInp extends TicketInp {
 			throw new IllegalArgumentException("illegal expiration date");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"expire", expirationDate, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "expire", expirationDate, BLANK, BLANK);
 
 	}
 
 	/**
-	 * Create a packing instruction to modify the expiration date. Setting the
-	 * date to {@code null} removes the expiration
+	 * Create a packing instruction to modify the expiration date. Setting the date
+	 * to {@code null} removes the expiration
 	 * 
 	 * @param ticketId
 	 *            {@code String} with the unique ticket string
 	 * @param expirationDate
 	 *            {@code Date} or {@code null} to remove
-	 * @return
+	 * @return {@link TicketAdminInp}
 	 */
-	public static TicketAdminInp instanceForModifyExpiration(
-			final String ticketId, final Date expirationDate) {
+	public static TicketAdminInp instanceForModifyExpiration(final String ticketId, final Date expirationDate) {
 
 		if (ticketId == null || ticketId.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ticket id");
@@ -207,13 +187,12 @@ public class TicketAdminInp extends TicketInp {
 			formattedDate = df.format(expirationDate);
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId,
-				"expire", formattedDate, BLANK, BLANK);
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "expire", formattedDate, BLANK, BLANK);
 	}
 
 	/**
-	 * Private constructor for TicketAdminInp, use the instance() methods to
-	 * create per command
+	 * Private constructor for TicketAdminInp, use the instance() methods to create
+	 * per command
 	 * 
 	 * 
 	 * @param arg1
@@ -223,8 +202,7 @@ public class TicketAdminInp extends TicketInp {
 	 * @param arg5
 	 * @param arg6
 	 */
-	private TicketAdminInp(final int apiNbr, final String arg1,
-			final String arg2, final String arg3, final String arg4,
+	private TicketAdminInp(final int apiNbr, final String arg1, final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6) {
 
 		super(apiNbr, arg1, arg2, arg3, arg4, arg5, arg6);

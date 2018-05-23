@@ -20,17 +20,17 @@ import org.irods.jargon.core.exception.JargonException;
 public interface TicketDistributionService {
 
 	/**
-	 * Get information about ticket distribution channels for a given valid
-	 * iRODS ticket
+	 * Get information about ticket distribution channels for a given valid iRODS
+	 * ticket
 	 * 
 	 * @param ticket
 	 *            {@link Ticket} for which distribution information will be
 	 *            generated
-	 * @return {@link TicketDistribution} with extended information on accessing
-	 *         the given ticket
+	 * @return {@link TicketDistribution} with extended information on accessing the
+	 *         given ticket
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	TicketDistribution getTicketDistributionForTicket(final Ticket ticket)
-			throws JargonException;
+	TicketDistribution getTicketDistributionForTicket(final Ticket ticket) throws JargonException;
 
 }
