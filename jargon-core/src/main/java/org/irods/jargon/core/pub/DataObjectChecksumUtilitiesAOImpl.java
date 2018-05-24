@@ -86,10 +86,11 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("irodsFile is null");
 		}
-
+		// FIXME: here! should take props into account?
 		log.info("computing checksum on irodsFile: {}", irodsFile.getAbsolutePath());
 
 		DataObjInp dataObjInp = DataObjInp.instanceForDataObjectChecksum(irodsFile.getAbsolutePath());
+		dataObjInp.setTransferOptions(this.getIRODSAccessObjectFactory().buildTransferOptionsBasedOnJargonProperties());
 		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		if (response == null) {

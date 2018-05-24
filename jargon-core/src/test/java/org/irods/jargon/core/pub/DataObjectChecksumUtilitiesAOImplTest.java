@@ -6,8 +6,8 @@ import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
-import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -63,10 +63,13 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
-		dto.putOperation(fileNameOrig, targetIrodsCollection,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		TransferControlBlock tcb = accessObjectFactory.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setComputeAndVerifyChecksumAfterTransfer(true);
+
+		dto.putOperation(fileNameOrig, targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, tcb);
+
 		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
@@ -152,7 +155,6 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		SettableJargonProperties jargonProps = new SettableJargonProperties();
-		jargonProps.setChecksumEncoding(ChecksumEncodingEnum.MD5);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
 		irodsFileSystem.getIrodsSession().getDiscoveredServerPropertiesCache().deleteCachedIRODSServerProperties(
 				irodsAccount.getHost(), irodsAccount.getZone(), DiscoveredServerPropertiesCache.CHECKSUM_TYPE);
@@ -169,7 +171,6 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 				.getDataObjectChecksumUtilitiesAO(irodsAccount);
 		ChecksumValue actual = dataObjectChecksumUtilitiesAO.computeChecksumOnDataObject(testFile);
 		Assert.assertNotNull("did not get checksum", actual);
-		Assert.assertEquals("did not set md5 checksum", ChecksumEncodingEnum.MD5, actual.getChecksumEncoding());
 
 	}
 
