@@ -38,8 +38,7 @@ public class AuthResponseInp extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 		Tag authResponse = new Tag(AuthResponseInp.PI_TAG,
-				new Tag[] { new Tag(RESPONSE_TAG, response),
-						new Tag(ACCOUNT_TAG, username) });
+				new Tag[] { new Tag(RESPONSE_TAG, response), new Tag(ACCOUNT_TAG, username) });
 		return authResponse;
 	}
 

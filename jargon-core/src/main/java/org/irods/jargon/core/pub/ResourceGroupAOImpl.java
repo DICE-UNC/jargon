@@ -45,7 +45,7 @@ public class ResourceGroupAOImpl extends IRODSGenericAO implements ResourceGroup
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceGroupAO#listResourceGroupNames()
 	 */
 	@Override

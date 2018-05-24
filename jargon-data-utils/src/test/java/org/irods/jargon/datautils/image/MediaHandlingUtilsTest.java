@@ -1,13 +1,13 @@
 package org.irods.jargon.datautils.image;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class MediaHandlingUtilsTest {
 

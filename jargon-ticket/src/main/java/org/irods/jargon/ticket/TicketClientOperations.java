@@ -18,7 +18,7 @@ public interface TicketClientOperations {
 	 * <p>
 	 * Put a file or collection to iRODS. Note that 'force' is not supported with
 	 * tickets at this time, so overwrites will return an {@code OverwriteException}
-	 * 
+	 *
 	 * @param ticketString
 	 *            {@code String} with the unique ticket string
 	 * @param sourceFile
@@ -59,7 +59,7 @@ public interface TicketClientOperations {
 	 * will detect whether this is a get of a single file, or of a collection. If
 	 * this is a get of a collection, the method will recursively obtain the data
 	 * from iRODS.
-	 * 
+	 *
 	 * @param ticketString
 	 *            {@code String} with the unique ticket string
 	 * @param irodsSourceFile
@@ -108,7 +108,7 @@ public interface TicketClientOperations {
 	 * and a collection, cannot be done in the typical way. As a work-around, this
 	 * object holds the lenght of the cached file so that it may be sent in browser
 	 * responses.
-	 * 
+	 *
 	 * @param ticketString
 	 *            {@code String} with the unique string that represents the ticket
 	 * @param irodsSourceFile
@@ -143,7 +143,7 @@ public interface TicketClientOperations {
 	 * is being uploaded from a browser. Since the iRODS ticket system does not
 	 * support input or output streams, the upload needs to be wrapped to emulate a
 	 * direct streaming via a ticket.
-	 * 
+	 *
 	 * @param ticketString
 	 *            {@code String} with the unique ticket id, which must have write
 	 *            privilages

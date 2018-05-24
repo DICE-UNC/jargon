@@ -37,7 +37,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends AbstractI
 
 	/**
 	 * Create an instance to send to iRODS for failure of SSL negotiation
-	 * 
+	 *
 	 * @return {@link ClientServerNegotiationStructNotifyServerOfResult}
 	 */
 	public static ClientServerNegotiationStructNotifyServerOfResult instanceForFailure() {
@@ -86,7 +86,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends AbstractI
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

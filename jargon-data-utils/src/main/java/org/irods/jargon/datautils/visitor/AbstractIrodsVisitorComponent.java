@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.visitor;
 
@@ -10,7 +10,7 @@ import org.irods.jargon.core.service.AbstractJargonService;
 /**
  * Abstract implementation of a Hierarchical Visitor. Basis for concrete visitor
  * implementations.
- * 
+ *
  * @author conwaymc
  *
  */
@@ -22,7 +22,8 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */
-	public AbstractIrodsVisitorComponent(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public AbstractIrodsVisitorComponent(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
@@ -31,7 +32,7 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.visitor.HierVisitor#visitEnter(org.irods.jargon.
 	 * datautils.visitor.HierComposite)
@@ -44,7 +45,7 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.visitor.HierVisitor#visit(org.irods.jargon.
 	 * datautils.visitor.HierLeaf)
 	 */

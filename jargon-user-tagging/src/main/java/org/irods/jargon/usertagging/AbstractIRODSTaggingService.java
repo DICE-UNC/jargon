@@ -16,7 +16,7 @@ public abstract class AbstractIRODSTaggingService {
 	/**
 	 * Private constructor that initializes the service with access to objects that
 	 * interact with iRODS.
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
 	 *            Access Objects.
@@ -50,7 +50,7 @@ public abstract class AbstractIRODSTaggingService {
 
 	/**
 	 * Get the obj stat for a given path
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String}
 	 * @return {@link ObjStat}

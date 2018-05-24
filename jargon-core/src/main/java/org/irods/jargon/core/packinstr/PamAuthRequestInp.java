@@ -32,8 +32,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 	 *            {@code int} with the pam time to live in seconds
 	 * @return {@code PamAuthRequestInp}
 	 */
-	public static PamAuthRequestInp instance(final String userName,
-			final String password, final int pamTimeToLive) {
+	public static PamAuthRequestInp instance(final String userName, final String password, final int pamTimeToLive) {
 		return new PamAuthRequestInp(userName, password, pamTimeToLive);
 	}
 
@@ -47,8 +46,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 	 * @param pamTimeToLive
 	 *            {@code int} with the pam time to live in seconds
 	 */
-	private PamAuthRequestInp(final String userName, final String password,
-			final int pamTimeToLive) {
+	private PamAuthRequestInp(final String userName, final String password, final int pamTimeToLive) {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userId");

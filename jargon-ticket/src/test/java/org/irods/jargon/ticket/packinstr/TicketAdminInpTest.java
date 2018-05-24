@@ -4,12 +4,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class TicketAdminInpTest {
 
@@ -64,8 +64,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	// end ticket DELETE tests
@@ -73,8 +72,7 @@ public class TicketAdminInpTest {
 	// ticket CREATE tests
 	@Test
 	public void testCreateTicketWithKey() throws Exception {
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, afile, ticketId);
+		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, afile, ticketId);
 
 		Assert.assertNotNull(pi);
 	}
@@ -82,8 +80,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testCreateTicketWithKeyCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, afile, ticketId);
+		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, afile, ticketId);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -95,28 +92,24 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketWithNullKey() throws Exception {
 
-		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, afile, null);
+		TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, afile, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketWithEmptyKey() throws Exception {
 
-		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, afile, "");
+		TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, afile, "");
 	}
 
 	@Test
 	public void testCreateTicketReadMode() throws Exception {
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, afile, ticketId);
+		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, afile, ticketId);
 
 		Assert.assertNotNull(pi);
 	}
@@ -124,8 +117,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testCreatelTicketReadModeCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, afile, ticketId);
+		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, afile, ticketId);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -137,14 +129,12 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test
 	public void testCreateTicketWriteMode() throws Exception {
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.WRITE, afile, ticketId);
+		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.WRITE, afile, ticketId);
 
 		Assert.assertNotNull(pi);
 	}
@@ -152,8 +142,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testCreatelTicketWriteModeCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.WRITE, afile, ticketId);
+		TicketAdminInp pi = TicketAdminInp.instanceForCreate(TicketCreateModeEnum.WRITE, afile, ticketId);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -165,8 +154,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -178,15 +166,13 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketNullObjPath() throws Exception {
 
-		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, null, ticketId);
+		TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, null, ticketId);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCreateTicketEmptyObjPath() throws Exception {
 
-		TicketAdminInp.instanceForCreate(
-				TicketCreateModeEnum.READ, "", ticketId);
+		TicketAdminInp.instanceForCreate(TicketCreateModeEnum.READ, "", ticketId);
 	}
 
 	// end ticket CREATE tests
@@ -215,8 +201,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test
@@ -242,8 +227,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test
@@ -269,8 +253,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test
@@ -296,8 +279,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	// end ticket LIST and LIST-ALL tests
@@ -329,8 +311,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -354,8 +335,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketAddUserNullAddType() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyAddAccess(ticketId,
-				null, userName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyAddAccess(ticketId, null, userName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -404,8 +384,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -429,8 +408,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketAddGroupNullAddType() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyAddAccess(ticketId,
-				null, groupName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyAddAccess(ticketId, null, groupName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -479,8 +457,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -504,8 +481,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketAddHostNullAddType() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyAddAccess(ticketId,
-				null, hostName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyAddAccess(ticketId, null, hostName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -532,9 +508,8 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketRemoveUser() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
-				userName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -542,9 +517,8 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketRemoveUserCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
-				userName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userName);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -556,8 +530,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -581,8 +554,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveUserNullAddType() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, null, userName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId, null, userName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -590,9 +562,8 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveUserNullUser() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
-				null);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, null);
 
 		Assert.assertNotNull(pi);
 	}
@@ -600,9 +571,8 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveUserEmptyUser() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER,
-				"");
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, "");
 
 		Assert.assertNotNull(pi);
 	}
@@ -611,9 +581,8 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketRemoveGroup() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
-				groupName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -621,9 +590,8 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketRemoveGroupCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
-				groupName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupName);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -635,8 +603,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -660,8 +627,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveGroupNullAddType() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, null, groupName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId, null, groupName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -669,9 +635,8 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveGroupNullGroup() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
-				null);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, null);
 
 		Assert.assertNotNull(pi);
 	}
@@ -679,9 +644,8 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveGroupEmptyGroup() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP,
-				"");
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, "");
 
 		Assert.assertNotNull(pi);
 	}
@@ -690,9 +654,8 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketRemoveHost() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
-				hostName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, hostName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -700,9 +663,8 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketRemoveHostCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
-				hostName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, hostName);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -714,8 +676,7 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -739,8 +700,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveHostNullAddType() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, null, hostName);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId, null, hostName);
 
 		Assert.assertNotNull(pi);
 	}
@@ -748,9 +708,8 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveHostNullHost() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
-				null);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, null);
 
 		Assert.assertNotNull(pi);
 	}
@@ -758,9 +717,8 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketRemoveHostEmptyHost() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(
-				ticketId, TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST,
-				"");
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, "");
 
 		Assert.assertNotNull(pi);
 	}
@@ -769,8 +727,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketUses() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(
-				ticketId, new Integer(2));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(ticketId, new Integer(2));
 
 		Assert.assertNotNull(pi);
 	}
@@ -778,8 +735,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketUsestCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(
-				ticketId, 2);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(ticketId, 2);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -791,15 +747,13 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketUsesNullTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(null,
-				new Integer(2));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(null, new Integer(2));
 
 		Assert.assertNotNull(pi);
 	}
@@ -807,8 +761,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketUsesEmptyTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses("",
-				new Integer(2));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses("", new Integer(2));
 
 		Assert.assertNotNull(pi);
 	}
@@ -816,8 +769,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketUsesZero() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(
-				ticketId, 0);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses(ticketId, 0);
 
 		Assert.assertNotNull(pi);
 	}
@@ -825,8 +777,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketUsesLessThanZero() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses("",
-				new Integer(-1));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyNumberOfUses("", new Integer(-1));
 
 		Assert.assertNotNull(pi);
 	}
@@ -835,8 +786,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketWriteFile() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(
-				ticketId, new Integer(555555555));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(ticketId, new Integer(555555555));
 
 		Assert.assertNotNull(pi);
 	}
@@ -844,8 +794,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketWriteFileCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(
-				ticketId, 20000);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(ticketId, 20000);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -857,15 +806,13 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketWriteFileNullTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(
-				null, new Integer(20000));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(null, new Integer(20000));
 
 		Assert.assertNotNull(pi);
 	}
@@ -873,8 +820,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketWriteFileEmptyTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber("",
-				new Integer(20000));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber("", new Integer(20000));
 
 		Assert.assertNotNull(pi);
 	}
@@ -882,8 +828,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketWriteFileZero() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(
-				ticketId, 0);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber(ticketId, 0);
 
 		Assert.assertNotNull(pi);
 	}
@@ -891,8 +836,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketWriteFileLessThanZero() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber("",
-				new Integer(-100));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyFileWriteNumber("", new Integer(-100));
 
 		Assert.assertNotNull(pi);
 	}
@@ -901,8 +845,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketWriteBytes() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(
-				ticketId, new Integer(555555555));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(ticketId, new Integer(555555555));
 
 		Assert.assertNotNull(pi);
 	}
@@ -910,8 +853,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketWriteBytesCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(
-				ticketId, 500000);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(ticketId, 500000);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -923,15 +865,13 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketWriteBytesNullTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(
-				null, new Integer(500000));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(null, new Integer(500000));
 
 		Assert.assertNotNull(pi);
 	}
@@ -939,8 +879,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketWriteBytesEmptyTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber("",
-				new Integer(500000));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber("", new Integer(500000));
 
 		Assert.assertNotNull(pi);
 	}
@@ -948,8 +887,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketWriteBytesZero() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(
-				ticketId, 0);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber(ticketId, 0);
 
 		Assert.assertNotNull(pi);
 	}
@@ -957,8 +895,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketWriteBytesLessThanZero() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber("",
-				new Integer(-100));
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyByteWriteNumber("", new Integer(-100));
 
 		Assert.assertNotNull(pi);
 	}
@@ -967,8 +904,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketExpire() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, validDate);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, validDate);
 
 		Assert.assertNotNull(pi);
 	}
@@ -976,8 +912,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketExpireCheckXML() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, validDate);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, validDate);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -989,15 +924,13 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketExpireNullTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(null,
-				validDate);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(null, validDate);
 
 		Assert.assertNotNull(pi);
 	}
@@ -1005,8 +938,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketExpireEmptyTicketId() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration("",
-				validDate);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration("", validDate);
 
 		Assert.assertNotNull(pi);
 	}
@@ -1014,8 +946,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketExpireInvalidDate() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, "2012-01-01");
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, "2012-01-01");
 
 		Assert.assertNotNull(pi);
 	}
@@ -1023,8 +954,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketExpireNullDate() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, (String) null);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, (String) null);
 
 		Assert.assertNotNull(pi);
 	}
@@ -1032,8 +962,7 @@ public class TicketAdminInpTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketExpireEmptyDate() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, "");
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, "");
 
 		Assert.assertNotNull(pi);
 	}
@@ -1042,8 +971,7 @@ public class TicketAdminInpTest {
 	public void testModifyTicketExpireWithDate() throws Exception {
 
 		Date now = new Date();
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, now);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, now);
 
 		Assert.assertNotNull(pi);
 	}
@@ -1056,8 +984,7 @@ public class TicketAdminInpTest {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss");
 		String formattedDate = df.format(now);
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, now);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, now);
 		String tagOut = pi.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -1071,16 +998,14 @@ public class TicketAdminInpTest {
 		sb.append("<arg6></arg6>\n");
 		sb.append("</ticketAdminInp_PI>\n");
 
-		Assert.assertEquals("unexpected XML protocol result", sb.toString(),
-				tagOut);
+		Assert.assertEquals("unexpected XML protocol result", sb.toString(), tagOut);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testModifyTicketExpireWithDateNullTicketId() throws Exception {
 
 		Date now = new Date();
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(null,
-				now);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(null, now);
 
 		Assert.assertNotNull(pi);
 	}
@@ -1097,8 +1022,7 @@ public class TicketAdminInpTest {
 	@Test
 	public void testModifyTicketExpireWitDateNullDate() throws Exception {
 
-		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(
-				ticketId, (Date) null);
+		TicketAdminInp pi = TicketAdminInp.instanceForModifyExpiration(ticketId, (Date) null);
 
 		Assert.assertNotNull(pi);
 	}

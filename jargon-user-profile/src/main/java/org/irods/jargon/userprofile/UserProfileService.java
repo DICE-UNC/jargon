@@ -6,9 +6,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Interface for a service to query and maintain user profile information.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface UserProfileService {
 
@@ -16,10 +16,10 @@ public interface UserProfileService {
 
 	/**
 	 * Add a profile for the given user.
-	 * 
+	 *
 	 * @param irodsUserName
-	 *            {@code String} with the name of the iRODS user in the
-	 *            given zone for which a profile will be added
+	 *            {@code String} with the name of the iRODS user in the given zone
+	 *            for which a profile will be added
 	 * @param userProfile
 	 *            {@link UserProfile} that will be added
 	 * @throws UserProfileValidationException
@@ -29,66 +29,61 @@ public interface UserProfileService {
 	 * @throws JargonException
 	 *             general exception
 	 */
-	void addProfileForUser(final String irodsUserName,
-			final UserProfile userProfile)
-			throws UserProfileValidationException, DuplicateDataException,
-			JargonException;
+	void addProfileForUser(final String irodsUserName, final UserProfile userProfile)
+			throws UserProfileValidationException, DuplicateDataException, JargonException;
 
 	/**
 	 * Get the configuration for the user profile service
-	 * 
+	 *
 	 * @return {@link UserProfileServiceConfiguration}
 	 */
 	UserProfileServiceConfiguration getUserProfileServiceConfiguration();
 
 	/**
 	 * Set the configuration for the user profile service
-	 * 
+	 *
 	 * @param userProfileServiceConfiguration
 	 *            {@link UserProfileServiceConfiguration}
 	 */
-	void setUserProfileServiceConfiguration(
-			UserProfileServiceConfiguration userProfileServiceConfiguration);
+	void setUserProfileServiceConfiguration(UserProfileServiceConfiguration userProfileServiceConfiguration);
 
 	/**
 	 * Remove the public and protected user profile information
-	 * 
+	 *
 	 * @param irodsUserName
-	 *            {@code String} with the name of the iRODS user in the
-	 *            given zone for which a profile will be removed
+	 *            {@code String} with the name of the iRODS user in the given zone
+	 *            for which a profile will be removed
 	 * @throws JargonException
 	 */
 	void removeProfileInformation(String irodsUserName) throws JargonException;
 
 	/**
 	 * Given an iRODS user name, retrive the user profile if it exists
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name
-	 * @return {@link UserProfile} with available information (may depend on
-	 *         ACL's)
+	 * @return {@link UserProfile} with available information (may depend on ACL's)
 	 * @throws DataNotFoundException
 	 *             if the user profile information does not exist
 	 * @throws JargonException
 	 */
-	UserProfile retrieveUserProfile(String userName)
-			throws DataNotFoundException, JargonException;
+	UserProfile retrieveUserProfile(String userName) throws DataNotFoundException, JargonException;
 
 	/**
-	 * Return the calculated path to the user profile directory based on the
-	 * user name and the {@link UserProfileServiceConfiguration} information.
-	 * 
+	 * Return the calculated path to the user profile directory based on the user
+	 * name and the {@link UserProfileServiceConfiguration} information.
+	 *
 	 * @param userName
-	 *            {@code String} with the iRODS user name for which the
-	 *            profile information is kept
-	 * @return {@code String} with the absolute path to the iRODS
-	 *         collection where user profile information is kept.
+	 *            {@code String} with the iRODS user name for which the profile
+	 *            information is kept
+	 * @return {@code String} with the absolute path to the iRODS collection where
+	 *         user profile information is kept.
 	 */
 	String getUserProfileDir(String userName);
 
 	/**
 	 * Update the user profile information for the given user
-	 * 
+	 *
 	 * @param userProfile
 	 *            {@link UserProfile} containing the desired state of the user's
 	 *            information
@@ -97,13 +92,12 @@ public interface UserProfileService {
 	void updateUserProfile(UserProfile userProfile) throws JargonException;
 
 	/**
-	 * Check and see if a group has been configured with read/write access to
-	 * the protected profile. If a group is not configured, then things still
-	 * operate, but that permission is not set and will have to be set by the
-	 * administrator
-	 * 
-	 * @return {@code boolean} of {@code true} if you want to set
-	 *         permissions for a protected profile group
+	 * Check and see if a group has been configured with read/write access to the
+	 * protected profile. If a group is not configured, then things still operate,
+	 * but that permission is not set and will have to be set by the administrator
+	 *
+	 * @return {@code boolean} of {@code true} if you want to set permissions for a
+	 *         protected profile group
 	 * @throws JargonException
 	 */
 	boolean isProtectedReadGroupConfigured() throws JargonException;

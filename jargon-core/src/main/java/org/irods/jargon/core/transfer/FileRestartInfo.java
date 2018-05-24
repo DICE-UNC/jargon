@@ -27,8 +27,8 @@ public class FileRestartInfo {
 
 	/**
 	 * String representation of {@code IRODAccount}, which is equivalent to
-	 * {@code IRODSAccount.toString()}. This URI format is easy to
-	 * serialize and avoids saving any actual iRODS credentials inadvertantly.
+	 * {@code IRODSAccount.toString()}. This URI format is easy to serialize and
+	 * avoids saving any actual iRODS credentials inadvertantly.
 	 */
 	private String irodsAccountIdentifier = "";
 	private String localAbsolutePath = "";
@@ -69,8 +69,7 @@ public class FileRestartInfo {
 		return fileRestartDataSegments;
 	}
 
-	public void setFileRestartDataSegments(
-			final List<FileRestartDataSegment> fileRestartDataSegments) {
+	public void setFileRestartDataSegments(final List<FileRestartDataSegment> fileRestartDataSegments) {
 		this.fileRestartDataSegments = fileRestartDataSegments;
 	}
 
@@ -130,8 +129,7 @@ public class FileRestartInfo {
 		builder.append(", ");
 		if (fileRestartDataSegments != null) {
 			builder.append("fileRestartDataSegments=");
-			builder.append(fileRestartDataSegments.subList(0,
-					Math.min(fileRestartDataSegments.size(), maxLen)));
+			builder.append(fileRestartDataSegments.subList(0, Math.min(fileRestartDataSegments.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();
@@ -172,8 +170,7 @@ public class FileRestartInfo {
 	 * Get an estimate of the length returned so far, helpful for progress
 	 * indicators
 	 *
-	 * @return {@code long} with an estimate of the total transferred so
-	 *         far.
+	 * @return {@code long} with an estimate of the total transferred so far.
 	 */
 	public long estimateLengthSoFar() {
 		long total = 0;

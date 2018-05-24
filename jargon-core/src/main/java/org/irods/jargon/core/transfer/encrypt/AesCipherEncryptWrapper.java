@@ -40,8 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AesCipherEncryptWrapper.class);
+	public static final Logger log = LoggerFactory.getLogger(AesCipherEncryptWrapper.class);
 	public static byte[] ivPad = new byte[16];
 
 	/**
@@ -57,10 +56,9 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 	 *            {@link Mode} that indicates encrypt/decrypt
 	 * @throws ClientServerNegotiationException
 	 */
-	AesCipherEncryptWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	AesCipherEncryptWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws ClientServerNegotiationException {
+			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -75,25 +73,20 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 		PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
 		try {
 			log.info("initCipher()");
-			setCipher(Cipher.getInstance(pipelineConfiguration
-					.getEncryptionAlgorithmEnum().getCypherKey()));
+			setCipher(Cipher.getInstance(pipelineConfiguration.getEncryptionAlgorithmEnum().getCypherKey()));
 
-			SecretKey secretKey = getNegotiatedClientServerConfiguration()
-					.getSecretKey();
+			SecretKey secretKey = getNegotiatedClientServerConfiguration().getSecretKey();
 			getCipher().init(Cipher.ENCRYPT_MODE, secretKey);
 
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException
-				| InvalidKeyException e) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
 			log.error("error generating key for cipher", e);
-			throw new JargonRuntimeException("cannot generate key for cipher",
-					e);
+			throw new JargonRuntimeException("cannot generate key for cipher", e);
 		}
 
 	}
 
 	@Override
-	protected EncryptionBuffer doEncrypt(final byte[] input)
-			throws EncryptionException {
+	protected EncryptionBuffer doEncrypt(final byte[] input) throws EncryptionException {
 
 		log.info("encrypt");
 		if (input == null) {
@@ -103,8 +96,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 		try {
 
 			AlgorithmParameters params = getCipher().getParameters();
-			byte[] mInitVec = params.getParameterSpec(IvParameterSpec.class)
-					.getIV();
+			byte[] mInitVec = params.getParameterSpec(IvParameterSpec.class).getIV();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			bos.write(mInitVec);
 			// TODO: add version checking
@@ -120,8 +112,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			log.debug("encrypted length:{}", encrypted.length);
 			return new EncryptionBuffer(bos.toByteArray(), encrypted);
 
-		} catch (IllegalBlockSizeException | BadPaddingException
-				| InvalidParameterSpecException | IOException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException | InvalidParameterSpecException | IOException e) {
 			log.error("encryption exception", e);
 			throw new EncryptionException("encryption exception", e);
 		}

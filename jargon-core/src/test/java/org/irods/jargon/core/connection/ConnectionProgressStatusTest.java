@@ -1,10 +1,10 @@
 package org.irods.jargon.core.connection;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class ConnectionProgressStatusTest {
 
@@ -18,8 +18,7 @@ public class ConnectionProgressStatusTest {
 
 	@Test
 	public void testInstanceForSend() {
-		ConnectionProgressStatus status = ConnectionProgressStatus
-				.instanceForSend(10);
+		ConnectionProgressStatus status = ConnectionProgressStatus.instanceForSend(10);
 		Assert.assertEquals("byte count not sent", 10, status.getByteCount());
 	}
 

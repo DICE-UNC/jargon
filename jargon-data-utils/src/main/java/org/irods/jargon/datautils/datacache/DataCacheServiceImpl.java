@@ -22,36 +22,32 @@ import org.slf4j.LoggerFactory;
  * Service to provide a secure data cache. This allows information to be
  * serialized by a key and stored as an iRODS file in an encrypted format, and
  * later retrieved.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
-		implements DataCacheService {
+public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implements DataCacheService {
 
 	String xform = "DES/ECB/PKCS5Padding";
 
 	/**
-	 * Configuration controls behavior of the cache. This can be set, or can
-	 * just use the defaults, which cache in the users home dir and do cleanups
-	 * as part of request processing.
+	 * Configuration controls behavior of the cache. This can be set, or can just
+	 * use the defaults, which cache in the users home dir and do cleanups as part
+	 * of request processing.
 	 */
 	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 
-	public static final Logger log = LoggerFactory
-			.getLogger(DataCacheServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(DataCacheServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} that can create necessary
-	 *            objects
+	 *            {@link IRODSAccessObjectFactory} that can create necessary objects
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that contains the login information
 	 */
-	public DataCacheServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public DataCacheServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -65,13 +61,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * putStringValueIntoCache(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String putStringValueIntoCache(final String stringToCache,
-			final String key) throws JargonException {
+	public String putStringValueIntoCache(final String stringToCache, final String key) throws JargonException {
 
 		if (stringToCache == null) {
 			throw new IllegalArgumentException("null stringToCache");
@@ -100,16 +95,13 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("bytes now encrypted for length:{}", encrypted.length);
 		// store in file
 
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
-				irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
 		log.info("storing to file at absolute path: {}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						irodsFileAbsolutePath);
+		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsFileAbsolutePath);
 
 		createCacheFileAndCacheDir(cacheFile);
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(irodsAccount);
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
 
 		log.info("done...");
@@ -121,8 +113,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	 * @param cacheFile
 	 * @throws JargonException
 	 */
-	private void createCacheFileAndCacheDir(final IRODSFile cacheFile)
-			throws JargonException {
+	private void createCacheFileAndCacheDir(final IRODSFile cacheFile) throws JargonException {
 		try {
 			cacheFile.getParentFile().mkdirs();
 			cacheFile.createNewFile();
@@ -133,13 +124,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.DataCacheService#
 	 * retrieveStringValueFromCache(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String retrieveStringValueFromCache(final String userName,
-			final String key) throws JargonException {
+	public String retrieveStringValueFromCache(final String userName, final String key) throws JargonException {
 
 		if (key == null || key.isEmpty()) {
 			throw new IllegalArgumentException("null key");
@@ -156,14 +146,11 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		// build hash of key and look for file
 		int keyHash = key.hashCode();
 		log.info("generated hash for key:{}", keyHash);
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
-				irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
 		log.info("looking for cache file at path:{}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						irodsFileAbsolutePath);
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(irodsAccount);
+		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsFileAbsolutePath);
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		byte[] fileBytes = stream2StreamAO.streamFileToByte(cacheFile);
 		log.info("decrypting data based on provided key....");
 		CacheEncryptor cacheEncryptor = new CacheEncryptor(key);
@@ -180,13 +167,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * putSerializedEncryptedObjectIntoCache(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public String putSerializedEncryptedObjectIntoCache(
-			final Object informationObject, final String key)
+	public String putSerializedEncryptedObjectIntoCache(final Object informationObject, final String key)
 			throws JargonException {
 
 		if (informationObject == null) {
@@ -214,8 +200,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		// serialize and encrypt object
 		log.info("serializing object to byte buffer...");
-		byte[] serializedObject = serializeObjectToByteStream(
-				informationObject, key);
+		byte[] serializedObject = serializeObjectToByteStream(informationObject, key);
 		log.info("object serialized into:{} bytes", serializedObject.length);
 
 		log.info("encrypting...");
@@ -225,16 +210,13 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("bytes now encrypted for length:{}", encrypted.length);
 		// store in file
 
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
-				irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
 		log.info("storing to file at absolute path: {}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						irodsFileAbsolutePath);
+		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsFileAbsolutePath);
 		createCacheFileAndCacheDir(cacheFile);
 
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(irodsAccount);
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
 
 		log.info("done...");
@@ -244,13 +226,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * retrieveObjectFromCache(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Object retrieveObjectFromCache(final String userName,
-			final String key) throws JargonException {
+	public Object retrieveObjectFromCache(final String userName, final String key) throws JargonException {
 
 		if (key == null || key.isEmpty()) {
 			throw new IllegalArgumentException("null key");
@@ -272,14 +253,11 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		// build hash of key and look for file
 		int keyHash = key.hashCode();
 		log.info("generated hash for key:{}", keyHash);
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
-				irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
 		log.info("looking for cache file at path:{}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						irodsFileAbsolutePath);
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(irodsAccount);
+		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsFileAbsolutePath);
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		byte[] fileBytes = stream2StreamAO.streamFileToByte(cacheFile);
 		log.info("decrypting data based on provided key....");
 		CacheEncryptor cacheEncryptor = new CacheEncryptor(key);
@@ -292,15 +270,14 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	}
 
 	/**
-	 * Based on the configuration, come up with an absolute path to the file
-	 * name for the cache file
-	 * 
+	 * Based on the configuration, come up with an absolute path to the file name
+	 * for the cache file
+	 *
 	 * @param keyHash
 	 * @param userName
 	 * @return
 	 */
-	private String buildIRODSFileAbsolutePath(final int keyHash,
-			final String userName) {
+	private String buildIRODSFileAbsolutePath(final int keyHash, final String userName) {
 		StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(userName);
 
 		sb.append("/");
@@ -314,17 +291,16 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	}
 
 	/**
-	 * Given a user and zone, come up with the absolute path to the cach dir
-	 * parent directory based on the standard /zone/home/user/cacheDir as
-	 * configured in teh CacheDirConfig
-	 * 
+	 * Given a user and zone, come up with the absolute path to the cach dir parent
+	 * directory based on the standard /zone/home/user/cacheDir as configured in teh
+	 * CacheDirConfig
+	 *
 	 * @param userName
-	 *            {@code String} with the name of the user for whom the
-	 *            home cache dir will be computed
+	 *            {@code String} with the name of the user for whom the home cache
+	 *            dir will be computed
 	 * @return {@code StringBuilder} with computed part of the abs path
 	 */
-	private StringBuilder computeCacheDirPathFromHomeDirFromUserAndZone(
-			final String userName) {
+	private StringBuilder computeCacheDirPathFromHomeDirFromUserAndZone(final String userName) {
 		StringBuilder sb = new StringBuilder();
 		if (cacheServiceConfiguration.isCacheInHomeDir()) {
 			log.info("building home dir cache file");
@@ -341,8 +317,8 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		return sb;
 	}
 
-	private byte[] serializeObjectToByteStream(final Object informationObject,
-			final String key) throws JargonException {
+	private byte[] serializeObjectToByteStream(final Object informationObject, final String key)
+			throws JargonException {
 
 		log.info("serialzeObjectToByteStream(");
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -359,12 +335,10 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		return bos.toByteArray();
 	}
 
-	private Object deserializeStreamToObject(final byte[] objectBuffer,
-			final String key) throws JargonException {
+	private Object deserializeStreamToObject(final byte[] objectBuffer, final String key) throws JargonException {
 
 		log.info("deserializeStreamToObject(");
-		ByteArrayInputStream byteInputStream = new ByteArrayInputStream(
-				objectBuffer);
+		ByteArrayInputStream byteInputStream = new ByteArrayInputStream(objectBuffer);
 
 		ObjectInput oi;
 		try {
@@ -379,16 +353,14 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * org.irods.jargon.datautils.datacache.AccountCacheService#purgeOldRequests
-	 * ()
+	 * org.irods.jargon.datautils.datacache.AccountCacheService#purgeOldRequests ()
 	 */
 	@Override
 	public void purgeOldRequests() throws JargonException {
 		log.info("purgeOldRequests()");
-		long daysToMillis = (long) getCacheServiceConfiguration()
-				.getLifetimeInDays() * 60 * 1000 * 60 * 24;
+		long daysToMillis = (long) getCacheServiceConfiguration().getLifetimeInDays() * 60 * 1000 * 60 * 24;
 		long millisNow = System.currentTimeMillis();
 		long purgeThreshold = millisNow - daysToMillis;
 		log.info("purge threshold:{}", purgeThreshold);
@@ -396,17 +368,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 		IRODSFile cacheDir = null;
 		if (cacheServiceConfiguration.isCacheInHomeDir()) {
-			StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(irodsAccount
-					.getUserName());
-			log.info(
-					"built home dir automatically for cache using account zone and user name:{}",
-					sb.toString());
-			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(sb.toString());
+			StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(irodsAccount.getUserName());
+			log.info("built home dir automatically for cache using account zone and user name:{}", sb.toString());
+			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(sb.toString());
 		} else {
-			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(
-					cacheServiceConfiguration.getCacheDirPath());
+			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(cacheServiceConfiguration.getCacheDirPath());
 		}
 
 		// list the files in the cache and purge any expired
@@ -433,20 +400,19 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * setCacheServiceConfiguration
 	 * (org.irods.jargon.datautils.datacache.CacheServiceConfiguration)
 	 */
 	@Override
-	public void setCacheServiceConfiguration(
-			final CacheServiceConfiguration cacheServiceConfiguration) {
+	public void setCacheServiceConfiguration(final CacheServiceConfiguration cacheServiceConfiguration) {
 		this.cacheServiceConfiguration = cacheServiceConfiguration;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * getCacheServiceConfiguration()
 	 */

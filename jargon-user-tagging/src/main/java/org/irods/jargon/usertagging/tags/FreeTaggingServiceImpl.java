@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * This service can compare a set of free tags to existing tag data for an iRODS
  * domain object and generate the appropriate add and delete AVU operations to
  * reflect the delta between existing and desired tags.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService implements FreeTaggingService {
 
@@ -58,7 +58,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 	/**
 	 * Static initializer that initializes the service with access to objects that
 	 * interact with iRODS.
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
 	 *            Access Objects.
@@ -76,7 +76,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 	 * Static initializer that allows a {@code IRODSTaggingService} implementation
 	 * to be passed in at construction time. Otherwise a new, default tagging
 	 * service is initialized.
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
 	 *            Access Objects.
@@ -100,7 +100,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 	/**
 	 * Private constructor that initializes the service with access to objects that
 	 * interact with iRODS.
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
 	 *            Access Objects.
@@ -128,7 +128,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.FreeTaggingService#
 	 * updateTagsForUserForADataObjectOrCollection(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -193,7 +193,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.usertagging.FreeTaggingService#
 	 * getTagsForDataObjectInFreeTagForm(java.lang.String)
 	 */
@@ -227,7 +227,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.usertagging.FreeTaggingService#
 	 * getTagsForCollectionInFreeTagForm(java.lang.String)
 	 */
@@ -260,7 +260,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.FreeTaggingService#updateTags(org.irods.
 	 * jargon.usertagging.domain.IRODSTagValue)
 	 */
@@ -335,7 +335,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 	/*
 	 * For a given tag in iRODS, see if it is in the free tagging area. If not, it
 	 * is no longer desired and can be removed from iRODS.
-	 * 
+	 *
 	 */
 	private void processCurrentTagAgainstDesiredTags(final IRODSTagValue currentTag, final String[] userTags,
 			final UserAnnotatedCatalogItem irodsTagGrouping) throws JargonException {
@@ -362,7 +362,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 	/*
 	 * For a given tag specified in a free tagging area, see if it is currently in
 	 * iRODS, and add if not.
-	 * 
+	 *
 	 */
 	private void processSuppliedTagAgainstCurrentTags(final String desiredTag, final List<IRODSTagValue> currentTags,
 			final UserAnnotatedCatalogItem irodsTagGrouping) throws JargonException {
@@ -392,7 +392,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.FreeTaggingService#searchUsingFreeTagString
 	 * (java.lang.String)
 	 */

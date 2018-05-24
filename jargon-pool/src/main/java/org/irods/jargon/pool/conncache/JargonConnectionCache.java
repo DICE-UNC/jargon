@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.pool.conncache;
 
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Connection cache keeps a pool of managed iRODS connections
- * 
+ *
  * @author mconway
  *
  */
@@ -20,18 +20,18 @@ public class JargonConnectionCache extends GenericKeyedObjectPool<IRODSAccount, 
 
 	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
 
-	public JargonConnectionCache(KeyedPooledObjectFactory<IRODSAccount, AbstractIRODSMidLevelProtocol> factory,
-			JargonKeyedPoolConfig config) {
+	public JargonConnectionCache(final KeyedPooledObjectFactory<IRODSAccount, AbstractIRODSMidLevelProtocol> factory,
+			final JargonKeyedPoolConfig config) {
 		super(factory);
-		this.setMaxIdlePerKey(config.getMaxIdlePerKey());
-		this.setMinEvictableIdleTimeMillis(30000);
-		this.setTimeBetweenEvictionRunsMillis(45000);
-		this.setTestOnBorrow(true);
+		setMaxIdlePerKey(config.getMaxIdlePerKey());
+		setMinEvictableIdleTimeMillis(30000);
+		setTimeBetweenEvictionRunsMillis(45000);
+		setTestOnBorrow(true);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.apache.commons.pool2.impl.GenericKeyedObjectPool#close()
 	 */
 	@Override

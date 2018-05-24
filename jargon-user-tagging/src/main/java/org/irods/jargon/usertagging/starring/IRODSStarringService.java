@@ -10,9 +10,9 @@ import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 /**
  * Interface describing a service for managing 'starred' or favorite files or
  * folders
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface IRODSStarringService {
 
@@ -20,7 +20,7 @@ public interface IRODSStarringService {
 	 * Find (if it exists) the starred or favorite status and description for a file
 	 * or folder. {@code null} will be returned if the given absolute path is not
 	 * 'starred' in iRODS.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS file or
 	 *            collection
@@ -40,7 +40,7 @@ public interface IRODSStarringService {
 	 * and includes a free text description.
 	 * <p>
 	 * Note that this method will either add or update, based on previous data.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS file or
 	 *            collection
@@ -59,7 +59,7 @@ public interface IRODSStarringService {
 	/**
 	 * Un-star a file or collection. Note that if the given file or collection is
 	 * not starred, it treats it as successful.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS file or
 	 *            collection

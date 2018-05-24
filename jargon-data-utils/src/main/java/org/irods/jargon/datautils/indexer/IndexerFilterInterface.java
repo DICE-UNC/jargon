@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.indexer;
 
@@ -12,7 +12,7 @@ import org.irods.jargon.datautils.visitor.HierLeaf;
  * <p>
  * This interface expects the availability of the roll-up of hierarchical AVU
  * metadata as an input to this decision-making process
- * 
+ *
  * @author conwaymc
  *
  */
@@ -20,7 +20,7 @@ public interface IndexerFilterInterface {
 
 	/**
 	 * Given a directory node, indicate whether it is indexable.
-	 * 
+	 *
 	 * @param node
 	 *            {@link HierComposite} that is a visit-able directory
 	 * @param metadataRollup
@@ -31,7 +31,7 @@ public interface IndexerFilterInterface {
 
 	/**
 	 * Given a leaf (File) node, indicate whether it is indexable
-	 * 
+	 *
 	 * @param leafNode
 	 *            {@link HierLeaf} with the visited node
 	 * @param metadataRollup

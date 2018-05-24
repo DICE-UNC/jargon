@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
@@ -27,6 +25,8 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -48,8 +48,7 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -70,42 +69,29 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		String testFileName = "testread.txt";
 		int fileLength = 40;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		org.irods.jargon.testutils.filemanip.FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		org.irods.jargon.testutils.filemanip.FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				fileLength);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
-		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
+		IRODSFileInputStream fis = irodsFileFactory.instanceIRODSFileInputStream(irodsFile);
 
 		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
 
@@ -129,50 +115,38 @@ public class RODSFIleInputStreamForSoftLinksTest {
 	@Test
 	public final void testInputStreamWithRerouting() throws Exception {
 
-		if (!testingPropertiesHelper
-				.isTestDistributedResources(testingProperties)) {
+		if (!testingPropertiesHelper.isTestDistributedResources(testingProperties)) {
 			return;
 		}
 
 		String testFileName = "testInputStreamWithRerouting.txt";
 		int fileLength = 100;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = org.irods.jargon.testutils.filemanip.FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, fileLength);
 		File localFile = new File(localFilePath);
 
 		// put scratch file into irods in the right place
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
-		irodsFile
-				.setResource(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
+		irodsFile.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
 		dto.putOperation(localFile, irodsFile, null, null);
 
 		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
 
 		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStreamWithRerouting(irodsFile
-						.getAbsolutePath());
+				.instanceIRODSFileInputStreamWithRerouting(irodsFile.getAbsolutePath());
 
 		byte[] readBytesBuffer = new byte[512];
 		while (((fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
@@ -182,51 +156,40 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		fis.close();
 		Assert.assertTrue("did not get instance of session closing stream",
 				fis instanceof SessionClosingIRODSFileInputStream);
-		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+		Assert.assertNull("session from reroute leaking", irodsFileSystem.getConnectionMap());
 
 	}
 
 	@Test
-	public final void testInputStreamWithReroutingNoRerouteNeeded()
-			throws Exception {
+	public final void testInputStreamWithReroutingNoRerouteNeeded() throws Exception {
 
 		String testFileName = "testInputStreamWithReroutingNoRerouteNeeded.txt";
 		int fileLength = 100;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = org.irods.jargon.testutils.filemanip.FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, fileLength);
 		File localFile = new File(localFilePath);
 
 		// put scratch file into irods in the right place
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
 		dto.putOperation(localFile, irodsFile, null, null);
 
 		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
 
 		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStreamWithRerouting(irodsFile
-						.getAbsolutePath());
+				.instanceIRODSFileInputStreamWithRerouting(irodsFile.getAbsolutePath());
 
 		byte[] readBytesBuffer = new byte[512];
 		while (((fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
@@ -236,8 +199,7 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		fis.close();
 		Assert.assertFalse("did not get instance of session closing stream",
 				fis instanceof SessionClosingIRODSFileInputStream);
-		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+		Assert.assertNull("session from reroute leaking", irodsFileSystem.getConnectionMap());
 
 	}
 
@@ -249,42 +211,29 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		String testFileName = "testReadByteArray.txt";
 		int fileLength = 230;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		org.irods.jargon.testutils.filemanip.FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		org.irods.jargon.testutils.filemanip.FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				fileLength);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
-		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
+		IRODSFileInputStream fis = irodsFileFactory.instanceIRODSFileInputStream(irodsFile);
 
 		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
 
@@ -304,43 +253,31 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		String testFileName = "testReadWithByteCountingWrapper.txt";
 		int fileLength = 23000000;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String absPathToFile = org.irods.jargon.testutils.filemanip.FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, fileLength);
 
 		File sourceFile = new File(absPathToFile);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
 
-		DataTransferOperations transferOperations = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
+		DataTransferOperations transferOperations = accessObjectFactory.getDataTransferOperations(irodsAccount);
 		transferOperations.putOperation(sourceFile, irodsFile, null, null);
 
-		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
+		IRODSFileInputStream fis = irodsFileFactory.instanceIRODSFileInputStream(irodsFile);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
-				.instance();
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
 		ConnectionProgressStatusListener connectionProgressStatusListener = DefaultIntraFileProgressCallbackListener
-				.instance(TransferType.GET, fileLength, transferControlBlock,
-						transferStatusCallbackListener);
-		InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
-				connectionProgressStatusListener, fis);
+				.instance(TransferType.GET, fileLength, transferControlBlock, transferStatusCallbackListener);
+		InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(connectionProgressStatusListener, fis);
 
 		int bytesRead = 0;
 		int readLength = 0;
@@ -351,8 +288,7 @@ public class RODSFIleInputStreamForSoftLinksTest {
 
 		wrapper.close();
 		Assert.assertEquals("whole file not read back", fileLength, bytesRead);
-		Assert.assertTrue("did not get callbacks",
-				transferStatusCallbackListener.getIntraFileCallbackCtr() > 0);
+		Assert.assertTrue("did not get callbacks", transferStatusCallbackListener.getIntraFileCallbackCtr() > 0);
 
 	}
 
@@ -366,34 +302,24 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		int fileLengthInKb = 2;
 		long fileLengthInBytes = fileLengthInKb * 1024;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				fileLengthInBytes);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, fileLengthInBytes);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
 		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
 
@@ -401,12 +327,9 @@ public class RODSFIleInputStreamForSoftLinksTest {
 
 		// now try to do the read
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
-		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
+		IRODSFileInputStream fis = irodsFileFactory.instanceIRODSFileInputStream(irodsFile);
 
 		long skipped = fis.skip(1024L);
 
@@ -418,15 +341,13 @@ public class RODSFIleInputStreamForSoftLinksTest {
 
 		int readBytes;
 		byte[] readBytesBuffer = new byte[512];
-		while ((readBytes = (fis.read(readBytesBuffer, 0,
-				readBytesBuffer.length))) > -1) {
+		while ((readBytes = (fis.read(readBytesBuffer, 0, readBytesBuffer.length))) > -1) {
 			actualFileContents.write(readBytes);
 			numberBytesReadAfterSkip += readBytes;
 		}
 
-		Assert.assertEquals(
-				"I did not skip and then read the remainder of the specified file",
-				fileLengthInBytes, skipped + numberBytesReadAfterSkip);
+		Assert.assertEquals("I did not skip and then read the remainder of the specified file", fileLengthInBytes,
+				skipped + numberBytesReadAfterSkip);
 	}
 
 	/**
@@ -437,42 +358,29 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		String testFileName = "testClose.txt";
 		int fileLength = 1;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		org.irods.jargon.testutils.filemanip.FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		org.irods.jargon.testutils.filemanip.FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				fileLength);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
-				targetIrodsCollection, testFileName);
-		IRODSFileInputStream fis = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection, testFileName);
+		IRODSFileInputStream fis = irodsFileFactory.instanceIRODSFileInputStream(irodsFile);
 
 		fis.close();
 

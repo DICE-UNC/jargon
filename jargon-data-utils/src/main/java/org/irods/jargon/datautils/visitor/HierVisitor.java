@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.visitor;
 
 /**
  * Interface for the 'Visitor' in the pattern
- * 
+ *
  * @author conwaymc
  *
  */
@@ -17,7 +17,7 @@ public interface HierVisitor {
 	 * will call to visit each of this composite's children until told to stop.
 	 * <p>
 	 * A composite returning false will cause the visiting of the children to halt.
-	 * 
+	 *
 	 * @param node
 	 *            {@link HierComposite} that is being visited in the current
 	 *            iteration.
@@ -35,7 +35,7 @@ public interface HierVisitor {
 	 * hierarchy.
 	 * <p>
 	 * A composite returning false will cause the visiting of siblings to halt.
-	 * 
+	 *
 	 * @param node
 	 *            {@link HierComposite} that was being visited in the current
 	 *            iteration.
@@ -43,17 +43,17 @@ public interface HierVisitor {
 	 *            {@code boolean} indicating that the visitEnter() method had
 	 *            returned 'false'. Can be used for orchestrating proper action on
 	 *            leave in an implementing indexer
-	 * 
+	 *
 	 * @return {@code boolean} with a <code>true</code> if the node and the node's
 	 *         siblings should be visited
-	 * 
+	 *
 	 */
 	public boolean visitLeave(HierComposite node, boolean visitorEntered);
 
 	/**
 	 * Called on visiting a leaf node (file). This visitor can return
 	 * <code>false</code> to short-circuit processing of siblings.
-	 * 
+	 *
 	 * @param node
 	 *            is a {@link HierLeaf} leaf node that is a file in the hierarchy
 	 * @return {@code boolean} indicating whether processing of siblings should
@@ -63,7 +63,7 @@ public interface HierVisitor {
 
 	/**
 	 * Launch the operation
-	 * 
+	 *
 	 * @param startingCollectionPath
 	 *            {@code String} with the crawl start path
 	 */

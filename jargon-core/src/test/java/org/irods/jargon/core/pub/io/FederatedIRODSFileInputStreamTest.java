@@ -3,8 +3,6 @@ package org.irods.jargon.core.pub.io;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -14,6 +12,8 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Tests for IRODSFile methods across zones
@@ -39,12 +39,10 @@ public class FederatedIRODSFileInputStreamTest {
 			return;
 		}
 
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -74,43 +72,34 @@ public class FederatedIRODSFileInputStreamTest {
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
 		String targetIrodsPath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ testSubdir);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						length);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, length);
 		File localFile = new File(localFilePath);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsPath);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsPath);
 
 		// delete to clean up
 		destFile.deleteWithForceOption();
 		destFile.mkdirs();
 
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
 		/*
-		 * setup done, now connect from the first zone and try to list the coll
-		 * with the data object
+		 * setup done, now connect from the first zone and try to list the coll with the
+		 * data object
 		 */
 
-		IRODSAccount fedAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount fedAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileInputStream irodsFileInputStream = irodsFileSystem
-				.getIRODSFileFactory(fedAccount).instanceIRODSFileInputStream(
-						destFile.getAbsolutePath() + "/" + testFileName);
+		IRODSFileInputStream irodsFileInputStream = irodsFileSystem.getIRODSFileFactory(fedAccount)
+				.instanceIRODSFileInputStream(destFile.getAbsolutePath() + "/" + testFileName);
 		// read the rest
 		int bytesRead = 0;
 
@@ -129,8 +118,7 @@ public class FederatedIRODSFileInputStreamTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testStreamDataObjectViaSoftLinkToAnotherZoneBug1842()
-			throws Exception {
+	public void testStreamDataObjectViaSoftLinkToAnotherZoneBug1842() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
@@ -144,54 +132,41 @@ public class FederatedIRODSFileInputStreamTest {
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ testSubdir);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
 		int length = 300;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, fileName, length);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, fileName, length);
 		File localFile = new File(localFilePath);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
 
 		// delete to clean up
 		destFile.deleteWithForceOption();
 		destFile.mkdirs();
 
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
-		IRODSAccount zone1Account = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount zone1Account = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// make a symlink in zone1 to the coll in zone2
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						zone1Account);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(zone1Account);
 
-		String softLinkCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ mountSubdir);
+		String softLinkCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + mountSubdir);
 
 		mountedCollectionAO.unmountACollection(softLinkCollection, "");
 
-		mountedCollectionAO.createASoftLink(targetIrodsCollection,
-				softLinkCollection);
+		mountedCollectionAO.createASoftLink(targetIrodsCollection, softLinkCollection);
 
-		IRODSFileInputStream irodsFileInputStream = irodsFileSystem
-				.getIRODSFileFactory(zone1Account)
-				.instanceIRODSFileInputStream(
-						softLinkCollection + "/" + fileName);
+		IRODSFileInputStream irodsFileInputStream = irodsFileSystem.getIRODSFileFactory(zone1Account)
+				.instanceIRODSFileInputStream(softLinkCollection + "/" + fileName);
 		// read the rest
 		int bytesRead = 0;
 

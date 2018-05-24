@@ -24,8 +24,8 @@ public class ConnectionProgressStatus {
 	private final CallbackType callbackType;
 
 	/**
-	 * @return the byteCount for the operation. Note that this does not
-	 *         aggregate, only sends the count at each read/write
+	 * @return the byteCount for the operation. Note that this does not aggregate,
+	 *         only sends the count at each read/write
 	 */
 	public long getByteCount() {
 		return byteCount;
@@ -42,31 +42,25 @@ public class ConnectionProgressStatus {
 	 * Create an immutable callback for progress sending data (PUT)
 	 *
 	 * @param byteCount
-	 *            {@code long} with the number of bytes instantaneously
-	 *            sent.
+	 *            {@code long} with the number of bytes instantaneously sent.
 	 * @return {@link ConnectionProgressStatus}
 	 */
 	public static ConnectionProgressStatus instanceForSend(final long byteCount) {
-		return new ConnectionProgressStatus(CallbackType.SEND_PROGRESS,
-				byteCount);
+		return new ConnectionProgressStatus(CallbackType.SEND_PROGRESS, byteCount);
 	}
 
 	/**
 	 * Create an immutable callback for progress receiving data (GET)
 	 *
 	 * @param byteCount
-	 *            {@code long} with the number of bytes instantaneously
-	 *            sent.
+	 *            {@code long} with the number of bytes instantaneously sent.
 	 * @return {@link ConnectionProgressStatus}
 	 */
-	public static ConnectionProgressStatus instanceForReceive(
-			final long byteCount) {
-		return new ConnectionProgressStatus(CallbackType.RECEIVE_PROGRESS,
-				byteCount);
+	public static ConnectionProgressStatus instanceForReceive(final long byteCount) {
+		return new ConnectionProgressStatus(CallbackType.RECEIVE_PROGRESS, byteCount);
 	}
 
-	private ConnectionProgressStatus(final CallbackType callbackType,
-			final long byteCount) {
+	private ConnectionProgressStatus(final CallbackType callbackType, final long byteCount) {
 
 		if (callbackType == null) {
 			throw new IllegalArgumentException("null callbackType");

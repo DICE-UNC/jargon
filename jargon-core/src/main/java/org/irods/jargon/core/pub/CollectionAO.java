@@ -30,12 +30,12 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * associated with collection objects (files), as well as performing common
  * query operations. This class also supports various iRODS file operations that
  * are not included in the standard {@code java.io.*} libraries.
- * 
- * 
+ *
+ *
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
- * 
- * 
+ *
+ *
  * <h2>Notes</h2> For soft links, AVU metadata always attaches to the given
  * path, which can be a soft link. This is somewhat different than metadata
  * handling for data objects, where the AVU metadata always associates with the
@@ -219,7 +219,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * object is added. If the AttName is used only by this one object, the AVU
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@code String} with the absolute path to the target collection
 	 * @param avuData
@@ -905,7 +905,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Convenience method to add a set of AVU metadata. This operation is tolerant
 	 * of individual duplicate AVUs, and will trap those exceptions and not throw
 	 * them.
-	 * 
+	 *
 	 * This method will return a collection of individual success or failure for
 	 * each AVU.
 	 *
@@ -928,7 +928,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Convenience method to delete a set of AVU metadata. This operation is
 	 * tolerant of individual non-existent AVUs, and will trap those exceptions and
 	 * not throw them.
-	 * 
+	 *
 	 * This method will return a collection of individual success or failure for
 	 * each AVU.
 	 *

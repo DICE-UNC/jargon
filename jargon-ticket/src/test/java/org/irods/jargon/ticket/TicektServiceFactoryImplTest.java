@@ -2,14 +2,14 @@ package org.irods.jargon.ticket;
 
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import junit.framework.Assert;
 
 public class TicektServiceFactoryImplTest {
 
@@ -21,14 +21,12 @@ public class TicektServiceFactoryImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 	}
 
 	@Test
 	public final void testTicketServiceFactoryImpl() {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 		new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		// non errror is a pass
 	}
@@ -40,45 +38,33 @@ public class TicektServiceFactoryImplTest {
 
 	@Test
 	public final void testInstanceTicketAdminService() throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory factory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
-		TicketAdminService adminService = factory
-				.instanceTicketAdminService(irodsAccount);
-		TestCase.assertNotNull("null admin service", adminService);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory factory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
+		TicketAdminService adminService = factory.instanceTicketAdminService(irodsAccount);
+		Assert.assertNotNull("null admin service", adminService);
 
 	}
 
 	@Test
 	public final void testInstanceTicketClientOperations() throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory factory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
-		TicketClientOperations clientOperations = factory
-				.instanceTicketClientOperations(irodsAccount);
-		TestCase.assertNotNull("null service", clientOperations);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory factory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
+		TicketClientOperations clientOperations = factory.instanceTicketClientOperations(irodsAccount);
+		Assert.assertNotNull("null service", clientOperations);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceTicketAdminServiceNullAccount()
-			throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory factory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+	public final void testInstanceTicketAdminServiceNullAccount() throws Exception {
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory factory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		factory.instanceTicketAdminService(null);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceTicketClientOperationsNullAccount()
-			throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory factory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+	public final void testInstanceTicketClientOperationsNullAccount() throws Exception {
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory factory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		factory.instanceTicketClientOperations(null);
 	}
 

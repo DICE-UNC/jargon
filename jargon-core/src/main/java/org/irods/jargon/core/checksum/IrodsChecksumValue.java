@@ -33,8 +33,7 @@ public class IrodsChecksumValue {
 		return checksumEncodingEnum;
 	}
 
-	public void setChecksumEncodingEnum(
-			final ChecksumEncodingEnum checksumEncodingEnum) {
+	public void setChecksumEncodingEnum(final ChecksumEncodingEnum checksumEncodingEnum) {
 		this.checksumEncodingEnum = checksumEncodingEnum;
 	}
 
@@ -46,8 +45,7 @@ public class IrodsChecksumValue {
 			builder.append("checksumValue=").append(checksumValue).append(", ");
 		}
 		if (checksumEncodingEnum != null) {
-			builder.append("checksumEncodingEnum=")
-			.append(checksumEncodingEnum);
+			builder.append("checksumEncodingEnum=").append(checksumEncodingEnum);
 		}
 		builder.append("]");
 		return builder.toString();

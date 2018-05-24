@@ -58,7 +58,7 @@ abstract class AuthMechanism {
 	/**
 	 * After startup pack, the client/server negotiation commences here, based on
 	 * configuration and the settings in the {@code IRODSAccount} visible here.
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol}
 	 * @param irodsAccount
@@ -95,7 +95,7 @@ abstract class AuthMechanism {
 	 *            {@link Tag} protocol representation of version info
 	 * @return {@link StartupResponseData} with the result of the send of the
 	 *         startup pack
-	 * 
+	 *
 	 */
 	static StartupResponseData buldStartupResponseFromVersionPI(final Tag versionPI) {
 		StartupResponseData startupResponseData;
@@ -124,7 +124,7 @@ abstract class AuthMechanism {
 
 		/*
 		 * I expect to read in a cd_neg_t structure
-		 * 
+		 *
 		 * struct cs_neg_t { int status_; char result_[MAX_NAME_LEN]; };
 		 */
 
@@ -156,7 +156,7 @@ abstract class AuthMechanism {
 			/*
 			 * Do the actual negotiation...The struct should have the response from the
 			 * startup pack to launch the negotiation process.
-			 * 
+			 *
 			 * here I am tracking lib/core/src/irods_client_negotiation.cpp ~ line 293
 			 */
 
@@ -317,7 +317,7 @@ abstract class AuthMechanism {
 
 		// FIXME: NEG_PI here
 		/*
-		 * 
+		 *
 		 * <CS_NEG_PI><status>1</status> <result>CS_NEG_DONT_CARE</result> </CS_NEG_PI>
 		 */
 

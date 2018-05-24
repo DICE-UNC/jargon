@@ -61,7 +61,7 @@ public class IRODSFileReader extends Reader {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Reader#close()
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class IRODSFileReader extends Reader {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Reader#read(char[], int, int)
 	 */
 	@Override

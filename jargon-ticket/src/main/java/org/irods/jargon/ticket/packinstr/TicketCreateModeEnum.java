@@ -20,8 +20,7 @@ public enum TicketCreateModeEnum {
 	public static List<String> getTicketModifyAddOrRemoveTypeList() {
 
 		List<String> types = new ArrayList<String>();
-		for (TicketCreateModeEnum ticketCreateMode : TicketCreateModeEnum
-				.values()) {
+		for (TicketCreateModeEnum ticketCreateMode : TicketCreateModeEnum.values()) {
 			types.add(ticketCreateMode.textValue);
 		}
 		return types;

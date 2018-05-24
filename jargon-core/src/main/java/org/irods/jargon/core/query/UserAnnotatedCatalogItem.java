@@ -12,8 +12,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
-implements Serializable {
+public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject implements Serializable {
 
 	/**
 	 *
@@ -27,17 +26,17 @@ implements Serializable {
 	 * Default constructor
 	 *
 	 * @param metadataDomain
-	 *            {@link MetadataDomain} enum value that describes the iCAT
-	 *            domain the annotation is for
+	 *            {@link MetadataDomain} enum value that describes the iCAT domain
+	 *            the annotation is for
 	 * @param domainUniqueName
-	 *            {@code String} with the unique identifier of the domain.
-	 *            For files and collections this is the iRODS absolute path
+	 *            {@code String} with the unique identifier of the domain. For files
+	 *            and collections this is the iRODS absolute path
 	 * @param userName
-	 *            {@code String} with the user name for which the item is
-	 *            annotated (these annotations are per user)
+	 *            {@code String} with the user name for which the item is annotated
+	 *            (these annotations are per user)
 	 */
-	public UserAnnotatedCatalogItem(final MetadataDomain metadataDomain,
-			final String domainUniqueName, final String userName) {
+	public UserAnnotatedCatalogItem(final MetadataDomain metadataDomain, final String domainUniqueName,
+			final String userName) {
 		super();
 
 		if (metadataDomain == null) {

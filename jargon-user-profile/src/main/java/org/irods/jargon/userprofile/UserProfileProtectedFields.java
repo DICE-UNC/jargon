@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.userprofile;
 
@@ -12,15 +12,15 @@ package org.irods.jargon.userprofile;
  * Note that some of the base attributes are based on the RFC for eduPerson at:
  * http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-
  * 200806.html And going forward more attributes may be added.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfileProtectedFields {
 
 	/**
-	 * From RFC 4524: The 'mail' (rfc822mailbox) attribute type holds Internet
-	 * mail addresses in Mailbox [RFC2821] form (e.g., user@example.com).
+	 * From RFC 4524: The 'mail' (rfc822mailbox) attribute type holds Internet mail
+	 * addresses in Mailbox [RFC2821] form (e.g., user@example.com).
 	 */
 	private String mail = "";
 

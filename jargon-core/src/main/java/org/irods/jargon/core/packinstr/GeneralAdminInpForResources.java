@@ -85,8 +85,8 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	public static final GeneralAdminInpForResources instanceForModifyResource(final Resource resource, String option)
-			throws JargonException {
+	public static final GeneralAdminInpForResources instanceForModifyResource(final Resource resource,
+			final String option) throws JargonException {
 
 		if (resource == null) {
 			throw new IllegalArgumentException("null resource");

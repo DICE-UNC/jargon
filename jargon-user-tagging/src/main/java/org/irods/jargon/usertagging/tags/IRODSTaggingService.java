@@ -12,26 +12,26 @@ import org.irods.jargon.usertagging.domain.IRODSTagValue;
  * Service interface for processing IRODS free tags. This method provides
  * services on top of Jargon to maintain user-defined tags on iRODS domain
  * objects.
- * 
+ *
  * Note that tags are by user. Various signatures within this service either
  * default to the logged-in user, or utilize the user passed in as part of the
  * method parameters. Please note carefully the comments for each method to
  * ensure that this is appropriately controlled. This service does not attempt
  * to do any edits of which user is updating which tag.
- * 
+ *
  * The {@code FreeTaggingService} is appropriate for end-user interfaces, and
  * does ensure that tag query/maintenance operations are done as the logged-in
  * user. Generally, the caller of this lower level service is responsible for
  * allowing or preventing updates on behalf of other users.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface IRODSTaggingService {
 
 	/**
 	 * Add a tag to a data object in iRODS for the user.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS data object
 	 *            that should be tagged.
@@ -50,7 +50,7 @@ public interface IRODSTaggingService {
 
 	/**
 	 * Remove the given tag from the data object.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS data object
 	 *            that has the tag to be removed.
@@ -69,7 +69,7 @@ public interface IRODSTaggingService {
 
 	/**
 	 * For a given data object, retrieve the tag values for the logged in user.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the path to the data object for which the tags
 	 *            will be retrieved.
@@ -83,7 +83,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Add a tag to a collection in iRODS for the user. The user with the account in
 	 * the tag value is used.
-	 * 
+	 *
 	 * @param collectionAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS collection that
 	 *            should be tagged.
@@ -103,7 +103,7 @@ public interface IRODSTaggingService {
 	 * Retrieve the user tags associated with a given iRODS collection. This method
 	 * will default to tags set by the user reflected in the {@code IRODSAccount}
 	 * object associated with the user.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path to the given iRODS
 	 *            Collection.
@@ -119,14 +119,14 @@ public interface IRODSTaggingService {
 
 	/**
 	 * Delete a user tag from a given iRODS Collection.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with iRODS absolute path.
 	 * @param irodsTagValue
 	 *            {@link IRODSTagValue} with the tag information to be deleted,
 	 *            including the user name. * @throws DataNotFoundException if the
 	 *            target data object is missing
-	 * 
+	 *
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 * @throws DataNotFoundException
@@ -140,7 +140,7 @@ public interface IRODSTaggingService {
 	 * path for a collection or data object), using the given {@code MetadataDomain}
 	 * value to determine the type of object that was tagged. This method uses the
 	 * logged-in user.
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
 	 *            describes the iRODS domain being tagged.
@@ -160,7 +160,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Add a tag to the given domain object within iRODS, using the user supplied in
 	 * the {@code IRODSTagValue}
-	 * 
+	 *
 	 * @param irodsTagValue
 	 *            {@link IRODSTagValue} with the tag information to be added,
 	 *            including the user.
@@ -183,7 +183,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Remove the tag from the given domain, using the user supplied in the
 	 * {@code IRODSTagValue}
-	 * 
+	 *
 	 * @param irodsTagValue
 	 *            {@link IRODSTagValue} with the tag information to be removed,
 	 *            including the user.
@@ -208,7 +208,7 @@ public interface IRODSTaggingService {
 	 * <p>
 	 * Note that, if the description is blank, an attempt will be made to delete any
 	 * description information currently stored.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to a data object that will
 	 *            have the specified description added for the user
@@ -219,7 +219,7 @@ public interface IRODSTaggingService {
 	 *             if the target data object is not found
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	void addDescriptionToDataObject(String dataObjectAbsolutePath, IRODSTagValue irodsDescriptionValue)
 			throws JargonException, DataNotFoundException;
@@ -227,7 +227,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Remove a description from a data object, using the user supplied in the
 	 * {@code IRODSTagValue}
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to a data object that will
 	 *            have the specified description removed for the user
@@ -245,7 +245,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Remove a description from a collection, using the user supplied in the
 	 * {@code IRODSTagValue}
-	 * 
+	 *
 	 * @param collectionAbsolutePath
 	 *            {@code String} with the absolute path to a collection that will
 	 *            have the specified description removed for the user
@@ -263,7 +263,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Retrieve the description value for a data object, using the logged-in user.
 	 * Note that this method returns null if no description is found.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to a data object that will
 	 *            have the specified description removed for the user
@@ -280,7 +280,7 @@ public interface IRODSTaggingService {
 	 * Note that adding a blank description will delete any description AVU data in
 	 * iRODS. Adding a description when one already exists will replace the previous
 	 * value.
-	 * 
+	 *
 	 * @param collectionAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS collection
 	 * @param irodsDescriptionValue
@@ -299,7 +299,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Get the description for the collection as specified by the logged-in user.
 	 * This method will return a {@code null} if no description is provided.
-	 * 
+	 *
 	 * @param collectionAbsolutePath
 	 *            {@code String} with the absolute path to the collection
 	 * @return {@link IRODSTagValue} containing the description for the given
@@ -316,7 +316,7 @@ public interface IRODSTaggingService {
 	 * Method wil return a description for the Collection or Data Object for the
 	 * logged in user. This method will return {@code null} if no description was
 	 * found.
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
 	 *            describes the iRODS domain being tagged.
@@ -339,7 +339,7 @@ public interface IRODSTaggingService {
 	 * the desired data. Any necessary updates are handled by looking at the
 	 * difference, e.g. it will delete if description removed, add if not currently
 	 * present, etc.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to a data object that will
 	 *            have the specified description removed for the user
@@ -358,7 +358,7 @@ public interface IRODSTaggingService {
 	 * the desired data. Any necessary updates are handled by looking at the
 	 * difference, e.g. it will delete if description removed, add if not currently
 	 * present, etc.
-	 * 
+	 *
 	 * @param collectionAbsolutePath
 	 *            {@code String} with the absolute path to a data object that will
 	 *            have the specified description removed for the user

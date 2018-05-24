@@ -26,12 +26,10 @@ public class TrashOperationsTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -41,8 +39,8 @@ public class TrashOperationsTest {
 	}
 
 	/**
-	 * test for bug mkcoll error in delete/save with wierd path from webdav
-	 * client #158
+	 * test for bug mkcoll error in delete/save with wierd path from webdav client
+	 * #158
 	 *
 	 * @throws Exception
 	 *
@@ -51,34 +49,25 @@ public class TrashOperationsTest {
 	public void testPutAndDeleteBug158() throws Exception {
 		String testParentDir = ".TemporaryItems/folders.501/TemporaryItems/";
 		// generate a local scratch file
-		String testParent = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testParentDir);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFile testParentAsFile = irodsFileSystem
-				.getIRODSAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
+		String testParent = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testParentDir);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile testParentAsFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(testParent);
 		testParentAsFile.mkdirs();
 		String testFileName = "(A Document Being Saved By TextEdit 7)";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
 
 		String parentFileName = testParent + testFileName;
 		// now put the file
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dto.putOperation(localFileName, parentFileName, "", null, null);
 
-		IRODSFile irodsFile = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
+		IRODSFile irodsFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(parentFileName);
 
 		irodsFile.delete();

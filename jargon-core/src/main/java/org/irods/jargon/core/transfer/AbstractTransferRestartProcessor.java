@@ -34,7 +34,7 @@ public abstract class AbstractTransferRestartProcessor extends AbstractJargonSer
 	}
 
 	/**
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory irodsAccessObjectFactory}
 	 * @param irodsAccount
@@ -74,7 +74,7 @@ public abstract class AbstractTransferRestartProcessor extends AbstractJargonSer
 	 * Check the need to restart the file, and do the restart processing if needed,
 	 * based on the data held by the restart manager. * @throws
 	 * RestartFailedException if the actual restart process failed
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the iRODS path to potentially restart
 	 * @throws RestartFailedException

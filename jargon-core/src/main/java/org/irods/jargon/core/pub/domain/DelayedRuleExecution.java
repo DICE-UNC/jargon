@@ -121,8 +121,7 @@ public class DelayedRuleExecution extends IRODSDomainObject {
 		return notificationAddress;
 	}
 
-	public synchronized void setNotificationAddress(
-			final String notificationAddress) {
+	public synchronized void setNotificationAddress(final String notificationAddress) {
 		this.notificationAddress = notificationAddress;
 	}
 

@@ -22,8 +22,7 @@ public class BulkAVUOperationResponse {
 	private ResultStatus resultStatus;
 	private String message;
 
-	public static BulkAVUOperationResponse instance(
-			final ResultStatus resultStatus, final AvuData avuData,
+	public static BulkAVUOperationResponse instance(final ResultStatus resultStatus, final AvuData avuData,
 			final String message) {
 		return new BulkAVUOperationResponse(resultStatus, avuData, message);
 	}
@@ -31,8 +30,7 @@ public class BulkAVUOperationResponse {
 	/**
 	 *
 	 */
-	private BulkAVUOperationResponse(final ResultStatus resultStatus,
-			final AvuData avuData, final String message) {
+	private BulkAVUOperationResponse(final ResultStatus resultStatus, final AvuData avuData, final String message) {
 
 		if (resultStatus == null) {
 			throw new IllegalArgumentException("null resultStatus");

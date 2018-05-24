@@ -101,7 +101,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -390,7 +390,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * Create an iRODS message Tag, including header. Send the bytes of the byte
 	 * array, no error stream.
-	 * 
+	 *
 	 * @param irodsPI
 	 *            {@link IRodsPI} with the packing instruction
 	 * @param errorStream
@@ -564,7 +564,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * Create an iRODS message Tag, including header. This convenience method is
 	 * suitable for operations that do not require error or binary streams, and will
 	 * set up empty streams for the method call.
-	 * 
+	 *
 	 * @param irodsPI
 	 *            {@link IRodsPI} with the packing instruction to execute
 	 * @return {@link Tag} with the result of the call
@@ -589,7 +589,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 */
 
 	/**
-	 * 
+	 *
 	 * @param irodsPI
 	 *            {@link IRodsPI} with the packing instruction to execute
 	 * @return {@link Tag} with the result of the call
@@ -609,7 +609,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Create an iRODS header packet
-	 * 
+	 *
 	 * @param type
 	 *            {@code String} with the message type
 	 * @param messageLength
@@ -657,7 +657,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Create a message header to send to irods
-	 * 
+	 *
 	 * @param type
 	 *            {@code String} with the header type
 	 * @param messageLength
@@ -886,7 +886,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * level API method, and typically is not used by clients of the API. The
 	 * exception would be when implementing a custom {@code IRODSProtocolManager}
 	 * that needs to directly manipulate connections in a pool or cache.
-	 * 
+	 *
 	 * @throws JargonException
 	 *             on iRODS error
 	 */
@@ -984,7 +984,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Set the {@code IRODSSession} that was used to obtain this connection
-	 * 
+	 *
 	 * @param irodsSession
 	 *            {@link IRODSSession} to set
 	 */
@@ -1066,7 +1066,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * @param irodsServerProperties
 	 *            {@link IRODSServerProperties} to set for this connection
-	 * 
+	 *
 	 */
 	synchronized void setIrodsServerProperties(final IRODSServerProperties irodsServerProperties) {
 		this.irodsServerProperties = irodsServerProperties;
@@ -1075,7 +1075,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
-	 * 
+	 *
 	 */
 	synchronized void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
@@ -1084,7 +1084,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * @param authResponse
 	 *            {@link AuthResponse} from the initiation of this connection
-	 * 
+	 *
 	 */
 	protected synchronized void setAuthResponse(final AuthResponse authResponse) {
 		this.authResponse = authResponse;
@@ -1106,7 +1106,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			 * message length in front of the message. Causing unexpected results when
 			 * attempting to parse the message, ie. <REr are interpreted as the message
 			 * length.
-			 * 
+			 *
 			 * <RError_PI> <count>1 </count> <RErrMsg_PI> <status>-808000 </status>
 			 * <msg>ERROR: msiDataObjPut: rsDataObjPut failed for <MsgHeader_PI>
 			 * <type>RODS_API_REPLY </type> <msgLen>0 </msgLen> <errorLen>0 </errorLen>
@@ -1232,7 +1232,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#
 	 * obliterateConnectionAndDiscardErrors()
 	 */
@@ -1340,7 +1340,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} to set
-	 * 
+	 *
 	 */
 	public void setIrodsProtocolManager(final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;

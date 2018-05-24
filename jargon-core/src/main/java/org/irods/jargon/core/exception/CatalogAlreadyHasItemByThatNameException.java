@@ -13,21 +13,18 @@ public class CatalogAlreadyHasItemByThatNameException extends JargonException {
 	 *
 	 */
 	private static final long serialVersionUID = 8297408727971695894L;
-	private static final int ERROR_CODE = ErrorEnum.CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME
-			.getInt();
+	private static final int ERROR_CODE = ErrorEnum.CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME.getInt();
 
-	public CatalogAlreadyHasItemByThatNameException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public CatalogAlreadyHasItemByThatNameException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public CatalogAlreadyHasItemByThatNameException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public CatalogAlreadyHasItemByThatNameException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public CatalogAlreadyHasItemByThatNameException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public CatalogAlreadyHasItemByThatNameException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -35,8 +32,7 @@ public class CatalogAlreadyHasItemByThatNameException extends JargonException {
 		super(message, ERROR_CODE);
 	}
 
-	public CatalogAlreadyHasItemByThatNameException(final String message,
-			final Throwable cause) {
+	public CatalogAlreadyHasItemByThatNameException(final String message, final Throwable cause) {
 		super(message, cause, ERROR_CODE);
 	}
 

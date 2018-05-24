@@ -192,7 +192,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	/**
 	 * Create a special type of binary input stream for data being streamed as a
 	 * result of the remote execution of an iRODS command.
-	 * 
+	 *
 	 * @param irodsCommands
 	 *            {@link AbstractIRODSMidLevelProtocol} for iRODS connections
 	 * @param fileDescriptor

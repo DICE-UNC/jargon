@@ -127,7 +127,7 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements SimpleQ
 	 * @param response
 	 *            A Tag, probably the reponse returned by getResponse().
 	 * @return A List<String> created by splitting the raw tag on newlines.
-	 * 
+	 *
 	 */
 	private List<String> extractRows(final Tag response) {
 		String rawResponse = response.getTag(OUT_BUF).getStringValue();

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
  * An entry that decribes a tag in a user tag cloud. This object identifies the
  * tag by name and can hold counts of occurrences for data objects and for
  * collections.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class TagCloudEntry implements Serializable {
 
@@ -24,7 +24,7 @@ public final class TagCloudEntry implements Serializable {
 
 	/**
 	 * Private constructor.
-	 * 
+	 *
 	 * @param irodsTagValue
 	 *            {@link IRODSTagValue} with information on the tag
 	 * @param countOfFiles
@@ -59,7 +59,7 @@ public final class TagCloudEntry implements Serializable {
 
 	/**
 	 * Get the value of the iRODS tag for this entry
-	 * 
+	 *
 	 * @return {@link IRODSTagValue} for the given cloud entry.
 	 */
 	public IRODSTagValue getIrodsTagValue() {
@@ -68,7 +68,7 @@ public final class TagCloudEntry implements Serializable {
 
 	/**
 	 * Get the count of tag occurrences for files (data objects)
-	 * 
+	 *
 	 * @return {@code int}
 	 */
 	public int getCountOfFiles() {
@@ -77,7 +77,7 @@ public final class TagCloudEntry implements Serializable {
 
 	/**
 	 * Get the count of tag occurrences for collections (directories)
-	 * 
+	 *
 	 * @return {@code int}
 	 */
 	public int getCountOfCollections() {

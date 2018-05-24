@@ -588,7 +588,7 @@ public class ResourceAOTest {
 
 	/**
 	 * ResourceAO findByName does not return parent resource #175
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

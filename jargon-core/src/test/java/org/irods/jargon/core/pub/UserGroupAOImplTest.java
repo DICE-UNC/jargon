@@ -72,7 +72,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * [#890] 806000 error UserGroupAO.find() when id is given as a string
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -194,9 +194,9 @@ public class UserGroupAOImplTest {
 	}
 
 	/**
-	 * "User lacks privileges to invoke the given API" when adding groups /
-	 * users to groups #255
-	 * 
+	 * "User lacks privileges to invoke the given API" when adding groups / users to
+	 * groups #255
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -288,7 +288,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Add the current iRODS user to a new group and see if it lists
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -324,7 +324,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Add the current iRODS user to a group that does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = InvalidGroupException.class)
@@ -342,7 +342,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Add a non-existent user to an existing user group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = InvalidUserException.class)
@@ -367,7 +367,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Add the current iRODS user to a new group twice
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DuplicateDataException.class)
@@ -420,7 +420,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * List members of a non-existent group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -460,7 +460,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Remove a user group by name that exists
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -485,9 +485,9 @@ public class UserGroupAOImplTest {
 	}
 
 	/**
-	 * Remove a user group by name that does not exist, should just log and
-	 * continue as normal
-	 * 
+	 * Remove a user group by name that does not exist, should just log and continue
+	 * as normal
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -631,7 +631,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Test a normal remove of an existing user from an existing group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -669,7 +669,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Remove a user that does not exist from the group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = InvalidUserException.class)
@@ -705,7 +705,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Test removal of valid user not in group.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -730,7 +730,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Check if an existing user is in an existing group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -757,7 +757,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * Check if an existing user is in an non-existent group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -775,7 +775,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * check null handling user group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -791,7 +791,7 @@ public class UserGroupAOImplTest {
 
 	/**
 	 * check null handling user
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)

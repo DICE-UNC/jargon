@@ -90,7 +90,7 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 		log.info("computing checksum on irodsFile: {}", irodsFile.getAbsolutePath());
 
 		DataObjInp dataObjInp = DataObjInp.instanceForDataObjectChecksum(irodsFile.getAbsolutePath());
-		dataObjInp.setTransferOptions(this.getIRODSAccessObjectFactory().buildTransferOptionsBasedOnJargonProperties());
+		dataObjInp.setTransferOptions(getIRODSAccessObjectFactory().buildTransferOptionsBasedOnJargonProperties());
 		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		if (response == null) {

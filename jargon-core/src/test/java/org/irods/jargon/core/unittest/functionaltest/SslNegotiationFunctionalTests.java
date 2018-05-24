@@ -5,8 +5,6 @@ package org.irods.jargon.core.unittest.functionaltest;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -22,6 +20,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Functional tests of various permutations of ssl negotiation and auth methods.
@@ -43,10 +43,8 @@ public class SslNegotiationFunctionalTests {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsFileSystem = IRODSFileSystem.instance();
-		settableJargonProperties = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		settableJargonProperties = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 	}
 
 	@AfterClass
@@ -57,28 +55,21 @@ public class SslNegotiationFunctionalTests {
 	@Before
 	public void before() throws Exception {
 
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 	}
 
 	@Test
-	public void testStandardLoginNoNegotiationFromClient()
-			throws JargonException {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testStandardLoginNoNegotiationFromClient() throws JargonException {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
-		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		AuthResponse actual = accessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		AuthResponse actual = accessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull(actual);
 	}
 
@@ -92,27 +83,21 @@ public class SslNegotiationFunctionalTests {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
-		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 		TrustAllX509TrustManager manager = new TrustAllX509TrustManager();
 		irodsFileSystem.getIrodsSession().setX509TrustManager(manager);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		AuthResponse actual = accessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		AuthResponse actual = accessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull(actual);
 		// Do some thing
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
 		Assert.assertTrue("time val was missing", timeVal > 0);
 	}
@@ -127,25 +112,19 @@ public class SslNegotiationFunctionalTests {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
-		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		AuthResponse actual = accessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		AuthResponse actual = accessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull(actual);
 		// Do some thing
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
 		Assert.assertTrue("time val was missing", timeVal > 0);
 	}
@@ -169,27 +148,21 @@ public class SslNegotiationFunctionalTests {
 		}
 
 		int times = 150;
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildPamIrodsAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildPamIrodsAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
-		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		for (int i = 0; i < times; i++) {
-			AuthResponse actual = accessObjectFactory
-					.authenticateIRODSAccount(irodsAccount);
+			AuthResponse actual = accessObjectFactory.authenticateIRODSAccount(irodsAccount);
 			Assert.assertNotNull(actual);
 			// Do some thing
-			EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-					.getEnvironmentalInfoAO(irodsAccount);
+			EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 			environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 			long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
 			Assert.assertTrue("time val was missing", timeVal > 0);

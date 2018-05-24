@@ -6,8 +6,6 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -24,6 +22,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -49,11 +49,9 @@ public class UserAOTest {
 
 	@Test
 	public void testGetUserAO() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		Assert.assertNotNull("userAO is null", userAO);
@@ -61,11 +59,9 @@ public class UserAOTest {
 
 	@Test
 	public void testListUsers() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		List<User> users = userAO.findAll();
@@ -75,13 +71,10 @@ public class UserAOTest {
 	@Test
 	public void testFindWhere() throws Exception {
 
-		String testUserName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		String testUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -98,10 +91,8 @@ public class UserAOTest {
 	@Test
 	public void testFindWhereNoWhere() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -113,10 +104,8 @@ public class UserAOTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindWhereNullWhere() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		userAO.findWhere(null);
@@ -125,13 +114,10 @@ public class UserAOTest {
 
 	@Test
 	public void testGetUserByIdFound() throws Exception {
-		String testUserName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
+		String testUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		User user = userAO.findByName(testUserName);
@@ -142,13 +128,10 @@ public class UserAOTest {
 
 	@Test
 	public void testGetUserByNameFound() throws Exception {
-		String testUserName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
+		String testUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		User user = userAO.findByName(testUserName);
@@ -159,11 +142,9 @@ public class UserAOTest {
 	@Test
 	public void testAddUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		String testUser = "addUserTestUser";
@@ -182,11 +163,9 @@ public class UserAOTest {
 	@Test
 	public void testUpdateUserUpdateComment() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		String testUser = "addUserUpdateComment";
 
@@ -204,21 +183,18 @@ public class UserAOTest {
 		userAO.updateUser(updateUser);
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertEquals("should have updated comment",
-				updateUser.getComment(), updatedUser.getComment());
+		Assert.assertEquals("should have updated comment", updateUser.getComment(), updatedUser.getComment());
 
 	}
 
 	@Test
 	public void testUpdateUserUpdateInfo() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserUpdateInfoTest";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -240,21 +216,18 @@ public class UserAOTest {
 		userAO.updateUser(updateUser);
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertEquals("should have updated info", updateUser.getInfo(),
-				updatedUser.getInfo());
+		Assert.assertEquals("should have updated info", updateUser.getInfo(), updatedUser.getInfo());
 
 	}
 
 	@Test
 	public void testUpdateUserInfo() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testUpdateUserInfo";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -274,20 +247,17 @@ public class UserAOTest {
 
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertEquals("should have updated info", testUser,
-				updatedUser.getInfo());
+		Assert.assertEquals("should have updated info", testUser, updatedUser.getInfo());
 	}
 
 	@Test
 	public void testRemoveUserDNBadUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testRemoveUserDNBadUser";
 		String testDN = "testRemoveUserDNBadUser";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -304,14 +274,12 @@ public class UserAOTest {
 
 	@Test(expected = InvalidUserException.class)
 	public void testAddUserDNBadUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testAddUserDNBadUser";
 		String testDN = "testAddUserDNBadUserValue";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -334,14 +302,12 @@ public class UserAOTest {
 	 */
 	@Test
 	public void testAddUserLongDN() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testAddUserLongDN";
 		String testDN = "/CN=xxxxxxxx-64f0-4d49-a0a9-508a8a5328cd/emailAddress=xxxxxxxxxxthismaynotshowup";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -365,14 +331,12 @@ public class UserAOTest {
 
 	@Test
 	public void testAddUserDN() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testAddUserDN";
 		String testDN = "testAddUserDNValue";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -404,14 +368,12 @@ public class UserAOTest {
 
 	@Test
 	public void testAddUserDNByAddUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testAddUserDNByAddUser";
 		String testDN = "testAddUserDNByAddUser";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -436,14 +398,12 @@ public class UserAOTest {
 
 	@Test
 	public void testRemoveUserDNByUpdateUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testRemoveUserDNByUpdateUser";
 		String testDN = "testRemoveUserDNByUpdateUser";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -472,15 +432,13 @@ public class UserAOTest {
 
 	@Test
 	public void testUpdateUserDNByUpdateUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testUpdateUserDNByUpdateUser";
 		String testDN = "testUpdateUserDNByUpdateUser";
 		String testDN2 = "testUpdateUserDNByUpdateUser2";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -509,14 +467,12 @@ public class UserAOTest {
 
 	@Test
 	public void testAddUserDNByUpdateUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testAddUserDNByAddUser";
 		String testDN = "testAddUserDNByAddUser";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -545,13 +501,11 @@ public class UserAOTest {
 	@Test
 	public void testUpdateUserInfoBlank() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testUpdateUserInfoBlank";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		// setup, delete user if it exists
@@ -571,20 +525,17 @@ public class UserAOTest {
 
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertEquals("should have updated info", "",
-				updatedUser.getInfo());
+		Assert.assertEquals("should have updated info", "", updatedUser.getInfo());
 	}
 
 	@Test(expected = DataNotFoundException.class)
 	public void testUpdateUserInfoNotFound() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "testUpdateUserInfoNotFound";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		userAO.updateUserInfo(testUser, testUser);
@@ -593,13 +544,11 @@ public class UserAOTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateUserInfoNullUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = null;
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		userAO.updateUserInfo(testUser, testUser);
@@ -608,12 +557,10 @@ public class UserAOTest {
 	@Test
 	public void testUpdateUserUpdateZone() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserUpdatedZone";
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -628,27 +575,23 @@ public class UserAOTest {
 		userAO.addUser(addedUser);
 
 		User updateUser = userAO.findByName(addedUser.getName());
-		updateUser.setZone(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+		updateUser.setZone(testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 		userAO.updateUser(updateUser);
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertEquals("should have updated zone", updateUser.getZone(),
-				updatedUser.getZone());
+		Assert.assertEquals("should have updated zone", updateUser.getZone(), updatedUser.getZone());
 
 	}
 
 	@Test
 	public void testUpdateUserUpdateInfoCommentAndZone() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserUpdatedInfoCommentZone";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -663,34 +606,27 @@ public class UserAOTest {
 		userAO.addUser(addedUser);
 
 		User updateUser = userAO.findByName(addedUser.getName());
-		updateUser.setZone(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+		updateUser.setZone(testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 		updateUser.setComment("updatedComment");
 		updateUser.setInfo("updatedInfo");
 
 		userAO.updateUser(updateUser);
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertEquals("should have updated zone", updateUser.getZone(),
-				updatedUser.getZone());
-		Assert.assertEquals("should have updated info", updateUser.getInfo(),
-				updatedUser.getInfo());
-		Assert.assertEquals("should have updated comment",
-				updateUser.getComment(), updatedUser.getComment());
+		Assert.assertEquals("should have updated zone", updateUser.getZone(), updatedUser.getZone());
+		Assert.assertEquals("should have updated info", updateUser.getInfo(), updatedUser.getInfo());
+		Assert.assertEquals("should have updated comment", updateUser.getComment(), updatedUser.getComment());
 
 	}
 
 	@Test
-	public void testUpdateUserUpdateInfoCommentAndZoneWhenNullZone()
-			throws Exception {
+	public void testUpdateUserUpdateInfoCommentAndZoneWhenNullZone() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserUpdatedInfoCommentZoneNullZone";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -703,8 +639,7 @@ public class UserAOTest {
 
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
-		addedUser.setZone(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+		addedUser.setZone(testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 		addedUser.setComment("orig");
 		addedUser.setInfo("orig");
 
@@ -725,27 +660,21 @@ public class UserAOTest {
 
 		User updatedUser = userAO.findByName(addedUser.getName());
 
-		Assert.assertTrue("should have caught exception before updates",
-				threwException);
-		Assert.assertEquals("should not have updated zone",
-				addedUser.getZone(), updatedUser.getZone());
-		Assert.assertEquals("should not have updated info",
-				addedUser.getInfo(), updatedUser.getInfo());
-		Assert.assertEquals("should not have updated comment",
-				addedUser.getComment(), updatedUser.getComment());
+		Assert.assertTrue("should have caught exception before updates", threwException);
+		Assert.assertEquals("should not have updated zone", addedUser.getZone(), updatedUser.getZone());
+		Assert.assertEquals("should not have updated info", addedUser.getInfo(), updatedUser.getInfo());
+		Assert.assertEquals("should not have updated comment", addedUser.getComment(), updatedUser.getComment());
 
 	}
 
 	@Test
 	public void testDeleteUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "deleteUserTestUser";
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -770,20 +699,16 @@ public class UserAOTest {
 			found = false;
 		}
 
-		Assert.assertFalse(
-				"i should not have found the user, it was supposed to be deleted",
-				found);
+		Assert.assertFalse("i should not have found the user, it was supposed to be deleted", found);
 	}
 
 	@Test(expected = DataNotFoundException.class)
 	public void testDeleteNonExistentUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
 		String testUser = "deleteUserThatDoesNotExist";
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		userAO.deleteUser(testUser);
@@ -796,15 +721,13 @@ public class UserAOTest {
 	@Test(expected = DuplicateDataException.class)
 	public void testAddDuplicateUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String testUser = "addUserDuplicateUser";
 
 		// setup, delete user if it exists
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -823,11 +746,9 @@ public class UserAOTest {
 	@Test
 	public void testListUserMetadataForId() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -849,11 +770,9 @@ public class UserAOTest {
 	@Test
 	public void testListUserMetadataForUserName() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		String meta1Attrib = "unattr1";
 		String meta1Value = "unc";
@@ -864,8 +783,7 @@ public class UserAOTest {
 		userAO.deleteAVUMetadata(irodsAccount.getUserName(), avuData);
 		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
 
-		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount
-				.getUserName());
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
 		userAO.deleteAVUMetadata(irodsAccount.getUserName(), avuData);
 
@@ -889,13 +807,11 @@ public class UserAOTest {
 		user.setInfo("info");
 		user.setName(testUser);
 		user.setUserType(UserTypeEnum.RODS_USER);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		irodsFileSystem.getIRODSAccessObjectFactory();
 
-		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		// pre-clean, remove testing user if there
 		adminUserAO.deleteUser(testUser);
@@ -910,31 +826,23 @@ public class UserAOTest {
 		// iterations
 
 		IRODSAccount userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password1);
-		UserAO myUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password1);
+		UserAO myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password1, password2);
 
 		userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password2);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
-				userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password2);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password2, password3);
 
 		userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password3);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
-				userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password3);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password3, password4);
 
 		userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password4);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
-				userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password4);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 
 		// now clean up as an admin
 
@@ -948,23 +856,19 @@ public class UserAOTest {
 		String testValue = "testAddUserMetadataValue";
 		String testUnit = "";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 		userAO.deleteAVUMetadata(irodsAccount.getUserName(), avuData);
 
 		userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
-		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount
-				.getUserName());
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
 		boolean avuFound = false;
 
 		for (AvuData actualAvuData : avuList) {
-			if (actualAvuData.getAttribute().equals(testAttrib)
-					&& actualAvuData.getValue().equals(testValue)) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValue)) {
 				avuFound = true;
 				break;
 			}
@@ -983,8 +887,7 @@ public class UserAOTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 
@@ -999,10 +902,8 @@ public class UserAOTest {
 		String testValue = "testDeleteUserMetadataValue";
 		String testUnit = "";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 
@@ -1010,21 +911,18 @@ public class UserAOTest {
 
 		userAO.deleteAVUMetadata(irodsAccount.getUserName(), avuData);
 
-		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount
-				.getUserName());
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
 		boolean avuFound = false;
 
 		for (AvuData actualAvuData : avuList) {
-			if (actualAvuData.getAttribute().equals(testAttrib)
-					&& actualAvuData.getValue().equals(testValue)) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValue)) {
 				avuFound = true;
 				break;
 			}
 		}
 
-		Assert.assertFalse("found the expected AVU, should have been deleted",
-				avuFound);
+		Assert.assertFalse("found the expected AVU, should have been deleted", avuFound);
 
 	}
 
@@ -1040,10 +938,8 @@ public class UserAOTest {
 
 		String testValueUpdate = "testModifyUserMetadataValueUpdate";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 
@@ -1053,14 +949,12 @@ public class UserAOTest {
 
 		userAO.modifyAVUMetadata(irodsAccount.getUserName(), avuData);
 
-		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount
-				.getUserName());
+		List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
 		boolean avuFound = false;
 
 		for (AvuData actualAvuData : avuList) {
-			if (actualAvuData.getAttribute().equals(testAttrib)
-					&& actualAvuData.getValue().equals(testValueUpdate)) {
+			if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValueUpdate)) {
 				avuFound = true;
 				break;
 			}
@@ -1078,10 +972,8 @@ public class UserAOTest {
 		String testUnit = "";
 		String testUser = "xxxxxxx";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 		userAO.addAVUMetadata(testUser, avuData);
@@ -1096,10 +988,8 @@ public class UserAOTest {
 		String testUnit = "";
 		String testUser = "xxxxxxx";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 		userAO.deleteAVUMetadata(testUser, avuData);
@@ -1113,10 +1003,8 @@ public class UserAOTest {
 		String testValue = "testAddUserMetadataTwiceValue";
 		String testUnit = "";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 
@@ -1124,14 +1012,12 @@ public class UserAOTest {
 			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
 			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
 
-			List<AvuData> avuList = userAO
-					.listUserMetadataForUserName(irodsAccount.getUserName());
+			List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
 			boolean avuFound = false;
 
 			for (AvuData actualAvuData : avuList) {
-				if (actualAvuData.getAttribute().equals(testAttrib)
-						&& actualAvuData.getValue().equals(testValue)) {
+				if (actualAvuData.getAttribute().equals(testAttrib) && actualAvuData.getValue().equals(testValue)) {
 					avuFound = true;
 					break;
 				}
@@ -1147,11 +1033,9 @@ public class UserAOTest {
 
 	@Test
 	public void testFindUserNameWhereUserNameLike() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -1161,13 +1045,10 @@ public class UserAOTest {
 	}
 
 	@Test
-	public void testFindUserNameWhereUserNameLikeNoResultExpected()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testFindUserNameWhereUserNameLikeNoResultExpected() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -1177,13 +1058,10 @@ public class UserAOTest {
 	}
 
 	@Test
-	public void testFindUserNameWhereUserNameLikeUserNameSpaces()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testFindUserNameWhereUserNameLikeUserNameSpaces() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
@@ -1195,22 +1073,18 @@ public class UserAOTest {
 	@Test
 	public void testGenerateTempPassword() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		String tempPassword = userAO.getTemporaryPasswordForConnectedUser();
 		Assert.assertNotNull("null temp password", tempPassword);
 
-		IRODSAccount account = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, irodsAccount.getUserName(),
-						tempPassword);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(account);
+		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+				testingProperties, irodsAccount.getUserName(), tempPassword);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(account);
 		Assert.assertNotNull("did not connect and get environmental info",
 				environmentalInfoAO.getIRODSServerProperties());
 
@@ -1223,37 +1097,30 @@ public class UserAOTest {
 	 *             This looks like an iRODS bug, reported, ignored for now....
 	 */
 	@Ignore
-	public void testGenerateTempPasswordWhenPAMAuthenticatedBug1070()
-			throws Exception {
+	public void testGenerateTempPasswordWhenPAMAuthenticatedBug1070() throws Exception {
 
 		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
 			return;
 		}
 
-		String pamUser = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
-		String pamPassword = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+		String pamUser = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+		String pamPassword = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, pamUser, pamPassword);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser, pamPassword);
 
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		String tempPassword = userAO.getTemporaryPasswordForConnectedUser();
 		Assert.assertNotNull("null temp password", tempPassword);
 
-		IRODSAccount account = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, irodsAccount.getUserName(),
-						tempPassword);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(account);
+		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+				testingProperties, irodsAccount.getUserName(), tempPassword);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(account);
 		Assert.assertNotNull("did not connect and get environmental info",
 				environmentalInfoAO.getIRODSServerProperties());
 
@@ -1266,50 +1133,41 @@ public class UserAOTest {
 	 */
 	@Ignore
 	// wait for next iRODS release
-	public void testGenerateTempPasswordForAnotherUserAsRodsAdmin()
-			throws Exception {
+	public void testGenerateTempPasswordForAnotherUserAsRodsAdmin() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
-		String tempUserName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
+		String tempUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_KEY);
 
-		String tempPassword = userAO
-				.getTemporaryPasswordForASpecifiedUser(tempUserName);
+		String tempPassword = userAO.getTemporaryPasswordForASpecifiedUser(tempUserName);
 		Assert.assertNotNull("null temp password", tempPassword);
 
-		IRODSAccount account = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, tempUserName, tempPassword);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(account);
+		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+				testingProperties, tempUserName, tempPassword);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(account);
 		Assert.assertNotNull("did not connect and get environmental info",
 				environmentalInfoAO.getIRODSServerProperties());
 
 	}
 
 	/**
-	 * Generate a password on behalf of a normal test user. In this case, I am
-	 * not rodsadmin and not privileged. This should cause an error
+	 * Generate a password on behalf of a normal test user. In this case, I am not
+	 * rodsadmin and not privileged. This should cause an error
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testGenerateTempPasswordForAnotherUserWhenNotRodsAdmin()
-			throws Exception {
+	public void testGenerateTempPasswordForAnotherUserWhenNotRodsAdmin() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
-		String tempUserName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
+		String tempUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
 
 		boolean gotException = false;
 
@@ -1322,8 +1180,7 @@ public class UserAOTest {
 			gotException = true;
 		}
 
-		Assert.assertTrue("did not get expected API priv exception",
-				gotException);
+		Assert.assertTrue("did not get expected API priv exception", gotException);
 
 	}
 }

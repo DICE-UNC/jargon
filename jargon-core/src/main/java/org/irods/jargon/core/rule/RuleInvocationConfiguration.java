@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -16,7 +16,7 @@ import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
  * automatic mode, it may select the default name for the iRODS or Python rule
  * engine based on the <code>JargonProperties</code>, or it can even directly
  * enter the name of a targeted rule engine.
- * 
+ *
  * @author Mike Conway
  *
  */
@@ -56,7 +56,7 @@ public class RuleInvocationConfiguration {
 	 * signatures of {@link RuleProcessingAO} before the introduction of this
 	 * configuration object. This is a deprecated set of methods, and it is
 	 * recommended that users change to signatures that
-	 * 
+	 *
 	 * @return {@link RuleInvocationConfiguration}
 	 */
 	public static RuleInvocationConfiguration instanceWithDefaultAutoSettings() {
@@ -77,7 +77,7 @@ public class RuleInvocationConfiguration {
 	 * @param irodsRuleInvocationTypeEnum
 	 *            the irodsRuleInvocationTypeEnum to set
 	 */
-	public void setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum irodsRuleInvocationTypeEnum) {
+	public void setIrodsRuleInvocationTypeEnum(final IrodsRuleInvocationTypeEnum irodsRuleInvocationTypeEnum) {
 		this.irodsRuleInvocationTypeEnum = irodsRuleInvocationTypeEnum;
 	}
 
@@ -92,13 +92,13 @@ public class RuleInvocationConfiguration {
 	 * @param ruleEngineSpecifier
 	 *            the ruleEngineSpecifier to set
 	 */
-	public void setRuleEngineSpecifier(String ruleEngineSpecifier) {
+	public void setRuleEngineSpecifier(final String ruleEngineSpecifier) {
 		this.ruleEngineSpecifier = ruleEngineSpecifier;
 	}
 
 	/**
 	 * Create a complete clone of the configuration
-	 * 
+	 *
 	 * @param ruleInvocationConfiguration
 	 *            {@link RuleInvocationConfiguration} to copy
 	 * @return copied {@link RuleInvocationConfiguration}
@@ -140,7 +140,7 @@ public class RuleInvocationConfiguration {
 		return ruleProcessingType;
 	}
 
-	public void setRuleProcessingType(RuleProcessingType ruleProcessingType) {
+	public void setRuleProcessingType(final RuleProcessingType ruleProcessingType) {
 		this.ruleProcessingType = ruleProcessingType;
 	}
 
@@ -148,19 +148,19 @@ public class RuleInvocationConfiguration {
 		return encodeRuleEngineInstance;
 	}
 
-	public void setEncodeRuleEngineInstance(boolean encodeRuleEngineInstance) {
+	public void setEncodeRuleEngineInstance(final boolean encodeRuleEngineInstance) {
 		this.encodeRuleEngineInstance = encodeRuleEngineInstance;
 	}
 
 	/**
 	 * Create an instance based on any settings in jargon properties
-	 * 
+	 *
 	 * @param jargonProperties
 	 *            {@link JargonProperties} that are binding
 	 * @return {@link RuleInvocationConfiguration} that contains general parameter
 	 *         settings
 	 */
-	public static RuleInvocationConfiguration instanceWithDefaultAutoSettings(JargonProperties jargonProperties) {
+	public static RuleInvocationConfiguration instanceWithDefaultAutoSettings(final JargonProperties jargonProperties) {
 		if (jargonProperties == null) {
 			throw new IllegalArgumentException("null jargonProperties");
 		}

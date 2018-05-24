@@ -1,6 +1,6 @@
 /**
  * Utilities to support file archives, like tar and zip
- * 
+ *
  * @author Mike Conway - DICE
  *
  */

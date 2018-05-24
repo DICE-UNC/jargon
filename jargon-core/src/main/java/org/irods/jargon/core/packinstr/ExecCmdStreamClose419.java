@@ -78,7 +78,7 @@ public final class ExecCmdStreamClose419 extends AbstractIRODSPackingInstruction
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

@@ -3,14 +3,14 @@ package org.irods.jargon.core.utils;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class LocalFileUtilsTest {
 
@@ -23,8 +23,7 @@ public class LocalFileUtilsTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@AfterClass
@@ -35,14 +34,10 @@ public class LocalFileUtilsTest {
 	public void testCountFilesInDirectory() throws Exception {
 		String rootCollection = "testCountFilesInDirectory";
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
 
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
+				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		File rootCollectionFile = new File(localCollectionAbsolutePath);
 		int fileCtr = LocalFileUtils.countFilesInDirectory(rootCollectionFile);
@@ -79,13 +74,10 @@ public class LocalFileUtilsTest {
 	@Test
 	public void testGenerateSHA256Checksum() throws Exception {
 		String testFileName = "testGenerateSHA256Checksum.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
 
-		byte[] actual = LocalFileUtils
-				.computeSHA256FileCheckSumViaAbsolutePath(localFileName);
+		byte[] actual = LocalFileUtils.computeSHA256FileCheckSumViaAbsolutePath(localFileName);
 		Assert.assertNotNull("no checksum", actual);
 
 	}

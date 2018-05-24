@@ -124,7 +124,7 @@ public interface IRODSFile {
 	 * guaranteed not to change until it is either deleted or marked to allow write
 	 * access. Whether or not a read-only file or directory may be deleted depends
 	 * upon the underlying system.
-	 * 
+	 *
 	 * @param executable
 	 *            {@code boolean} with the desired execute state
 	 * @param ownerOnly
@@ -139,7 +139,7 @@ public interface IRODSFile {
 	 * guaranteed not to change until it is either deleted or marked to allow write
 	 * access. Whether or not a read-only file or directory may be deleted depends
 	 * upon the underlying system.
-	 * 
+	 *
 	 * @param executable
 	 *            {@code boolean} with executable state
 	 * @return {@code boolean} indicating success
@@ -149,7 +149,7 @@ public interface IRODSFile {
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
-	 * 
+	 *
 	 * @param time
 	 *            {@code long} with the last modified date
 	 * @return {@code boolean} indicating success
@@ -159,7 +159,7 @@ public interface IRODSFile {
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
-	 * 
+	 *
 	 * @param readable
 	 *            {@code boolean} indicating the readable state to set
 	 * @param ownerOnly
@@ -171,7 +171,7 @@ public interface IRODSFile {
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
-	 * 
+	 *
 	 * @param readable
 	 *            {@code boolean} indicating desired read state
 	 * @return {@code boolean} indicating success
@@ -181,7 +181,7 @@ public interface IRODSFile {
 	/**
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
-	 * 
+	 *
 	 * @return {@code boolean} indicating success
 	 */
 	boolean setReadOnly();
@@ -264,17 +264,17 @@ public interface IRODSFile {
 
 	/**
 	 * Rename to a new target location
-	 * 
+	 *
 	 * @param dest
 	 *            {@link IRODSFile} that is the target of the rename
 	 * @return {@code boolean} if successful
-	 * 
+	 *
 	 */
 	boolean renameTo(IRODSFile dest);
 
 	/**
 	 * Rename to a new target location
-	 * 
+	 *
 	 * @param dest
 	 *            {@link File} that is the target. This must be an {@link IRODSFile}
 	 *            and will be cast as such in the implementation, other types will
@@ -312,7 +312,7 @@ public interface IRODSFile {
 	 * available. This is an iRODS oriented variation on the
 	 * {@code java.io.File createNewFile()} method to handle cases where no defautl
 	 * storage resource is found
-	 * 
+	 *
 	 * @param openFlags
 	 *            {@link OpenFlags} for create
 	 *

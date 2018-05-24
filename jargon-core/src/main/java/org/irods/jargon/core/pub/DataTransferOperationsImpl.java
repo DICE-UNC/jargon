@@ -80,7 +80,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#physicalMove(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -140,7 +140,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#move(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -168,7 +168,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#move(org.irods.jargon
 	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
 	 */
@@ -219,7 +219,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#getOperation(org.irods
 	 * .jargon.core.pub.io.IRODSFile, java.io.File,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
@@ -471,7 +471,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#getOperation(java.lang
 	 * .String, java.lang.String, java.lang.String,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
@@ -585,7 +585,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#putOperation(java.io
 	 * .File, org.irods.jargon.core.pub.io.IRODSFile,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
@@ -812,7 +812,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#putOperation(java.lang
 	 * .String, java.lang.String, java.lang.String,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
@@ -1055,7 +1055,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#replicate(java.lang.
 	 * String, java.lang.String,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
@@ -1180,7 +1180,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String,
 	 * java.lang.String, java.lang.String,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener, boolean,
@@ -1248,7 +1248,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String,
 	 * java.lang.String, java.lang.String,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
@@ -1290,7 +1290,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataTransferOperations#copy(org.irods.jargon
 	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,

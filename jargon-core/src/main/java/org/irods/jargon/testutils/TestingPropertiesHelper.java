@@ -118,7 +118,7 @@ public class TestingPropertiesHelper {
 	 * @return {@link Properties} class with the test values
 	 * @throws TestConfigurationException
 	 *             {@link TestConfigurationException}
-	 * 
+	 *
 	 */
 	public Properties getTestProperties() throws TestConfigurationException {
 		ClassLoader loader = this.getClass().getClassLoader();
@@ -165,7 +165,7 @@ public class TestingPropertiesHelper {
 	 *
 	 * @param testingProperties
 	 *            {@link Properties} file with the standard names defined in
-	 * 
+	 *
 	 * @param fileName
 	 *            {@link String} with the path (no leading '/') below the user
 	 *            scratch directory as defined in testing.properties
@@ -226,7 +226,7 @@ public class TestingPropertiesHelper {
 	 *
 	 * @param testingProperties
 	 *            {@link Properties} file with the standard names defined in
-	 * 
+	 *
 	 * @param fileName
 	 *            {@link String} with the path (no leading '/') below the user
 	 *            scratch directory as defined in testing.properties
@@ -268,7 +268,7 @@ public class TestingPropertiesHelper {
 	 *
 	 * @param testingProperties
 	 *            {@link Properties} file with the standard names defined in
-	 * 
+	 *
 	 * @param fileName
 	 *            {@link String} with the path (no leading '/') below the user
 	 *            scratch directory as defined in testing.properties
@@ -985,7 +985,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional audit system is to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 *            {@link Properties}
 	 * @return <code>boolean</code> with option

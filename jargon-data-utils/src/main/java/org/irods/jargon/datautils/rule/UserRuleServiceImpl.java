@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.rule;
 
@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Utilities to manage user defined rules in iRODS via a convention for a user
  * rules dir
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserRuleServiceImpl extends AbstractJargonService implements UserRuleService {
 
@@ -53,7 +53,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements UserRu
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.rule.UserRulesService#listUserRules()
 	 */
 	@Override

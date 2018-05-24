@@ -23,37 +23,31 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Eventually, we can expand the ticket distribution channels to include email
  * and other services.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class TicketDistributionServiceImpl extends AbstractTicketService
-		implements TicketDistributionService {
+public class TicketDistributionServiceImpl extends AbstractTicketService implements TicketDistributionService {
 
 	private final TicketServiceFactory ticketServiceFactory;
 	private final TicketDistributionContext ticketDistributionContext;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(TicketDistributionServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(TicketDistributionServiceImpl.class);
 
 	/**
-	 * Default constructor takes the objects necessary to communicate with iRODS
-	 * via Access Objects
-	 * 
+	 * Default constructor takes the objects necessary to communicate with iRODS via
+	 * Access Objects
+	 *
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} that can create various
-	 *            access objects
+	 *            {@link IRODSAccessObjectFactory} that can create various access
+	 *            objects
 	 * @param irodsAccount
-	 *            {@link IRODSAccount} with login information for the target
-	 *            grid
+	 *            {@link IRODSAccount} with login information for the target grid
 	 * @throws JargonException
 	 */
-	TicketDistributionServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount,
-			final TicketServiceFactory ticketServiceFactory,
-			final TicketDistributionContext ticketDistributionContext)
-			throws JargonException {
+	TicketDistributionServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount, final TicketServiceFactory ticketServiceFactory,
+			final TicketDistributionContext ticketDistributionContext) throws JargonException {
 
 		super(irodsAccessObjectFactory, irodsAccount);
 
@@ -72,13 +66,12 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ticket.TicketDistributionService#
 	 * getTicketDistributionForTicket(org.irods.jargon.ticket.Ticket)
 	 */
 	@Override
-	public TicketDistribution getTicketDistributionForTicket(final Ticket ticket)
-			throws JargonException {
+	public TicketDistribution getTicketDistributionForTicket(final Ticket ticket) throws JargonException {
 
 		log.info("getTicketDistributionForTicket()");
 
@@ -90,26 +83,22 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 
 		// a few short sanity checks on the ticket
 
-		if (ticket.getTicketString() == null
-				|| ticket.getTicketString().isEmpty()) {
-			throw new IllegalArgumentException(
-					"no ticketString in ticket, appears not to be valid");
+		if (ticket.getTicketString() == null || ticket.getTicketString().isEmpty()) {
+			throw new IllegalArgumentException("no ticketString in ticket, appears not to be valid");
 		}
 
-		if (ticket.getIrodsAbsolutePath() == null
-				|| ticket.getIrodsAbsolutePath().isEmpty()) {
-			throw new IllegalArgumentException(
-					"no irodsAbsolutePath in ticket, appears not to be valid");
+		if (ticket.getIrodsAbsolutePath() == null || ticket.getIrodsAbsolutePath().isEmpty()) {
+			throw new IllegalArgumentException("no irodsAbsolutePath in ticket, appears not to be valid");
 		}
 
 		TicketDistribution ticketDistribution = new TicketDistribution();
 		ticketDistribution.setTicket(ticket);
 		ticketDistribution.setIrodsAccessURI(IRODSUriUtils
-				.buildURIForAnAccountWithNoUserInformationIncluded(
-						irodsAccount, ticket.getIrodsAbsolutePath()));
+				.buildURIForAnAccountWithNoUserInformationIncluded(irodsAccount, ticket.getIrodsAbsolutePath()));
 
 		if (!ticketDistributionContext.getHost().isEmpty()) {
-			log.info("host info is present in ticket distribution context, so add a generated URL given the other information...");
+			log.info(
+					"host info is present in ticket distribution context, so add a generated URL given the other information...");
 			// create a string in the expected scheme
 			// <scheme>://<authority><path>?<query>#<fragment>
 			StringBuilder sb = new StringBuilder();
@@ -155,10 +144,10 @@ public class TicketDistributionServiceImpl extends AbstractTicketService
 			ticketDistribution.setTicketURL(accessURL);
 
 			/*
-			 * Tack on a ticket landing page for the url with landing page
-			 * information. This URL will request display of an intermediate
-			 * page if the ticket is redeemed, versus direct download of a file.
-			 * The processing of such a request is dependent on the client.
+			 * Tack on a ticket landing page for the url with landing page information. This
+			 * URL will request display of an intermediate page if the ticket is redeemed,
+			 * versus direct download of a file. The processing of such a request is
+			 * dependent on the client.
 			 */
 
 			sb.append("&landingPage=true");

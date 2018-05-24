@@ -1,10 +1,10 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class SSLStartInpTest {
 
@@ -20,8 +20,7 @@ public class SSLStartInpTest {
 	public final void testInstance() {
 		SSLStartInp sslStartInp = SSLStartInp.instance();
 		Assert.assertNotNull("null sslStartInp");
-		Assert.assertEquals("wrong API number", SSLStartInp.SSL_START_API_NBR,
-				sslStartInp.getApiNumber());
+		Assert.assertEquals("wrong API number", SSLStartInp.SSL_START_API_NBR, sslStartInp.getApiNumber());
 	}
 
 }

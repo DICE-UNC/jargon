@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -34,6 +32,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class TicketAdminServiceImplTest {
 
@@ -67,17 +67,13 @@ public class TicketAdminServiceImplTest {
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 
 		// delete any tickets to start fresh
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 		ticketSvc.deleteAllTicketsForThisUser();
 	}
 
@@ -88,52 +84,36 @@ public class TicketAdminServiceImplTest {
 		}
 	}
 
-	private IRODSFile createDataObjectByName(final String fileName,
-			final String resource, final IRODSAccount irodsAccount,
-			final IRODSAccessObjectFactory accessObjectFactory)
-			throws Exception {
+	private IRODSFile createDataObjectByName(final String fileName, final String resource,
+			final IRODSAccount irodsAccount, final IRODSAccessObjectFactory accessObjectFactory) throws Exception {
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, fileName, 1);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, fileName, 1);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		DataTransferOperations dataTransferOperations = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dataTransferOperations.putOperation(localFileName,
-				targetIrodsCollection, resource, null, null);
+		DataTransferOperations dataTransferOperations = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(localFileName, targetIrodsCollection, resource, null, null);
 
-		IRODSFile targetFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + fileName);
+		IRODSFile targetFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + fileName);
 
 		return targetFile;
 	}
 
-	private IRODSFile createCollectionByName(final String collectionName,
-			final IRODSAccount irodsAccount,
-			final IRODSAccessObjectFactory accessObjectFactory)
-			throws Exception {
+	private IRODSFile createCollectionByName(final String collectionName, final IRODSAccount irodsAccount,
+			final IRODSAccessObjectFactory accessObjectFactory) throws Exception {
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ collectionName);
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + collectionName);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile dirFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
+		IRODSFile dirFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
 		dirFile.mkdirs();
 
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile targetFile = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection);
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile targetFile = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection);
 
 		return targetFile;
 	}
@@ -147,33 +127,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 
@@ -193,33 +165,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectAndThenListIt.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		List<Ticket> tickets = ticketSvc.listAllTicketsForDataObjects(0);
 		Assert.assertTrue("tickets array has no values", tickets.size() > 0);
@@ -238,35 +202,27 @@ public class TicketAdminServiceImplTest {
 
 		String testCollection = "testCreateTicketForCollectionAndThenListIt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testCollection);
-		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testCollection);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		targetFile.mkdirs();
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		List<Ticket> tickets = ticketSvc.listAllTicketsForCollections(0);
 		Assert.assertTrue("tickets array has no values", tickets.size() > 0);
@@ -274,13 +230,10 @@ public class TicketAdminServiceImplTest {
 		boolean foundIt = false;
 		// find my ticket
 		for (Ticket actualTicket : tickets) {
-			if (actualTicket.getIrodsAbsolutePath().equals(
-					targetIrodsCollection)) {
+			if (actualTicket.getIrodsAbsolutePath().equals(targetIrodsCollection)) {
 				foundIt = true;
-				Assert.assertEquals("ticket wrong type",
-						TicketCreateModeEnum.READ, actualTicket.getType());
-				Assert.assertEquals("wrong object type",
-						Ticket.TicketObjectType.COLLECTION,
+				Assert.assertEquals("ticket wrong type", TicketCreateModeEnum.READ, actualTicket.getType());
+				Assert.assertEquals("wrong object type", Ticket.TicketObjectType.COLLECTION,
 						actualTicket.getObjectType());
 			}
 		}
@@ -300,31 +253,24 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectDoesNotExist";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		IRODSFile targetFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSFile targetFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		boolean gotError = false;
 
@@ -347,33 +293,24 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectNullFile.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+		createDataObjectByName(testFileName, testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				null, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, null, null);
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -389,30 +326,23 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectNullMode.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		String ticketId = ticketSvc.createTicket(null, targetFile, null);
 
@@ -430,30 +360,23 @@ public class TicketAdminServiceImplTest {
 
 		String collectionName = "testCreateTicketForCollectionExists";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile collection = createCollectionByName(collectionName,
-				irodsAccount, accessObjectFactory);
+		IRODSFile collection = createCollectionByName(collectionName, irodsAccount, accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				collection, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, collection, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 
@@ -473,37 +396,27 @@ public class TicketAdminServiceImplTest {
 
 		String collectionName = "testCreateTicketForCollectionDoesNotExist";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ collectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + collectionName);
 
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile collection = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection);
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile collection = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				collection, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, collection, null);
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -511,8 +424,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testCreateTicketForDataObjectInDifferentResource()
-			throws Exception {
+	public void testCreateTicketForDataObjectInDifferentResource() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -520,33 +432,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectInDifferentResource.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 
@@ -558,8 +462,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = JargonException.class)
-	public void testCreateTicketForDataObjectBelongingToDifferentUser()
-			throws Exception {
+	public void testCreateTicketForDataObjectBelongingToDifferentUser() throws Exception {
 
 		if (!testTicket) {
 			throw new DataNotFoundException("expected");
@@ -567,56 +470,39 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectBelongingToDifferentUser.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccount irodsAccount2 = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new JargonException("thrown for expectations");
 		}
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		DataTransferOperations dataTransferOperations = accessObjectFactory
-				.getDataTransferOperations(irodsAccount2);
-		TransferControlBlock tcb = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		DataTransferOperations dataTransferOperations = accessObjectFactory.getDataTransferOperations(irodsAccount2);
+		TransferControlBlock tcb = irodsFileSystem.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
-		dataTransferOperations
-				.putOperation(
-						localFileName,
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-						null, tcb);
+		dataTransferOperations.putOperation(localFileName, targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), null, tcb);
 
-		IRODSFile targetFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+		IRODSFile targetFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -624,8 +510,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = DuplicateDataException.class)
-	public void testCreateTicketForDataObjectNonUniqueTicketString()
-			throws Exception {
+	public void testCreateTicketForDataObjectNonUniqueTicketString() throws Exception {
 
 		if (!testTicket) {
 			throw new DuplicateDataException("expected");
@@ -633,43 +518,33 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCreateTicketForDataObjectNonUniqueTicketString.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new DuplicateDataException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, DUPLICATE_ID);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, DUPLICATE_ID);
 
-		ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile,
-				DUPLICATE_ID);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, DUPLICATE_ID);
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
 	}
 
 	@Test(expected = DuplicateDataException.class)
-	public void testCreateTicketForDifferentDataObjectsNonUniqueTicketString()
-			throws Exception {
+	public void testCreateTicketForDifferentDataObjectsNonUniqueTicketString() throws Exception {
 
 		if (!testTicket) {
 			throw new DuplicateDataException("expected");
@@ -682,40 +557,29 @@ public class TicketAdminServiceImplTest {
 		String testFileName1 = "testCreateTicketForDifferentDataObjectsNonUniqueTicketString1.txt";
 		String testFileName2 = "testCreateTicketForDifferentDataObjectsNonUniqueTicketString2.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new DuplicateDataException("thrown for expectations");
 		}
 
-		IRODSFile targetFile1 = createDataObjectByName(
-				testFileName1,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
-		IRODSFile targetFile2 = createDataObjectByName(
-				testFileName2,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile1 = createDataObjectByName(testFileName1,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
+		IRODSFile targetFile2 = createDataObjectByName(testFileName2,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId1 = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile1, "hellothere");
+		String ticketId1 = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile1, "hellothere");
 
-		String ticketId2 = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile2, "hellothere");
+		String ticketId2 = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile2, "hellothere");
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId1);
@@ -735,40 +599,30 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testDeleteTicketForDataObjectExists.txt";
 		String ticketId = "deleteMe" + System.currentTimeMillis();
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
-		String targetIrodsFileName = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
+		String targetIrodsFileName = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
 
 		File sourceFile = new File(localFileName);
-		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsFileName);
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsFileName);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
 		dto.putOperation(sourceFile, targetFile, null, null);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, ticketId);
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
@@ -789,40 +643,30 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testDeleteTicketForDataObjectDoesNotExist.txt";
 		String ticketId = "deleteMe" + System.currentTimeMillis();
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
-		String targetIrodsFileName = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
+		String targetIrodsFileName = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
 
 		File sourceFile = new File(localFileName);
-		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsFileName);
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsFileName);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
 		dto.putOperation(sourceFile, targetFile, null, null);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, ticketId);
 
@@ -844,24 +688,19 @@ public class TicketAdminServiceImplTest {
 		}
 		String ticketId = "Idonotexist";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 		boolean result = ticketSvc.deleteTicket(ticketId);
 		Assert.assertFalse("ticket delete unsuccessful expected", result);
 	}
@@ -875,30 +714,23 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testDeleteTicketWithNullTicketString.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
@@ -915,33 +747,25 @@ public class TicketAdminServiceImplTest {
 		int numberOfUses = 22;
 		String testFileName = "testModifyTicketUsesLimitForDataObjectExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		Assert.assertTrue(ticketSvc.setTicketUsesLimit(ticketId, numberOfUses));
 
@@ -955,8 +779,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketUsesLimitForTicketDoesNotExist()
-			throws Exception {
+	public void testModifyTicketUsesLimitForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -965,33 +788,25 @@ public class TicketAdminServiceImplTest {
 		int numberOfUses = 22;
 		String testFileName = "testModifyTicketUsesLimitForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
@@ -1001,8 +816,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketUsesLimitForTicketExistsNullTicketId()
-			throws Exception {
+	public void testModifyTicketUsesLimitForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1011,33 +825,25 @@ public class TicketAdminServiceImplTest {
 		int numberOfUses = 22;
 		String testFileName = "testModifyTicketUsesLimitForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		ticketSvc.setTicketUsesLimit(null, numberOfUses);
 
@@ -1047,8 +853,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketUsesLimitForTicketExistsUsesLessThan0()
-			throws Exception {
+	public void testModifyTicketUsesLimitForTicketExistsUsesLessThan0() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1056,33 +861,25 @@ public class TicketAdminServiceImplTest {
 		int numberOfUses = -1;
 		String testFileName = "testModifyTicketUsesLimitForTicketExistsUsesLessThan0.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		ticketSvc.setTicketUsesLimit(ticketId, numberOfUses);
 
@@ -1092,8 +889,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketFileWriteLimitForTicketExists()
-			throws Exception {
+	public void testModifyTicketFileWriteLimitForTicketExists() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1102,36 +898,27 @@ public class TicketAdminServiceImplTest {
 		int numberFileWrites = 102;
 		String testFileName = "testModifyTicketFileWriteLimitForDataObjectExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.setTicketFileWriteLimit(ticketId,
-				numberFileWrites));
+		Assert.assertTrue(ticketSvc.setTicketFileWriteLimit(ticketId, numberFileWrites));
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 
@@ -1143,8 +930,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketFileWriteLimitForTicketDoesNotExist()
-			throws Exception {
+	public void testModifyTicketFileWriteLimitForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1153,45 +939,35 @@ public class TicketAdminServiceImplTest {
 		int numberFileWrites = 102;
 		String testFileName = "testModifyTicketFileWriteLimitForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.setTicketFileWriteLimit(ticketId,
-				numberFileWrites));
+		Assert.assertFalse(ticketSvc.setTicketFileWriteLimit(ticketId, numberFileWrites));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketFileWriteLimitForTicketExistsNullTicketId()
-			throws Exception {
+	public void testModifyTicketFileWriteLimitForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1200,33 +976,25 @@ public class TicketAdminServiceImplTest {
 		int numberFileWrites = 102;
 		String testFileName = "testModifyTicketFileWriteLimitForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketFileWriteLimit(null, numberFileWrites);
 
@@ -1236,8 +1004,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketFileWriteLimitForTicketExistsLimitLessThan0()
-			throws Exception {
+	public void testModifyTicketFileWriteLimitForTicketExistsLimitLessThan0() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1246,32 +1013,24 @@ public class TicketAdminServiceImplTest {
 		int numberFileWrites = -1;
 		String testFileName = "testModifyTicketFileWriteLimitForTicketExistsLimitLessThan0.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketFileWriteLimit(ticketId, numberFileWrites);
 
@@ -1281,8 +1040,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketByteWriteLimitForTicketExists()
-			throws Exception {
+	public void testModifyTicketByteWriteLimitForTicketExists() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1291,35 +1049,26 @@ public class TicketAdminServiceImplTest {
 		int numberByteWrites = 100993;
 		String testFileName = "testModifyTicketByteWriteLimitForDataObjectExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.setTicketByteWriteLimit(ticketId,
-				numberByteWrites));
+		Assert.assertTrue(ticketSvc.setTicketByteWriteLimit(ticketId, numberByteWrites));
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 
@@ -1331,8 +1080,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketByteWriteLimitForTicketDoesNotExist()
-			throws Exception {
+	public void testModifyTicketByteWriteLimitForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1341,43 +1089,33 @@ public class TicketAdminServiceImplTest {
 		int numberByteWrites = 100993;
 		String testFileName = "testModifyTicketByteWriteLimitForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.setTicketByteWriteLimit(ticketId,
-				numberByteWrites));
+		Assert.assertFalse(ticketSvc.setTicketByteWriteLimit(ticketId, numberByteWrites));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketByteWriteLimitForTicketExistsNullTicketId()
-			throws Exception {
+	public void testModifyTicketByteWriteLimitForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1386,21 +1124,15 @@ public class TicketAdminServiceImplTest {
 		int numberByteWrites = 100993;
 		String testFileName = "testModifyTicketByteWriteLimitForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketByteWriteLimit(null, numberByteWrites);
 
@@ -1410,8 +1142,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketByteWriteLimitForTicketExistsLimitLessThan0()
-			throws Exception {
+	public void testModifyTicketByteWriteLimitForTicketExistsLimitLessThan0() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1420,32 +1151,24 @@ public class TicketAdminServiceImplTest {
 		int numberByteWrites = -1;
 		String testFileName = "testModifyTicketByteWriteLimitForTicketExistsLimitLessThan0.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketByteWriteLimit(ticketId, numberByteWrites);
 
@@ -1466,32 +1189,24 @@ public class TicketAdminServiceImplTest {
 		expireSoon.setTime(now + 2000);
 		String testFileName = "testModifyTicketExpirationForTicketExistsxxx.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Assert.assertTrue(ticketSvc.setTicketExpiration(ticketId, expireSoon));
 
@@ -1512,8 +1227,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketExpirationForTicketDoesNotExist()
-			throws Exception {
+	public void testModifyTicketExpirationForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1524,21 +1238,15 @@ public class TicketAdminServiceImplTest {
 		expireSoon.setTime(now + 2000);
 		String testFileName = "testModifyTicketExpirationForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
@@ -1548,8 +1256,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testModifyTicketExpirationForTicketExistsNullTicketId()
-			throws Exception {
+	public void testModifyTicketExpirationForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1560,33 +1267,25 @@ public class TicketAdminServiceImplTest {
 		expireSoon.setTime(now + 2000);
 		String testFileName = "testModifyTicketExpirationForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketExpiration(null, expireSoon);
 
@@ -1596,8 +1295,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testModifyTicketExpirationForTicketExistsNullExpiration()
-			throws Exception {
+	public void testModifyTicketExpirationForTicketExistsNullExpiration() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1606,38 +1304,29 @@ public class TicketAdminServiceImplTest {
 		Date expireSoon = null;
 		String testFileName = "testModifyTicketExpirationForTicketExistsNullExpiration.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.setTicketExpiration(ticketId, expireSoon);
 
 		Ticket actual = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
-		Assert.assertNull("should have removed expire date",
-				actual.getExpireTime());
+		Assert.assertNull("should have removed expire date", actual.getExpireTime());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -1653,38 +1342,28 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketUserRestrictionForTicketExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		List<String> users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		List<String> users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(irodsAccount.getUserName(), users.get(0));
 
 		// delete ticket after done
@@ -1693,8 +1372,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testAddTicketUserRestrictionForTicketDoesNotExist()
-			throws Exception {
+	public void testAddTicketUserRestrictionForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1702,33 +1380,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketUserRestrictionForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
+		Assert.assertFalse(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddTicketUserRestrictionForTicketExistsNullTicketId()
-			throws Exception {
+	public void testAddTicketUserRestrictionForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1736,33 +1406,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketUserRestrictionForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketUserRestriction(null, irodsAccount.getUserName());
 
@@ -1772,8 +1434,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddTicketUserRestrictionForTicketExistsNullUserId()
-			throws Exception {
+	public void testAddTicketUserRestrictionForTicketExistsNullUserId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1781,32 +1442,24 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketUserRestrictionForTicketExistsNullUserId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketUserRestriction(ticketId, null);
 
@@ -1816,8 +1469,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = InvalidUserException.class)
-	public void testAddTicketUserRestrictionForTicketExistsInvalidUser()
-			throws Exception {
+	public void testAddTicketUserRestrictionForTicketExistsInvalidUser() throws Exception {
 
 		if (!testTicket) {
 			throw new InvalidUserException("expected");
@@ -1827,33 +1479,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketUserRestrictionForTicketExistsInvalidUser.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new InvalidUserException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketUserRestriction(ticketId, invalidUser);
 
@@ -1863,8 +1507,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testRemoveTicketUserRestrictionForTicketExists()
-			throws Exception {
+	public void testRemoveTicketUserRestrictionForTicketExists() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1872,43 +1515,31 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		List<String> users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		List<String> users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(irodsAccount.getUserName(), users.get(0));
 
-		Assert.assertTrue(ticketSvc.removeTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.removeTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertTrue(users.isEmpty());
 
 		// delete ticket after done
@@ -1917,8 +1548,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testRemoveTicketUserRestrictionForTicketDoesNotExist()
-			throws Exception {
+	public void testRemoveTicketUserRestrictionForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -1926,51 +1556,39 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		List<String> users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		List<String> users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(irodsAccount.getUserName(), users.get(0));
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.removeTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
+		Assert.assertFalse(ticketSvc.removeTicketUserRestriction(ticketId, irodsAccount.getUserName()));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveTicketUserRestrictionForTicketExistsNullTicketId()
-			throws Exception {
+	public void testRemoveTicketUserRestrictionForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -1978,38 +1596,28 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		List<String> users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		List<String> users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(irodsAccount.getUserName(), users.get(0));
 
 		ticketSvc.removeTicketUserRestriction(null, irodsAccount.getUserName());
@@ -2020,8 +1628,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveTicketUserRestrictionForTicketExistsNullUserId()
-			throws Exception {
+	public void testRemoveTicketUserRestrictionForTicketExistsNullUserId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2029,38 +1636,28 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketExistsNullUserId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		List<String> users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		List<String> users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(irodsAccount.getUserName(), users.get(0));
 
 		ticketSvc.removeTicketUserRestriction(ticketId, null);
@@ -2071,8 +1668,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = InvalidUserException.class)
-	public void testRemoveTicketUserRestrictionForTicketExistsInvalidUser()
-			throws Exception {
+	public void testRemoveTicketUserRestrictionForTicketExistsInvalidUser() throws Exception {
 
 		if (!testTicket) {
 			throw new InvalidUserException("expected");
@@ -2082,38 +1678,28 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketUserRestrictionForTicketExistsInvalidUser.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId,
-				irodsAccount.getUserName()));
-		List<String> users = ticketSvc
-				.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketUserRestriction(ticketId, irodsAccount.getUserName()));
+		List<String> users = ticketSvc.listAllUserRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(irodsAccount.getUserName(), users.get(0));
 
 		ticketSvc.removeTicketUserRestriction(ticketId, invalidUser);
@@ -2132,41 +1718,30 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
-		List<String> groups = ticketSvc
-				.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
+		List<String> groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(testGroupName, groups.get(0));
 
 		// delete ticket after done
@@ -2175,8 +1750,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testAddTicketGroupRestrictionForTicketDoesNotExist()
-			throws Exception {
+	public void testAddTicketGroupRestrictionForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -2184,48 +1758,37 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
+		Assert.assertFalse(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddTicketGroupRestrictionForTicketExistsNullTicketId()
-			throws Exception {
+	public void testAddTicketGroupRestrictionForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2233,24 +1796,17 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketGroupRestriction(null, testGroupName);
 
@@ -2260,8 +1816,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddTicketGroupRestrictionForTicketExistsNullGroupId()
-			throws Exception {
+	public void testAddTicketGroupRestrictionForTicketExistsNullGroupId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2269,33 +1824,25 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketGroupRestrictionForTicketExistsNullGroupId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketGroupRestriction(ticketId, null);
 
@@ -2305,8 +1852,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = InvalidGroupException.class)
-	public void testAddTicketGroupRestrictionForTicketExistsInvalidGroup()
-			throws Exception {
+	public void testAddTicketGroupRestrictionForTicketExistsInvalidGroup() throws Exception {
 
 		if (!testTicket) {
 			throw new InvalidGroupException("expected");
@@ -2315,32 +1861,24 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testAddTicketGroupRestrictionForTicketExistsInvalidGroup.txt";
 		String testGroupName = "wronggroop";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new InvalidGroupException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketGroupRestriction(ticketId, testGroupName);
 
@@ -2350,8 +1888,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testRemoveTicketGroupRestrictionForTicketExists()
-			throws Exception {
+	public void testRemoveTicketGroupRestrictionForTicketExists() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -2359,46 +1896,33 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExists.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
-		List<String> groups = ticketSvc
-				.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
+		List<String> groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(testGroupName, groups.get(0));
 
-		Assert.assertTrue(ticketSvc.removeTicketGroupRestriction(ticketId,
-				testGroupName));
-		groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId,
-				0);
+		Assert.assertTrue(ticketSvc.removeTicketGroupRestriction(ticketId, testGroupName));
+		groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertTrue(groups.isEmpty());
 
 		// delete ticket after done
@@ -2407,8 +1931,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testRemoveTicketGroupRestrictionForTicketDoesNotExist()
-			throws Exception {
+	public void testRemoveTicketGroupRestrictionForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -2416,53 +1939,40 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketDoesNotExist.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
-		List<String> groups = ticketSvc
-				.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
+		List<String> groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(testGroupName, groups.get(0));
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.removeTicketGroupRestriction(ticketId,
-				testGroupName));
+		Assert.assertFalse(ticketSvc.removeTicketGroupRestriction(ticketId, testGroupName));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveTicketGroupRestrictionForTicketExistsNullTicketId()
-			throws Exception {
+	public void testRemoveTicketGroupRestrictionForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2470,40 +1980,29 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExistsNullTicketId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
-		List<String> groups = ticketSvc
-				.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
+		List<String> groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(testGroupName, groups.get(0));
 
 		ticketSvc.removeTicketGroupRestriction(null, testGroupName);
@@ -2514,8 +2013,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveTicketGroupRestrictionForTicketExistsNullGroupId()
-			throws Exception {
+	public void testRemoveTicketGroupRestrictionForTicketExistsNullGroupId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2523,40 +2021,29 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExistsNullGroupId.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
-		List<String> groups = ticketSvc
-				.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
+		List<String> groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(testGroupName, groups.get(0));
 
 		ticketSvc.removeTicketGroupRestriction(ticketId, null);
@@ -2567,8 +2054,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = InvalidGroupException.class)
-	public void testRemoveTicketGroupRestrictionForTicketExistsInvalidGroup()
-			throws Exception {
+	public void testRemoveTicketGroupRestrictionForTicketExistsInvalidGroup() throws Exception {
 
 		if (!testTicket) {
 			throw new InvalidGroupException("expected");
@@ -2577,40 +2063,29 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testRemoveTicketGroupRestrictionForTicketExistsInvalidGroup.txt";
 		String wrongGroupName = "wronggroop";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new InvalidGroupException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		String testGroupName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		String testGroupName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_USER_GROUP_KEY);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId,
-				testGroupName));
-		List<String> groups = ticketSvc
-				.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketGroupRestriction(ticketId, testGroupName));
+		List<String> groups = ticketSvc.listAllGroupRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(testGroupName, groups.get(0));
 
 		ticketSvc.removeTicketGroupRestriction(ticketId, wrongGroupName);
@@ -2630,38 +2105,28 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testAddTicketHostRestrictionForTicketExists.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
-		List<String> hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId, localHost));
+		List<String> hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(localHost, hosts.get(0));
 
 		// delete ticket after done
@@ -2670,8 +2135,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testAddTicketHostRestrictionForTicketDoesNotExist()
-			throws Exception {
+	public void testAddTicketHostRestrictionForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -2680,45 +2144,35 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testAddTicketHostRestrictionForTicketDoesNotExist.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
+		Assert.assertFalse(ticketSvc.addTicketHostRestriction(ticketId, localHost));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddTicketHostRestrictionForTicketExistsNullTicketId()
-			throws Exception {
+	public void testAddTicketHostRestrictionForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2727,33 +2181,25 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testAddTicketHostRestrictionForTicketExistsNullTicketId.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketHostRestriction(null, localHost);
 
@@ -2763,8 +2209,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testAddTicketHostRestrictionForTicketExistsNullHost()
-			throws Exception {
+	public void testAddTicketHostRestrictionForTicketExistsNullHost() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2772,32 +2217,24 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testAddTicketHostRestrictionForTicketExistsNullHost.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketHostRestriction(ticketId, null);
 
@@ -2810,8 +2247,7 @@ public class TicketAdminServiceImplTest {
 	// implemented
 	@Ignore
 	// (expected = JargonException.class)
-	public void testAddTicketHostRestrictionForTicketExistsInvalidHost()
-			throws Exception {
+	public void testAddTicketHostRestrictionForTicketExistsInvalidHost() throws Exception {
 
 		if (!testTicket) {
 			throw new JargonException("expected");
@@ -2820,21 +2256,15 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testAddTicketHostRestrictionForTicketExistsInvalidHost.txt";
 		String invalidHost = "wrongipaddress";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		ticketSvc.addTicketHostRestriction(ticketId, invalidHost);
 
@@ -2844,8 +2274,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testRemoveTicketHostRestrictionForTicketExists()
-			throws Exception {
+	public void testRemoveTicketHostRestrictionForTicketExists() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -2854,43 +2283,31 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testRemoveTicketHostRestrictionForTicketExists.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
-		List<String> hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId, localHost));
+		List<String> hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(localHost, hosts.get(0));
 
-		Assert.assertTrue(ticketSvc.removeTicketHostRestriction(ticketId,
-				localHost));
-		hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.removeTicketHostRestriction(ticketId, localHost));
+		hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertTrue(hosts.isEmpty());
 
 		// delete ticket after done
@@ -2899,8 +2316,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test
-	public void testRemoveTicketHostRestrictionForTicketDoesNotExist()
-			throws Exception {
+	public void testRemoveTicketHostRestrictionForTicketDoesNotExist() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -2909,51 +2325,39 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testRemoveTicketHostRestrictionForTicketDoesNotExist.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
-		List<String> hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId, localHost));
+		List<String> hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(localHost, hosts.get(0));
 
 		// delete ticket
 		Assert.assertTrue(ticketSvc.deleteTicket(ticketId));
 
-		Assert.assertFalse(ticketSvc.removeTicketHostRestriction(ticketId,
-				localHost));
+		Assert.assertFalse(ticketSvc.removeTicketHostRestriction(ticketId, localHost));
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveTicketHostRestrictionForTicketExistsNullTicketId()
-			throws Exception {
+	public void testRemoveTicketHostRestrictionForTicketExistsNullTicketId() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -2962,37 +2366,27 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testRemoveTicketHostRestrictionForTicketExistsNullTicketId.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
-		List<String> hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId, localHost));
+		List<String> hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(localHost, hosts.get(0));
 
 		ticketSvc.removeTicketHostRestriction(null, localHost);
@@ -3003,8 +2397,7 @@ public class TicketAdminServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testRemoveTicketHostRestrictionForTicketExistsNullHost()
-			throws Exception {
+	public void testRemoveTicketHostRestrictionForTicketExistsNullHost() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
@@ -3013,37 +2406,27 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "testRemoveTicketHostRestrictionForTicketExistsNullHost.txt";
 		String localHost = "127.0.0.1";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
-		List<String> hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId, localHost));
+		List<String> hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(localHost, hosts.get(0));
 
 		ticketSvc.removeTicketHostRestriction(ticketId, null);
@@ -3058,8 +2441,7 @@ public class TicketAdminServiceImplTest {
 
 	@Ignore
 	// expected = JargonException.class)
-	public void testRemoveTicketHostRestrictionForTicketExistsInvalidHost()
-			throws Exception {
+	public void testRemoveTicketHostRestrictionForTicketExistsInvalidHost() throws Exception {
 
 		if (!testTicket) {
 			throw new JargonException("expected");
@@ -3070,26 +2452,18 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testRemoveTicketHostRestrictionForTicketExistsInvalidHost.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
-		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId,
-				localHost));
-		List<String> hosts = ticketSvc
-				.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
+		Assert.assertTrue(ticketSvc.addTicketHostRestriction(ticketId, localHost));
+		List<String> hosts = ticketSvc.listAllHostRestrictionsForSpecifiedTicket(ticketId, 0);
 		Assert.assertEquals(localHost, hosts.get(0));
 
 		ticketSvc.removeTicketHostRestriction(ticketId, invalidHost);
@@ -3101,7 +2475,7 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * create a ticket then make sure I can tell it's in use
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3113,35 +2487,27 @@ public class TicketAdminServiceImplTest {
 
 		String testCollection = "testIsTicketInUseWhenExists";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testCollection);
-		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testCollection);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		targetFile.mkdirs();
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
 		boolean inUse = ticketSvc.isTicketInUse(ticketId);
 		Assert.assertTrue("ticket should be in use", inUse);
@@ -3150,7 +2516,7 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * check that a ticket not in use does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3162,24 +2528,19 @@ public class TicketAdminServiceImplTest {
 
 		String testCollection = "testIsTicketInUseWhenNotExists";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		boolean inUse = ticketSvc.isTicketInUse(testCollection);
 		Assert.assertFalse("ticket should not be in use", inUse);
@@ -3188,7 +2549,7 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * add two tickets for a collection, then list them by the collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3200,49 +2561,35 @@ public class TicketAdminServiceImplTest {
 
 		String testCollection = "listAllTicketsForGivenCollection";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testCollection);
-		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testCollection);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		targetFile.mkdirs();
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId1 = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, testCollection + "1");
-		String ticketId2 = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, testCollection + "2");
+		String ticketId1 = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, testCollection + "1");
+		String ticketId2 = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, testCollection + "2");
 
-		List<Ticket> tickets = ticketSvc.listAllTicketsForGivenCollection(
-				targetIrodsCollection, 0);
-		Assert.assertEquals("tickets array does not have two added tickets", 2,
-				tickets.size());
+		List<Ticket> tickets = ticketSvc.listAllTicketsForGivenCollection(targetIrodsCollection, 0);
+		Assert.assertEquals("tickets array does not have two added tickets", 2, tickets.size());
 
 		for (Ticket actualTicket : tickets) {
-			if (actualTicket.getIrodsAbsolutePath().equals(
-					targetIrodsCollection)) {
-				Assert.assertEquals("ticket wrong type",
-						TicketCreateModeEnum.READ, actualTicket.getType());
-				Assert.assertEquals("wrong object type",
-						Ticket.TicketObjectType.COLLECTION,
+			if (actualTicket.getIrodsAbsolutePath().equals(targetIrodsCollection)) {
+				Assert.assertEquals("ticket wrong type", TicketCreateModeEnum.READ, actualTicket.getType());
+				Assert.assertEquals("wrong object type", Ticket.TicketObjectType.COLLECTION,
 						actualTicket.getObjectType());
 			}
 		}
@@ -3254,7 +2601,7 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * list tickets for a collection when no tickets
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3266,45 +2613,36 @@ public class TicketAdminServiceImplTest {
 
 		String testCollection = "listAllTicketsForGivenCollectionNoTickets";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testCollection);
-		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testCollection);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		targetFile.mkdirs();
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		List<Ticket> tickets = ticketSvc.listAllTicketsForGivenCollection(
-				targetIrodsCollection, 0);
+		List<Ticket> tickets = ticketSvc.listAllTicketsForGivenCollection(targetIrodsCollection, 0);
 		Assert.assertEquals("tickets array should be empty", 0, tickets.size());
 	}
 
 	/**
 	 * list tickets on a collection that does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = FileNotFoundException.class)
-	public void listAllTicketsForGivenCollectionNonExistentPath()
-			throws Exception {
+	public void listAllTicketsForGivenCollectionNonExistentPath() throws Exception {
 
 		if (!testTicket) {
 			throw new FileNotFoundException("expected");
@@ -3312,31 +2650,23 @@ public class TicketAdminServiceImplTest {
 
 		String testCollection = "listAllTicketsForGivenCollectionNonExistentPath";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testCollection);
-		accessObjectFactory.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testCollection);
+		accessObjectFactory.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.listAllTicketsForGivenCollection(targetIrodsCollection, 0);
 
@@ -3349,24 +2679,19 @@ public class TicketAdminServiceImplTest {
 			throw new IllegalArgumentException("expected");
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.listAllTicketsForGivenCollection(null, 0);
 
@@ -3379,24 +2704,19 @@ public class TicketAdminServiceImplTest {
 			throw new IllegalArgumentException("expected");
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.listAllTicketsForGivenCollection("", 0);
 
@@ -3404,7 +2724,7 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * List tickets for a given data object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3417,38 +2737,29 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "listAllTicketsForGivenDataObject.txt";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
 
-		List<Ticket> tickets = ticketSvc.listAllTicketsForGivenDataObject(
-				targetIrodsCollection + "/" + testFileName, 0);
+		List<Ticket> tickets = ticketSvc.listAllTicketsForGivenDataObject(targetIrodsCollection + "/" + testFileName,
+				0);
 		Assert.assertTrue("tickets array has no values", tickets.size() > 0);
 
 		// delete ticket after done
@@ -3458,12 +2769,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * List tickets for a given data object, but it's a collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
-	public void listAllTicketsForGivenDataObjectWhenColection()
-			throws Exception {
+	public void listAllTicketsForGivenDataObjectWhenColection() throws Exception {
 
 		if (!testTicket) {
 			throw new JargonException("expected");
@@ -3472,32 +2782,23 @@ public class TicketAdminServiceImplTest {
 		String testFileName = "listAllTicketsForGivenDataObjectWhenColection.txt";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new JargonException("thrown for expectations");
 		}
-		createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+		createDataObjectByName(testFileName, testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				irodsAccount, accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.listAllTicketsForGivenDataObject(targetIrodsCollection, 0);
 
@@ -3505,7 +2806,7 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Create a valid ticket for a data object using the 'meta' method
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3517,29 +2818,22 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "createTicketFromTicketObjectForDataObject.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setTicketString(testFileName);
@@ -3547,15 +2841,12 @@ public class TicketAdminServiceImplTest {
 		ticket.setType(TicketCreateModeEnum.READ);
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
 
-		Ticket actual = ticketSvc
-				.getTicketForSpecifiedTicketString(returnedTicket
-						.getTicketString());
+		Ticket actual = ticketSvc.getTicketForSpecifiedTicketString(returnedTicket.getTicketString());
 
 		Assert.assertEquals(testFileName, actual.getTicketString());
-		Assert.assertEquals("should be set to data object type",
-				Ticket.TicketObjectType.DATA_OBJECT, actual.getObjectType());
-		Assert.assertEquals("wrong ticket type", TicketCreateModeEnum.READ,
-				actual.getType());
+		Assert.assertEquals("should be set to data object type", Ticket.TicketObjectType.DATA_OBJECT,
+				actual.getObjectType());
+		Assert.assertEquals("wrong ticket type", TicketCreateModeEnum.READ, actual.getType());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(testFileName);
@@ -3571,27 +2862,21 @@ public class TicketAdminServiceImplTest {
 
 		String collectionName = "createTicketFromTicketObjectForCollection";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile collection = createCollectionByName(collectionName,
-				irodsAccount, accessObjectFactory);
+		IRODSFile collection = createCollectionByName(collectionName, irodsAccount, accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setIrodsAbsolutePath(collection.getAbsolutePath());
@@ -3599,18 +2884,13 @@ public class TicketAdminServiceImplTest {
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
 		Assert.assertNotNull("null ticket returned", returnedTicket);
 		Assert.assertFalse("ticket string not set",
-				returnedTicket.getTicketString() == null
-						| returnedTicket.getTicketString().isEmpty());
-		Assert.assertEquals("user name not set", irodsAccount.getUserName(),
-				returnedTicket.getOwnerName());
-		Assert.assertEquals("zone not set", irodsAccount.getZone(),
-				returnedTicket.getOwnerZone());
-		Assert.assertEquals("should be a collection object",
-				Ticket.TicketObjectType.COLLECTION,
+				returnedTicket.getTicketString() == null | returnedTicket.getTicketString().isEmpty());
+		Assert.assertEquals("user name not set", irodsAccount.getUserName(), returnedTicket.getOwnerName());
+		Assert.assertEquals("zone not set", irodsAccount.getZone(), returnedTicket.getOwnerZone());
+		Assert.assertEquals("should be a collection object", Ticket.TicketObjectType.COLLECTION,
 				returnedTicket.getObjectType());
 
-		ticketSvc.getTicketForSpecifiedTicketString(returnedTicket
-				.getTicketString());
+		ticketSvc.getTicketForSpecifiedTicketString(returnedTicket.getTicketString());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(returnedTicket.getTicketString());
@@ -3618,14 +2898,13 @@ public class TicketAdminServiceImplTest {
 	}
 
 	/**
-	 * Test for bug: [#827] created tickets have 10 file limit currently parked
-	 * as I think it's an iRODS error, note sent to Wayne (MC)
-	 * 
+	 * Test for bug: [#827] created tickets have 10 file limit currently parked as I
+	 * think it's an iRODS error, note sent to Wayne (MC)
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
-	public void createTicketFromTicketObjectForCollectionTestFileLimit()
-			throws Exception {
+	public void createTicketFromTicketObjectForCollectionTestFileLimit() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -3633,27 +2912,21 @@ public class TicketAdminServiceImplTest {
 
 		String collectionName = "createTicketFromTicketObjectForCollectionTestFileLimit";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile collection = createCollectionByName(collectionName,
-				irodsAccount, accessObjectFactory);
+		IRODSFile collection = createCollectionByName(collectionName, irodsAccount, accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setIrodsAbsolutePath(collection.getAbsolutePath());
@@ -3661,21 +2934,14 @@ public class TicketAdminServiceImplTest {
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
 		Assert.assertNotNull("null ticket returned", returnedTicket);
 		Assert.assertFalse("ticket string not set",
-				returnedTicket.getTicketString() == null
-						| returnedTicket.getTicketString().isEmpty());
-		Assert.assertEquals("user name not set", irodsAccount.getUserName(),
-				returnedTicket.getOwnerName());
-		Assert.assertEquals("zone not set", irodsAccount.getZone(),
-				returnedTicket.getOwnerZone());
-		Assert.assertEquals("should be a collection object",
-				Ticket.TicketObjectType.COLLECTION,
+				returnedTicket.getTicketString() == null | returnedTicket.getTicketString().isEmpty());
+		Assert.assertEquals("user name not set", irodsAccount.getUserName(), returnedTicket.getOwnerName());
+		Assert.assertEquals("zone not set", irodsAccount.getZone(), returnedTicket.getOwnerZone());
+		Assert.assertEquals("should be a collection object", Ticket.TicketObjectType.COLLECTION,
 				returnedTicket.getObjectType());
 
-		Ticket actual = ticketSvc
-				.getTicketForSpecifiedTicketString(returnedTicket
-						.getTicketString());
-		Assert.assertEquals("should not have set write file limit", 0,
-				actual.getWriteFileLimit());
+		Ticket actual = ticketSvc.getTicketForSpecifiedTicketString(returnedTicket.getTicketString());
+		Assert.assertEquals("should not have set write file limit", 0, actual.getWriteFileLimit());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(returnedTicket.getTicketString());
@@ -3684,41 +2950,33 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * create a ticket using the meta method when target does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = FileNotFoundException.class)
-	public void createTicketFromTicketObjectForCollectionNotExists()
-			throws Exception {
+	public void createTicketFromTicketObjectForCollectionNotExists() throws Exception {
 
 		if (!testTicket) {
 			throw new DataNotFoundException("expected");
 		}
 
 		String collectionName = "createTicketFromTicketObjectForCollectionNotExists";
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ collectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + collectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setIrodsAbsolutePath(targetIrodsCollection);
@@ -3729,35 +2987,29 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Create a ticket, forget to set the path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void createTicketFromTicketObjectForCollectionNoPath()
-			throws Exception {
+	public void createTicketFromTicketObjectForCollectionNoPath() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setType(TicketCreateModeEnum.READ);
@@ -3768,12 +3020,11 @@ public class TicketAdminServiceImplTest {
 	/**
 	 * Create a 'write' ticket and set the counts, make sure they are correctly
 	 * picked up
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void createWriteTicketFromTicketObjectForCollectionSetCounts()
-			throws Exception {
+	public void createWriteTicketFromTicketObjectForCollectionSetCounts() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -3785,27 +3036,21 @@ public class TicketAdminServiceImplTest {
 
 		String collectionName = "createTicketFromTicketObjectForCollection";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile collection = createCollectionByName(collectionName,
-				irodsAccount, accessObjectFactory);
+		IRODSFile collection = createCollectionByName(collectionName, irodsAccount, accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setTicketString(collectionName);
@@ -3818,32 +3063,21 @@ public class TicketAdminServiceImplTest {
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);
 		Assert.assertNotNull("null ticket returned", returnedTicket);
 		Assert.assertFalse("ticket string not set",
-				returnedTicket.getTicketString() == null
-						| returnedTicket.getTicketString().isEmpty());
-		Assert.assertEquals("user name not set", irodsAccount.getUserName(),
-				returnedTicket.getOwnerName());
-		Assert.assertEquals("zone not set", irodsAccount.getZone(),
-				returnedTicket.getOwnerZone());
-		Assert.assertEquals("should be a collection object",
-				Ticket.TicketObjectType.COLLECTION,
+				returnedTicket.getTicketString() == null | returnedTicket.getTicketString().isEmpty());
+		Assert.assertEquals("user name not set", irodsAccount.getUserName(), returnedTicket.getOwnerName());
+		Assert.assertEquals("zone not set", irodsAccount.getZone(), returnedTicket.getOwnerZone());
+		Assert.assertEquals("should be a collection object", Ticket.TicketObjectType.COLLECTION,
 				returnedTicket.getObjectType());
 
 		// get the actual ticket
 
-		Ticket actual = ticketSvc
-				.getTicketForSpecifiedTicketString(collectionName);
-		Assert.assertEquals("wrong path", ticket.getIrodsAbsolutePath(),
-				actual.getIrodsAbsolutePath());
-		Assert.assertEquals("wrong type", ticket.getObjectType(),
-				actual.getObjectType());
-		Assert.assertEquals("wrong ticket type", returnedTicket.getType(),
-				actual.getType());
-		Assert.assertEquals("wrong usesLimit", returnedTicket.getUsesLimit(),
-				actual.getUsesLimit());
-		Assert.assertEquals("wrong writeByteLimit",
-				returnedTicket.getWriteByteLimit(), actual.getWriteByteLimit());
-		Assert.assertEquals("wrong writeFileLimit",
-				returnedTicket.getWriteFileLimit(), actual.getWriteFileLimit());
+		Ticket actual = ticketSvc.getTicketForSpecifiedTicketString(collectionName);
+		Assert.assertEquals("wrong path", ticket.getIrodsAbsolutePath(), actual.getIrodsAbsolutePath());
+		Assert.assertEquals("wrong type", ticket.getObjectType(), actual.getObjectType());
+		Assert.assertEquals("wrong ticket type", returnedTicket.getType(), actual.getType());
+		Assert.assertEquals("wrong usesLimit", returnedTicket.getUsesLimit(), actual.getUsesLimit());
+		Assert.assertEquals("wrong writeByteLimit", returnedTicket.getWriteByteLimit(), actual.getWriteByteLimit());
+		Assert.assertEquals("wrong writeFileLimit", returnedTicket.getWriteFileLimit(), actual.getWriteFileLimit());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(returnedTicket.getTicketString());
@@ -3852,12 +3086,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Do a compare/update where no changes made
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testCompareGivenTicketToActualAndUpdateAsNeededNoChanges()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededNoChanges() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -3865,43 +3098,31 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededNoChanges.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
-		Ticket actual = ticketSvc
-				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+		Ticket actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
 
-		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(),
-				actual.getUsesLimit());
-		Assert.assertEquals("files limit altered", ticket.getWriteFileLimit(),
-				actual.getWriteFileLimit());
-		Assert.assertEquals("byte limit altered", ticket.getWriteByteLimit(),
-				actual.getWriteByteLimit());
+		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(), actual.getUsesLimit());
+		Assert.assertEquals("files limit altered", ticket.getWriteFileLimit(), actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit altered", ticket.getWriteByteLimit(), actual.getWriteByteLimit());
 		Assert.assertNull("expire limit altered", actual.getExpireTime());
 
 		// delete ticket after done
@@ -3911,12 +3132,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Do a compare/update where uses limit changed
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeUsesLimit()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeUsesLimit() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -3925,45 +3145,33 @@ public class TicketAdminServiceImplTest {
 		int expectedUsesLimit = 30;
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededChangeUsesLimit.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 		ticket.setUsesLimit(expectedUsesLimit);
-		Ticket actual = ticketSvc
-				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+		Ticket actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
 
-		Assert.assertEquals("uses limit not altered", expectedUsesLimit,
-				actual.getUsesLimit());
-		Assert.assertEquals("files limit altered", ticket.getWriteFileLimit(),
-				actual.getWriteFileLimit());
-		Assert.assertEquals("byte limit altered", ticket.getWriteByteLimit(),
-				actual.getWriteByteLimit());
+		Assert.assertEquals("uses limit not altered", expectedUsesLimit, actual.getUsesLimit());
+		Assert.assertEquals("files limit altered", ticket.getWriteFileLimit(), actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit altered", ticket.getWriteByteLimit(), actual.getWriteByteLimit());
 		Assert.assertNull("expire limit altered", actual.getExpireTime());
 
 		// delete ticket after done
@@ -3973,12 +3181,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Do a compare/update where files limit changed
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeFilesLimit()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeFilesLimit() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -3987,45 +3194,33 @@ public class TicketAdminServiceImplTest {
 		int expectedFilesLimit = 3;
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededChangeFilesLimit.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 		ticket.setWriteFileLimit(expectedFilesLimit);
-		Ticket actual = ticketSvc
-				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+		Ticket actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
 
-		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(),
-				actual.getUsesLimit());
-		Assert.assertEquals("files limit not altered", expectedFilesLimit,
-				actual.getWriteFileLimit());
-		Assert.assertEquals("byte limit altered", ticket.getWriteByteLimit(),
-				actual.getWriteByteLimit());
+		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(), actual.getUsesLimit());
+		Assert.assertEquals("files limit not altered", expectedFilesLimit, actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit altered", ticket.getWriteByteLimit(), actual.getWriteByteLimit());
 		Assert.assertNull("expire limit altered", actual.getExpireTime());
 
 		// delete ticket after done
@@ -4035,12 +3230,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Do a compare/update where files limit changed
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeBytesLimit()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeBytesLimit() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -4049,45 +3243,33 @@ public class TicketAdminServiceImplTest {
 		long expectedBytesLimit = 3000L;
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededChangeBytesLimit.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 		ticket.setWriteByteLimit(expectedBytesLimit);
-		Ticket actual = ticketSvc
-				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+		Ticket actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
 
-		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(),
-				actual.getUsesLimit());
-		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(),
-				actual.getWriteFileLimit());
-		Assert.assertEquals("byte limit not altered", expectedBytesLimit,
-				actual.getWriteByteLimit());
+		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(), actual.getUsesLimit());
+		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(), actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit not altered", expectedBytesLimit, actual.getWriteByteLimit());
 		Assert.assertNull("expire limit altered", actual.getExpireTime());
 
 		// delete ticket after done
@@ -4097,12 +3279,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Do a compare/update where expired changed
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeExpired()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeExpired() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -4111,45 +3292,33 @@ public class TicketAdminServiceImplTest {
 		Date expired = new Date();
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededChangeExpired.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 		ticket.setExpireTime(expired);
-		Ticket actual = ticketSvc
-				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+		Ticket actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
 
-		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(),
-				actual.getUsesLimit());
-		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(),
-				actual.getWriteFileLimit());
-		Assert.assertEquals("byte limit not altered",
-				ticket.getWriteByteLimit(), actual.getWriteByteLimit());
+		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(), actual.getUsesLimit());
+		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(), actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit not altered", ticket.getWriteByteLimit(), actual.getWriteByteLimit());
 		Assert.assertNotNull("expire limit not altered", actual.getExpireTime());
 
 		// delete ticket after done
@@ -4159,12 +3328,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Do a compare/update where expired is set then removed
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testCompareGivenTicketToActualAndUpdateAsNeededRemovesExpired()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededRemovesExpired() throws Exception {
 
 		if (!testTicket) {
 			return;
@@ -4173,53 +3341,40 @@ public class TicketAdminServiceImplTest {
 		Date expired = new Date();
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededRemovesExpired.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
-		IRODSFile targetFile = createDataObjectByName(
-				testFileName,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				irodsAccount, accessObjectFactory);
+		IRODSFile targetFile = createDataObjectByName(testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), irodsAccount,
+				accessObjectFactory);
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
-		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE,
-				targetFile, null);
+		String ticketId = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, targetFile, null);
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
 		ticket.setExpireTime(expired);
-		Ticket actual = ticketSvc
-				.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
+		Ticket actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(ticket);
 
-		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(),
-				actual.getUsesLimit());
-		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(),
-				actual.getWriteFileLimit());
-		Assert.assertEquals("byte limit not altered",
-				ticket.getWriteByteLimit(), actual.getWriteByteLimit());
+		Assert.assertEquals("uses limit altered", ticket.getUsesLimit(), actual.getUsesLimit());
+		Assert.assertEquals("files limit  altered", ticket.getWriteFileLimit(), actual.getWriteFileLimit());
+		Assert.assertEquals("byte limit not altered", ticket.getWriteByteLimit(), actual.getWriteByteLimit());
 		Assert.assertNotNull("expire limit not altered", actual.getExpireTime());
 
 		// remove expired
 
 		actual.setExpireTime(null);
 		actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(actual);
-		Assert.assertNull("expire limit shold have been remvoed",
-				actual.getExpireTime());
+		Assert.assertNull("expire limit shold have been remvoed", actual.getExpireTime());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
@@ -4228,12 +3383,11 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Update when no ticket
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DataNotFoundException.class)
-	public void testCompareGivenTicketToActualAndUpdateAsNeededNoTicket()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededNoTicket() throws Exception {
 
 		if (!testTicket) {
 			throw new DataNotFoundException("expected");
@@ -4241,24 +3395,19 @@ public class TicketAdminServiceImplTest {
 
 		String testFileName = "testCompareGivenTicketToActualAndUpdateAsNeededNoTicket.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
 		ticket.setTicketId(testFileName);
@@ -4269,35 +3418,29 @@ public class TicketAdminServiceImplTest {
 
 	/**
 	 * Update when null ticket
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void testCompareGivenTicketToActualAndUpdateAsNeededNullTicket()
-			throws Exception {
+	public void testCompareGivenTicketToActualAndUpdateAsNeededNullTicket() throws Exception {
 
 		if (!testTicket) {
 			throw new IllegalArgumentException("expected");
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
-		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
-				accessObjectFactory, irodsAccount);
+		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(null);
 

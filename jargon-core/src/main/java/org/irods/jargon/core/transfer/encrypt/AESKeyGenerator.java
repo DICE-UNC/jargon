@@ -44,7 +44,7 @@ public class AESKeyGenerator extends AbstractKeyGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.encrypt.AbstractKeyGenerator#generateKey()
 	 */

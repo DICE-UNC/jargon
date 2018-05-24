@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.pool.conncache;
 
@@ -23,7 +23,7 @@ public class JargonKeyedPoolConfig extends GenericKeyedObjectPoolConfig {
 	}
 
 	@Override
-	public void setMaxIdlePerKey(int maxIdlePerKey) {
+	public void setMaxIdlePerKey(final int maxIdlePerKey) {
 		this.maxIdlePerKey = maxIdlePerKey;
 	}
 
@@ -117,82 +117,82 @@ public class JargonKeyedPoolConfig extends GenericKeyedObjectPoolConfig {
 	}
 
 	@Override
-	public void setBlockWhenExhausted(boolean blockWhenExhausted) {
+	public void setBlockWhenExhausted(final boolean blockWhenExhausted) {
 		super.setBlockWhenExhausted(blockWhenExhausted);
 	}
 
 	@Override
-	public void setEvictionPolicyClassName(String evictionPolicyClassName) {
+	public void setEvictionPolicyClassName(final String evictionPolicyClassName) {
 		super.setEvictionPolicyClassName(evictionPolicyClassName);
 	}
 
 	@Override
-	public void setFairness(boolean fairness) {
+	public void setFairness(final boolean fairness) {
 		super.setFairness(fairness);
 	}
 
 	@Override
-	public void setJmxEnabled(boolean jmxEnabled) {
+	public void setJmxEnabled(final boolean jmxEnabled) {
 		super.setJmxEnabled(jmxEnabled);
 	}
 
 	@Override
-	public void setJmxNameBase(String jmxNameBase) {
+	public void setJmxNameBase(final String jmxNameBase) {
 		super.setJmxNameBase(jmxNameBase);
 	}
 
 	@Override
-	public void setJmxNamePrefix(String jmxNamePrefix) {
+	public void setJmxNamePrefix(final String jmxNamePrefix) {
 		super.setJmxNamePrefix(jmxNamePrefix);
 	}
 
 	@Override
-	public void setLifo(boolean lifo) {
+	public void setLifo(final boolean lifo) {
 		super.setLifo(lifo);
 	}
 
 	@Override
-	public void setMaxWaitMillis(long maxWaitMillis) {
+	public void setMaxWaitMillis(final long maxWaitMillis) {
 		super.setMaxWaitMillis(maxWaitMillis);
 	}
 
 	@Override
-	public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
+	public void setMinEvictableIdleTimeMillis(final long minEvictableIdleTimeMillis) {
 		super.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
 	}
 
 	@Override
-	public void setNumTestsPerEvictionRun(int numTestsPerEvictionRun) {
+	public void setNumTestsPerEvictionRun(final int numTestsPerEvictionRun) {
 		super.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
 	}
 
 	@Override
-	public void setSoftMinEvictableIdleTimeMillis(long softMinEvictableIdleTimeMillis) {
+	public void setSoftMinEvictableIdleTimeMillis(final long softMinEvictableIdleTimeMillis) {
 		super.setSoftMinEvictableIdleTimeMillis(softMinEvictableIdleTimeMillis);
 	}
 
 	@Override
-	public void setTestOnBorrow(boolean testOnBorrow) {
+	public void setTestOnBorrow(final boolean testOnBorrow) {
 		super.setTestOnBorrow(testOnBorrow);
 	}
 
 	@Override
-	public void setTestOnCreate(boolean testOnCreate) {
+	public void setTestOnCreate(final boolean testOnCreate) {
 		super.setTestOnCreate(testOnCreate);
 	}
 
 	@Override
-	public void setTestOnReturn(boolean testOnReturn) {
+	public void setTestOnReturn(final boolean testOnReturn) {
 		super.setTestOnReturn(testOnReturn);
 	}
 
 	@Override
-	public void setTestWhileIdle(boolean testWhileIdle) {
+	public void setTestWhileIdle(final boolean testWhileIdle) {
 		super.setTestWhileIdle(testWhileIdle);
 	}
 
 	@Override
-	public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
+	public void setTimeBetweenEvictionRunsMillis(final long timeBetweenEvictionRunsMillis) {
 		super.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
 	}
 

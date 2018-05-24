@@ -35,7 +35,7 @@ public class ScratchFileUtils {
 	 * already exist. * @param pathUnderScratch {@code String} giving the relative
 	 * path of the file/directory underneath the scratch area (no leading / delim is
 	 * necessary
-	 * 
+	 *
 	 * @param pathUnderScratch
 	 *            {@code String}
 	 */
@@ -190,7 +190,7 @@ public class ScratchFileUtils {
 	 * @param absolutePathToLocalFile
 	 *            {@code String} with absolute local file path under scratch (no
 	 *            leading '/')
-	 * 
+	 *
 	 * @return {@code long} with the file's checksum value
 	 * @throws TestConfigurationException
 	 *             {@link TestConfigurationException}

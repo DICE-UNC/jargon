@@ -156,7 +156,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

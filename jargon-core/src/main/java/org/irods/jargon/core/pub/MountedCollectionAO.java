@@ -77,7 +77,7 @@ public interface MountedCollectionAO {
 	 * This method takes a local file path to the mso object that will be 'put' to
 	 * iRODS as an mso file. Then the given collection is 'mounted' as a WSSO given
 	 * the provided path to the desired collection, and the .wss file that was just
-	 * 
+	 *
 	 * @param absoluteLocalPathToWssFile
 	 *            {@link String} with the absolute path to wss structured object to
 	 *            mount

@@ -35,8 +35,7 @@ abstract class ParallelCipherWrapper {
 	 *            negotiation
 	 * @throws ClientServerNegotiationException
 	 */
-	ParallelCipherWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	ParallelCipherWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		if (pipelineConfiguration == null) {
@@ -47,8 +46,7 @@ abstract class ParallelCipherWrapper {
 		}
 
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
-			throw new JargonRuntimeException(
-					"attempting to encrypt when not an SSL enabled connection");
+			throw new JargonRuntimeException("attempting to encrypt when not an SSL enabled connection");
 		}
 
 		this.pipelineConfiguration = pipelineConfiguration;

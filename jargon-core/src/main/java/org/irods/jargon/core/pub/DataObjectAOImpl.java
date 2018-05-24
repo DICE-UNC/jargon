@@ -139,7 +139,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findByCollectionNameAndDataName
 	 * (java.lang.String, java.lang.String)
 	 */
@@ -169,7 +169,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findByAbsolutePath(java.lang.String )
 	 */
@@ -192,7 +192,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findById(int)
 	 */
 	@Override
@@ -231,7 +231,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findGivenObjStat(org.irods.jargon
 	 * .core.pub.domain.ObjStat)
 	 */
@@ -320,7 +320,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findWhere(java.lang.String, int)
 	 */
 
@@ -1415,7 +1415,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 				// compute iRODS first, use algorithm from iRODS to compute the
 				// local checksum that should match
-				DataObjectChecksumUtilitiesAO checksumUtils = this.getIRODSAccessObjectFactory()
+				DataObjectChecksumUtilitiesAO checksumUtils = getIRODSAccessObjectFactory()
 						.getDataObjectChecksumUtilitiesAO(getIRODSAccount());
 
 				ChecksumValue irodsChecksum = checksumUtils.computeChecksumOnDataObject(irodsFileToGet);
@@ -1609,7 +1609,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#listMetadataValuesForDataObject
 	 * (java.util.List, java.lang.String, java.lang.String)
 	 */
@@ -1624,7 +1624,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * findMetadataValuesForDataObjectUsingAVUQuery(java.util.List,
 	 * java.lang.String, java.lang.String, boolean)
@@ -1694,7 +1694,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * findMetadataValuesForDataObjectUsingAVUQuery(java.util.List,
 	 * java.lang.String)
@@ -1719,7 +1719,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#instanceIRODSFileForPath(java.
 	 * lang.String)
 	 */
@@ -1732,7 +1732,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#addBulkAVUMetadataToDataObject
 	 * (java.lang.String, java.util.List)
 	 */
@@ -1777,7 +1777,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#deleteBulkAVUMetadataFromDataObject
 	 * (java.lang.String, java.util.List)
@@ -1815,7 +1815,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -1883,7 +1883,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String,
 	 * java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -1949,7 +1949,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		IRODSFile file = this.getIRODSFileFactory().instanceIRODSFile(irodsCollectionAbsolutePath, fileName);
+		IRODSFile file = getIRODSFileFactory().instanceIRODSFile(irodsCollectionAbsolutePath, fileName);
 		this.setAVUMetadata(file.getAbsolutePath(), avuData);
 	}
 
@@ -1967,7 +1967,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		if (!this.getIRODSServerProperties().isSupportsMetadataSet()) {
+		if (!getIRODSServerProperties().isSupportsMetadataSet()) {
 			log.error("irods version does not support set avu");
 			throw new OperationNotSupportedByThisServerException("set avu not available on this iRODS version");
 		}
@@ -2066,7 +2066,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#deleteAVUMetadata(java.lang.String ,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -2125,7 +2125,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
 	 */
@@ -2139,7 +2139,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int)
 	 */
@@ -2153,7 +2153,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int, boolean)
 	 */
@@ -2218,7 +2218,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java
 	 * .util.List)
 	 */
@@ -2232,7 +2232,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java
 	 * .util.List, int)
 	 */
@@ -2245,7 +2245,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java
 	 * .util.List, int, boolean)
 	 */
@@ -2298,7 +2298,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#replicateIrodsDataObject(java.
 	 * lang.String, java.lang.String)
 	 */
@@ -2381,7 +2381,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		irodsRuleParameters
 				.add(new IRODSRuleParameter("*DelayInfo", RuleUtils.buildDelayParamForMinutes(delayInMinutes)));
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/rulemsiDataObjReplAsync.r",
@@ -2494,7 +2494,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.pub.DataObjectAO#
 	 * replicateIrodsDataObjectToAllResourcesInResourceGroup(java.lang.String,
 	 * java.lang.String)
@@ -2530,7 +2530,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#getResourcesForDataObject(java
 	 * .lang.String, java.lang.String)
 	 */
@@ -2553,7 +2553,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (java.lang.String, java.lang.String)
 	 */
@@ -2595,7 +2595,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
 	 * (java.lang.String, int)
@@ -2620,7 +2620,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
 	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
@@ -2678,7 +2678,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (java.lang.String)
 	 */
@@ -2729,7 +2729,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
@@ -2753,7 +2753,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#computeMD5ChecksumOnFile(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -2784,7 +2784,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#verifyChecksumBetweenLocalAndIrods
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
@@ -2814,7 +2814,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 
 		try {
-			DataObjectChecksumUtilitiesAO checksumUtils = this.getIRODSAccessObjectFactory()
+			DataObjectChecksumUtilitiesAO checksumUtils = getIRODSAccessObjectFactory()
 					.getDataObjectChecksumUtilitiesAO(getIRODSAccount());
 
 			ChecksumValue irodsChecksum = checksumUtils.computeChecksumOnDataObject(irodsFile);
@@ -2833,7 +2833,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionRead(java.lang
 	 * .String, java.lang.String, java.lang.String)
 	 */
@@ -2875,7 +2875,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionReadInAdminMode
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -2919,7 +2919,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWrite(java.
 	 * lang.String, java.lang.String, java.lang.String)
 	 */
@@ -2958,7 +2958,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermission(java.lang.
 	 * String, java.lang.String, java.lang.String,
 	 * org.irods.jargon.core.protovalues.FilePermissionEnum)
@@ -3004,7 +3004,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -3043,7 +3043,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwn(java.lang
 	 * .String, java.lang.String, java.lang.String)
 	 */
@@ -3081,7 +3081,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwnInAdminMode
 	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -3123,7 +3123,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#removeAccessPermissionsForUser
 	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -3164,7 +3164,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * removeAccessPermissionsForUserInAdminMode(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -3204,7 +3204,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObject(java
 	 * .lang.String, java.lang.String, java.lang.String)
 	 */
@@ -3236,7 +3236,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
 	 * .lang.String, java.lang.String)
 	 */
@@ -3314,7 +3314,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
 	 * .lang.String)
 	 */
@@ -3338,7 +3338,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -3403,7 +3403,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String ,
 	 * org.irods.jargon.core.pub.domain.AvuData,
@@ -3464,7 +3464,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String ,
 	 * java.lang.String, org.irods.jargon.core.pub.domain.AvuData,
@@ -3628,7 +3628,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listFileResources(java.lang.String )
 	 */
@@ -3646,7 +3646,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		// get objStat to resolve possible soft link
 		ObjStat objStat = getObjectStatForAbsolutePath(irodsAbsolutePath);
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
-		IRODSFile newFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+		IRODSFile newFile = getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
 				.instanceIRODSFile(absPath);
 
 		ResourceAO resourceAO = getIRODSAccessObjectFactory().getResourceAO(getIRODSAccount());
@@ -3656,7 +3656,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFileInResGroup
 	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -3712,7 +3712,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
 	 * (java.lang.String, java.lang.String)
@@ -3768,7 +3768,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * listPermissionsForDataObjectForUserName(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -3844,7 +3844,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.FileCatalogObjectAOImpl#isUserHasAccess(java
 	 * .lang.String, java.lang.String)
 	 */
@@ -3878,7 +3878,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getTotalNumberOfReplsForDataObject
 	 * (java.lang.String, java.lang.String)
@@ -4026,7 +4026,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		try {
 			RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-					.instanceWithDefaultAutoSettings(this.getJargonProperties());
+					.instanceWithDefaultAutoSettings(getJargonProperties());
 			ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 			IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/trimDataObject.r",
 					irodsRuleParameters, ruleInvocationConfiguration);
@@ -4054,7 +4054,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFile(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -4101,7 +4101,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(java.lang.String)
 	 */

@@ -28,7 +28,7 @@ import org.irods.jargon.core.transfer.FileRestartManagementException;
  * (files). This object treats the IRODSFile as an object, not as a
  * {@code java.io.File} object. For normal read and other familier
  * {@code java.io.*} operations, see {@link IRODSFile}.
- * 
+ *
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
@@ -37,10 +37,10 @@ import org.irods.jargon.core.transfer.FileRestartManagementException;
  * associated with data objects (files), as well as performing common query
  * operations. This class also supports various iRODS file operations that are
  * not included in the standard {@code java.io.*} libraries.
- * 
+ *
  * For general data movement operations, also see
  * {@link DataTransferOperations}.
- * 
+ *
  * <h2>Notes</h2> For soft links, AVU metadata always attaches to the canonical
  * path. There is some inconsistency with the operation of the imeta command,
  * where AVU operations against the soft link target path result in file not
@@ -60,7 +60,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Query method will return the first data object found with the given
 	 * collectionPath and dataName.
-	 * 
+	 *
 	 * Note that this method will return 'null' if the object is not found.
 	 *
 	 * @param collectionPath
@@ -82,7 +82,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * For a given absolute path, get an {@code IRODSFileImpl} that is a data
 	 * object. If the data exists, and is not a File, this method will throw an
 	 * exception. If the given file does not exist, then a File will be returned.
-	 * 
+	 *
 	 * The given path may be a soft-linked path, and it will behave as normal.
 	 *
 	 * @param fileAbsolutePath
@@ -95,11 +95,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add AVU metadata for this data object
-	 * 
+	 *
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
 	 * path will be reflected if querying the soft link target path.
-	 * 
+	 *
 	 * For later (4.1+) versions of iRODS consider using the set AVU methods
 	 *
 	 * @param absolutePath
@@ -123,17 +123,17 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add or update AVU metadata for this data object usimg the new set semantics.
-	 * 
+	 *
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
 	 * path will be reflected if querying the soft link target path. *
-	 * 
+	 *
 	 * 'set' modifies an AVU if it exists, or creates one if it does not. If the
 	 * AttName does not exist, or is used by multiple objects, the AVU for this
 	 * object is added. If the AttName is used only by this one object, the AVU
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@code String} with the absolute path to the target data object
 	 * @param avuData
@@ -160,7 +160,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
 	 * </p>
-	 * 
+	 *
 	 * @param irodsCollectionAbsolutePath
 	 *            {@code String} with the absolute path to the target data object
 	 *            parent
@@ -179,7 +179,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * List the AVU metadata for a particular data object, as well as identifying
 	 * information about the data object itself, based on a metadata query.
-	 * 
+	 *
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
 	 * path will be reflected if querying the soft link target path.
@@ -205,11 +205,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * List the AVU metadata for a particular data object, as well as identifying
 	 * information about the data object itself, based on a metadata query.
-	 * 
+	 *
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
 	 * path will be reflected if querying the soft link target path.
-	 * 
+	 *
 	 * This version of the method will compare AVU values using case-insensitive
 	 * queries
 	 *
@@ -237,7 +237,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * List the AVU metadata for a particular data object, as well as identifying
 	 * information about the data object itself, based on a metadata query.
-	 * 
+	 *
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
 	 * path will be reflected if querying the soft link target path.
@@ -317,7 +317,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * List the data objects that answer the given AVU metadata query with the
 	 * ability to page through a partial start index.
-	 * 
+	 *
 	 * This version supports case-insensitive metadata queries
 	 *
 	 * @param avuQuery
@@ -377,7 +377,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Given a set of metadata query parameters, return a list of IRODS Data Objects
 	 * that match the metadata query. This query method allows a partial start as an
 	 * offset into the result set to get paging behaviors.
-	 * 
+	 *
 	 * This method allows the specification of case-insensitive queries on the AVU
 	 * values. This is an iRODS3.2+ capability
 	 *
@@ -403,7 +403,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * replicates one data object. The {@link DataTransferOperations} access object
 	 * has more comprehensive methods for replication, including recursive
 	 * replication with the ability to process callbacks.
-	 * 
+	 *
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFileAbsolutePath
@@ -420,7 +420,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Get a list of {@code Resource} objects that contain this data object.
-	 * 
+	 *
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param dataObjectPath
@@ -437,7 +437,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Compute a checksum on a File, iRODS uses MD5 by default.
-	 * 
+	 *
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFile
@@ -453,7 +453,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Replicate the data object given as an absolute path to all of the resources
 	 * defined in the {@code irodsResourceGroupName}. This is equivilant to an irepl
 	 * -a command.
-	 * 
+	 *
 	 * The {@link DataTransferOperations} access object has more comprehensive
 	 * methods for replication, including recursive replication with the ability to
 	 * process callbacks.
@@ -475,7 +475,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Delete the given AVU from the data object identified by absolute path.
-	 * 
+	 *
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
 	 * path will be reflected if querying the soft link target path.
@@ -495,7 +495,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Find the object representing the data object (file) in iRODS.
-	 * 
+	 *
 	 * This method will handle soft-linked paths and return the data object
 	 * representing the data at the given soft linked location.
 	 *
@@ -577,7 +577,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * find the canonical path if this is a soft link and operate on that data
 	 * object.
 	 * </p>
-	 * 
+	 *
 	 * @param zone
 	 *            {@code String} with an optional zone for the file. Leave blank if
 	 *            not used, it is not required.
@@ -597,7 +597,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * find the canonical path if this is a soft link and operate on that data
 	 * object.
 	 * </p>
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
@@ -685,7 +685,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * <p>
 	 * For later (4.1+) versions of iRODS consider using the set AVU methods
 	 * </p>
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@code String}
 	 * @param avuData
@@ -736,7 +736,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * <p>
 	 * For later (4.1+) versions of iRODS consider using the set AVU methods
 	 * </p>
-	 * 
+	 *
 	 * @param irodsCollectionAbsolutePath
 	 *            {@code String} with the absolute path to the data object
 	 * @param dataName
@@ -765,7 +765,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * <p>
 	 * For later (4.1+) versions of iRODS consider using the set AVU methods
 	 * </p>
-	 * 
+	 *
 	 * @param irodsCollectionAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection
@@ -1049,7 +1049,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Get the total number of replicas for the given data object in the given
 	 * resource group
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String}
 	 * @param fileName

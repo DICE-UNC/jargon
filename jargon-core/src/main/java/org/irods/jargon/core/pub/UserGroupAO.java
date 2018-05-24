@@ -190,7 +190,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add a user group as a user with groupadmin privilages
-	 * 
+	 *
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @throws DuplicateDataException
@@ -202,7 +202,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add the given user to the group as a user with groupadmin privilages
-	 * 
+	 *
 	 * @param userGroupName
 	 *            <code>String</code> of the group to which the user will be added
 	 * @param userName

@@ -18,7 +18,7 @@ public final class EscapeTagChars {
 
 	/**
 	 * Escape characters for text appearing in Tag markup.
-	 * 
+	 *
 	 * @param aText
 	 *            {@code String} to escape
 	 * @return {@code String} escaped
@@ -123,7 +123,7 @@ public final class EscapeTagChars {
 	 * {@code HREF} attribute, simply because it does not escape the ampersand
 	 * character. This is a nuisance when multiple query parameters appear in the
 	 * URL, since it requires a little extra work.
-	 * 
+	 *
 	 * @param aURL
 	 *            {@code String} with the parameter to escape
 	 * @return {@code String} with the result
@@ -144,7 +144,7 @@ public final class EscapeTagChars {
 	 * attribute, then there are two issues - ensuring the query string is valid
 	 * HTTP (it is URL-encoded), and ensuring it is valid HTML (ensuring the
 	 * ampersand is escaped).
-	 * 
+	 *
 	 * @param aURLFragment
 	 *            {@code String} to escape
 	 * @return {@code String} escaped
@@ -196,7 +196,7 @@ public final class EscapeTagChars {
 	 * Note that JSTL's {@code <c:out>} escapes the exact same set of characters as
 	 * this method. <span class='highlight'>That is, {@code <c:out>} is good for
 	 * escaping to produce valid XML, but not for producing safe HTML.</span>
-	 * 
+	 *
 	 * @param aText
 	 *            {@code String} xml
 	 * @return {@code String} escaped
@@ -274,11 +274,11 @@ public final class EscapeTagChars {
 	 * </table>
 	 *
 	 * <P>
-	 * 
+	 *
 	 * @param aText
 	 *            {@code String} to escape
 	 * @return {@code String} with the escaped text
-	 * 
+	 *
 	 *         See <a href='http://www.ietf.org/rfc/rfc4627.txt'>RFC 4627</a> for
 	 *         more information.
 	 */
@@ -316,7 +316,7 @@ public final class EscapeTagChars {
 	/**
 	 * Return {@code aText} with all {@code '<'} and {@code '>'} characters replaced
 	 * by their escaped equivalents.
-	 * 
+	 *
 	 * @param aText
 	 *            {@code String} to escape
 	 * @return {@code String} with escaped text
@@ -357,7 +357,7 @@ public final class EscapeTagChars {
 	 * <li>( and )
 	 * <li>^ and $
 	 * </ul>
-	 * 
+	 *
 	 * @param aRegexFragment
 	 *            {@code String}
 	 * @return {@code String}
@@ -417,7 +417,7 @@ public final class EscapeTagChars {
 	 * If replacement text can contain arbitrary characters, then you will usually
 	 * need to escape that text, to ensure special characters are interpreted
 	 * literally.
-	 * 
+	 *
 	 * @param aInput
 	 *            {@code String}
 	 * @return {@code String} escaped

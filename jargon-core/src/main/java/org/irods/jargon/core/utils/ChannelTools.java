@@ -13,14 +13,11 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ChannelTools {
-	private static final Logger log = LoggerFactory
-			.getLogger(ChannelTools.class);
+	private static final Logger log = LoggerFactory.getLogger(ChannelTools.class);
 
-	public static void fastChannelCopy(final ReadableByteChannel src,
-			final WritableByteChannel dest, final int bufferSize)
-					throws IOException {
-		log.info("fast channel copy on streams, buffer length set to:{}",
-				bufferSize);
+	public static void fastChannelCopy(final ReadableByteChannel src, final WritableByteChannel dest,
+			final int bufferSize) throws IOException {
+		log.info("fast channel copy on streams, buffer length set to:{}", bufferSize);
 		final ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
 		while (src.read(buffer) != -1) {
 			// prepare the buffer to be drained

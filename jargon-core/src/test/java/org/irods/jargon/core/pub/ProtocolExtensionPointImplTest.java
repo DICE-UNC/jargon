@@ -2,13 +2,13 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class ProtocolExtensionPointImplTest {
 
@@ -34,12 +34,9 @@ public class ProtocolExtensionPointImplTest {
 
 	@Test
 	public final void testProtocolExtensionPointImpl() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		ProtocolExtensionPoint pep = accessObjectFactory
-				.getProtocolExtensionPoint(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		ProtocolExtensionPoint pep = accessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		Assert.assertNotNull("did not get protocolExtensionPoint", pep);
 	}
 

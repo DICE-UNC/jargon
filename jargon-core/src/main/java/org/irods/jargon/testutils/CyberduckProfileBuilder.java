@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.testutils;
 
@@ -18,13 +18,13 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class CyberduckProfileBuilder {
 
-	public static final void writeCyberduckProfile(
-			final String profileAbsolutePath, final Properties testingProperties)
+	public static final void writeCyberduckProfile(final String profileAbsolutePath, final Properties testingProperties)
 			throws JargonException {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		sb.append("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n");
+		sb.append(
+				"<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n");
 		sb.append("<plist version=\"1.0\">\n");
 		sb.append("<dict>\n");
 		sb.append("<key>Protocol</key>\n");
@@ -45,8 +45,7 @@ public class CyberduckProfileBuilder {
 		sb.append("<string>");
 		sb.append(testingProperties.get(TestingPropertiesHelper.IRODS_ZONE_KEY));
 		sb.append(":");
-		sb.append(testingProperties
-				.get(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		sb.append(testingProperties.get(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		sb.append("</string>\n");
 		sb.append("<key>Default Port</key>\n");
 		sb.append("<string>");
@@ -58,8 +57,7 @@ public class CyberduckProfileBuilder {
 		sb.append("</string>\n");
 		sb.append("<key>Password Placeholder</key>\n");
 		sb.append("<string>");
-		sb.append(testingProperties
-				.get(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		sb.append(testingProperties.get(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
 		sb.append("</string>\n");
 		sb.append(" </dict>\n");
 		sb.append("</plist>\n");

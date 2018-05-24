@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -28,6 +26,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import junit.framework.Assert;
+
 public class UserProfileServiceImplTest {
 
 	private static Properties testingProperties = new Properties();
@@ -42,8 +42,7 @@ public class UserProfileServiceImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 
 	}
@@ -57,44 +56,36 @@ public class UserProfileServiceImplTest {
 
 	@Test
 	public final void testUserProfileServiceImpl() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		new UserProfileServiceImpl(accessObjectFactory, irodsAccount);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testUserProfileServiceImplNullAccount() throws Exception {
 		IRODSAccount irodsAccount = null;
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		new UserProfileServiceImpl(accessObjectFactory, irodsAccount);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testUserProfileServiceImplNullAccessObjectFactory()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public final void testUserProfileServiceImplNullAccessObjectFactory() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = null;
 		new UserProfileServiceImpl(accessObjectFactory, irodsAccount);
 	}
 
 	/**
 	 * Test ability to add and remove profile repeatedly
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testRepeatedlyAddAndRemoveProfileForUser()
-			throws Exception {
+	public final void testRepeatedlyAddAndRemoveProfileForUser() throws Exception {
 
 		int count = 5;
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testRepeatedlyAddAndRemoveProfileForUser";
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
@@ -111,11 +102,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		for (int i = 0; i < count; i++) {
 
@@ -128,8 +117,7 @@ public class UserProfileServiceImplTest {
 			// adjust the config to use the admin uid as the protected profile
 			// access person
 			userProfileService.getUserProfileServiceConfiguration()
-					.setProtectedProfileReadWriteGroup(
-							irodsAccount.getUserName());
+					.setProtectedProfileReadWriteGroup(irodsAccount.getUserName());
 
 			userProfileService.addProfileForUser(testUser, userProfile);
 
@@ -137,41 +125,29 @@ public class UserProfileServiceImplTest {
 
 			String userHomeDir = userProfileService.getUserProfileDir(testUser);
 
-			IRODSFile userProfileFile = accessObjectFactory
-					.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
-							userHomeDir,
-							userProfileService
-									.getUserProfileServiceConfiguration()
-									.getPublicProfileFileName());
+			IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+					userHomeDir, userProfileService.getUserProfileServiceConfiguration().getPublicProfileFileName());
 
-			TestCase.assertTrue("public user profile not created",
-					userProfileFile.exists());
+			Assert.assertTrue("public user profile not created", userProfileFile.exists());
 
-			IRODSFile protectedProfileFile = accessObjectFactory
-					.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
-							userHomeDir,
-							userProfileService
-									.getUserProfileServiceConfiguration()
-									.getProtectedProfileFileName());
+			IRODSFile protectedProfileFile = accessObjectFactory.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+					userHomeDir, userProfileService.getUserProfileServiceConfiguration().getProtectedProfileFileName());
 
-			TestCase.assertTrue("protected user profile not created",
-					protectedProfileFile.exists());
+			Assert.assertTrue("protected user profile not created", protectedProfileFile.exists());
 		}
 
 	}
 
 	/**
 	 * Add a profile twice
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DuplicateDataException.class)
 	public final void testAddProfileWhenOneExists() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testAddProfileWhenOneExists";
 		String password = "password";
 
@@ -189,11 +165,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -213,10 +187,8 @@ public class UserProfileServiceImplTest {
 	@Test
 	public final void testAddProfileForUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testAddProfileForUser2";
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
@@ -233,11 +205,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -248,8 +218,7 @@ public class UserProfileServiceImplTest {
 		String actualNickName = "nickName";
 		String actualDescription = "description";
 
-		userProfile.getUserProfilePublicFields().setDescription(
-				actualDescription);
+		userProfile.getUserProfilePublicFields().setDescription(actualDescription);
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		// access person
 		userProfileService.getUserProfileServiceConfiguration()
@@ -261,69 +230,52 @@ public class UserProfileServiceImplTest {
 
 		String userHomeDir = userProfileService.getUserProfileDir(testUser);
 
-		IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(
-				testUserAccount).instanceIRODSFile(
-				userHomeDir,
-				userProfileService.getUserProfileServiceConfiguration()
-						.getPublicProfileFileName());
+		IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+				userHomeDir, userProfileService.getUserProfileServiceConfiguration().getPublicProfileFileName());
 
-		TestCase.assertTrue("public user profile not created",
-				userProfileFile.exists());
+		Assert.assertTrue("public user profile not created", userProfileFile.exists());
 
 		// make sure public can read profile
 
-		DataObjectAO dataObjectAO = accessObjectFactory
-				.getDataObjectAO(irodsAccount);
-		FilePermissionEnum permissionData = dataObjectAO
-				.getPermissionForDataObject(userProfileFile.getAbsolutePath(),
-						"public", irodsAccount.getZone());
+		DataObjectAO dataObjectAO = accessObjectFactory.getDataObjectAO(irodsAccount);
+		FilePermissionEnum permissionData = dataObjectAO.getPermissionForDataObject(userProfileFile.getAbsolutePath(),
+				"public", irodsAccount.getZone());
 
-		TestCase.assertEquals("public should have read permission",
-				FilePermissionEnum.READ, permissionData);
+		Assert.assertEquals("public should have read permission", FilePermissionEnum.READ, permissionData);
 
 		// admin should have write
 
-		permissionData = dataObjectAO.getPermissionForDataObject(
-				userProfileFile.getAbsolutePath(), irodsAccount.getUserName(),
-				irodsAccount.getZone());
+		permissionData = dataObjectAO.getPermissionForDataObject(userProfileFile.getAbsolutePath(),
+				irodsAccount.getUserName(), irodsAccount.getZone());
 
-		TestCase.assertEquals("rods should have write permission",
-				FilePermissionEnum.WRITE, permissionData);
+		Assert.assertEquals("rods should have write permission", FilePermissionEnum.WRITE, permissionData);
 
 		// inspect data in AVU
 
 		List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
 
-		query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL,
+		query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
 				UserProfileService.AVU_UNIT_NAMESPACE));
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
-				.findMetadataValuesForDataObject(userProfileFile
-						.getAbsolutePath());
+				.findMetadataValuesForDataObject(userProfileFile.getAbsolutePath());
 
 		// check for metadata, other unit tests will look at the details field
 		// by field
-		TestCase.assertFalse("no metadata found", metadata.isEmpty());
+		Assert.assertFalse("no metadata found", metadata.isEmpty());
 
-		IRODSFile protectedProfileFile = accessObjectFactory
-				.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
-						userHomeDir,
-						userProfileService.getUserProfileServiceConfiguration()
-								.getProtectedProfileFileName());
+		IRODSFile protectedProfileFile = accessObjectFactory.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+				userHomeDir, userProfileService.getUserProfileServiceConfiguration().getProtectedProfileFileName());
 
-		TestCase.assertTrue("protected user profile not created",
-				protectedProfileFile.exists());
+		Assert.assertTrue("protected user profile not created", protectedProfileFile.exists());
 
 	}
 
 	@Test
 	public final void testRetrieveProfileForUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testRetrieveProfileForUser";
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
@@ -340,11 +292,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -356,8 +306,7 @@ public class UserProfileServiceImplTest {
 		String actualDescription = "description";
 		String actualEmail = "emal@something.com";
 
-		userProfile.getUserProfilePublicFields().setDescription(
-				actualDescription);
+		userProfile.getUserProfilePublicFields().setDescription(actualDescription);
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
 
@@ -369,33 +318,26 @@ public class UserProfileServiceImplTest {
 
 		// now retrive
 		UserProfile actual = userProfileService.retrieveUserProfile(testUser);
-		TestCase.assertEquals("user name not set", userProfile.getUserName(),
-				actual.getUserName());
-		TestCase.assertEquals("zone not set", userProfile.getZone(),
-				actual.getZone());
-		TestCase.assertEquals("nick name not set", userProfile
-				.getUserProfilePublicFields().getNickName(), actual
-				.getUserProfilePublicFields().getNickName());
-		TestCase.assertEquals("description not set", userProfile
-				.getUserProfilePublicFields().getDescription(), actual
-				.getUserProfilePublicFields().getDescription());
-		TestCase.assertEquals("mail not set", userProfile
-				.getUserProfileProtectedFields().getMail(), actual
-				.getUserProfileProtectedFields().getMail());
+		Assert.assertEquals("user name not set", userProfile.getUserName(), actual.getUserName());
+		Assert.assertEquals("zone not set", userProfile.getZone(), actual.getZone());
+		Assert.assertEquals("nick name not set", userProfile.getUserProfilePublicFields().getNickName(),
+				actual.getUserProfilePublicFields().getNickName());
+		Assert.assertEquals("description not set", userProfile.getUserProfilePublicFields().getDescription(),
+				actual.getUserProfilePublicFields().getDescription());
+		Assert.assertEquals("mail not set", userProfile.getUserProfileProtectedFields().getMail(),
+				actual.getUserProfileProtectedFields().getMail());
 	}
 
 	/**
 	 * Test general operation when a subdir is not defined for the profile info
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public final void testRetrieveProfileForUserNoSubdir() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testRetrieveProfileForUserNoSubdir";
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
@@ -412,13 +354,10 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
-		userProfileService.getUserProfileServiceConfiguration()
-				.setProfileSubdirName("");
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
+		userProfileService.getUserProfileServiceConfiguration().setProfileSubdirName("");
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -430,8 +369,7 @@ public class UserProfileServiceImplTest {
 		String actualDescription = "description";
 		String actualEmail = "emal@something.com";
 
-		userProfile.getUserProfilePublicFields().setDescription(
-				actualDescription);
+		userProfile.getUserProfilePublicFields().setDescription(actualDescription);
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
 
@@ -443,28 +381,21 @@ public class UserProfileServiceImplTest {
 
 		// now retrive
 		UserProfile actual = userProfileService.retrieveUserProfile(testUser);
-		TestCase.assertEquals("user name not set", userProfile.getUserName(),
-				actual.getUserName());
-		TestCase.assertEquals("zone not set", userProfile.getZone(),
-				actual.getZone());
-		TestCase.assertEquals("nick name not set", userProfile
-				.getUserProfilePublicFields().getNickName(), actual
-				.getUserProfilePublicFields().getNickName());
-		TestCase.assertEquals("description not set", userProfile
-				.getUserProfilePublicFields().getDescription(), actual
-				.getUserProfilePublicFields().getDescription());
-		TestCase.assertEquals("mail not set", userProfile
-				.getUserProfileProtectedFields().getMail(), actual
-				.getUserProfileProtectedFields().getMail());
+		Assert.assertEquals("user name not set", userProfile.getUserName(), actual.getUserName());
+		Assert.assertEquals("zone not set", userProfile.getZone(), actual.getZone());
+		Assert.assertEquals("nick name not set", userProfile.getUserProfilePublicFields().getNickName(),
+				actual.getUserProfilePublicFields().getNickName());
+		Assert.assertEquals("description not set", userProfile.getUserProfilePublicFields().getDescription(),
+				actual.getUserProfilePublicFields().getDescription());
+		Assert.assertEquals("mail not set", userProfile.getUserProfileProtectedFields().getMail(),
+				actual.getUserProfileProtectedFields().getMail());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testRetrieveProfileForUserNullUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testRetrieveProfileForUserNullUser";
 		String password = "password";
 
@@ -482,11 +413,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		// now retrive
 		userProfileService.retrieveUserProfile(null);
@@ -496,10 +425,8 @@ public class UserProfileServiceImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public final void testRetrieveProfileForUserBlankUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testRetrieveProfileForUserBlankUser";
 		String password = "password";
 
@@ -517,11 +444,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		// now retrive
 		userProfileService.retrieveUserProfile("");
@@ -531,10 +456,8 @@ public class UserProfileServiceImplTest {
 	@Test
 	public final void testUpdateProfileForUser() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testUpdateProfileForUser";
 		String updatedPostFix = "updated";
 
@@ -552,11 +475,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -568,8 +489,7 @@ public class UserProfileServiceImplTest {
 		String actualDescription = "description";
 		String actualEmail = "emal@something.com";
 
-		userProfile.getUserProfilePublicFields().setDescription(
-				actualDescription);
+		userProfile.getUserProfilePublicFields().setDescription(actualDescription);
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
 
@@ -580,12 +500,9 @@ public class UserProfileServiceImplTest {
 		userProfileService.addProfileForUser(testUser, userProfile);
 
 		// now retrive and update the email and descr
-		UserProfile beforeUpdate = userProfileService
-				.retrieveUserProfile(testUser);
-		beforeUpdate.getUserProfileProtectedFields().setMail(
-				actualEmail + updatedPostFix);
-		beforeUpdate.getUserProfilePublicFields().setDescription(
-				actualDescription + updatedPostFix);
+		UserProfile beforeUpdate = userProfileService.retrieveUserProfile(testUser);
+		beforeUpdate.getUserProfileProtectedFields().setMail(actualEmail + updatedPostFix);
+		beforeUpdate.getUserProfilePublicFields().setDescription(actualDescription + updatedPostFix);
 
 		userProfileService.updateUserProfile(beforeUpdate);
 
@@ -593,35 +510,29 @@ public class UserProfileServiceImplTest {
 
 		UserProfile actual = userProfileService.retrieveUserProfile(testUser);
 
-		TestCase.assertEquals("did not update description", actualDescription
-				+ updatedPostFix, actual.getUserProfilePublicFields()
-				.getDescription());
-		TestCase.assertEquals("did not update email", actualEmail
-				+ updatedPostFix, actual.getUserProfileProtectedFields()
-				.getMail());
+		Assert.assertEquals("did not update description", actualDescription + updatedPostFix,
+				actual.getUserProfilePublicFields().getDescription());
+		Assert.assertEquals("did not update email", actualEmail + updatedPostFix,
+				actual.getUserProfileProtectedFields().getMail());
 
 	}
 
 	/**
 	 * Update a profile on a non-existent user
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonRuntimeException.class)
 	public final void testUpdateProfileForUserUserNotExists() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testUpdateProfileForUserUserNotExists";
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		UserProfile userProfile = new UserProfile();
 		userProfile.setUserName(testUser);
@@ -632,17 +543,14 @@ public class UserProfileServiceImplTest {
 
 	/**
 	 * Update a profile on an existing user who has no profile
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testUpdateProfileForUserThatExistsButDoesNotHaveAProfile()
-			throws Exception {
+	public final void testUpdateProfileForUserThatExistsButDoesNotHaveAProfile() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testUpdateProfileForUserThatExistsButDoesNotHaveAProfile";
 		String password = "password";
 
@@ -660,11 +568,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -676,8 +582,7 @@ public class UserProfileServiceImplTest {
 		String actualDescription = "description";
 		String actualEmail = "emal@something.com";
 
-		userProfile.getUserProfilePublicFields().setDescription(
-				actualDescription);
+		userProfile.getUserProfilePublicFields().setDescription(actualDescription);
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
 
@@ -689,16 +594,14 @@ public class UserProfileServiceImplTest {
 		UserProfile actual = userProfileService.retrieveUserProfile(testUser);
 		// really should just not get a data not found error, should really add,
 		// the test below is a formality
-		TestCase.assertNotNull("profile was null", actual);
+		Assert.assertNotNull("profile was null", actual);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testUpdateProfileForNullUserProfile() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "testUpdateProfileForNullUserProfile";
 		String password = "password";
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
@@ -715,11 +618,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		UserProfile userProfile = null;
 		userProfileService.updateUserProfile(userProfile);
@@ -727,13 +628,10 @@ public class UserProfileServiceImplTest {
 	}
 
 	@Test
-	public final void testRetrieveProfileForUserAllPublicFieldsTested()
-			throws Exception {
+	public final void testRetrieveProfileForUserAllPublicFieldsTested() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		String testUser = "AllPublicFieldsTested";
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
@@ -750,11 +648,9 @@ public class UserProfileServiceImplTest {
 		}
 
 		IRODSAccount testUserAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, testUser);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, testUser);
 
-		UserProfileService userProfileService = new UserProfileServiceImpl(
-				accessObjectFactory, testUserAccount);
+		UserProfileService userProfileService = new UserProfileServiceImpl(accessObjectFactory, testUserAccount);
 
 		userProfileService.removeProfileInformation(testUser);
 
@@ -766,34 +662,22 @@ public class UserProfileServiceImplTest {
 		String actualDescription = "description";
 		String actualEmail = "emal@something.com";
 
-		userProfile.getUserProfilePublicFields().setDescription(
-				actualDescription);
+		userProfile.getUserProfilePublicFields().setDescription(actualDescription);
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
 		userProfile.getUserProfilePublicFields().setCn(UserProfileConstants.CN);
-		userProfile.getUserProfilePublicFields().setGivenName(
-				UserProfileConstants.GIVEN_NAME);
-		userProfile.getUserProfilePublicFields().setJpegPhoto(
-				UserProfileConstants.JPEG_PHOTO);
-		userProfile.getUserProfilePublicFields().setLabeledURL(
-				UserProfileConstants.LABELED_URL);
-		userProfile.getUserProfilePublicFields().setLocalityName(
-				UserProfileConstants.LOCALITY_NAME);
-		userProfile.getUserProfilePublicFields().setPostalAddress(
-				UserProfileConstants.POSTAL_ADDRESS);
-		userProfile.getUserProfilePublicFields().setPostalCode(
-				UserProfileConstants.POSTAL_CODE);
-		userProfile.getUserProfilePublicFields().setPostOfficeBox(
-				UserProfileConstants.POST_OFFICE_BOX);
+		userProfile.getUserProfilePublicFields().setGivenName(UserProfileConstants.GIVEN_NAME);
+		userProfile.getUserProfilePublicFields().setJpegPhoto(UserProfileConstants.JPEG_PHOTO);
+		userProfile.getUserProfilePublicFields().setLabeledURL(UserProfileConstants.LABELED_URL);
+		userProfile.getUserProfilePublicFields().setLocalityName(UserProfileConstants.LOCALITY_NAME);
+		userProfile.getUserProfilePublicFields().setPostalAddress(UserProfileConstants.POSTAL_ADDRESS);
+		userProfile.getUserProfilePublicFields().setPostalCode(UserProfileConstants.POSTAL_CODE);
+		userProfile.getUserProfilePublicFields().setPostOfficeBox(UserProfileConstants.POST_OFFICE_BOX);
 		userProfile.getUserProfilePublicFields().setSn(UserProfileConstants.SN);
-		userProfile.getUserProfilePublicFields().setSt(
-				UserProfileConstants.STATE);
-		userProfile.getUserProfilePublicFields().setStreet(
-				UserProfileConstants.STREET);
-		userProfile.getUserProfilePublicFields().setTelephoneNumber(
-				UserProfileConstants.TELEPHONE_NUMBER);
-		userProfile.getUserProfilePublicFields().setTitle(
-				UserProfileConstants.TITLE);
+		userProfile.getUserProfilePublicFields().setSt(UserProfileConstants.STATE);
+		userProfile.getUserProfilePublicFields().setStreet(UserProfileConstants.STREET);
+		userProfile.getUserProfilePublicFields().setTelephoneNumber(UserProfileConstants.TELEPHONE_NUMBER);
+		userProfile.getUserProfilePublicFields().setTitle(UserProfileConstants.TITLE);
 
 		// access person
 		userProfileService.getUserProfileServiceConfiguration()
@@ -803,53 +687,37 @@ public class UserProfileServiceImplTest {
 
 		// now retrive
 		UserProfile actual = userProfileService.retrieveUserProfile(testUser);
-		TestCase.assertEquals("user name not set", userProfile.getUserName(),
-				actual.getUserName());
-		TestCase.assertEquals("zone not set", userProfile.getZone(),
-				actual.getZone());
-		TestCase.assertEquals("nick name not set", userProfile
-				.getUserProfilePublicFields().getNickName(), actual
-				.getUserProfilePublicFields().getNickName());
-		TestCase.assertEquals("description not set", userProfile
-				.getUserProfilePublicFields().getDescription(), actual
-				.getUserProfilePublicFields().getDescription());
-		TestCase.assertEquals("mail not set", userProfile
-				.getUserProfileProtectedFields().getMail(), actual
-				.getUserProfileProtectedFields().getMail());
+		Assert.assertEquals("user name not set", userProfile.getUserName(), actual.getUserName());
+		Assert.assertEquals("zone not set", userProfile.getZone(), actual.getZone());
+		Assert.assertEquals("nick name not set", userProfile.getUserProfilePublicFields().getNickName(),
+				actual.getUserProfilePublicFields().getNickName());
+		Assert.assertEquals("description not set", userProfile.getUserProfilePublicFields().getDescription(),
+				actual.getUserProfilePublicFields().getDescription());
+		Assert.assertEquals("mail not set", userProfile.getUserProfileProtectedFields().getMail(),
+				actual.getUserProfileProtectedFields().getMail());
 
-		TestCase.assertEquals("cn not set", UserProfileConstants.CN, actual
-				.getUserProfilePublicFields().getCn());
-		TestCase.assertEquals("GIVEN_NAME not set",
-				UserProfileConstants.GIVEN_NAME, actual
-						.getUserProfilePublicFields().getGivenName());
-		TestCase.assertEquals("JPEG_PHOTO not set",
-				UserProfileConstants.JPEG_PHOTO, actual
-						.getUserProfilePublicFields().getJpegPhoto());
-		TestCase.assertEquals("LABELED_URL not set",
-				UserProfileConstants.LABELED_URL, actual
-						.getUserProfilePublicFields().getLabeledURL());
-		TestCase.assertEquals("LOCALITY_NAME not set",
-				UserProfileConstants.LOCALITY_NAME, actual
-						.getUserProfilePublicFields().getLocalityName());
-		TestCase.assertEquals("POSTAL_ADDRESS not set",
-				UserProfileConstants.POSTAL_ADDRESS, actual
-						.getUserProfilePublicFields().getPostalAddress());
-		TestCase.assertEquals("POSTAL_CODE not set",
-				UserProfileConstants.POSTAL_CODE, actual
-						.getUserProfilePublicFields().getPostalCode());
-		TestCase.assertEquals("POST_OFFICE_BOX not set",
-				UserProfileConstants.POST_OFFICE_BOX, actual
-						.getUserProfilePublicFields().getPostOfficeBox());
-		TestCase.assertEquals("SN not set", UserProfileConstants.SN, actual
-				.getUserProfilePublicFields().getSn());
-		TestCase.assertEquals("STREET not set", UserProfileConstants.STREET,
+		Assert.assertEquals("cn not set", UserProfileConstants.CN, actual.getUserProfilePublicFields().getCn());
+		Assert.assertEquals("GIVEN_NAME not set", UserProfileConstants.GIVEN_NAME,
+				actual.getUserProfilePublicFields().getGivenName());
+		Assert.assertEquals("JPEG_PHOTO not set", UserProfileConstants.JPEG_PHOTO,
+				actual.getUserProfilePublicFields().getJpegPhoto());
+		Assert.assertEquals("LABELED_URL not set", UserProfileConstants.LABELED_URL,
+				actual.getUserProfilePublicFields().getLabeledURL());
+		Assert.assertEquals("LOCALITY_NAME not set", UserProfileConstants.LOCALITY_NAME,
+				actual.getUserProfilePublicFields().getLocalityName());
+		Assert.assertEquals("POSTAL_ADDRESS not set", UserProfileConstants.POSTAL_ADDRESS,
+				actual.getUserProfilePublicFields().getPostalAddress());
+		Assert.assertEquals("POSTAL_CODE not set", UserProfileConstants.POSTAL_CODE,
+				actual.getUserProfilePublicFields().getPostalCode());
+		Assert.assertEquals("POST_OFFICE_BOX not set", UserProfileConstants.POST_OFFICE_BOX,
+				actual.getUserProfilePublicFields().getPostOfficeBox());
+		Assert.assertEquals("SN not set", UserProfileConstants.SN, actual.getUserProfilePublicFields().getSn());
+		Assert.assertEquals("STREET not set", UserProfileConstants.STREET,
 				actual.getUserProfilePublicFields().getStreet());
-		TestCase.assertEquals("STATE not set", UserProfileConstants.STATE,
-				actual.getUserProfilePublicFields().getSt());
-		TestCase.assertEquals("TELEPHONE_NUMBER not set",
-				UserProfileConstants.TELEPHONE_NUMBER, actual
-						.getUserProfilePublicFields().getTelephoneNumber());
-		TestCase.assertEquals("TITLE not set", UserProfileConstants.TITLE,
+		Assert.assertEquals("STATE not set", UserProfileConstants.STATE, actual.getUserProfilePublicFields().getSt());
+		Assert.assertEquals("TELEPHONE_NUMBER not set", UserProfileConstants.TELEPHONE_NUMBER,
+				actual.getUserProfilePublicFields().getTelephoneNumber());
+		Assert.assertEquals("TITLE not set", UserProfileConstants.TITLE,
 				actual.getUserProfilePublicFields().getTitle());
 	}
 

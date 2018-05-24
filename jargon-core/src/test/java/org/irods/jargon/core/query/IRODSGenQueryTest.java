@@ -1,10 +1,10 @@
 package org.irods.jargon.core.query;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class IRODSGenQueryTest {
 

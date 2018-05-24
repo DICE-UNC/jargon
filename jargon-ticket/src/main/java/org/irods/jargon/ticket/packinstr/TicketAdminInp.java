@@ -7,9 +7,9 @@ import java.util.Date;
 /**
  * Packing instruction for admin functions for the ticket subsystem in iRODS.
  * These functions mirror the packing instructions in the iticket icommand.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TicketAdminInp extends TicketInp {
 
@@ -167,7 +167,7 @@ public class TicketAdminInp extends TicketInp {
 	/**
 	 * Create a packing instruction to modify the expiration date. Setting the date
 	 * to {@code null} removes the expiration
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} with the unique ticket string
 	 * @param expirationDate
@@ -193,8 +193,8 @@ public class TicketAdminInp extends TicketInp {
 	/**
 	 * Private constructor for TicketAdminInp, use the instance() methods to create
 	 * per command
-	 * 
-	 * 
+	 *
+	 *
 	 * @param arg1
 	 * @param arg2
 	 * @param arg3

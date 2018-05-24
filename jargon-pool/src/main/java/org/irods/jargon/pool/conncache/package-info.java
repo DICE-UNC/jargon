@@ -1,9 +1,9 @@
 /**
- * 
+ *
  */
 /**
  * Connection cache for temporary pooling (as a performance enhancement)
- * 
+ *
  * @author mconway
  *
  */

@@ -1068,7 +1068,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * See https://github.com/DICE-UNC/jargon/issues/216
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1103,7 +1103,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * See https://github.com/DICE-UNC/jargon/issues/216
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * In the future, more generalized pooling implementations may be developed, but
  * for now, this is narrowly focused.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFactory {
 
@@ -35,7 +35,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 	/**
 	 * Constructor will build a connection source based on the given
 	 * {@code cachedIRODSAccount} and return an open connection on demand.
-	 * 
+	 *
 	 * @param cachedIRODSAccount
 	 *            {@link IRODSAccount} that will describe the source of the
 	 *            connection to iRODS
@@ -66,7 +66,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.apache.commons.pool.PoolableObjectFactory#activateObject(java.lang
 	 * .Object)
 	 */
@@ -77,7 +77,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.apache.commons.pool.PoolableObjectFactory#destroyObject(java.lang
 	 * .Object)
 	 */
@@ -95,7 +95,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.apache.commons.pool.PoolableObjectFactory#makeObject()
 	 */
 	@Override
@@ -106,7 +106,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.apache.commons.pool.PoolableObjectFactory#passivateObject(java.lang
 	 * .Object)
 	 */
@@ -118,7 +118,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.apache.commons.pool.PoolableObjectFactory#validateObject(java.lang
 	 * .Object)
 	 */

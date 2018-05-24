@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.visitor;
 
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * Service to run a crawl given a visitor and configuration. This is an example
  * of how the crawl can be initiated. It is likey a specific implementation
  * would differ.
- * 
+ *
  * @author conwaymc
  *
  */
@@ -30,7 +30,8 @@ public class HierVisitorCrawlerServiceImpl extends AbstractJargonService {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */
-	public HierVisitorCrawlerServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public HierVisitorCrawlerServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
@@ -50,7 +51,7 @@ public class HierVisitorCrawlerServiceImpl extends AbstractJargonService {
 
 		log.info("beginning the crawl...east to west...north to south...");
 
-		IRODSFileImpl startingPoint = (IRODSFileImpl) this.getIrodsAccessObjectFactory()
+		IRODSFileImpl startingPoint = (IRODSFileImpl) getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(startingCollectionPath);
 
 		if (!startingPoint.isDirectory()) {

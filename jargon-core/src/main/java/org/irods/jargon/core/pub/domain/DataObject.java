@@ -496,7 +496,7 @@ public class DataObject extends IRODSDomainObject {
 		return resourceId;
 	}
 
-	public void setResourceId(String resourceId) {
+	public void setResourceId(final String resourceId) {
 		this.resourceId = resourceId;
 	}
 }

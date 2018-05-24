@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * Special variant of the {@link IRODSProtocolManager} that caches a temporary
  * password and only returns that one connection. This effectively shares that
  * single connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
@@ -36,7 +36,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 * pool for reuse. This is because temp passwords are one-time only. This allows
 	 * client applications to (somewhat) transparently simulate the ability to get a
 	 * connection on-demand. This is used in idrop-lite, for example.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the underlying cached account
 	 * @param irodsSession
@@ -73,7 +73,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#
 	 * getIRODSProtocol(org.irods.jargon.core.connection.IRODSAccount,
 	 * org.irods.jargon.core.connection.PipelineConfiguration)
@@ -93,7 +93,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#destroy()
 	 */
 	@Override
@@ -110,7 +110,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#initialize
 	 * ()
 	 */
@@ -142,7 +142,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)

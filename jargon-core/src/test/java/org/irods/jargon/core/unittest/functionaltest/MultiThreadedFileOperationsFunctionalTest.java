@@ -2,14 +2,14 @@ package org.irods.jargon.core.unittest.functionaltest;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Various multi-threaded access to iRODS files and streams. Right now this is
@@ -35,8 +35,7 @@ public class MultiThreadedFileOperationsFunctionalTest {
 
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -58,8 +57,7 @@ public class MultiThreadedFileOperationsFunctionalTest {
 		final String testFileName = "testCreateFileMultipleThreadsBug65.xls";
 
 		final String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		final IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -70,9 +68,7 @@ public class MultiThreadedFileOperationsFunctionalTest {
 				public void run() {
 					try {
 						irodsFileSystem.getIRODSFileFactory(irodsAccount)
-								.instanceIRODSFile(
-										targetIrodsCollection + "/"
-												+ testFileName + finalJ);
+								.instanceIRODSFile(targetIrodsCollection + "/" + testFileName + finalJ);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Assert.fail("exception:" + e);

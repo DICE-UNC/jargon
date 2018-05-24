@@ -3,11 +3,11 @@ package org.irods.jargon.core.query;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class ExtensibleMetaDataMappingTest {
 
@@ -29,8 +29,7 @@ public class ExtensibleMetaDataMappingTest {
 		metaDataSource.put(key1, val1);
 		metaDataSource.put(key2, val2);
 
-		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping
-				.instance(metaDataSource);
+		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping.instance(metaDataSource);
 
 		Assert.assertNotNull(metaDataMapping);
 
@@ -46,8 +45,7 @@ public class ExtensibleMetaDataMappingTest {
 		metaDataSource.put(key1, val1);
 		metaDataSource.put(key2, val2);
 
-		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping
-				.instance(metaDataSource);
+		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping.instance(metaDataSource);
 
 		String index = metaDataMapping.getIndexFromColumnName(key1);
 		Assert.assertEquals(val1, index);
@@ -63,8 +61,7 @@ public class ExtensibleMetaDataMappingTest {
 		metaDataSource.put(key1, val1);
 		metaDataSource.put(key2, val2);
 
-		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping
-				.instance(metaDataSource);
+		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping.instance(metaDataSource);
 
 		String actual = metaDataMapping.getColumnNameFromIndex(val1);
 		Assert.assertEquals(key1, actual);
@@ -72,8 +69,7 @@ public class ExtensibleMetaDataMappingTest {
 	}
 
 	@Test
-	public final void testCreateThenObtainInstanceAgainCheckOverride()
-			throws Exception {
+	public final void testCreateThenObtainInstanceAgainCheckOverride() throws Exception {
 		Map<String, String> metaDataSource = new HashMap<String, String>();
 		String key1 = "key1";
 		String val1 = "10003";
@@ -82,8 +78,7 @@ public class ExtensibleMetaDataMappingTest {
 		metaDataSource.put(key1, val1);
 		metaDataSource.put(key2, val2);
 
-		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping
-				.instance(metaDataSource);
+		ExtensibleMetaDataMapping metaDataMapping = ExtensibleMetaDataMapping.instance(metaDataSource);
 		metaDataSource = new HashMap<String, String>();
 		String key3 = "key3";
 		String val3 = "10004";
@@ -93,9 +88,7 @@ public class ExtensibleMetaDataMappingTest {
 		metaDataSource.put(key4, val4);
 		metaDataMapping = ExtensibleMetaDataMapping.instance(metaDataSource);
 		String actual = metaDataMapping.getColumnNameFromIndex(val3);
-		Assert.assertEquals(
-				"stale data still in metadata mapping, should have overridden",
-				key3, actual);
+		Assert.assertEquals("stale data still in metadata mapping, should have overridden", key3, actual);
 	}
 
 }

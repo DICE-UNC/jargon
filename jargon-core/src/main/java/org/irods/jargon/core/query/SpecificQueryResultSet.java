@@ -22,21 +22,18 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
 	 * @param results
-	 *            {@code List} of {@link IRODSQueryResultRow} with each row
-	 *            of the query results
+	 *            {@code List} of {@link IRODSQueryResultRow} with each row of the
+	 *            query results
 	 * @param columnNames
 	 *            {@code List<String>} of columns in the results
 	 * @param hasMoreRecords
-	 *            {@code boolean} indicating whether more records are
-	 *            available
+	 *            {@code boolean} indicating whether more records are available
 	 * @param continuationIndex
-	 *            {@code int} with a continuation index, this can be used
-	 *            in subsequent queries to re-query for more result pages
+	 *            {@code int} with a continuation index, this can be used in
+	 *            subsequent queries to re-query for more result pages
 	 */
-	public SpecificQueryResultSet(final SpecificQuery specificQuery,
-			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final boolean hasMoreRecords,
-			final int continuationIndex) {
+	public SpecificQueryResultSet(final SpecificQuery specificQuery, final List<IRODSQueryResultRow> results,
+			final List<String> columnNames, final boolean hasMoreRecords, final int continuationIndex) {
 		super(results, columnNames, hasMoreRecords, continuationIndex);
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specificQuery");
@@ -52,8 +49,7 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param columnNames
 	 *            {@code List<String>} of columns in the results
 	 */
-	public SpecificQueryResultSet(final SpecificQuery specificQuery,
-			final List<String> columnNames) {
+	public SpecificQueryResultSet(final SpecificQuery specificQuery, final List<String> columnNames) {
 		super(new ArrayList<IRODSQueryResultRow>(), columnNames, false, 0);
 		if (specificQuery == null) {
 			throw new IllegalArgumentException("null specificQuery");

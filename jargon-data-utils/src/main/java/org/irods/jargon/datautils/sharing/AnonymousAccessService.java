@@ -8,16 +8,16 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 /**
  * Interface to a service object that presents handy methods for managing
  * anonymous users and their access
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface AnonymousAccessService {
 
 	/**
 	 * Checks to see whether anonymous access is allowed for the given iRODS
 	 * absolute path. This can be either a file or a collection.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with an absolute path to an iRODS file or
 	 *            collection
@@ -32,7 +32,7 @@ public interface AnonymousAccessService {
 	/**
 	 * Get the anonymous user name for use in comparisons and setting. May be
 	 * modified by setting a variant.
-	 * 
+	 *
 	 * @return the anonymousUserName {@code String}
 	 */
 	abstract String getAnonymousUserName();
@@ -40,7 +40,7 @@ public interface AnonymousAccessService {
 	/**
 	 * Set (by injection) the user name to use as 'anonymous'. Defaults to the
 	 * setting in {@link IRODSAccount}
-	 * 
+	 *
 	 * @param anonymousUserName
 	 *            {@code String} the anonymousUserName to set
 	 */
@@ -53,7 +53,7 @@ public interface AnonymousAccessService {
 	 * containing collection's access to at least read. If the
 	 * {@code optionalFilePermissionForParentCollection} is specified, that
 	 * permission will be used for the parent collection.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path to the iRODS collection or
 	 *            data object for which the permissions will be set

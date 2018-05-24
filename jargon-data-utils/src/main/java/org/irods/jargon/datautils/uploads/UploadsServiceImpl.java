@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.uploads;
 
@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Service implementation to help manage an 'uploads' directory, used by
  * convention in multiple interfaces as a generic location to upload data.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UploadsServiceImpl extends AbstractJargonService implements UploadsService {
 
@@ -25,7 +25,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements Uploads
 
 	/**
 	 * Constructor with information needed to connect to iRODS
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
@@ -38,7 +38,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements Uploads
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.uploads.UploadsService#getUploadsDirectory()
 	 */
 	@Override
@@ -57,7 +57,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements Uploads
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.uploads.UploadsService#deleteUploadsDirectory
 	 * ()
 	 */
@@ -74,7 +74,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements Uploads
 
 	/**
 	 * Get the uploads dir name under the user home directory
-	 * 
+	 *
 	 * @return
 	 */
 	private String getUploadsDirName() {

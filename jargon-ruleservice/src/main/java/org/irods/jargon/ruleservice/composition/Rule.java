@@ -8,9 +8,9 @@ import org.irods.jargon.core.rule.IRODSRuleParameter;
 /**
  * Representation of a rule in iRODS. This is a representation of a 'new' iRODS
  * rule, and does not support the 'classic' rule
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class Rule {
 
@@ -67,8 +67,7 @@ public class Rule {
 		return inputParameters;
 	}
 
-	public void setInputParameters(
-			final List<IRODSRuleParameter> inputParameters) {
+	public void setInputParameters(final List<IRODSRuleParameter> inputParameters) {
 		this.inputParameters = inputParameters;
 	}
 
@@ -76,8 +75,7 @@ public class Rule {
 		return outputParameters;
 	}
 
-	public void setOutputParameters(
-			final List<IRODSRuleParameter> outputParameters) {
+	public void setOutputParameters(final List<IRODSRuleParameter> outputParameters) {
 		this.outputParameters = outputParameters;
 	}
 

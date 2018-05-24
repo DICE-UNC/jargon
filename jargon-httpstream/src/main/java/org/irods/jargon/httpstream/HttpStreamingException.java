@@ -2,19 +2,19 @@ package org.irods.jargon.httpstream;
 
 /**
  * An HTTP exception or URL processing exception
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class HttpStreamingException extends Exception {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3177260897750311917L;
 
 	/**
-	 * 
+	 *
 	 */
 	public HttpStreamingException() {
 

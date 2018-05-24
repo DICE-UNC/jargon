@@ -29,7 +29,6 @@ public final class InvalidClientUserException extends JargonException {
 	 *            {@code String} with any additional information
 	 */
 	public InvalidClientUserException(final String explanation) {
-		super(makeMessage(explanation), ErrorEnum.CAT_INVALID_CLIENT_USER
-				.getInt());
+		super(makeMessage(explanation), ErrorEnum.CAT_INVALID_CLIENT_USER.getInt());
 	}
 }

@@ -120,7 +120,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing
 	 * (java.lang.String)
@@ -262,10 +262,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
-	 * 
+	 *
 	 * softlink
 	 */
 	@Override
@@ -306,7 +306,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countDataObjectsAndCollectionsUnderPath(java.lang.String)
 	 */
@@ -347,7 +347,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countDataObjectsUnderPath(java.lang.String)
 	 */
@@ -459,7 +459,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countCollectionsUnderPath(java.lang.String)
 	 */
@@ -526,7 +526,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsBasedOnName(java.lang.String)
 	 */
@@ -541,7 +541,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsBasedOnName(java.lang.String, int)
 	 */
@@ -592,10 +592,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listCollectionsUnderPath(java.lang.String, int)
-	 * 
+	 *
 	 * softlink
 	 */
 	@Override
@@ -639,7 +639,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listCollectionsUnderPathWithPermissions(java.lang.String, int)
 	 */
@@ -963,7 +963,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPath(java.lang.String, int)
 	 */
@@ -990,7 +990,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPathWithPermissions(java.lang.String, int)
 	 */
@@ -1135,7 +1135,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchDataObjectsBasedOnName(java.lang.String)
 	 */
@@ -1148,7 +1148,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchDataObjectsBasedOnName(java.lang.String, int)
 	 */
@@ -1214,7 +1214,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsAndDataObjectsBasedOnName(java.lang.String)
 	 */
@@ -1238,7 +1238,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * getFullObjectForType(java.lang.String)
 	 */
@@ -1326,7 +1326,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPathAndDataObjectName(java.lang.String,
 	 * java.lang.String)
@@ -1352,7 +1352,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPathWithHeuristicPathGuessing(java.lang.String)
 	 */
@@ -1384,7 +1384,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPath(java.lang.String)
 	 */

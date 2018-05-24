@@ -7,8 +7,7 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
-public class TestingStatusCallbackListener implements
-		TransferStatusCallbackListener {
+public class TestingStatusCallbackListener implements TransferStatusCallbackListener {
 
 	private int successCallbackCount = 0;
 	private int errorCallbackCount = 0;
@@ -27,13 +26,11 @@ public class TestingStatusCallbackListener implements
 	}
 
 	@Override
-	public FileStatusCallbackResponse statusCallback(
-			final TransferStatus transferStatus) {
+	public FileStatusCallbackResponse statusCallback(final TransferStatus transferStatus) {
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			numberIntraFileCallbacks++;
-			bytesReportedIntraFileCallbacks = transferStatus
-					.getBytesTransfered();
+			bytesReportedIntraFileCallbacks = transferStatus.getBytesTransfered();
 		} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			errorCallbackCount++;
 		} else if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
@@ -109,8 +106,8 @@ public class TestingStatusCallbackListener implements
 	}
 
 	@Override
-	public CallbackResponse transferAsksWhetherToForceOperation(
-			final String irodsAbsolutePath, final boolean isCollection) {
+	public CallbackResponse transferAsksWhetherToForceOperation(final String irodsAbsolutePath,
+			final boolean isCollection) {
 		return forceOption;
 	}
 

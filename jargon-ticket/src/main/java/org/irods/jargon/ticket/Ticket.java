@@ -9,9 +9,9 @@ import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 
 /**
  * Represents a ticket (temporary access to a file or collection) in iRODS.
- * 
+ *
  * @author Lisa Stillwell (RENCI)
- * 
+ *
  */
 public class Ticket extends IRODSDomainObject {
 

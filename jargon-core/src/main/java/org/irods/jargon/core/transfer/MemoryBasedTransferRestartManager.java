@@ -19,8 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(MemoryBasedTransferRestartManager.class);
+	private static final Logger log = LoggerFactory.getLogger(MemoryBasedTransferRestartManager.class);
 
 	private final ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo> cacheOfRestartInfo = new ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo>(
 			8, 0.9f, 1);
@@ -31,14 +30,12 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.AbstractRestartManager#storeRestart(org
+	 * @see org.irods.jargon.core.transfer.AbstractRestartManager#storeRestart(org
 	 * .irods.jargon.core.transfer.FileRestartInfo)
 	 */
 	@Override
-	public FileRestartInfoIdentifier storeRestart(
-			final FileRestartInfo fileRestartInfo)
-					throws FileRestartManagementException {
+	public FileRestartInfoIdentifier storeRestart(final FileRestartInfo fileRestartInfo)
+			throws FileRestartManagementException {
 
 		log.info("storeRestart()");
 		if (fileRestartInfo == null) {
@@ -48,8 +45,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 		FileRestartInfoIdentifier identifier;
 
 		synchronized (this) {
-			identifier = FileRestartInfoIdentifier
-					.instanceFromFileRestartInfo(fileRestartInfo);
+			identifier = FileRestartInfoIdentifier.instanceFromFileRestartInfo(fileRestartInfo);
 			cacheOfRestartInfo.put(identifier, fileRestartInfo);
 		}
 		return identifier;
@@ -59,14 +55,12 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.AbstractRestartManager#deleteRestart(org
+	 * @see org.irods.jargon.core.transfer.AbstractRestartManager#deleteRestart(org
 	 * .irods.jargon.core.transfer.FileRestartInfoIdentifier)
 	 */
 	@Override
-	public void deleteRestart(
-			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-					throws FileRestartManagementException {
+	public void deleteRestart(final FileRestartInfoIdentifier fileRestartInfoIdentifier)
+			throws FileRestartManagementException {
 
 		log.info("deleteRestart()");
 		if (fileRestartInfoIdentifier == null) {
@@ -82,14 +76,12 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.AbstractRestartManager#retrieveRestart
+	 * @see org.irods.jargon.core.transfer.AbstractRestartManager#retrieveRestart
 	 * (org.irods.jargon.core.transfer.FileRestartInfoIdentifier)
 	 */
 	@Override
-	public FileRestartInfo retrieveRestart(
-			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-					throws FileRestartManagementException {
+	public FileRestartInfo retrieveRestart(final FileRestartInfoIdentifier fileRestartInfoIdentifier)
+			throws FileRestartManagementException {
 
 		log.info("retrieveRestart()");
 		if (fileRestartInfoIdentifier == null) {
@@ -104,15 +96,13 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.AbstractRestartManager#updateSegment(org
+	 * @see org.irods.jargon.core.transfer.AbstractRestartManager#updateSegment(org
 	 * .irods.jargon.core.transfer.FileRestartInfo,
 	 * org.irods.jargon.core.transfer.FileRestartDataSegment)
 	 */
 	@Override
 	public void updateSegment(final FileRestartInfo fileRestartInfo,
-			final FileRestartDataSegment fileRestartDataSegment)
-					throws FileRestartManagementException {
+			final FileRestartDataSegment fileRestartDataSegment) throws FileRestartManagementException {
 
 		log.info("updateSegment()");
 
@@ -128,34 +118,23 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 		log.info("updating fileRestartDataSegment:{}", fileRestartDataSegment);
 
 		synchronized (this) {
-			FileRestartInfo actualRestartInfo = retrieveRestart(fileRestartInfo
-					.identifierFromThisInfo());
-			if (actualRestartInfo.getFileRestartDataSegments().size() < fileRestartDataSegment
-					.getThreadNumber()) {
-				log.error(
-						"fileRestartInfo does not contain the given segment:{}",
-						fileRestartInfo);
-				throw new FileRestartManagementException(
-						"unable to find segment");
+			FileRestartInfo actualRestartInfo = retrieveRestart(fileRestartInfo.identifierFromThisInfo());
+			if (actualRestartInfo.getFileRestartDataSegments().size() < fileRestartDataSegment.getThreadNumber()) {
+				log.error("fileRestartInfo does not contain the given segment:{}", fileRestartInfo);
+				throw new FileRestartManagementException("unable to find segment");
 			}
-			FileRestartDataSegment actualSegment = actualRestartInfo
-					.getFileRestartDataSegments().get(
-							fileRestartDataSegment.getThreadNumber());
-			if (actualSegment.getThreadNumber() != fileRestartDataSegment
-					.getThreadNumber()) {
-				log.error(
-						"mismatch in thread number in update request for segment:{}",
-						fileRestartDataSegment);
-				throw new FileRestartManagementException(
-						"file segment does not match thread number");
+			FileRestartDataSegment actualSegment = actualRestartInfo.getFileRestartDataSegments()
+					.get(fileRestartDataSegment.getThreadNumber());
+			if (actualSegment.getThreadNumber() != fileRestartDataSegment.getThreadNumber()) {
+				log.error("mismatch in thread number in update request for segment:{}", fileRestartDataSegment);
+				throw new FileRestartManagementException("file segment does not match thread number");
 			}
 
 			/*
 			 * Update the segment
 			 */
 
-			actualRestartInfo.getFileRestartDataSegments().set(
-					actualSegment.getThreadNumber(), fileRestartDataSegment);
+			actualRestartInfo.getFileRestartDataSegments().set(actualSegment.getThreadNumber(), fileRestartDataSegment);
 			storeRestart(actualRestartInfo);
 		}
 	}
@@ -167,9 +146,8 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	 * incrementRestartAttempts(org.irods.jargon.core.transfer.FileRestartInfo)
 	 */
 	@Override
-	public FileRestartInfo incrementRestartAttempts(
-			final FileRestartInfo fileRestartInfo)
-					throws RestartFailedException, FileRestartManagementException {
+	public FileRestartInfo incrementRestartAttempts(final FileRestartInfo fileRestartInfo)
+			throws RestartFailedException, FileRestartManagementException {
 
 		log.info("incrementRestartAttempts()");
 		if (fileRestartInfo == null) {
@@ -179,8 +157,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 		log.info("fileRestartInfo:{}", fileRestartInfo);
 
 		synchronized (this) {
-			FileRestartInfo actualRestartInfo = retrieveRestart(fileRestartInfo
-					.identifierFromThisInfo());
+			FileRestartInfo actualRestartInfo = retrieveRestart(fileRestartInfo.identifierFromThisInfo());
 			if (actualRestartInfo == null) {
 				log.error("nothing to increment!");
 				return null;
@@ -189,8 +166,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 			currentRestarts++;
 			if (currentRestarts > ConnectionConstants.MAX_FILE_RESTART_ATTEMPTS) {
 				log.error("violates max restart attempts, go ahead and fail the restart attempt");
-				throw new RestartFailedException(
-						"restart failed with too many attempts");
+				throw new RestartFailedException("restart failed with too many attempts");
 			}
 			actualRestartInfo.setNumberRestarts(currentRestarts);
 			storeRestart(actualRestartInfo);

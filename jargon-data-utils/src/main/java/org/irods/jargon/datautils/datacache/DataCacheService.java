@@ -9,9 +9,9 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
  * iRODS files. This cache can hold serialized objects or strings, or other
  * types of data as defined in the interface. A
  * {@link CacheServiceConfiguration} controls the behavior of the cache.
- * 
+ *
  * @author mikeconway
- * 
+ *
  */
 public interface DataCacheService {
 
@@ -19,7 +19,7 @@ public interface DataCacheService {
 	 * Given a {@code String} value, and a key value, encrypt the value by the key,
 	 * and store the data in the appropriate iRODS file. This will be determined by
 	 * the given {@link CacheServiceConfiguration}.
-	 * 
+	 *
 	 * @param stringToCache
 	 *            {@code String} with the data to be cached
 	 * @param key
@@ -34,7 +34,7 @@ public interface DataCacheService {
 	/**
 	 * Put the given object into a special place in the users home directory. Note
 	 * that this method uses the
-	 * 
+	 *
 	 * @param informationObject
 	 *            {@code Object} that will be serialized and stored in encrypted
 	 *            form in the appropriate cache directory
@@ -52,7 +52,7 @@ public interface DataCacheService {
 	 * Given a user name and key, retrieve the iRODS file that contains a serialize
 	 * object. The file is located based on the parameters, and the settings in the
 	 * {@link CacheServiceConfiguration}.
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the user name
 	 * @param key
@@ -65,7 +65,7 @@ public interface DataCacheService {
 
 	/**
 	 * Purge accounts (per the configured {@link CacheServiceConfiguration}
-	 * 
+	 *
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
@@ -86,7 +86,7 @@ public interface DataCacheService {
 	/**
 	 * For a given user and key, retrieve the value that was stored in the cache as
 	 * an encrypted {@code String}
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the user name for which the data was stored
 	 * @param key

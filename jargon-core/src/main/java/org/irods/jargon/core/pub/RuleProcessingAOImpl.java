@@ -110,7 +110,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromResource(java
 	 * .lang.String, java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
-	 * 
+	 *
 	 * @deprecated use method variant that allows specification of the {@link
 	 * RuleInvocationConfiguration}
 	 */
@@ -126,7 +126,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
 
 		return executeRuleFromResource(resourcePath, irodsRuleInputParameters, ruleInvocationConfiguration);
@@ -179,7 +179,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 *
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromIRODSFile(java
 	 * .lang.String, java.util.List)
-	 * 
+	 *
 	 * @deprecated use method variant that allows specification of the {@link
 	 * RuleInvocationConfiguration}
 	 */
@@ -195,7 +195,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
 		return executeRuleFromIRODSFile(ruleFileAbsolutePath, irodsRuleInputParameters, ruleInvocationConfiguration);
 
@@ -273,17 +273,17 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * (non-Javadoc)
 	 *
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String)
-	 * 
+	 *
 	 * TODO: deprecate and add context method
-	 * 
+	 *
 	 */
 	@Override
-	public IRODSRuleExecResult executeRule(String irodsRuleAsString) throws JargonRuleException, JargonException {
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString) throws JargonRuleException, JargonException {
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 
 		return executeRule(irodsRuleAsString, ruleInvocationConfiguration);
 	}
@@ -304,7 +304,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	}
 
 	@Override
-	public IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
+			final List<IRODSRuleParameter> inputParameterOverrides,
 			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {
 		log.info("executeRule()");
 		if (irodsRuleAsString == null || irodsRuleAsString.isEmpty()) {
@@ -319,15 +320,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
-		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(this.getIRODSAccessObjectFactory(),
-				this.getIRODSAccount());
+		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(getIRODSAccessObjectFactory(), getIRODSAccount());
 		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, inputParameterOverrides,
 				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
 
 		log.debug("decorating the rule with the appropriate rule engine instance");
-		RuleEngineInstanceChooser ruleEngineInstanceChooser = new RuleEngineInstanceChooser(this.getJargonProperties(),
-				this.getIRODSServerProperties());
+		RuleEngineInstanceChooser ruleEngineInstanceChooser = new RuleEngineInstanceChooser(getJargonProperties(),
+				getIRODSServerProperties());
 		ruleEngineInstanceChooser.decorateRuleInvocationConfugurationWithRuleEngineInstance(irodsRule);
 
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
@@ -347,11 +347,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String,
 	 * java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
-	 * 
+	 *
 	 * TODO: deprecate and add rule context invocation
 	 */
 	@Override
-	public IRODSRuleExecResult executeRule(String irodsRuleAsString,
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
 			final List<IRODSRuleParameter> inputParameterOverrides, final RuleProcessingType ruleProcessingType)
 			throws JargonRuleException, JargonException {
 

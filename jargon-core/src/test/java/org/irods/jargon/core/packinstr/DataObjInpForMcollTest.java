@@ -1,10 +1,10 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class DataObjInpForMcollTest {
 
@@ -18,23 +18,18 @@ public class DataObjInpForMcollTest {
 
 	@Test
 	public final void testInstanceForSoftLinkMount() {
-		DataObjInpForMcoll actual = DataObjInpForMcoll
-				.instanceForSoftLinkMount("source", "target", "resc");
-		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
-				actual.getApiNumber());
+		DataObjInpForMcoll actual = DataObjInpForMcoll.instanceForSoftLinkMount("source", "target", "resc");
+		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN, actual.getApiNumber());
 	}
 
 	@Test
 	public final void testInstanceForMSSOMount() {
-		DataObjInpForMcoll actual = DataObjInpForMcoll.instanceForMSSOMount(
-				"source", "target", "resc");
-		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
-				actual.getApiNumber());
+		DataObjInpForMcoll actual = DataObjInpForMcoll.instanceForMSSOMount("source", "target", "resc");
+		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN, actual.getApiNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForFileSystemMountNullLocal()
-			throws Exception {
+	public final void testInstanceForFileSystemMountNullLocal() throws Exception {
 		String localFile = null;
 		String mount = "/target/irods";
 		String resc = "resc";
@@ -43,8 +38,7 @@ public class DataObjInpForMcollTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForFileSystemMountBlankLocal()
-			throws Exception {
+	public final void testInstanceForFileSystemMountBlankLocal() throws Exception {
 		String localFile = "";
 		String mount = "/target/irods";
 		String resc = "resc";
@@ -53,8 +47,7 @@ public class DataObjInpForMcollTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForFileSystemMountNullIrods()
-			throws Exception {
+	public final void testInstanceForFileSystemMountNullIrods() throws Exception {
 		String localFile = "xxx";
 		String mount = null;
 		String resc = "resc";
@@ -63,8 +56,7 @@ public class DataObjInpForMcollTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForFileSystemMountBlankIrods()
-			throws Exception {
+	public final void testInstanceForFileSystemMountBlankIrods() throws Exception {
 		String localFile = "xxx";
 		String mount = "";
 		String resc = "resc";
@@ -86,10 +78,8 @@ public class DataObjInpForMcollTest {
 		String localFile = "/a/local/file";
 		String mount = "/target/irods";
 		String resc = "resc";
-		DataObjInpForMcoll actual = DataObjInpForMcoll
-				.instanceForFileSystemMount(localFile, mount, resc);
-		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN,
-				actual.getApiNumber());
+		DataObjInpForMcoll actual = DataObjInpForMcoll.instanceForFileSystemMount(localFile, mount, resc);
+		Assert.assertEquals("wrong api number", DataObjInpForMcoll.MCOLL_AN, actual.getApiNumber());
 
 		String actualTag = actual.getParsedTags();
 		StringBuilder sb = new StringBuilder();

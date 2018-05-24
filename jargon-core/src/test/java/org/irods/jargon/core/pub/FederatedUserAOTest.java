@@ -2,14 +2,14 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -34,8 +34,8 @@ public class FederatedUserAOTest {
 	}
 
 	/**
-	 * Get a user that is set up as a user on this zone from a federated zone
-	 * this checks a lookup in user#zone format
+	 * Get a user that is set up as a user on this zone from a federated zone this
+	 * checks a lookup in user#zone format
 	 *
 	 * @throws Exception
 	 */
@@ -46,32 +46,21 @@ public class FederatedUserAOTest {
 			return;
 		}
 
-		String testUserName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
-				+ "#"
-				+ testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
+		String testUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY) + "#"
+				+ testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 		User user = userAO.findByName(testUserName);
 		Assert.assertEquals(
-				testingProperties
-						.getProperty(
-								"did not get federated user",
-								testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)),
+				testingProperties.getProperty("did not get federated user",
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)),
 				user.getName());
 		Assert.assertEquals(
-				testingProperties
-						.getProperty(
-								"did not get federated zone",
-								testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
+				testingProperties.getProperty("did not get federated zone",
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
 				user.getZone());
 
 	}
@@ -91,23 +80,16 @@ public class FederatedUserAOTest {
 
 		IRODSAccount federatedAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
-		UserAO fedUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(federatedAccount);
-		User fedUserOnOtherZone = fedUserAO.findByName(federatedAccount
-				.getUserName());
+		UserAO fedUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(federatedAccount);
+		User fedUserOnOtherZone = fedUserAO.findByName(federatedAccount.getUserName());
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
-		User user = userAO.findByIdInZone(fedUserOnOtherZone.getId(),
-				federatedAccount.getZone());
-		Assert.assertEquals("names do not match", fedUserOnOtherZone.getName(),
-				user.getName());
-		Assert.assertEquals("zones do not match", fedUserOnOtherZone.getZone(),
-				user.getZone());
+		User user = userAO.findByIdInZone(fedUserOnOtherZone.getId(), federatedAccount.getZone());
+		Assert.assertEquals("names do not match", fedUserOnOtherZone.getName(), user.getName());
+		Assert.assertEquals("zones do not match", fedUserOnOtherZone.getZone(), user.getZone());
 
 	}
 }

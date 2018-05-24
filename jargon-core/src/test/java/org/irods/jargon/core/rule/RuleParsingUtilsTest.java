@@ -1,10 +1,10 @@
 package org.irods.jargon.core.rule;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class RuleParsingUtilsTest {
 
@@ -19,8 +19,7 @@ public class RuleParsingUtilsTest {
 	@Test
 	public final void testParseInputParameterForNameAndValue() {
 		String parameter = "*name=value";
-		RuleInputParameter rip = RuleParsingUtils
-				.parseInputParameterForNameAndValue(parameter);
+		RuleInputParameter rip = RuleParsingUtils.parseInputParameterForNameAndValue(parameter);
 		Assert.assertEquals("no name given", "*name", rip.getParamName());
 		Assert.assertEquals("no value given", "value", rip.getParamValue());
 	}

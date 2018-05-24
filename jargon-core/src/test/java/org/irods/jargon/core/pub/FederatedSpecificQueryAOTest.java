@@ -2,8 +2,6 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
@@ -11,6 +9,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class FederatedSpecificQueryAOTest {
 
@@ -53,25 +53,19 @@ public class FederatedSpecificQueryAOTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
 			return;
 		}
 
-		SpecificQueryAO queryAO = accessObjectFactory
-				.getSpecificQueryAO(irodsAccount);
-		SpecificQuery specificQuery = SpecificQuery.instanceWithNoArguments(
-				"ls", 0, "");
+		SpecificQueryAO queryAO = accessObjectFactory.getSpecificQueryAO(irodsAccount);
+		SpecificQuery specificQuery = SpecificQuery.instanceWithNoArguments("ls", 0, "");
 
-		SpecificQueryResultSet specificQueryResultSet = queryAO
-				.executeSpecificQueryUsingAlias(specificQuery,
-						accessObjectFactory.getJargonProperties()
-								.getMaxFilesAndDirsQueryMax());
+		SpecificQueryResultSet specificQueryResultSet = queryAO.executeSpecificQueryUsingAlias(specificQuery,
+				accessObjectFactory.getJargonProperties().getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());

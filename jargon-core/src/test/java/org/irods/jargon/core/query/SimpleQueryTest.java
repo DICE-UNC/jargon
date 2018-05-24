@@ -3,9 +3,9 @@ package org.irods.jargon.core.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class SimpleQueryTest {
 
@@ -13,8 +13,7 @@ public class SimpleQueryTest {
 	public void testInstanceOneArgValid() throws Exception {
 		String query = "query";
 		String args = "args";
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument(query,
-				args, 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument(query, args, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
 		Assert.assertEquals("invalid args", 1, sq.getArguments().size());
 	}
@@ -57,14 +56,11 @@ public class SimpleQueryTest {
 		String query = "query";
 		String arg1 = "arg1";
 		String arg2 = "arg2";
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithTwoArguments(query,
-				arg1, arg2, 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithTwoArguments(query, arg1, arg2, 0);
 		Assert.assertEquals("invalid query value", query, sq.getQueryString());
 		Assert.assertEquals("invalid args", 2, sq.getArguments().size());
-		Assert.assertEquals("did not set args correctly", arg1, sq
-				.getArguments().get(0));
-		Assert.assertEquals("did not set args correctly", arg2, sq
-				.getArguments().get(1));
+		Assert.assertEquals("did not set args correctly", arg1, sq.getArguments().get(0));
+		Assert.assertEquals("did not set args correctly", arg2, sq.getArguments().get(1));
 
 	}
 
@@ -79,8 +75,7 @@ public class SimpleQueryTest {
 	@Test
 	public void testInstanceNullArray() throws Exception {
 		AbstractAliasedQuery sq = SimpleQuery.instance("xxx", null, 0);
-		Assert.assertNotNull("should have initialized blank array",
-				sq.getArguments());
+		Assert.assertNotNull("should have initialized blank array", sq.getArguments());
 	}
 
 }

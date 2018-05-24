@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * sizes.
  *
  * Two sets of read methods are provided:
- * 
+ *
  * <ul>
  * <li>Single-value read methods such as int readInt().
  * <li>Multi-value read methods such as void readInts(int* values,int nValues).
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * and return them in a given array.
  * <p>
  * Two sets of write methods are provided:
- * 
+ *
  * <ul>
  * <li>Single-value write methods such as int writeInt(int value).
  * <li>Multi-value write methods such as void writeInts(int* values,int
@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * <b>Note:</b> This class offers features that extend those found in
  * java.io.RandomAccessFile. However, it <i>is not</i> a subclass, due to the
  * unfortunate use of final methods in java.io.RandomAccessFile.
- * 
+ *
  *
  * @author Mike Conway - DICE (www.irods.org) adopted from original Jargon
  *         implementation by Lucas Gilbert
@@ -162,7 +162,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * detected, or an exception is thrown.
 	 *
 	 * @return the next two bytes of this file as a Unicode character.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -259,7 +259,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *            the start offset of the data.
 	 * @param len
 	 *            the number of bytes to read.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -436,7 +436,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the next byte of this file, interpreted as an unsigned eight-bit
 	 *         number.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1030,7 +1030,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * or an exception is thrown.
 	 *
 	 * @return the next byte of this file as a signed eight-bit {@code byte}.
-	 * 
+	 *
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1046,7 +1046,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * This method closes the underlying IRODSFileImpl
-	 * 
+	 *
 	 * @throws IOException
 	 *             for any underlying iRODS error
 	 */

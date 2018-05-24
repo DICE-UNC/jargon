@@ -2,12 +2,12 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class EnvironmentalInfoAccessorTest {
 
@@ -26,32 +26,22 @@ public class EnvironmentalInfoAccessorTest {
 
 	@Test
 	public final void testEnvironmentalInfoAccessor() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		EnvironmentalInfoAccessor target = new EnvironmentalInfoAccessor(
-				irodsSession.currentConnection(irodsAccount));
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		EnvironmentalInfoAccessor target = new EnvironmentalInfoAccessor(irodsSession.currentConnection(irodsAccount));
 		Assert.assertNotNull(target);
 
 	}
 
 	@Test
 	public final void testGetIRODSServerProperties() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		EnvironmentalInfoAccessor target = new EnvironmentalInfoAccessor(
-				irodsSession.currentConnection(irodsAccount));
-		IRODSServerProperties irodsServerProperties = target
-				.getIRODSServerProperties();
-		Assert.assertEquals(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY),
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		EnvironmentalInfoAccessor target = new EnvironmentalInfoAccessor(irodsSession.currentConnection(irodsAccount));
+		IRODSServerProperties irodsServerProperties = target.getIRODSServerProperties();
+		Assert.assertEquals(testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY),
 				irodsServerProperties.getRodsZone());
 	}
 

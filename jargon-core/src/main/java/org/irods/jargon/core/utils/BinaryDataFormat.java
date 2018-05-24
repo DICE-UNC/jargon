@@ -60,7 +60,7 @@ package org.irods.jargon.core.utils;
  * object to describe the file's format, and then call that object's
  * shortValue(bytes*b), intValue(bytes*b), longValue(bytes*b), and
  * longLongValue(bytes*b) methods to convert to the host's format:
- * 
+ *
  *
  * <PRE>
  * // Define the file's binary data attributes
@@ -144,7 +144,7 @@ package org.irods.jargon.core.utils;
  * While this class supports conversions for long doubles, the Java language
  * does not support this data type. As a result, conversion from a long double
  * into a Java double or float may truncate.
- * 
+ *
  * <DL>
  * <DT>Sub-classing</DT>
  * <DD>Final</DD>

@@ -2,8 +2,6 @@ package org.irods.jargon.core.pub.io;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -12,6 +10,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class SessionClosingIRODSFileOutputStreamTest {
 
@@ -31,8 +31,7 @@ public class SessionClosingIRODSFileOutputStreamTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -49,18 +48,13 @@ public class SessionClosingIRODSFileOutputStreamTest {
 		String testFileName = "testWriteIntAndClose.csv";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		SessionClosingIRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceSessionClosingIRODSFileOutputStream(irodsFile);
 
@@ -68,8 +62,7 @@ public class SessionClosingIRODSFileOutputStreamTest {
 		irodsFileOutputStream.write(writtenInt);
 		irodsFileOutputStream.close();
 
-		Assert.assertTrue("irodsFile not closed",
-				irodsFile.getFileDescriptor() == -1);
+		Assert.assertTrue("irodsFile not closed", irodsFile.getFileDescriptor() == -1);
 
 	}
 

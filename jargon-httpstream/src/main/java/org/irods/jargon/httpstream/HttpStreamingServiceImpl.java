@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Service providing the ability to interact between iRODS and HTTP resources,
  * for streaming data into and out of iRODS
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class HttpStreamingServiceImpl implements HttpStreamingService {
 
@@ -44,7 +44,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 	/**
 	 * Default constructor takes the objects necessary to communicate with iRODS via
 	 * Access Objects
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} that can create various access
 	 *            objects
@@ -60,7 +60,7 @@ public class HttpStreamingServiceImpl implements HttpStreamingService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.httpstream.HttpStreamingService#
 	 * streamHttpUrlContentsToIRODSFile(java.lang.String,
 	 * org.irods.jargon.core.pub.io.IRODSFile,

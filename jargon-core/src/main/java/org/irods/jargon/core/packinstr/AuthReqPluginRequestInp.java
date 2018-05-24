@@ -45,7 +45,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	}
 
 	private AuthReqPluginRequestInp(final String authScheme, final String userName, final String password,
-			final int timeToLive, StartupResponseData startupResponseData) {
+			final int timeToLive, final StartupResponseData startupResponseData) {
 
 		if (authScheme == null || authScheme.isEmpty()) {
 			throw new IllegalArgumentException("null or empty authScheme");
@@ -70,7 +70,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

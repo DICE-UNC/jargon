@@ -17,11 +17,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Mike Conway - DICE
  */
-public class SHA256LocalChecksumComputerStrategy extends
-AbstractChecksumComputeStrategy {
+public class SHA256LocalChecksumComputerStrategy extends AbstractChecksumComputeStrategy {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(SHA256LocalChecksumComputerStrategy.class);
+	public static final Logger log = LoggerFactory.getLogger(SHA256LocalChecksumComputerStrategy.class);
 
 	/*
 	 * (non-Javadoc)
@@ -30,19 +28,16 @@ AbstractChecksumComputeStrategy {
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */
 	@Override
-	public ChecksumValue computeChecksumValueForLocalFile(
-			final String localFileAbsolutePath) throws FileNotFoundException,
-			JargonException {
+	public ChecksumValue computeChecksumValueForLocalFile(final String localFileAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		log.info("instanceChecksumForPackingInstruction()");
 
 		if (localFileAbsolutePath == null || localFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty localFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty localFileAbsolutePath");
 		}
 
-		byte[] digest = LocalFileUtils
-				.computeSHA256FileCheckSumViaAbsolutePath(localFileAbsolutePath);
+		byte[] digest = LocalFileUtils.computeSHA256FileCheckSumViaAbsolutePath(localFileAbsolutePath);
 
 		ChecksumValue value = new ChecksumValue();
 		value.setChecksumEncoding(ChecksumEncodingEnum.SHA256);

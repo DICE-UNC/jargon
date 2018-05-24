@@ -133,7 +133,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 
 	/**
 	 * Create a file at the given path
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@link String} with iRODS path
 	 * @param openFlags
@@ -153,7 +153,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 
 	/**
 	 * Create a file on the given resource
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@link String} with iRODS path
 	 * @param openFlags
@@ -211,7 +211,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * Rename the iRODS file from one path to another. This method also detects a
 	 * file being moved to another iRODS resource, and if necessary will do a
 	 * physical move.
-	 * 
+	 *
 	 * @param fromFile
 	 *            {@link IRODSFile}
 	 * @param toFile
@@ -225,7 +225,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * Rename the iRODS directory from one path to another. This method also detects
 	 * a file being moved to another iRODS resource, and if necessary will do a
 	 * physical move.
-	 * 
+	 *
 	 * @param fromFile
 	 *            {@link IRODSFile}
 	 * @param toFile
@@ -409,7 +409,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 
 	/**
 	 * Close the file
-	 * 
+	 *
 	 * @param fileDescriptor
 	 *            {@code int}
 	 * @param putOpr

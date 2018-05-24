@@ -3,8 +3,6 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -15,6 +13,8 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Tests various data transfer operations between federated zones.
@@ -45,15 +45,12 @@ public class FederatedDataTransferOperationsImplTest {
 			return;
 		}
 
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -63,8 +60,8 @@ public class FederatedDataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Write to a collection on a federated zone2 from zone1 with approprate
-	 * write permissions
+	 * Write to a collection on a federated zone2 from zone1 with approprate write
+	 * permissions
 	 *
 	 * @throws Exception
 	 */
@@ -77,50 +74,37 @@ public class FederatedDataTransferOperationsImplTest {
 
 		String rootCollection = "testPutCollectionWithTwoFilesInAnotherZone";
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
 
 		IRODSAccount crossZoneAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
-		IRODSFile crossZoneColl = irodsFileSystem.getIRODSFileFactory(
-				crossZoneAccount).instanceIRODSFile(
-				irodsCollectionRootAbsolutePath);
+		IRODSFile crossZoneColl = irodsFileSystem.getIRODSFileFactory(crossZoneAccount)
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		crossZoneColl.deleteWithForceOption();
 		crossZoneColl.mkdirs();
 
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
-						"testFile", ".txt", 2, 2, 1, 2);
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
+				"testPutCollectionWithTwoFilesInAnotherZone", 1, 1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		destFile.close();
 
-		irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(crossZoneAccount);
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-						+ rootCollection);
+		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(crossZoneAccount);
+		destFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/" + rootCollection);
 
-		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
-				localFile, (File) destFile);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, (File) destFile);
 	}
 
 	@Test
@@ -134,70 +118,52 @@ public class FederatedDataTransferOperationsImplTest {
 		String returnedLocalCollection = "testGetCollectionWithTwoFilesInAnotherZoneReturnedLocalFiles";
 
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
 
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testGetCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
-						"testGetCollectionWithTwoFilesInAnotherZone", ".txt",
-						2, 2, 1, 2);
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
+				"testGetCollectionWithTwoFilesInAnotherZone", 1, 1, 1, "testGetCollectionWithTwoFilesInAnotherZone",
+				".txt", 2, 2, 1, 2);
 
 		IRODSAccount crossZoneAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(crossZoneAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						crossZoneAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(crossZoneAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(crossZoneAccount);
 		File localFile = new File(localCollectionAbsolutePath);
-		TransferControlBlock tcb = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		TransferControlBlock tcb = irodsFileSystem.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, tcb);
 		destFile.close();
 
-		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-						+ rootCollection);
+		destFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/" + rootCollection);
 
 		// now get the files into a local return collection from another zone
 		// and verify
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		IRODSFile getIrodsFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
-						+ rootCollection);
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/" + rootCollection);
 		String returnLocalCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + returnedLocalCollection);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + returnedLocalCollection);
 		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
 
-		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
-				null, null);
+		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile, null, null);
 
-		String returnLocalCollectionCompareAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + returnedLocalCollection + '/' + rootCollection);
-		File returnCompareLocalFile = new File(
-				returnLocalCollectionCompareAbsolutePath);
+		String returnLocalCollectionCompareAbsolutePath = scratchFileUtils.createAndReturnAbsoluteScratchPath(
+				IRODS_TEST_SUBDIR_PATH + '/' + returnedLocalCollection + '/' + rootCollection);
+		File returnCompareLocalFile = new File(returnLocalCollectionCompareAbsolutePath);
 
-		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
-				localFile, returnCompareLocalFile);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, returnCompareLocalFile);
 	}
 
 	/**
@@ -206,8 +172,7 @@ public class FederatedDataTransferOperationsImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testGetDataObjectViaSoftLinkToAnotherZoneBug1842()
-			throws Exception {
+	public void testGetDataObjectViaSoftLinkToAnotherZoneBug1842() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
@@ -222,67 +187,52 @@ public class FederatedDataTransferOperationsImplTest {
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ testSubdir);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
 		int length = 300;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, fileName, length);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, fileName, length);
 		File localFile = new File(localFilePath);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
 
 		// delete to clean up
 		destFile.deleteWithForceOption();
 		destFile.mkdirs();
 
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
-		IRODSAccount zone1Account = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount zone1Account = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// make a symlink in zone1 to the coll in zone2
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						zone1Account);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(zone1Account);
 
-		String softLinkCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ mountSubdir);
+		String softLinkCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + mountSubdir);
 
-		IRODSFile getIrodsFile = irodsFileSystem.getIRODSFileFactory(
-				zone1Account).instanceIRODSFile(softLinkCollection, fileName);
+		IRODSFile getIrodsFile = irodsFileSystem.getIRODSFileFactory(zone1Account).instanceIRODSFile(softLinkCollection,
+				fileName);
 
 		mountedCollectionAO.unmountACollection(softLinkCollection, "");
 
-		mountedCollectionAO.createASoftLink(targetIrodsCollection,
-				softLinkCollection);
+		mountedCollectionAO.createASoftLink(targetIrodsCollection, softLinkCollection);
 
 		String returnLocalCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + returnedLocalCollection);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + returnedLocalCollection);
 		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
 
-		dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						zone1Account);
+		dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(zone1Account);
 
-		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
-				null, null);
+		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile, null, null);
 
-		File returnCompareLocalFile = new File(
-				returnLocalCollectionAbsolutePath, fileName);
+		File returnCompareLocalFile = new File(returnLocalCollectionAbsolutePath, fileName);
 
 		Assert.assertTrue("got file", returnCompareLocalFile.exists());
 	}

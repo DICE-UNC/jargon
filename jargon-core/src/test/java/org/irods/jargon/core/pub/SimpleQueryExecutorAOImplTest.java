@@ -2,8 +2,6 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.query.AbstractAliasedQuery;
@@ -17,6 +15,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class SimpleQueryExecutorAOImplTest {
 
@@ -34,15 +34,12 @@ public class SimpleQueryExecutorAOImplTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
-		irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 	}
 
 	@AfterClass
@@ -53,11 +50,9 @@ public class SimpleQueryExecutorAOImplTest {
 	@Test
 	public void testInstance() throws Exception {
 
-		SimpleQueryExecutorAO simpleQueryExecutorAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
-						irodsAccount);
-		Assert.assertNotNull("Null simpleQueryExecutor returned",
-				simpleQueryExecutorAO);
+		SimpleQueryExecutorAO simpleQueryExecutorAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSimpleQueryExecutorAO(irodsAccount);
+		Assert.assertNotNull("Null simpleQueryExecutor returned", simpleQueryExecutorAO);
 	}
 
 	@Ignore
@@ -65,14 +60,11 @@ public class SimpleQueryExecutorAOImplTest {
 	public void testRescQueryNoArgs() throws Exception {
 
 		String querySQL = "select resc_name from R_RESC_MAIN";
-		SimpleQueryExecutorAO simpleQueryExecutorAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
-						irodsAccount);
+		SimpleQueryExecutorAO simpleQueryExecutorAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSimpleQueryExecutorAO(irodsAccount);
 
-		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(
-				querySQL, 0);
-		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO
-				.executeSimpleQuery(simpleQuery);
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithNoArguments(querySQL, 0);
+		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO.executeSimpleQuery(simpleQuery);
 		Assert.assertNotNull("got a null result et from the query", resultSet);
 
 	}
@@ -80,12 +72,10 @@ public class SimpleQueryExecutorAOImplTest {
 	@Test
 	public void testRescQueryOneArgMultipleValsInSelect() throws Exception {
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (props.isAtLeastIrods410()) {
 			return;
@@ -98,22 +88,16 @@ public class SimpleQueryExecutorAOImplTest {
 		}
 
 		String querySQL = "select R_RESC_GROUP.resc_group_name, R_RESC_GROUP.resc_id, resc_name, R_RESC_GROUP.create_ts, R_RESC_GROUP.modify_ts from R_RESC_MAIN, R_RESC_GROUP where R_RESC_MAIN.resc_id = R_RESC_GROUP.resc_id and resc_group_name=?";
-		String resourceGroup = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY);
+		String resourceGroup = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY);
 
-		SimpleQueryExecutorAO simpleQueryExecutorAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getSimpleQueryExecutorAO(
-						irodsAccount);
+		SimpleQueryExecutorAO simpleQueryExecutorAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSimpleQueryExecutorAO(irodsAccount);
 
-		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithOneArgument(
-				querySQL, resourceGroup, 0);
-		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO
-				.executeSimpleQuery(simpleQuery);
+		AbstractAliasedQuery simpleQuery = SimpleQuery.instanceWithOneArgument(querySQL, resourceGroup, 0);
+		IRODSQueryResultSetInterface resultSet = simpleQueryExecutorAO.executeSimpleQuery(simpleQuery);
 		Assert.assertNotNull("got a null result et from the query", resultSet);
-		Assert.assertEquals("did not set the column names", 5, resultSet
-				.getColumnNames().size());
-		Assert.assertEquals("did not get the one result row", 1, resultSet
-				.getResults().size());
+		Assert.assertEquals("did not set the column names", 5, resultSet.getColumnNames().size());
+		Assert.assertEquals("did not get the one result row", 1, resultSet.getResults().size());
 		IRODSQueryResultRow testResultRow = resultSet.getResults().get(0);
 		testResultRow.getQueryResultColumns().size();
 

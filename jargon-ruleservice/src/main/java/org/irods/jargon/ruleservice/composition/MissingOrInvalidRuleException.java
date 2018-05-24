@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.ruleservice.composition;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Missing or malformed rule exception
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class MissingOrInvalidRuleException extends JargonException {
 

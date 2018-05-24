@@ -39,7 +39,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgs (java.lang.String,
 	 * java.lang.String)
@@ -62,7 +62,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgsAndHost
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -85,7 +85,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -109,7 +109,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements R
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost
 	 * (java.lang.String, java.lang.String, java.lang.String)

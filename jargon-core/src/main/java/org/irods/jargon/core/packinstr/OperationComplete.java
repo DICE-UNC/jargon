@@ -25,13 +25,12 @@ public class OperationComplete extends AbstractIRODSPackingInstruction {
 	 * Private constructor
 	 *
 	 * @param status
-	 *            {@code int} >= 0 that is the status to send with the
-	 *            operation complete message
+	 *            {@code int} >= 0 that is the status to send with the operation
+	 *            complete message
 	 */
 	private OperationComplete(final int status) {
 		if (status < 0) {
-			throw new IllegalArgumentException(
-					"status must be greater than or equal to zero");
+			throw new IllegalArgumentException("status must be greater than or equal to zero");
 		}
 		this.status = status;
 		setApiNumber(OPR_COMPLETE_API_NBR);

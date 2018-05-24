@@ -16,14 +16,13 @@ public class GenQueryCondition {
 	private final String operator;
 	private final String value;
 
-	public static GenQueryCondition instance(final String fieldName,
-			final String operator, final String value)
-					throws JargonQueryException {
+	public static GenQueryCondition instance(final String fieldName, final String operator, final String value)
+			throws JargonQueryException {
 		return new GenQueryCondition(fieldName, operator, value);
 	}
 
-	private GenQueryCondition(final String fieldName, final String operator,
-			final String value) throws JargonQueryException {
+	private GenQueryCondition(final String fieldName, final String operator, final String value)
+			throws JargonQueryException {
 		if (fieldName == null) {
 			throw new JargonQueryException("field name in condition is null");
 		}

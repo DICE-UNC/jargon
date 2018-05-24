@@ -23,8 +23,8 @@ public final class IRODSConstants {
 	public static final int SYS_CLI_TO_SVR_COLL_STAT_SIZE = 10;
 
 	/**
-	 * Maximum threads to open for a parallel transfer. More than this usually
-	 * won't help, might even be slower.
+	 * Maximum threads to open for a parallel transfer. More than this usually won't
+	 * help, might even be slower.
 	 */
 	public static final int MAX_THREAD_NUMBER = 16;
 

@@ -43,7 +43,7 @@ package org.irods.jargon.core.utils;
 /**
  * <DIV > The Host class describes important attributes of the current host
  * processor, compiler, and operating system. Attributes include:
- * 
+ *
  * <UL>
  * <LI>Byte order
  * <LI>Data type storage sizes
@@ -59,12 +59,12 @@ package org.irods.jargon.core.utils;
  * For all data types requiring more than one byte (i.e.,
  * {@code sizeof(type)>1)}, the processor stores the value as a sequence of
  * bytes. That sequence may place the highest-order bytes first or last:
- * 
+ *
  * <UL>
  * <LI>Big endian = Most-significant Byte First = MBF
  * <LI>Little endian = Least-significant Byte First = LBF
  * </UL>
- * 
+ *
  * Intel processors are LBF, while most other processors are MBF. Java is always
  * MBF, regardless of processor.
  * <P>
@@ -110,49 +110,49 @@ public final class Host extends Object {
 
 	/**
 	 * A language primitive signed or unsigned char.
-	 * 
+	 *
 	 */
 	public static final int CHAR = 0;
 
 	/**
 	 * A language primitive signed or unsigned short integer.
-	 * 
+	 *
 	 */
 	public static final int SHORT = 1;
 
 	/**
 	 * A language primitive signed or unsigned integer.
-	 * 
+	 *
 	 */
 	public static final int INT = 2;
 
 	/**
 	 * A language primitive signed or unsigned long integer.
-	 * 
+	 *
 	 */
 	public static final int LONG = 3;
 
 	/**
 	 * A language primitive signed or unsigned long long integer.
-	 * 
+	 *
 	 */
 	public static final int LONGLONG = 4;
 
 	/**
 	 * A language primitive float.
-	 * 
+	 *
 	 */
 	public static final int FLOAT = 5;
 
 	/**
 	 * A language primitive double.
-	 * 
+	 *
 	 */
 	public static final int DOUBLE = 6;
 
 	/**
 	 * A language primitive long double.
-	 * 
+	 *
 	 */
 	public static final int LONGDOUBLE = 7;
 
@@ -169,7 +169,7 @@ public final class Host extends Object {
 	 * <P>
 	 * The maximum value is intentionally set large in order to accomodate current
 	 * and future architectures.
-	 * 
+	 *
 	 */
 	public static final int MAX_TYPE_SIZE = 64;
 
@@ -180,13 +180,13 @@ public final class Host extends Object {
 	 * Holds true if the host byte order is MBF, and false if LBF.
 	 * <P>
 	 * Note: Java is always MBF, regardless of host.
-	 * 
+	 *
 	 */
 	private static boolean isMBF = true;
 
 	/**
 	 * Holds a name for each data type.
-	 * 
+	 *
 	 * @return {@code String} with the type name
 	 */
 	private static final String typeName[] = { "char", "short", "int", "long", "long long", "float", "double",
@@ -213,7 +213,7 @@ public final class Host extends Object {
 	 * types.
 	 * <P>
 	 * Note: Java type significant bits are fixed, regardless of host.
-	 * 
+	 *
 	 */
 	private static final short typeBits[] = { 8, // char
 			16, // short
@@ -234,7 +234,7 @@ public final class Host extends Object {
 	 * there are no pointers, and so this feature is not available. Additionally,
 	 * without pointers it is not possible to clearly determine alignment
 	 * characteristics. We therefore default to the type size for all values.
-	 * 
+	 *
 	 */
 	private static final byte typeCompilerAlignment[] = { 1, // char
 			2, // short
@@ -2553,7 +2553,7 @@ public final class Host extends Object {
 	// ----------------------------------------------------------------------
 	/**
 	 * Prints to System.out the attributes of the current host.
-	 * 
+	 *
 	 */
 	public final static void print() {
 		System.out.println("Host attributes:");

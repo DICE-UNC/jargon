@@ -58,7 +58,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Writer#close()
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Writer#flush()
 	 */
 	@Override
@@ -79,7 +79,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Writer#write(char[], int, int)
 	 */
 	@Override

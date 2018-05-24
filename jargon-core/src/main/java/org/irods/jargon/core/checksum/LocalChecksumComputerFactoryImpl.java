@@ -15,20 +15,17 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * @author Mike Conway - DICE
  *
  */
-public class LocalChecksumComputerFactoryImpl implements
-LocalChecksumComputerFactory {
+public class LocalChecksumComputerFactoryImpl implements LocalChecksumComputerFactory {
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.checksum.LocalChecksumComputerFactory#instance(
+	 * @see org.irods.jargon.core.checksum.LocalChecksumComputerFactory#instance(
 	 * org.irods.jargon.core.protovalues.ChecksumEncodingEnum)
 	 */
 	@Override
-	public AbstractChecksumComputeStrategy instance(
-			final ChecksumEncodingEnum checksumEncodingEnum)
-					throws ChecksumMethodUnavailableException {
+	public AbstractChecksumComputeStrategy instance(final ChecksumEncodingEnum checksumEncodingEnum)
+			throws ChecksumMethodUnavailableException {
 
 		if (checksumEncodingEnum == null) {
 			throw new IllegalArgumentException("null checksumEncodingEnum");
@@ -40,8 +37,7 @@ LocalChecksumComputerFactory {
 			return new SHA256LocalChecksumComputerStrategy();
 		} else {
 			throw new ChecksumMethodUnavailableException(
-					"unable to find a checksum encoding method for:"
-							+ checksumEncodingEnum);
+					"unable to find a checksum encoding method for:" + checksumEncodingEnum);
 		}
 
 	}

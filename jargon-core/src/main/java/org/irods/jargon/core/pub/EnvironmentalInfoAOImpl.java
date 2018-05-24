@@ -47,7 +47,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.accessobject.EnvironmentalInfoAO#
 	 * getIRODSServerProperties()
 	 */
@@ -60,7 +60,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#getIRODSServerCurrentTime()
 	 */
@@ -99,7 +99,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
 	 */
 	@Override
@@ -114,7 +114,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableRemoteCommands ()
 	 */
@@ -179,7 +179,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
 	 * ()
 	 */
@@ -194,7 +194,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/rulemsiListEnabledMS.r", null,
 				ruleInvocationConfiguration);

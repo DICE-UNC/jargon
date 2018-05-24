@@ -23,12 +23,11 @@ import org.slf4j.LoggerFactory;
  *
  *         Access object that encapsulates file IO operations. This is a
  *         delegate class for the {@code IRODSFileInputStream} and
- *         {@code IRODSFileOutputStream} classes. This class is not
- *         publicly visible. Instead, the various IRODS-specific steam classes
- *         should be used.
+ *         {@code IRODSFileOutputStream} classes. This class is not publicly
+ *         visible. Instead, the various IRODS-specific steam classes should be
+ *         used.
  */
-final class FileIOOperationsAOImpl extends IRODSGenericAO implements
-		FileIOOperations {
+final class FileIOOperationsAOImpl extends IRODSGenericAO implements FileIOOperations {
 
 	static Logger log = LoggerFactory.getLogger(FileIOOperationsAOImpl.class);
 
@@ -37,25 +36,22 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	protected FileIOOperationsAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected FileIOOperationsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.io.FileIOOperations#write(int, byte[],
-	 * int, int)
+	 *
+	 * @see org.irods.jargon.core.pub.io.FileIOOperations#write(int, byte[], int,
+	 * int)
 	 */
 	@Override
-	public int write(final int fd, final byte buffer[], final int offset,
-			final int length) throws JargonException {
+	public int write(final int fd, final byte buffer[], final int offset, final int length) throws JargonException {
 
 		if (fd <= 0) {
-			throw new IllegalArgumentException(
-					"file is not open, file descriptor was less than zero:"
-							+ fd);
+			throw new IllegalArgumentException("file is not open, file descriptor was less than zero:" + fd);
 		}
 
 		if (buffer == null || buffer.length == 0) {
@@ -71,45 +67,37 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		}
 
 		if (offset > length) {
-			throw new IllegalArgumentException("offset of:" + offset
-					+ " is > length:" + length);
+			throw new IllegalArgumentException("offset of:" + offset + " is > length:" + length);
 		}
 
 		if (offset > buffer.length) {
-			throw new IllegalArgumentException("offset of:" + offset
-					+ " is greater than the buffer length of:" + buffer.length);
+			throw new IllegalArgumentException(
+					"offset of:" + offset + " is greater than the buffer length of:" + buffer.length);
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("attempting to write to fd:" + fd
-					+ " a buffer with a size of " + buffer.length
-					+ " using a length of " + length + " and an offset of "
-					+ offset);
+			log.debug("attempting to write to fd:" + fd + " a buffer with a size of " + buffer.length
+					+ " using a length of " + length + " and an offset of " + offset);
 		}
 
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFileWrite(fd, offset, length);
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFileWrite(fd, offset, length);
 		// DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(fd,
 		// length);
 
-		Tag message = getIRODSProtocol().irodsFunction(
-				IRODSConstants.RODS_API_REQ, openedDataObjInp.getParsedTags(),
-				null, 0, 0, buffer, offset, length,
-				openedDataObjInp.getApiNumber());
+		Tag message = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, openedDataObjInp.getParsedTags(),
+				null, 0, 0, buffer, offset, length, openedDataObjInp.getApiNumber());
 
-		return message.getTag(IRODSConstants.MsgHeader_PI)
-				.getTag(IRODSConstants.intInfo).getIntValue();
+		return message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int,
 	 * java.io.OutputStream, long)
 	 */
 	@Override
-	public int fileRead(final int fd, final OutputStream destination,
-			long length) throws JargonException {
+	public int fileRead(final int fd, final OutputStream destination, long length) throws JargonException {
 
 		log.debug("file read for fd: {}", fd);
 
@@ -118,8 +106,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		}
 
 		// DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
-		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd,
-				length);
+		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd, length);
 		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
 
 		Tag message = irodsProtocol.irodsFunction(fileReadInp);
@@ -129,24 +116,21 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 			return -1;
 		}
 
-		length = message.getTag(IRODSConstants.MsgHeader_PI)
-				.getTag(IRODSConstants.bsLen).getIntValue();
+		length = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen).getIntValue();
 
 		// read the message byte stream into the local file
 		irodsProtocol.read(destination, length);
-		return message.getTag(IRODSConstants.MsgHeader_PI)
-				.getTag(IRODSConstants.intInfo).getIntValue();
+		return message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int, byte[],
-	 * int, int)
+	 *
+	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int, byte[], int,
+	 * int)
 	 */
 	@Override
-	public int fileRead(final int fd, final byte buffer[], final int offset,
-			int length) throws JargonException {
+	public int fileRead(final int fd, final byte buffer[], final int offset, int length) throws JargonException {
 
 		log.debug("file read for fd: {}", fd);
 
@@ -154,8 +138,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("invalid file descriptor");
 		}
 
-		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd,
-				length);
+		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd, length);
 		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
 		Tag message = irodsProtocol.irodsFunction(fileReadInp);
 
@@ -164,40 +147,35 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 			return -1;
 		}
 
-		length = message.getTag(IRODSConstants.MsgHeader_PI)
-				.getTag(IRODSConstants.bsLen).getIntValue();
+		length = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen).getIntValue();
 
 		// read the message byte stream into the local file
 
 		int read = irodsProtocol.read(buffer, offset, length);
 
-		if (read == message.getTag(IRODSConstants.MsgHeader_PI)
-				.getTag(IRODSConstants.intInfo).getIntValue()) {
+		if (read == message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue()) {
 			return read;
 		} else {
-			log.error("did not read length equal to response length, expected"
-					+ length + " bytes actually read:" + read);
+			log.error(
+					"did not read length equal to response length, expected" + length + " bytes actually read:" + read);
 			throw new JargonException("Bytes read mismatch");
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#seek(int, long,
 	 * org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType)
 	 */
 	@Override
-	public long seek(final int fd, final long seek, final SeekWhenceType whence)
-			throws JargonException {
+	public long seek(final int fd, final long seek, final SeekWhenceType whence) throws JargonException {
 
-		if (whence == SeekWhenceType.SEEK_START
-				|| whence == SeekWhenceType.SEEK_CURRENT
+		if (whence == SeekWhenceType.SEEK_START || whence == SeekWhenceType.SEEK_CURRENT
 				|| whence == SeekWhenceType.SEEK_END) {
 		} else {
 			log.error("Illegal Argument exception, whence value in seek must be SEEK_START, SEEK_CURRENT, or SEEK_END");
-			throw new IllegalArgumentException(
-					"whence value in seek must be SEEK_START, SEEK_CURRENT, or SEEK_END");
+			throw new IllegalArgumentException("whence value in seek must be SEEK_START, SEEK_CURRENT, or SEEK_END");
 		}
 
 		if (fd <= 0) {
@@ -207,8 +185,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 
 		Tag message;
 
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFileSeek(seek, fd, whence.ordinal());
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFileSeek(seek, fd, whence.ordinal());
 		message = getIRODSProtocol().irodsFunction(openedDataObjInp);
 
 		return message.getTag(IRODSConstants.offset).getLongValue();
@@ -216,30 +193,24 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.FileIOOperations#computeChecksumOnIrodsFile
+	 *
+	 * @see org.irods.jargon.core.pub.io.FileIOOperations#computeChecksumOnIrodsFile
 	 * (java.lang.String)
 	 */
 	@Override
-	public ChecksumValue computeChecksumOnIrodsFile(String irodsFileAbsolutePath)
-			throws JargonException {
+	public ChecksumValue computeChecksumOnIrodsFile(final String irodsFileAbsolutePath) throws JargonException {
 
 		log.info("computeChecksumOnIrodsFile()");
 		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsFileAbsolutePath");
 		}
 		log.info("irodsFileAbsolutePath:{}", irodsFileAbsolutePath);
 
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
-				irodsFileAbsolutePath);
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(irodsFileAbsolutePath);
 
-		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = this
-				.getIRODSAccessObjectFactory()
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = getIRODSAccessObjectFactory()
 				.getDataObjectChecksumUtilitiesAO(getIRODSAccount());
-		return dataObjectChecksumUtilitiesAO
-				.computeChecksumOnDataObject(irodsFile);
+		return dataObjectChecksumUtilitiesAO.computeChecksumOnDataObject(irodsFile);
 
 	}
 }

@@ -15,7 +15,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	/**
 	 * Type of rule invocation, primarily involving special handlng of iRODS old
 	 * style rules. For other rule languages DEFAULT is the usual setting.
-	 * 
+	 *
 	 * @author conwaymc
 	 *
 	 */
@@ -70,7 +70,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 
 	/**
 	 * List all the rules in the delay exec queue
-	 * 
+	 *
 	 * @param partialStartIndex
 	 *            {@code int} with 0 or an offset
 	 * @return List of {@code DelayedRuleExecution}
@@ -254,14 +254,14 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * rule engine (python, irods) the rule is bound for. In the above method, the
 	 * invocation type defaults to auto and Jargon will try and do some simple
 	 * checks to guess what type of rule is being processed.
-	 * 
+	 *
 	 * @param irodsRuleAsString
 	 *            {@code String} with the rule body, as well as input and output
 	 *            parameters.
 	 * @param inputParameterOverrides
 	 *            {@code List} of {@link IRODSRuleParameter} that overrides the
 	 *            parameters derived from the rule bodies.
-	 * 
+	 *
 	 * @param ruleInvocationConfiguration
 	 *            {@link RuleInvocationConfiguration} that represents the type of
 	 *            rule engine the user wishes this rule to be run on. With multiple

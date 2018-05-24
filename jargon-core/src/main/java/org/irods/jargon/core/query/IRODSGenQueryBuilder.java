@@ -37,7 +37,7 @@ public class IRODSGenQueryBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

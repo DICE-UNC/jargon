@@ -74,8 +74,7 @@ public class FileLock {
 	 * @param approximateSystemTimeWhenLockObtained
 	 *            the approximateSystemTimeWhenLockObtained to set
 	 */
-	public void setApproximateSystemTimeWhenLockObtained(
-			final long approximateSystemTimeWhenLockObtained) {
+	public void setApproximateSystemTimeWhenLockObtained(final long approximateSystemTimeWhenLockObtained) {
 		this.approximateSystemTimeWhenLockObtained = approximateSystemTimeWhenLockObtained;
 	}
 

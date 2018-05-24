@@ -206,7 +206,7 @@ public class SettableJargonProperties implements JargonProperties {
 		defaultIrodsRuleEngineIdentifier = jargonProperties.getDefaultIrodsRuleEngineIdentifier();
 		defaultPythonRuleEngineIdentifier = jargonProperties.getDefaultPythonRuleEngineIdentifier();
 		defaultCppRuleEngineIdentifier = jargonProperties.getDefaultCppRuleEngineIdentifier();
-		this.rulesSetDestinationWhenAuto = jargonProperties.isRulesSetDestinationWhenAuto();
+		rulesSetDestinationWhenAuto = jargonProperties.isRulesSetDestinationWhenAuto();
 	}
 
 	@Override
@@ -878,7 +878,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public boolean isRulesSetDestinationWhenAuto() {
-		return this.rulesSetDestinationWhenAuto;
+		return rulesSetDestinationWhenAuto;
 	}
 
 	public void setRulesSetDestinationWhenAuto(final boolean rulesSetDestinationWhenAuto) {

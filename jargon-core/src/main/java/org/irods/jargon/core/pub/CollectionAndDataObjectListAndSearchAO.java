@@ -252,9 +252,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Provides a search capability to search for any collections that have a match
 	 * on the search term. The typical case would be a search box on a form to find
 	 * all collections that have the given string.
-	 * 
+	 *
 	 * Note that this will do a genquery like:
-	 * 
+	 *
 	 *
 	 * <pre>
 	 * COL_COLL_NAME like '%thepathyougiveforsearch%'
@@ -279,9 +279,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Provides a search capability to search for any data objects that have a match
 	 * on the given search term. The typical case would be a search box on a form to
 	 * find all data objects that have the given string in the name.
-	 * 
+	 *
 	 * Note that this will do a genquery like:
-	 * 
+	 *
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
@@ -305,9 +305,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Provides a search capability to search for any data objects that have a match
 	 * on the given search term. The typical case would be a search box on a form to
 	 * find all data objects that have the given string in the name.
-	 * 
+	 *
 	 * Note that this will do a genquery like:
-	 * 
+	 *
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
@@ -336,13 +336,13 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * results are available.
 	 *
 	 * Note that this will do a genquery like:
-	 * 
+	 *
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 *
-	 * 
+	 *
 	 * Note that this method will compensate if strict ACL's are in place
 	 *
 	 * @param searchTerm
@@ -411,7 +411,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * for each object. Clients of this method can inspect the returned results to
 	 * determine the position of each result and whether there are more records to
 	 * display.
-	 * 
+	 *
 	 * This method is not a search method, it simply lists.
 	 *
 	 * @param absolutePathToParent
@@ -438,18 +438,18 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * that contains information about paging for each object, such as record count,
 	 * and whether this is the last record. This method adds the user ACL
 	 * information, which is derived from an extended query.
-	 * 
+	 *
 	 * Note that there is an issue with GenQuery that makes it impossible to derive
 	 * user zone in this query. This is something that may be addressed by
 	 * converting the GenQuery to 'specific SQL query' at a later time. If zone
 	 * information is desired, it is recommended that the
 	 * {@code listPermissionsForDataObject()} in {@link DataObjectAO} and
 	 * {@code listPermissionsForCollection} in {@link CollectionAO} be consulted.
-	 * 
+	 *
 	 * This method is meant for listings, or building trees. As such, it does not
 	 * show any information about replicas, rather, it groups the data by data
 	 * object path for all replicas.
-	 * 
+	 *
 	 * Note that this collection is composed of a collection of objects for child
 	 * collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and 'isLastEntry'
@@ -568,7 +568,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * List data objects and collections underneath the given parent (as an ObjStat)
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
 	 * @return List of {@link CollectionAndDataObjectListingEntry}

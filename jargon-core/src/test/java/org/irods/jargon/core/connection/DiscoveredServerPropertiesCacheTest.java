@@ -1,10 +1,10 @@
 package org.irods.jargon.core.connection;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class DiscoveredServerPropertiesCacheTest {
 
@@ -252,26 +252,22 @@ public class DiscoveredServerPropertiesCacheTest {
 	public void testCacheIRODSServerProperties() throws Exception {
 		String host = "host";
 		String zone = "zone";
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
+		IRODSServerProperties props = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
 		DiscoveredServerPropertiesCache cache = new DiscoveredServerPropertiesCache();
 		cache.cacheIRODSServerProperties(host, zone, props);
 
-		IRODSServerProperties actual = cache.retrieveIRODSServerProperties(
-				host, zone);
+		IRODSServerProperties actual = cache.retrieveIRODSServerProperties(host, zone);
 		Assert.assertNotNull(actual);
 	}
 
 	public void testCacheIRODSServerPropertiesWrongHost() throws Exception {
 		String host = "host";
 		String zone = "zone";
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
+		IRODSServerProperties props = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111, "x", "x", "x");
 		DiscoveredServerPropertiesCache cache = new DiscoveredServerPropertiesCache();
 		cache.cacheIRODSServerProperties(host, zone, props);
 
-		IRODSServerProperties actual = cache.retrieveIRODSServerProperties(
-				"notthehost", zone);
+		IRODSServerProperties actual = cache.retrieveIRODSServerProperties("notthehost", zone);
 		Assert.assertNull(actual);
 	}
 

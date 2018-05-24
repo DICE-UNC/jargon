@@ -295,7 +295,7 @@ public abstract class AbstractRuleTranslator {
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsServerProperties
 	 *            {@link IRODSServerProperties} that characterizes the current iRODS
 	 *            server

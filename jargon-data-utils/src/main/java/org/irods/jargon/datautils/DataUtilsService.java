@@ -7,8 +7,7 @@ public interface DataUtilsService {
 
 	public abstract IRODSAccessObjectFactory getIrodsAccessObjectFactory();
 
-	public abstract void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory);
+	public abstract void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory);
 
 	public abstract IRODSAccount getIrodsAccount();
 

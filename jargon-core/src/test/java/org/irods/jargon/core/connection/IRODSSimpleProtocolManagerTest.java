@@ -2,8 +2,6 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -11,6 +9,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class IRODSSimpleProtocolManagerTest {
 	private static Properties testingProperties = new Properties();
@@ -33,54 +33,42 @@ public class IRODSSimpleProtocolManagerTest {
 
 	@Test
 	public void testGetIRODSConnection() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
-				.getIrodsSession().currentConnection(irodsAccount);
-		Assert.assertTrue("this connection is not connected",
-				irodsProtocol.isConnected());
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		Assert.assertTrue("this connection is not connected", irodsProtocol.isConnected());
 		irodsProtocol.disconnectWithForce();
-		Assert.assertFalse("the connection is not closed after disconnect",
-				irodsProtocol.isConnected());
+		Assert.assertFalse("the connection is not closed after disconnect", irodsProtocol.isConnected());
 	}
 
 	@Test(expected = InvalidUserException.class)
 	public void testGetIRODSConnectionForInvalidUser() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, "iam-a-bogus-user", "irockthecode");
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+				testingProperties, "iam-a-bogus-user", "irockthecode");
 		irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 
 	}
 
 	@Test
 	public void testOpenAndClose50Connections() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		for (int i = 0; i < 50; i++) {
-			AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
-					.getIrodsSession().currentConnection(irodsAccount);
+			AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession()
+					.currentConnection(irodsAccount);
 
-			Assert.assertTrue("this connection is not connected",
-					irodsProtocol.isConnected());
+			Assert.assertTrue("this connection is not connected", irodsProtocol.isConnected());
 			irodsProtocol.disconnectWithForce();
-			Assert.assertFalse("the connection is not closed after disconnect",
-					irodsProtocol.isConnected());
+			Assert.assertFalse("the connection is not closed after disconnect", irodsProtocol.isConnected());
 		}
 
 	}
 
 	@Test
 	public void testOpenAndCloseNConnectionsFrom3Threads() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		ConnectionLoop conn1 = new ConnectionLoop(irodsAccount,
-				irodsFileSystem, 30);
-		ConnectionLoop conn2 = new ConnectionLoop(irodsAccount,
-				irodsFileSystem, 30);
-		ConnectionLoop conn3 = new ConnectionLoop(irodsAccount,
-				irodsFileSystem, 30);
+		ConnectionLoop conn1 = new ConnectionLoop(irodsAccount, irodsFileSystem, 30);
+		ConnectionLoop conn2 = new ConnectionLoop(irodsAccount, irodsFileSystem, 30);
+		ConnectionLoop conn3 = new ConnectionLoop(irodsAccount, irodsFileSystem, 30);
 
 		Thread t1 = new Thread(conn1);
 		t1.start();
@@ -136,8 +124,8 @@ public class IRODSSimpleProtocolManagerTest {
 		private boolean finished = false;
 		private Exception caughtException = null;
 
-		public ConnectionLoop(final IRODSAccount irodsAccount,
-				final IRODSFileSystem irodsFileSystem, final int iterations) {
+		public ConnectionLoop(final IRODSAccount irodsAccount, final IRODSFileSystem irodsFileSystem,
+				final int iterations) {
 			this.irodsAccount = irodsAccount;
 			this.irodsFileSystem = irodsFileSystem;
 			this.iterations = iterations;
@@ -157,8 +145,8 @@ public class IRODSSimpleProtocolManagerTest {
 				for (int i = 0; i < iterations; i++) {
 					// Pause for 1 second
 					Thread.sleep(1000);
-					AbstractIRODSMidLevelProtocol connection = irodsFileSystem
-							.getIrodsSession().currentConnection(irodsAccount);
+					AbstractIRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession()
+							.currentConnection(irodsAccount);
 					connection.disconnect();
 				}
 				setFinished(true);
@@ -180,8 +168,7 @@ public class IRODSSimpleProtocolManagerTest {
 	 */
 	@Test
 	public void testCreatesDefaultAuthenticationFactoryImpl() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
 		Assert.assertNotNull(irodsConnectionManager.getAuthenticationFactory());
 	}
 

@@ -16,7 +16,7 @@ public class NegotiatedClientServerConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -39,8 +39,7 @@ public class NegotiatedClientServerConfiguration {
 	 * Default constructor
 	 *
 	 * @param sslConnection
-	 *            {@code boolean} that will be {@code true} if ssl is
-	 *            used
+	 *            {@code boolean} that will be {@code true} if ssl is used
 	 */
 	public NegotiatedClientServerConfiguration(final boolean sslConnection) {
 		super();

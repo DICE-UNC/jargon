@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -11,9 +11,9 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 /**
  * Represents a free tag or textual description for iRODS data. This is an
  * immutable object, and is validated when constructed
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class IRODSTagValue implements Serializable, Comparable<Object> {
 
@@ -23,7 +23,7 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 
 	/**
 	 * Construct a tag with the given value
-	 * 
+	 *
 	 * @param tagData
 	 *            {@code String} with the tag data value for the tag.
 	 * @param tagUser
@@ -49,7 +49,7 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	/**
 	 * Special constructor that can interpret AVU data as a tag. Note that the tag
 	 * is in the AVU attribute, and the user is in the AVU value
-	 * 
+	 *
 	 * @param metadataAndDomainData
 	 *            {@code MetaDataAndDomainData} object from Jargon that contains
 	 *            information from a raw AVU triple.

@@ -8,15 +8,15 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Manage the creation and maintenance of thumbnail images for image files
  * stored in iRODS.
- * 
+ *
  * Note that local processing of tiff files requires JAI - see
  * http://java.net/projects/jai-core/ and see
  * http://java.sun.com/products/java-media/jai/downloads/download-1_1_2.html for
  * download The JAI libraries may need to be installed on the client or mid-tier
  * machine
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface ThumbnailService {
 
@@ -32,7 +32,7 @@ public interface ThumbnailService {
 	 * thumbnail is stored underneath the temporary thumbnail directory based on an
 	 * internal scheme. The {@code File} that is returned from this method points to
 	 * this thumbnail image.
-	 * 
+	 *
 	 * @param workingDirectory
 	 *            {@code File} with the path to the top level of a working directory
 	 *            to hold the thumbnail image.
@@ -57,7 +57,7 @@ public interface ThumbnailService {
 	 * Currently, this is done by generating the thumbnail when requested, later,
 	 * this can include a caching scheme, and alternative cache locations (local
 	 * verus in iRODS AVU, etc). Consider this a first approximation.
-	 * 
+	 *
 	 * @param irodsAbsolutePathToGenerateThumbnailFor
 	 *            {@code String} that is the absolute path to the iRODS file for
 	 *            which a thumbnail will be generated.
@@ -77,7 +77,7 @@ public interface ThumbnailService {
 	 * <p>
 	 * Note that it is not efficient to call this method repeatedly, rather, a
 	 * client service should call once for an iRODS server and cache the result.
-	 * 
+	 *
 	 * @return {@code true} if the iRODS server has support for imagemagik thumbnail
 	 *         generation. If the hueristic cannot determine, it will return false.
 	 *         The current heuristic is to use the listCommands.sh script, which

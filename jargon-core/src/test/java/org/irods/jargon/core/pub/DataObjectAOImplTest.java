@@ -821,7 +821,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * test for transfer get of file with parens and spaces in name gives file not
 	 * found #1
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -2716,11 +2716,11 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Test for https://github.com/DICE-UNC/jargon/issues/227
-	 * 
+	 *
 	 * imeta add -d testBulkAddAVUMetadataToDataObjectSpecialCharsBug227.txt
 	 * icommand áàâ
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws Exception
 	 */
 	@Test

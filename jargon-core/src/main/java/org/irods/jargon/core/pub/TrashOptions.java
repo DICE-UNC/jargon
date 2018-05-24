@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -8,7 +8,7 @@ import org.irods.jargon.core.packinstr.CollInpForEmptyTrash.TrashOperationMode;
 /**
  * Options for handling trash, passed in requests for detailed control of
  * emptying or restoring files in trash
- * 
+ *
  * @author conwaymc
  *
  */
@@ -37,7 +37,7 @@ public class TrashOptions {
 		return recursive;
 	}
 
-	public void setRecursive(boolean recursive) {
+	public void setRecursive(final boolean recursive) {
 		this.recursive = recursive;
 	}
 
@@ -45,7 +45,7 @@ public class TrashOptions {
 		return ageInMinutes;
 	}
 
-	public void setAgeInMinutes(int ageInMinutes) {
+	public void setAgeInMinutes(final int ageInMinutes) {
 		this.ageInMinutes = ageInMinutes;
 	}
 
@@ -64,7 +64,7 @@ public class TrashOptions {
 		return trashOperationMode;
 	}
 
-	public void setTrashOperationMode(TrashOperationMode trashOperationMode) {
+	public void setTrashOperationMode(final TrashOperationMode trashOperationMode) {
 		this.trashOperationMode = trashOperationMode;
 	}
 

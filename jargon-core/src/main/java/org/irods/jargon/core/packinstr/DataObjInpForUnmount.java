@@ -22,7 +22,7 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing instruction to unmount a special collection
-	 * 
+	 *
 	 * @param collectionToUnmountAbsolutePath
 	 *            {@code String} with iRODS path to unmount
 	 * @param destResourceName

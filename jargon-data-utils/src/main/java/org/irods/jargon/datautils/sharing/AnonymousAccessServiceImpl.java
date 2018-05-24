@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.sharing;
 
@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handy methods to
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AnonymousAccessServiceImpl extends AbstractJargonService implements AnonymousAccessService {
 
@@ -61,7 +61,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.sharing.AnonymousAccessService#
 	 * isAnonymousAccessSetUp(java.lang.String)
 	 */
@@ -234,7 +234,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 	/**
 	 * Get the anonymous user name for use in comparisons and setting. May be
 	 * modified by setting a variant.
-	 * 
+	 *
 	 * @return the anonymousUserName {@code String}
 	 */
 	@Override
@@ -245,7 +245,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 	/**
 	 * Set (by injection) the user name to use as 'anonymous'. Defaults to the
 	 * setting in {@link IRODSAccount}
-	 * 
+	 *
 	 * @param anonymousUserName
 	 *            the anonymousUserName to set {@code String}
 	 */

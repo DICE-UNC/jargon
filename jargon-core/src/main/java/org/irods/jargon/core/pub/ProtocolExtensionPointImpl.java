@@ -22,22 +22,19 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class ProtocolExtensionPointImpl extends IRODSGenericAO implements
-ProtocolExtensionPoint {
+public class ProtocolExtensionPointImpl extends IRODSGenericAO implements ProtocolExtensionPoint {
 
-	private static Logger log = LoggerFactory
-			.getLogger(ProtocolExtensionPointImpl.class);
+	private static Logger log = LoggerFactory.getLogger(ProtocolExtensionPointImpl.class);
 
-	protected ProtocolExtensionPointImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected ProtocolExtensionPointImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.ProtocolExtensionPoint#irodsFunction(org.irods
+	 * @see org.irods.jargon.core.pub.ProtocolExtensionPoint#irodsFunction(org.irods
 	 * .jargon.core.packinstr.IRodsPI)
 	 */
 	@Override
@@ -49,8 +46,8 @@ ProtocolExtensionPoint {
 			throw new IllegalArgumentException(err);
 		}
 
-		return getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ,
-				irodsPI.getParsedTags(), irodsPI.getApiNumber());
+		return getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, irodsPI.getParsedTags(),
+				irodsPI.getApiNumber());
 	}
 
 }

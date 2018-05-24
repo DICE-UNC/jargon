@@ -1,7 +1,5 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryTranslator;
@@ -11,6 +9,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import junit.framework.Assert;
 
 public class GenQueryInpTest {
 
@@ -25,41 +25,31 @@ public class GenQueryInpTest {
 
 	@Test
 	public final void testInstanceForClose() throws Exception {
-		TranslatedIRODSGenQuery translatedIRODSQuery = Mockito
-				.mock(TranslatedIRODSGenQuery.class);
-		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(
-				translatedIRODSQuery, 2);
-		Assert.assertEquals("did not correctly set continuation", 2,
-				genQueryInp.getContinueIndex());
+		TranslatedIRODSGenQuery translatedIRODSQuery = Mockito.mock(TranslatedIRODSGenQuery.class);
+		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(translatedIRODSQuery, 2);
+		Assert.assertEquals("did not correctly set continuation", 2, genQueryInp.getContinueIndex());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceForCloseNoContinuation() throws Exception {
-		TranslatedIRODSGenQuery translatedIRODSQuery = Mockito
-				.mock(TranslatedIRODSGenQuery.class);
+		TranslatedIRODSGenQuery translatedIRODSQuery = Mockito.mock(TranslatedIRODSGenQuery.class);
 		GenQueryInp.instanceForCloseQuery(translatedIRODSQuery, 0);
 	}
 
 	@Test
 	public final void testGetParsedTagsClose() throws Exception {
-		String queryString = "select "
-				+ RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
-				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName()
-				+ " where " + RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName()
-				+ " = " + "'2'";
+		String queryString = "select " + RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName() + " where "
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName() + " = " + "'2'";
 
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
-				"d", "zone");
+		IRODSServerProperties props = IRODSServerProperties.instance(IRODSServerProperties.IcatEnabled.ICAT_ENABLED,
+				100, "rods2.2", "d", "zone");
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				props);
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
-		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(
-				translatedIRODSQuery, 2);
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(props);
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator.getTranslatedQuery(irodsQuery);
+		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(translatedIRODSQuery, 2);
 		String response = genQueryInp.getParsedTags();
 		Assert.assertNotNull("no tags generated", response);
 
@@ -87,78 +77,58 @@ public class GenQueryInpTest {
 
 	@Test
 	public final void testGenQueryInp() throws Exception {
-		String queryString = "select "
-				+ RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
-				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName()
-				+ " where " + RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName()
-				+ " = " + "'2'";
+		String queryString = "select " + RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName() + " where "
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName() + " = " + "'2'";
 
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
-				"d", "zone");
+		IRODSServerProperties props = IRODSServerProperties.instance(IRODSServerProperties.IcatEnabled.ICAT_ENABLED,
+				100, "rods2.2", "d", "zone");
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
 
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				props);
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(props);
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator.getTranslatedQuery(irodsQuery);
 
-		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
-				null);
+		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0, null);
 
 		Assert.assertNotNull(genQueryInp.getParsedTags());
 	}
 
 	@Test
 	public final void testGetParsedTags() throws Exception {
-		String queryString = "select "
-				+ RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
-				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName()
-				+ " where " + RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName()
-				+ " = " + "'2'";
+		String queryString = "select " + RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName() + " where "
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName() + " = " + "'2'";
 
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
-				"d", "zone");
+		IRODSServerProperties props = IRODSServerProperties.instance(IRODSServerProperties.IcatEnabled.ICAT_ENABLED,
+				100, "rods2.2", "d", "zone");
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				props);
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
-		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
-				null);
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(props);
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator.getTranslatedQuery(irodsQuery);
+		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0, null);
 		String tagData = genQueryInp.getParsedTags();
 		Assert.assertTrue("did not find select field",
-				tagData.indexOf(String.valueOf(RodsGenQueryEnum.COL_D_COLL_ID
-						.getNumericValue())) > -1);
-		Assert.assertTrue("did not find select field", tagData.indexOf(String
-				.valueOf(RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID
-						.getNumericValue())) > -1);
+				tagData.indexOf(String.valueOf(RodsGenQueryEnum.COL_D_COLL_ID.getNumericValue())) > -1);
+		Assert.assertTrue("did not find select field",
+				tagData.indexOf(String.valueOf(RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getNumericValue())) > -1);
 
 	}
 
 	@Test
 	public final void testGetParsedTagsWithZone() throws Exception {
 		String zoneName = "zoneNameHere";
-		String queryString = "select "
-				+ RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
-				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName()
-				+ " where " + RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName()
-				+ " = " + "'2'";
+		String queryString = "select " + RodsGenQueryEnum.COL_D_COLL_ID.getName() + " ,"
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_COLL_ID.getName() + " where "
+				+ RodsGenQueryEnum.COL_COLL_ACCESS_TYPE.getName() + " = " + "'2'";
 
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				IRODSServerProperties.IcatEnabled.ICAT_ENABLED, 100, "rods2.2",
-				"d", "zone");
+		IRODSServerProperties props = IRODSServerProperties.instance(IRODSServerProperties.IcatEnabled.ICAT_ENABLED,
+				100, "rods2.2", "d", "zone");
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-				props);
-		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator
-				.getTranslatedQuery(irodsQuery);
-		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
-				zoneName);
+		IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(props);
+		TranslatedIRODSGenQuery translatedIRODSQuery = irodsQueryTranslator.getTranslatedQuery(irodsQuery);
+		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0, zoneName);
 		String response = genQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<GenQueryInp_PI><maxRows>500</maxRows>\n");

@@ -13,16 +13,16 @@ import org.irods.jargon.core.exception.JargonException;
  * <p>
  * Eventually, we can expand the ticket distribution channels to include email
  * and other services.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface TicketDistributionService {
 
 	/**
 	 * Get information about ticket distribution channels for a given valid iRODS
 	 * ticket
-	 * 
+	 *
 	 * @param ticket
 	 *            {@link Ticket} for which distribution information will be
 	 *            generated

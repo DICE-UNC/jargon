@@ -3,8 +3,6 @@ package org.irods.jargon.datautils.filearchive;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -14,6 +12,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class LocalTarFileArchiverTest {
 
@@ -32,19 +32,15 @@ public class LocalTarFileArchiverTest {
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
 		jargonOriginalProperties = settableJargonProperties;
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -56,8 +52,7 @@ public class LocalTarFileArchiverTest {
 	@Before
 	public void before() throws Exception {
 		// be sure that normal parallel stuff is set up
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				jargonOriginalProperties);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonOriginalProperties);
 	}
 
 	@Test
@@ -67,21 +62,17 @@ public class LocalTarFileArchiverTest {
 		String targetTarFile = "targetTarFile.tar";
 
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
 
-		String tarParentCollection = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String tarParentCollection = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
 		File tarFile = new File(tarParentCollection, targetTarFile);
 
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath, rootCollection, 2, 3, 2,
-						"testFile", ".txt", 3, 2, 1, 200 * 1024);
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
+				rootCollection, 2, 3, 2, "testFile", ".txt", 3, 2, 1, 200 * 1024);
 
-		LocalTarFileArchiver archiver = new LocalTarFileArchiver(
-				localCollectionAbsolutePath, tarFile.getAbsolutePath());
+		LocalTarFileArchiver archiver = new LocalTarFileArchiver(localCollectionAbsolutePath,
+				tarFile.getAbsolutePath());
 
 		File tarredFile = archiver.createArchive();
 		Assert.assertNotNull("null tarFile returned", tarredFile);

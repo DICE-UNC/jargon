@@ -24,29 +24,26 @@ import org.slf4j.LoggerFactory;
 /**
  * Client transfer and other operations that are ticket enabled, wrapped with
  * ticket semantics
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class TicketClientOperationsImpl extends AbstractTicketService implements
-		TicketClientOperations {
+public class TicketClientOperationsImpl extends AbstractTicketService implements TicketClientOperations {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(TicketClientOperationsImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(TicketClientOperationsImpl.class);
 
 	private DataTransferOperations dataTransferOperations = null;
 	private TicketClientSupport ticketClientSupport = null;
 
 	/**
 	 * Constructor initializes service for
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	TicketClientOperationsImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+	TicketClientOperationsImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)
+			throws JargonException {
 
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
@@ -59,27 +56,21 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
 
-		dataTransferOperations = irodsAccessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		ticketClientSupport = new TicketClientSupport(irodsAccessObjectFactory,
-				irodsAccount);
+		dataTransferOperations = irodsAccessObjectFactory.getDataTransferOperations(irodsAccount);
+		ticketClientSupport = new TicketClientSupport(irodsAccessObjectFactory, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.ticket.TicketClientOperations#putFileToIRODSUsingTicket
+	 *
+	 * @see org.irods.jargon.ticket.TicketClientOperations#putFileToIRODSUsingTicket
 	 * (java.lang.String, java.io.File, org.irods.jargon.core.pub.io.IRODSFile,
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener,
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
-	public void putFileToIRODSUsingTicket(
-			final String ticketString,
-			final File sourceFile,
-			final IRODSFile targetIrodsFile,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
+	public void putFileToIRODSUsingTicket(final String ticketString, final File sourceFile,
+			final IRODSFile targetIrodsFile, final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws DataNotFoundException, OverwriteException, JargonException {
 
@@ -95,14 +86,14 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		ticketClientSupport.initializeSessionWithTicket(ticketString);
 
 		log.info("session initialized, doing put operation");
-		dataTransferOperations.putOperation(sourceFile, targetIrodsFile,
-				transferStatusCallbackListener, transferControlBlock);
+		dataTransferOperations.putOperation(sourceFile, targetIrodsFile, transferStatusCallbackListener,
+				transferControlBlock);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ticket.TicketClientOperations#
 	 * getOperationFromIRODSUsingTicket(java.lang.String,
 	 * org.irods.jargon.core.pub.io.IRODSFile, java.io.File,
@@ -110,11 +101,8 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
 	@Override
-	public void getOperationFromIRODSUsingTicket(
-			final String ticketString,
-			final IRODSFile irodsSourceFile,
-			final File targetLocalFile,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
+	public void getOperationFromIRODSUsingTicket(final String ticketString, final IRODSFile irodsSourceFile,
+			final File targetLocalFile, final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
 			throws DataNotFoundException, OverwriteException, JargonException {
 
@@ -130,22 +118,20 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		ticketClientSupport.initializeSessionWithTicket(ticketString);
 
 		log.info("session initialized, doing get operation");
-		dataTransferOperations.getOperation(irodsSourceFile, targetLocalFile,
-				transferStatusCallbackListener, transferControlBlock);
+		dataTransferOperations.getOperation(irodsSourceFile, targetLocalFile, transferStatusCallbackListener,
+				transferControlBlock);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ticket.TicketClientOperations#
-	 * redeemTicketAndStreamToIRODSCollection(java.lang.String,
-	 * java.lang.String, java.lang.String, java.io.InputStream, java.io.File)
+	 * redeemTicketAndStreamToIRODSCollection(java.lang.String, java.lang.String,
+	 * java.lang.String, java.io.InputStream, java.io.File)
 	 */
 	@Override
-	public void redeemTicketAndStreamToIRODSCollection(
-			final String ticketString,
-			final String irodsCollectionAbsolutePath, final String fileName,
-			final InputStream inputStreamForFileData,
+	public void redeemTicketAndStreamToIRODSCollection(final String ticketString,
+			final String irodsCollectionAbsolutePath, final String fileName, final InputStream inputStreamForFileData,
 			final File temporaryCacheDirectoryLocation)
 			throws DataNotFoundException, OverwriteException, JargonException {
 
@@ -164,23 +150,20 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		}
 
 		if (temporaryCacheDirectoryLocation == null) {
-			throw new IllegalArgumentException(
-					"null temporaryCacheDirectoryLocation");
+			throw new IllegalArgumentException("null temporaryCacheDirectoryLocation");
 		}
 
 		if (!temporaryCacheDirectoryLocation.exists()) {
-			throw new JargonException(
-					"temporaryCacheDirectoryLocation does not exist");
+			throw new JargonException("temporaryCacheDirectoryLocation does not exist");
 		}
 
 		if (!temporaryCacheDirectoryLocation.isDirectory()) {
-			throw new JargonException(
-					"temporaryCacheDirectoryLocation is not a directory");
+			throw new JargonException("temporaryCacheDirectoryLocation is not a directory");
 		}
 
 		/*
-		 * Everything is in order I need to stream the input stream data to a
-		 * temporary file first
+		 * Everything is in order I need to stream the input stream data to a temporary
+		 * file first
 		 */
 
 		StringBuffer sb = new StringBuffer();
@@ -196,13 +179,11 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 			FileUtils.copyInputStreamToFile(inputStreamForFileData, tempFile);
 		} catch (IOException e) {
 			log.error("io exception copying input stream to temp file", e);
-			throw new JargonException(
-					"error copying provided input stream to temporary cache");
+			throw new JargonException("error copying provided input stream to temporary cache");
 		}
 
-		IRODSFile targetIrodsFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						irodsCollectionAbsolutePath, fileName);
+		IRODSFile targetIrodsFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(irodsCollectionAbsolutePath, fileName);
 		log.info("target iRODS file:{}", targetIrodsFile);
 
 		log.info("data has been copied to temp file, now put to iRODS via ticket");
@@ -210,8 +191,7 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		 * Put file, try and clean up no matter what happens
 		 */
 		try {
-			putFileToIRODSUsingTicket(ticketString, tempFile, targetIrodsFile,
-					null, null);
+			putFileToIRODSUsingTicket(ticketString, tempFile, targetIrodsFile, null, null);
 		} finally {
 			log.info("delete the temp file");
 			tempFile.delete();
@@ -228,15 +208,14 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ticket.TicketClientOperations#
 	 * redeemTicketGetDataObjectAndStreamBack(java.lang.String,
 	 * org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
 	 */
 	@Override
-	public FileStreamAndInfo redeemTicketGetDataObjectAndStreamBack(
-			final String ticketString, final IRODSFile irodsSourceFile,
-			final File intermediateCacheRootDirectory)
+	public FileStreamAndInfo redeemTicketGetDataObjectAndStreamBack(final String ticketString,
+			final IRODSFile irodsSourceFile, final File intermediateCacheRootDirectory)
 			throws DataNotFoundException, JargonException {
 
 		log.info("redeemTicketGetDataObjectAndStreamBack()");
@@ -246,16 +225,13 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		}
 
 		if (intermediateCacheRootDirectory == null) {
-			throw new IllegalArgumentException(
-					"null intermediateCacheRootDirectory");
+			throw new IllegalArgumentException("null intermediateCacheRootDirectory");
 		}
 
-		log.info("intermediate cache root dir:{}",
-				intermediateCacheRootDirectory.getAbsolutePath());
+		log.info("intermediate cache root dir:{}", intermediateCacheRootDirectory.getAbsolutePath());
 
 		if (!intermediateCacheRootDirectory.exists()) {
-			throw new JargonException(
-					"cannot create intermediate cache, root dir does not exist");
+			throw new JargonException("cannot create intermediate cache, root dir does not exist");
 		}
 
 		// compute file name under cache dir as current time +
@@ -269,8 +245,7 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 
 		log.info("temp file name: {}", tempFileName);
 
-		File intermediateCacheFile = new File(intermediateCacheRootDirectory,
-				tempFileName);
+		File intermediateCacheFile = new File(intermediateCacheRootDirectory, tempFileName);
 
 		// other param checks done in delegated methods
 
@@ -278,19 +253,15 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		ticketClientSupport.initializeSessionWithTicket(ticketString);
 
 		log.info("session initialized, doing get operation");
-		dataTransferOperations.getOperation(irodsSourceFile,
-				intermediateCacheFile, null, null);
+		dataTransferOperations.getOperation(irodsSourceFile, intermediateCacheFile, null, null);
 		log.info("file obtained and in cache, now returning an input stream");
 		InputStream inputStream;
 		try {
-			inputStream = new BufferedInputStream(
-					new CleanUpWhenClosedInputStream(intermediateCacheFile));
-			return new FileStreamAndInfo(inputStream,
-					intermediateCacheFile.length());
+			inputStream = new BufferedInputStream(new CleanUpWhenClosedInputStream(intermediateCacheFile));
+			return new FileStreamAndInfo(inputStream, intermediateCacheFile.length());
 		} catch (FileNotFoundException e) {
 			log.error("cannot find temp cache file to stream back", e);
-			throw new JargonException(
-					"cannot find the temporary cache stream I had created");
+			throw new JargonException("cannot find the temporary cache stream I had created");
 		}
 
 	}

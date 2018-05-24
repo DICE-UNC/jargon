@@ -91,7 +91,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Default constructor with all final fields initialized
-	 * 
+	 *
 	 * @param irodsRule
 	 *            {@link IRODSRule} describing the user-submitted rule
 	 * @param host
@@ -134,7 +134,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -14,12 +14,12 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * encapsulates the treatment of tags as one space delimited string of tag
  * values, and allows the storing, retrieval, and update of tags for a domain
  * object in iRODS based on a provided string of space-delimited tags.
- * 
+ *
  * This object is a bridge between the typical client presentation of a free tag
  * area, and the underlying one-AVU-per-tag structure of the data.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class IRODSTagGrouping extends UserAnnotatedCatalogItem implements Serializable {
 
@@ -29,7 +29,7 @@ public final class IRODSTagGrouping extends UserAnnotatedCatalogItem implements 
 	/**
 	 * Depicts user tags for a domain object as one string of space-delimited tags,
 	 * and describes the user and object that is being tagged.
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
 	 *            identifies the domain object type that is tagged (e.g. DataObject,

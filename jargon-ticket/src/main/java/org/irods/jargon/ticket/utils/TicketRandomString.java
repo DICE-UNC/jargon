@@ -6,8 +6,7 @@ public class TicketRandomString {
 
 	private static final int ALPHA_SET_SIZE = 26;
 	private static final int NUMERIC_SET_SIZE = 10;
-	private static final int[] symbols = new int[ALPHA_SET_SIZE
-			+ ALPHA_SET_SIZE + NUMERIC_SET_SIZE];
+	private static final int[] symbols = new int[ALPHA_SET_SIZE + ALPHA_SET_SIZE + NUMERIC_SET_SIZE];
 
 	static {
 		int j = 0;

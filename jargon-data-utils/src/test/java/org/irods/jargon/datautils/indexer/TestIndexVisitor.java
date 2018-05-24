@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.indexer;
 
@@ -16,7 +16,7 @@ import org.irods.jargon.datautils.visitor.HierLeaf;
 
 /**
  * Test visitor instrumented for unit tests
- * 
+ *
  * @author conwaymc
  *
  */
@@ -29,7 +29,7 @@ public class TestIndexVisitor extends AbstractIndexerVisitor {
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	public TestIndexVisitor(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount)
+	public TestIndexVisitor(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)
 			throws JargonException {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -38,12 +38,12 @@ public class TestIndexVisitor extends AbstractIndexerVisitor {
 		return nodeVisitLog;
 	}
 
-	public void setNodeVisitLog(NodeVisitLog nodeVisitLog) {
+	public void setNodeVisitLog(final NodeVisitLog nodeVisitLog) {
 		this.nodeVisitLog = nodeVisitLog;
 	}
 
 	@Override
-	public boolean visitEnterWithMetadata(HierComposite node, MetadataRollup metadataRollup) {
+	public boolean visitEnterWithMetadata(final HierComposite node, final MetadataRollup metadataRollup) {
 		NodeVisitLogEntry entry = new NodeVisitLogEntry();
 		entry.setNodeAbsolutePath(node.getAbsolutePath());
 		entry.setNodeName(node.getName());
@@ -63,7 +63,8 @@ public class TestIndexVisitor extends AbstractIndexerVisitor {
 	}
 
 	@Override
-	public boolean visitLeaveWithMetadata(HierComposite node, MetadataRollup metadataRollup, boolean vistorEntered) {
+	public boolean visitLeaveWithMetadata(final HierComposite node, final MetadataRollup metadataRollup,
+			final boolean vistorEntered) {
 		NodeVisitLogEntry entry = new NodeVisitLogEntry();
 		entry.setNodeAbsolutePath(node.getAbsolutePath());
 		entry.setNodeName(node.getName());
@@ -82,7 +83,7 @@ public class TestIndexVisitor extends AbstractIndexerVisitor {
 	}
 
 	@Override
-	public boolean visitWithMetadata(HierLeaf hierLeaf, MetadataRollup metadataRollup) {
+	public boolean visitWithMetadata(final HierLeaf hierLeaf, final MetadataRollup metadataRollup) {
 		NodeVisitLogEntry entry = new NodeVisitLogEntry();
 		entry.setNodeAbsolutePath(hierLeaf.getAbsolutePath());
 		entry.setNodeName(hierLeaf.getName());

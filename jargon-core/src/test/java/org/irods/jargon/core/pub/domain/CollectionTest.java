@@ -1,10 +1,10 @@
 package org.irods.jargon.core.pub.domain;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class CollectionTest {
 
@@ -21,8 +21,7 @@ public class CollectionTest {
 		String path = "a/path/to/a/collection";
 		Collection collection = new Collection();
 		collection.setCollectionName(path);
-		Assert.assertEquals("collection",
-				collection.getCollectionLastPathComponent());
+		Assert.assertEquals("collection", collection.getCollectionLastPathComponent());
 	}
 
 }

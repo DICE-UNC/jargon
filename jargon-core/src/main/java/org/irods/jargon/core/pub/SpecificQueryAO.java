@@ -23,7 +23,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 
 	/**
 	 * Add a specific query to iRODS
-	 * 
+	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} to be added
 	 * @throws JargonException

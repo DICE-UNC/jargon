@@ -3,14 +3,14 @@ package org.irods.jargon.core.connection;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.auth.GSIUtilities;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class GSIAuthTest {
 	private static Properties testingProperties = new Properties();
@@ -36,27 +36,19 @@ public class GSIAuthTest {
 			return;
 		}
 
-		File credentialFile = new File(
-				(String) testingProperties
-						.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
+		File credentialFile = new File((String) testingProperties.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
 
-		GSIIRODSAccount irodsAccount = GSIUtilities
-				.createGSIIRODSAccountFromCredential(
-						credentialFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
-						testingPropertiesHelper.getPropertyValueAsInt(
-								testingProperties,
-								TestingPropertiesHelper.IRODS_GSI_PORT_KEY), "");
+		GSIIRODSAccount irodsAccount = GSIUtilities.createGSIIRODSAccountFromCredential(credentialFile,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY), testingPropertiesHelper
+						.getPropertyValueAsInt(testingProperties, TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+				"");
 
-		Assert.assertFalse("did not set user DN from cert", irodsAccount
-				.getDistinguishedName().isEmpty());
+		Assert.assertFalse("did not set user DN from cert", irodsAccount.getDistinguishedName().isEmpty());
 
 	}
 
 	@Test
-	public final void testGSIAccountCreateWithDefaultResource()
-			throws Exception {
+	public final void testGSIAccountCreateWithDefaultResource() throws Exception {
 
 		if (!testingPropertiesHelper.isTestGSI(testingProperties)) {
 			return;
@@ -64,31 +56,21 @@ public class GSIAuthTest {
 
 		String testResc = "resc";
 
-		File credentialFile = new File(
-				(String) testingProperties
-						.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
+		File credentialFile = new File((String) testingProperties.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
 
-		GSIIRODSAccount irodsAccount = GSIUtilities
-				.createGSIIRODSAccountFromCredential(
-						credentialFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
-						testingPropertiesHelper.getPropertyValueAsInt(
-								testingProperties,
-								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
-						testResc);
+		GSIIRODSAccount irodsAccount = GSIUtilities.createGSIIRODSAccountFromCredential(credentialFile,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY), testingPropertiesHelper
+						.getPropertyValueAsInt(testingProperties, TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+				testResc);
 
-		Assert.assertFalse("did not set user DN from cert", irodsAccount
-				.getDistinguishedName().isEmpty());
+		Assert.assertFalse("did not set user DN from cert", irodsAccount.getDistinguishedName().isEmpty());
 
-		Assert.assertEquals("did not set default storage resource", testResc,
-				irodsAccount.getDefaultStorageResource());
+		Assert.assertEquals("did not set default storage resource", testResc, irodsAccount.getDefaultStorageResource());
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testGSIAccountCreateWithMissingCertFile()
-			throws Exception {
+	public final void testGSIAccountCreateWithMissingCertFile() throws Exception {
 
 		if (!testingPropertiesHelper.isTestGSI(testingProperties)) {
 			throw new IllegalArgumentException("this is what i am expecting");
@@ -98,15 +80,10 @@ public class GSIAuthTest {
 
 		File credentialFile = new File("/blah/blah/blah/idontexist.pem");
 
-		GSIUtilities
-				.createGSIIRODSAccountFromCredential(
-						credentialFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
-						testingPropertiesHelper.getPropertyValueAsInt(
-								testingProperties,
-								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
-						testResc);
+		GSIUtilities.createGSIIRODSAccountFromCredential(credentialFile,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY), testingPropertiesHelper
+						.getPropertyValueAsInt(testingProperties, TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+				testResc);
 
 	}
 
@@ -121,15 +98,10 @@ public class GSIAuthTest {
 
 		File credentialFile = null;
 
-		GSIUtilities
-				.createGSIIRODSAccountFromCredential(
-						credentialFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
-						testingPropertiesHelper.getPropertyValueAsInt(
-								testingProperties,
-								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
-						testResc);
+		GSIUtilities.createGSIIRODSAccountFromCredential(credentialFile,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY), testingPropertiesHelper
+						.getPropertyValueAsInt(testingProperties, TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+				testResc);
 
 	}
 

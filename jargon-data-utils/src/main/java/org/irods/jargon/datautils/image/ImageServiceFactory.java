@@ -5,22 +5,20 @@ import org.irods.jargon.core.connection.IRODSAccount;
 /**
  * Factory for various services that support image processing for iRODS
  * applications
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface ImageServiceFactory {
 
 	/**
-	 * Retrieve an instance of {@code ImageServiceFactory} that supports
-	 * image processing for iRODS
-	 * 
+	 * Retrieve an instance of {@code ImageServiceFactory} that supports image
+	 * processing for iRODS
+	 *
 	 * @param irodsAccount
-	 *            {@code IRODSAccount} describing the user and desired
-	 *            iRODS host
+	 *            {@code IRODSAccount} describing the user and desired iRODS host
 	 * @return {@link ImageServiceFactory} implementation
 	 */
-	public abstract ThumbnailService instanceThumbnailService(
-			final IRODSAccount irodsAccount);
+	public abstract ThumbnailService instanceThumbnailService(final IRODSAccount irodsAccount);
 
 }

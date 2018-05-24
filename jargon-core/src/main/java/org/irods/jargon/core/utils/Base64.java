@@ -76,8 +76,8 @@ public class Base64 {
 	 *            Whether to add a close parenthesis or not
 	 * @return A String representing the formatted output
 	 */
-	public static String formatString(final byte[] b, final int lineLength,
-			final String prefix, final boolean addClose) {
+	public static String formatString(final byte[] b, final int lineLength, final String prefix,
+			final boolean addClose) {
 		String s = toString(b);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < s.length(); i += lineLength) {
@@ -100,8 +100,7 @@ public class Base64 {
 	 *
 	 * @param str
 	 *            A String containing the encoded data
-	 * @return An array containing the binary data, or null if the string is
-	 *         invalid
+	 * @return An array containing the binary data, or null if the string is invalid
 	 */
 	public static byte[] fromString(final String str) {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();

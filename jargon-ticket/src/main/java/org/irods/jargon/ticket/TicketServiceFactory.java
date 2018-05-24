@@ -9,17 +9,17 @@ import org.irods.jargon.core.exception.JargonException;
  * and test.
  * <p>
  * Note that tickets are not supported in versions before iRODS 3.1
- * 
- * 
+ *
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface TicketServiceFactory {
 
 	/**
 	 * Create a new instance of the {@code TicketAdminService} that can create and
 	 * modify tickets
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that describes the server and connection info
 	 * @return {@link TicketAdminService} object to interact with iRODS tickets
@@ -31,7 +31,7 @@ public interface TicketServiceFactory {
 	/**
 	 * Create a new instance of the {@code TicketClientOperations} that can redeem
 	 * tickets
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that describes the server and connection info
 	 * @return {@link TicketAdminService} object to interact with iRODS tickets
@@ -43,7 +43,7 @@ public interface TicketServiceFactory {
 	/**
 	 * Create a new instance of the {@code TicketDistributionService} that can
 	 * distribute tickets via various channels
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that describes the server and connection info
 	 * @param ticketDistributionContext

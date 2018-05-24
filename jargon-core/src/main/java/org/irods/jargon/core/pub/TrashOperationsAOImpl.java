@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of trash operations
- * 
+ *
  * @author conwaymc
  *
  */
@@ -38,18 +38,19 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	public TrashOperationsAOImpl(IRODSSession irodsSession, IRODSAccount irodsAccount) throws JargonException {
+	public TrashOperationsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	@Override
 	public IRODSFile getTrashHomeForLoggedInUser() throws JargonException {
 		log.info("getTrashHomeForLoggedInUser())");
-		log.info("for user:{}", this.getIRODSAccount());
+		log.info("for user:{}", getIRODSAccount());
 		String trashHomePath = MiscIRODSUtils.buildTrashHome(getIRODSAccount().getUserName(),
 				getIRODSAccount().getZone());
 		log.info("getting file at:{}", trashHomePath);
-		IRODSFile trashFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+		IRODSFile trashFile = getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
 				.instanceIRODSFile(trashHomePath);
 		return trashFile;
 
@@ -60,12 +61,12 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		log.info("getOrphanTrashHome())");
 		String operativeZone = zone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		String trashHomePath = MiscIRODSUtils.buildTrashOrphanPath(getIRODSAccount().getZone());
 
-		IRODSFile trashFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+		IRODSFile trashFile = getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
 				.instanceIRODSFile(trashHomePath);
 		return trashFile;
 
@@ -77,12 +78,12 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 		String operativeZone = zone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		String trashHomePath = MiscIRODSUtils.buildTrashHome(operativeZone);
 		log.info("getting file at:{}", trashHomePath);
-		IRODSFile trashFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+		IRODSFile trashFile = getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
 				.instanceIRODSFile(trashHomePath);
 		return trashFile;
 
@@ -90,7 +91,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.TrashOperationsAO#emptyTrashForLoggedInUser(java.
 	 * lang.String, int)
@@ -100,7 +101,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		log.info("emptyTrash()");
 		String operativeZone = irodsZone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		TrashOptions trashOptions = new TrashOptions();
@@ -110,14 +111,14 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		log.info("operativeZone:{}", operativeZone);
 		log.info("trashOptions:{}", trashOptions);
 
-		emptyTrash(operativeZone, MiscIRODSUtils.buildTrashHome(this.getIRODSAccount().getUserName(), operativeZone),
+		emptyTrash(operativeZone, MiscIRODSUtils.buildTrashHome(getIRODSAccount().getUserName(), operativeZone),
 				trashOptions);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.TrashOperationsAO#emptyTrashAtPathForLoggedInUser(
 	 * java.lang.String, java.lang.String, int)
@@ -128,7 +129,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		log.info("emptyTrash()");
 		String operativeZone = irodsZone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		if (irodsPath == null || irodsPath.isEmpty()) {
@@ -154,7 +155,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.TrashOperationsAO#emptyTrashAdminMode(java.lang.
 	 * String, java.lang.String, int)
@@ -171,7 +172,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 		String operativeZone = zone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		if (irodsPath == null || irodsPath.isEmpty()) {
@@ -207,14 +208,14 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 		String operativeZone = zone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		TrashOptions trashOptions = new TrashOptions();
 		trashOptions.setAgeInMinutes(age);
 		trashOptions.setRecursive(true);
 		trashOptions.setTrashOperationMode(TrashOperationMode.ADMIN);
-		IRODSFile trashHomeFile = this.getTrashHome(zone);
+		IRODSFile trashHomeFile = getTrashHome(zone);
 
 		if (operativeUserName.isEmpty()) {
 			log.info("empty all trash as admin");
@@ -231,7 +232,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.TrashOperationsAO#emptyOrphanTrash(java.lang.
 	 * String)
 	 */
@@ -242,14 +243,14 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 		String operativeZone = zone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		TrashOptions trashOptions = new TrashOptions();
 		trashOptions.setAgeInMinutes(0);
 		trashOptions.setRecursive(true);
 		trashOptions.setTrashOperationMode(TrashOperationMode.ADMIN);
-		IRODSFile trashHomeFile = this.getOrphanTrashHome(zone);
+		IRODSFile trashHomeFile = getOrphanTrashHome(zone);
 
 		log.info("empty orphan trash at: {}", trashHomeFile);
 		emptyTrash(operativeZone, trashHomeFile.getAbsolutePath(), trashOptions);
@@ -263,7 +264,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * path, allowing the setting of options. This method expects proper resolution
 	 * of all of the parameters, and these parameters are set by the varous public
 	 * method signatures
-	 * 
+	 *
 	 * @param irodsZone
 	 *            optional (<code>null</code> or blank) <code>String</code> with a
 	 *            zone for which the trash will be emptied. defaults to the current
@@ -286,7 +287,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		log.info("emptyTrash()");
 		String operativeZone = irodsZone;
 		if (operativeZone == null || operativeZone.isEmpty()) {
-			operativeZone = this.getIRODSAccount().getZone();
+			operativeZone = getIRODSAccount().getZone();
 		}
 
 		if (irodsPath == null || irodsPath.isEmpty()) {
@@ -301,13 +302,13 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		log.info("operativeZone:{}", operativeZone);
 		log.info("irodsPath:{}", irodsPath);
 
-		if (!operativeZone.equals(this.getIRODSAccount().getZone())) {
+		if (!operativeZone.equals(getIRODSAccount().getZone())) {
 			operativeZone = "";
 		}
 
 		log.debug("getting objStat on trash path");
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsPath);
 
 		log.debug("objStat:{}", objStat);
@@ -336,7 +337,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	/**
 	 * Empty the trash can for the logged in user with the given iRODS absolute
 	 * path, allowing the setting of options.
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> that will have trash emptied. Note that
 	 *            federated zone user identities must be provided, so a cross zone

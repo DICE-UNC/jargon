@@ -248,8 +248,8 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	@Override
 	public MetaDataAndDomainData clone() throws CloneNotSupportedException {
 		try {
-			return new MetaDataAndDomainData(this.metadataDomain, this.domainObjectId, this.domainObjectUniqueName,
-					size, createdAt, createdAt, avuId, avuAttribute, avuValue, avuUnit);
+			return new MetaDataAndDomainData(metadataDomain, domainObjectId, domainObjectUniqueName, size, createdAt,
+					createdAt, avuId, avuAttribute, avuValue, avuUnit);
 		} catch (JargonException e) {
 			throw new JargonRuntimeException("exception during clone()", e);
 		}

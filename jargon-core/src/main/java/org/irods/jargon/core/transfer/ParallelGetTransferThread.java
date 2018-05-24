@@ -282,7 +282,7 @@ public final class ParallelGetTransferThread extends AbstractParallelTransferThr
 				 */
 
 				if (parallelGetFileTransferStrategy.doEncryption()) {
-					buffer = this.parallelDecryptionCipherWrapper.decrypt(buffer);
+					buffer = parallelDecryptionCipherWrapper.decrypt(buffer);
 					read = buffer.length;
 
 				}

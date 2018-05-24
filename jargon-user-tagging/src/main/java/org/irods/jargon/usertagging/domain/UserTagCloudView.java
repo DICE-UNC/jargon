@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -13,9 +13,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * This class represents a user tag cloud for a given domain (collection, data
  * object, etc) in iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class UserTagCloudView implements Serializable {
 
@@ -25,8 +25,8 @@ public final class UserTagCloudView implements Serializable {
 
 	/**
 	 * Static initializer creates an instance.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param userName
 	 *            {@code String} with the name of the user who owns the tag cloud.
 	 * @param tagCloudEntries
@@ -44,7 +44,7 @@ public final class UserTagCloudView implements Serializable {
 	/**
 	 * Static initializer with separate tag clouds for collections and data objects
 	 * that will be put together in a union with counts for each.
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the name of the user who owns the tag cloud.
 	 * @param fileTagCloudEntries
@@ -95,7 +95,7 @@ public final class UserTagCloudView implements Serializable {
 
 	/**
 	 * Private constructor
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
 	 *            describes the iRODS domain object being tagged (e.g. collection,

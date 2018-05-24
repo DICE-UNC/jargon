@@ -14,8 +14,7 @@ public class EncryptionBuffer {
 	private final byte[] initializationVector;
 	private final byte[] encryptedData;
 
-	public EncryptionBuffer(final byte[] initializationVector,
-			final byte[] encryptedData) {
+	public EncryptionBuffer(final byte[] initializationVector, final byte[] encryptedData) {
 		super();
 		if (initializationVector == null) {
 			throw new IllegalArgumentException("null initializationVector");

@@ -79,33 +79,33 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (Supported modes are:
-	 * 
+	 *
 	 * READ 'r' Open for reading only; place the file pointer at the beginning of
 	 * the file.
-	 * 
+	 *
 	 * READ_TRUNCATE 'r+' Open for reading and writing; place the file pointer at
 	 * the beginning of the file.
-	 * 
+	 *
 	 * WRITE 'w' Open for writing only; place the file pointer at the beginning of
 	 * the file. If the file does not exist, attempt to create it.
-	 * 
+	 *
 	 * WRITE_TRUNCATE 'w+' Open for reading and writing; place the file pointer at
 	 * the beginning of the file and truncate the file to zero length. If the file
 	 * does not exist, attempt to create it.
-	 * 
+	 *
 	 * READ_WRITE 'a' Open for writing only; place the file pointer at the end of
 	 * the file. If the file does not exist, attempt to create it.
-	 * 
+	 *
 	 * READ_WRITE_CREATE_IF_NOT_EXISTS 'a+' Open for reading and writing; place the
 	 * file pointer at the end of the file. If the file does not exist, attempt to
 	 * create it.
-	 * 
+	 *
 	 * WRITE_FAIL_IF_EXISTS 'x' Create and open for writing only; place the file
 	 * pointer at the beginning of the file. If the file already exists, the fopen()
 	 * call will fail by returning FALSE and generating an error of level E_WARNING.
 	 * If the file does not exist, attempt to create it. This is equivalent to
 	 * specifying O_EXCL|O_CREAT flags for the underlying open(2) system call.
-	 * 
+	 *
 	 * READ_WRITE_FAIL_IF_EXISTS 'x+' Create and open for reading and writing; place
 	 * the file pointer at the beginning of the file. If the file already exists,
 	 * the fopen() call will fail by returning FALSE and generating an error of

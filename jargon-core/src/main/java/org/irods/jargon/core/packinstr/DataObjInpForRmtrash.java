@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -12,7 +12,7 @@ import org.irods.jargon.core.pub.TrashOptions;
 
 /**
  * DataObjInp for removing trash in irmtrash operations
- * 
+ *
  * @author conwaymc
  *
  */
@@ -37,7 +37,7 @@ public class DataObjInpForRmtrash extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue()
 	 */
@@ -65,7 +65,7 @@ public class DataObjInpForRmtrash extends AbstractIRODSPackingInstruction {
 
 		/*
 		 * If in a remote zone a zone kw needs to be supplied
-		 * 
+		 *
 		 */
 
 		if (!zone.isEmpty()) {
@@ -87,7 +87,7 @@ public class DataObjInpForRmtrash extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Constructor with required values
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            {@link String} with path to be deleted
 	 * @param trashOptions
@@ -95,7 +95,7 @@ public class DataObjInpForRmtrash extends AbstractIRODSPackingInstruction {
 	 * @param zone
 	 *            {@link String} with the target zone
 	 */
-	public DataObjInpForRmtrash(String fileAbsolutePath, TrashOptions trashOptions, String zone) {
+	public DataObjInpForRmtrash(final String fileAbsolutePath, final TrashOptions trashOptions, final String zone) {
 		super();
 
 		if (fileAbsolutePath == null || fileAbsolutePath.isEmpty()) {

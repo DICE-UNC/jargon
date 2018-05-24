@@ -1005,7 +1005,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	@Override
-	public boolean renameTo(File dest) {
+	public boolean renameTo(final File dest) {
 		log.info("renameTo()");
 		if (dest == null) {
 			throw new IllegalArgumentException("dest is null");
@@ -1436,7 +1436,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		return irodsFileSystemAO;
 	}
 
-	public void setIrodsFileSystemAO(IRODSFileSystemAO irodsFileSystemAO) {
+	public void setIrodsFileSystemAO(final IRODSFileSystemAO irodsFileSystemAO) {
 		this.irodsFileSystemAO = irodsFileSystemAO;
 	}
 

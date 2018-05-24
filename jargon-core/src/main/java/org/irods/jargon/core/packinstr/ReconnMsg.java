@@ -20,8 +20,7 @@ public class ReconnMsg extends AbstractIRODSPackingInstruction {
 	 *            {@link StartupResponseData} that was returned when the startup
 	 *            sequence was done, and the reconnect option was set.
 	 */
-	public ReconnMsg(final IRODSAccount irodsAccount,
-			final StartupResponseData startupResponseData) {
+	public ReconnMsg(final IRODSAccount irodsAccount, final StartupResponseData startupResponseData) {
 		super();
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -36,10 +35,8 @@ public class ReconnMsg extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		Tag startupPacket = new Tag(PI_TAG, new Tag[] {
-				new Tag("status", startupResponseData.getStatus()),
-				new Tag("cookie", startupResponseData.getCookie()),
-				new Tag("procState", "0"), new Tag("flag", "0") });
+		Tag startupPacket = new Tag(PI_TAG, new Tag[] { new Tag("status", startupResponseData.getStatus()),
+				new Tag("cookie", startupResponseData.getCookie()), new Tag("procState", "0"), new Tag("flag", "0") });
 		return startupPacket;
 	}
 

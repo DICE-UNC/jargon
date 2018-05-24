@@ -25,15 +25,13 @@ import org.slf4j.LoggerFactory;
  */
 abstract class AbstractParallelCipherWrapper {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractParallelCipherWrapper.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractParallelCipherWrapper.class);
 
 	/**
 	 * @param pipelineConfiguration
 	 * @param negotiatedClientServerConfiguration
 	 */
-	AbstractParallelCipherWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	AbstractParallelCipherWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		this.pipelineConfiguration = pipelineConfiguration;
@@ -74,16 +72,14 @@ abstract class AbstractParallelCipherWrapper {
 	}
 
 	/**
-	 * Generate a salt value configured by the
-	 * {@code PipelineConfiguration} that was the decided upon during
-	 * client/server negotiation
+	 * Generate a salt value configured by the {@code PipelineConfiguration} that
+	 * was the decided upon during client/server negotiation
 	 *
 	 * @return {@code byte[]} of the desired salt size
 	 */
 	byte[] generateSalt() throws JargonException {
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
-			throw new JargonRuntimeException(
-					"salt should not be generated when SSL not configured");
+			throw new JargonRuntimeException("salt should not be generated when SSL not configured");
 		}
 		SecureRandom random = new SecureRandom();
 		byte bytes[] = new byte[pipelineConfiguration.getEncryptionSaltSize()];
@@ -92,8 +88,7 @@ abstract class AbstractParallelCipherWrapper {
 		try {
 			return s.getBytes(pipelineConfiguration.getDefaultEncoding());
 		} catch (UnsupportedEncodingException e) {
-			log.error("unsupported encoding:{}",
-					pipelineConfiguration.getDefaultEncoding(), e);
+			log.error("unsupported encoding:{}", pipelineConfiguration.getDefaultEncoding(), e);
 			throw new JargonException("Cannot encode salt value", e);
 		}
 	}

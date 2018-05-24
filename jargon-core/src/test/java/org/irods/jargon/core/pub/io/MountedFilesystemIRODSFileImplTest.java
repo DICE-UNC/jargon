@@ -6,8 +6,6 @@ package org.irods.jargon.core.pub.io;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -17,6 +15,8 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -40,12 +40,10 @@ public class MountedFilesystemIRODSFileImplTest {
 			return;
 		}
 
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -75,62 +73,51 @@ public class MountedFilesystemIRODSFileImplTest {
 		String testFilePrefix = "testFile";
 		int count = 200;
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
 		String localScratchAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + scratchDir);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + scratchDir);
 
-		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
-				localScratchAbsolutePath, testFilePrefix, ".txt", count, 1, 2);
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(localScratchAbsolutePath, testFilePrefix,
+				".txt", count, 1, 2);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
 		// put the scratch files to the mount
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		dto.putOperation(localScratchAbsolutePath, targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource(), null, null);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localScratchAbsolutePath, targetIrodsCollection, irodsAccount.getDefaultStorageResource(),
+				null, null);
 
-		IRODSFile parentFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection, scratchDir);
+		IRODSFile parentFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection, scratchDir);
 
 		File[] irodsFiles = parentFile.listFiles();
 		Assert.assertNotNull(irodsFiles);
 		Assert.assertTrue("no results", irodsFiles.length > 0);
-		Assert.assertEquals("did not get all expected files", count,
-				irodsFiles.length);
+		Assert.assertEquals("did not get all expected files", count, irodsFiles.length);
 
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isFile()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isFile()}.
 	 */
 	@Test
 	public final void testIsFileWhenFile() throws Exception {
@@ -144,50 +131,40 @@ public class MountedFilesystemIRODSFileImplTest {
 		String scratchDir = "testIsFileWhenFile";
 		String testFileName = "testIsFileWhenFile.txt";
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
 		String localScratchAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + scratchDir);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + scratchDir);
 
-		FileGenerator.generateFileOfFixedLengthGivenName(
-				localScratchAbsolutePath, testFileName, 1);
+		FileGenerator.generateFileOfFixedLengthGivenName(localScratchAbsolutePath, testFileName, 1);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
 		// put the scratch files to the mount
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		dto.putOperation(localScratchAbsolutePath, targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource(), null, null);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localScratchAbsolutePath, targetIrodsCollection, irodsAccount.getDefaultStorageResource(),
+				null, null);
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection + "/" + scratchDir,
-						testFileName);
+				.instanceIRODSFile(targetIrodsCollection + "/" + scratchDir, testFileName);
 
 		Assert.assertTrue("this should be a file", irodsFile.isFile());
 	}
@@ -202,35 +179,29 @@ public class MountedFilesystemIRODSFileImplTest {
 		String subdirName = "testIsDirectory";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
 		// now get an irods file and see if it is readable, it should be
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
-
-		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection, subdirName);
+		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				subdirName);
 		dirFile.mkdirs();
 
 		boolean isDir = dirFile.isDirectory();
@@ -247,35 +218,29 @@ public class MountedFilesystemIRODSFileImplTest {
 		String subdirName = "testIsDirectoryNotExists";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
 		// now get an irods file and see if it is readable, it should be
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
-
-		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection, subdirName);
+		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				subdirName);
 
 		boolean isDir = dirFile.isDirectory();
 		Assert.assertFalse("this should not exist", isDir);
@@ -290,35 +255,29 @@ public class MountedFilesystemIRODSFileImplTest {
 		String subdirName = "testExistsDir";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
 		// now get an irods file and see if it is readable, it should be
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
-
-		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection, subdirName);
+		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				subdirName);
 		dirFile.mkdirs();
 
 		boolean exists = dirFile.exists();
@@ -334,35 +293,29 @@ public class MountedFilesystemIRODSFileImplTest {
 		String subdirName = "testExistsDirNotExists";
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
 		// now get an irods file and see if it is readable, it should be
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
-
-		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection, subdirName);
+		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				subdirName);
 
 		boolean exists = dirFile.exists();
 		Assert.assertFalse("this should not exist", exists);

@@ -1,10 +1,10 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class UserAdminInpTest {
 
@@ -20,8 +20,7 @@ public class UserAdminInpTest {
 	public final void testGetTagValueForUserPasswordChange() throws Exception {
 		String userName = "testuser";
 		String obfuscatedPassword = "obfuscatedPassword";
-		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(
-				userName, obfuscatedPassword);
+		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(userName, obfuscatedPassword);
 		String tagValue = userAdminInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<userAdminInp_PI><arg0>userpw</arg0>\n");
@@ -43,11 +42,9 @@ public class UserAdminInpTest {
 	public final void testInstanceForChangeUserPassword() throws Exception {
 		String userName = "testuser";
 		String obfuscatedPassword = "obfuscatedPassword";
-		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(
-				userName, obfuscatedPassword);
+		UserAdminInp userAdminInp = UserAdminInp.instanceForChangeUserPassword(userName, obfuscatedPassword);
 		Assert.assertNotNull("null userAdminInp", userAdminInp);
-		Assert.assertEquals("incorrect API number", 714,
-				userAdminInp.getApiNumber());
+		Assert.assertEquals("incorrect API number", 714, userAdminInp.getApiNumber());
 	}
 
 }

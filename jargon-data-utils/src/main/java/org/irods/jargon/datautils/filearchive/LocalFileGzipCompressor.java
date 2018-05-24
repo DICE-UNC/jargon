@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.filearchive;
 
@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Archiver that will tar a given local collection
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class LocalFileGzipCompressor {
 
@@ -33,7 +33,7 @@ public class LocalFileGzipCompressor {
 
 	/**
 	 * Take the given file and compress it to a gzip with a .gzip extension added
-	 * 
+	 *
 	 * @param inputFileAbsolutePath
 	 *            {@code String} with an absolute path to a file that is gzip
 	 *            compressed
@@ -96,7 +96,7 @@ public class LocalFileGzipCompressor {
 	 * Note the result file will either be the same name with the .gzip removed,
 	 * leaving the original extension. If a .gzip extension is not found it will
 	 * make it a .tar file by default
-	 * 
+	 *
 	 * @param inputFileAbsolutePath
 	 *            {@code String} with the absolute path to a .gzip file
 	 * @return {@link File} that is unzipped and has the .gzip removed to give the

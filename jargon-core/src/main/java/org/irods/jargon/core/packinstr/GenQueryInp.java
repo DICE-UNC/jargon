@@ -66,7 +66,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	/**
 	 * Static instance method for version of the packing instruction to close the
 	 * query down.
-	 * 
+	 *
 	 * @param translatedIRODSQuery
 	 *            {@link TranslatedIRODSGenQuery}
 	 * @param continueIndex
@@ -173,7 +173,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

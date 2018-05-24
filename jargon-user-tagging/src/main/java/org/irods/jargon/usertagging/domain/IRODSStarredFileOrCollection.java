@@ -9,9 +9,9 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
 /**
  * Represents a user 'star' of a file or collection. This is like a favorite
  * folder, and includes a free text description of the folder
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class IRODSStarredFileOrCollection extends UserAnnotatedCatalogItem implements Serializable {
 
@@ -25,7 +25,7 @@ public final class IRODSStarredFileOrCollection extends UserAnnotatedCatalogItem
 	/**
 	 * Constructor describes the user and object that is being starred, and
 	 * providing a description.
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
 	 *            identifies the domain object type that is tagged (e.g. DataObject,

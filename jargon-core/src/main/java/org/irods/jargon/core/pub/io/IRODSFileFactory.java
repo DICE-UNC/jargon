@@ -85,7 +85,7 @@ public interface IRODSFileFactory {
 	 *             when resource missing
 	 * @throws JargonException
 	 *             for iRODS error
-	 * 
+	 *
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(IRODSFile file, OpenFlags openFlags)
 			throws NoResourceDefinedException, JargonException;

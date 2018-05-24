@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.connectiontester;
 
@@ -10,9 +10,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 
 /**
  * Report of the result of a test
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ConnectionTestResult {
 
@@ -30,7 +30,7 @@ public class ConnectionTestResult {
 	private List<TestResultEntry> testResults = new ArrayList<TestResultEntry>();
 
 	/**
-	 * 
+	 *
 	 */
 	public ConnectionTestResult() {
 	}
@@ -46,7 +46,7 @@ public class ConnectionTestResult {
 	 * @param configuration
 	 *            the configuration to set
 	 */
-	public void setConfiguration(ConnectionTesterConfiguration configuration) {
+	public void setConfiguration(final ConnectionTesterConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -61,7 +61,7 @@ public class ConnectionTestResult {
 	 * @param irodsAccount
 	 *            the irodsAccount to set
 	 */
-	public void setIrodsAccount(IRODSAccount irodsAccount) {
+	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
 
@@ -76,13 +76,13 @@ public class ConnectionTestResult {
 	 * @param testResults
 	 *            the testResults to set
 	 */
-	public void setTestResults(List<TestResultEntry> testResults) {
+	public void setTestResults(final List<TestResultEntry> testResults) {
 		this.testResults = testResults;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -102,8 +102,7 @@ public class ConnectionTestResult {
 		}
 		if (testResults != null) {
 			builder.append("testResults=");
-			builder.append(testResults.subList(0,
-					Math.min(testResults.size(), maxLen)));
+			builder.append(testResults.subList(0, Math.min(testResults.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();

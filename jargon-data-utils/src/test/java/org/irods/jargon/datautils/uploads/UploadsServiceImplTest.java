@@ -1,11 +1,9 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.uploads;
 
 import java.util.Properties;
-
-import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -17,9 +15,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import junit.framework.Assert;
+
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UploadsServiceImplTest {
 	private static Properties testingProperties = new Properties();
@@ -30,8 +30,7 @@ public class UploadsServiceImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 	}
 
 	/**
@@ -41,29 +40,22 @@ public class UploadsServiceImplTest {
 	 */
 	@Test
 	public void testGetUploadsDirectory() throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
-		String testUploadsDir = MiscIRODSUtils
-				.computeHomeDirectoryForIRODSAccount(irodsAccount)
-				+ "/"
+		String testUploadsDir = MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(irodsAccount) + "/"
 				+ UploadsService.UPLOADS_DIR_DEFAULT_NAME;
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
 
 		Mockito.when(irodsFile.exists()).thenReturn(false);
 
-		Mockito.when(irodsFileFactory.instanceIRODSFile(testUploadsDir))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(testUploadsDir)).thenReturn(irodsFile);
 
-		UploadsService uploadsService = new UploadsServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		UploadsService uploadsService = new UploadsServiceImpl(irodsAccessObjectFactory, irodsAccount);
 		IRODSFile actual = uploadsService.getUploadsDirectory();
 		Assert.assertNotNull("no irods file returned", actual);
 		Mockito.verify(irodsFile).mkdirs();
@@ -72,29 +64,22 @@ public class UploadsServiceImplTest {
 
 	@Test
 	public void testGetUploadsDirectoryAlreadyExists() throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
-		String testUploadsDir = MiscIRODSUtils
-				.computeHomeDirectoryForIRODSAccount(irodsAccount)
-				+ "/"
+		String testUploadsDir = MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(irodsAccount) + "/"
 				+ UploadsService.UPLOADS_DIR_DEFAULT_NAME;
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
 
 		Mockito.when(irodsFile.exists()).thenReturn(true);
 
-		Mockito.when(irodsFileFactory.instanceIRODSFile(testUploadsDir))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(testUploadsDir)).thenReturn(irodsFile);
 
-		UploadsService uploadsService = new UploadsServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		UploadsService uploadsService = new UploadsServiceImpl(irodsAccessObjectFactory, irodsAccount);
 		IRODSFile actual = uploadsService.getUploadsDirectory();
 		Assert.assertNotNull("no irods file returned", actual);
 		Mockito.verify(irodsFile, Mockito.never()).mkdirs();
@@ -103,29 +88,22 @@ public class UploadsServiceImplTest {
 
 	@Test
 	public void testDeleteUploadsDirectory() throws Exception {
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
-		String testUploadsDir = MiscIRODSUtils
-				.computeHomeDirectoryForIRODSAccount(irodsAccount)
-				+ "/"
+		String testUploadsDir = MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(irodsAccount) + "/"
 				+ UploadsService.UPLOADS_DIR_DEFAULT_NAME;
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
 
 		Mockito.when(irodsFile.exists()).thenReturn(true);
 
-		Mockito.when(irodsFileFactory.instanceIRODSFile(testUploadsDir))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(testUploadsDir)).thenReturn(irodsFile);
 
-		UploadsService uploadsService = new UploadsServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		UploadsService uploadsService = new UploadsServiceImpl(irodsAccessObjectFactory, irodsAccount);
 		uploadsService.deleteUploadsDirectory();
 		Mockito.verify(irodsFile).deleteWithForceOption();
 	}

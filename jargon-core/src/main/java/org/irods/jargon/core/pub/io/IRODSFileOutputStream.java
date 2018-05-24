@@ -158,7 +158,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileOutputStream#close()
 	 */
 	@Override
@@ -170,11 +170,11 @@ public class IRODSFileOutputStream extends OutputStream {
 			 * If checksum compute is true, add an iRODS checksum
 			 */
 
-			if (this.getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
-					|| this.getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
+			if (getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
+					|| getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
 				log.info("computing checksum per jargon properties settings");
 
-				this.getFileIOOperations().computeChecksumOnIrodsFile(this.irodsFile.getAbsolutePath());
+				getFileIOOperations().computeChecksumOnIrodsFile(irodsFile.getAbsolutePath());
 
 			}
 
@@ -194,7 +194,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileOutputStream#write(byte[], int, int)
 	 */
 	@Override
@@ -216,7 +216,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileOutputStream#write(byte[])
 	 */
 	@Override

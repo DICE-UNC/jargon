@@ -89,7 +89,7 @@ public class TransferStatus {
 	 * @param transferZone
 	 *            {@code String} with the zone name for the transfer
 	 * @return {@link TransferStatus}
-	 * 
+	 *
 	 */
 	public static TransferStatus instance(final TransferType transferType, final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String targetResource, final long totalSize,

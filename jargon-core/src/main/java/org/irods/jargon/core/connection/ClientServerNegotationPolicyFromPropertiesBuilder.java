@@ -19,8 +19,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilder {
 	 * @param irodsSession
 	 *            {@link IRODSSession} with a link to properties and settings
 	 */
-	public ClientServerNegotationPolicyFromPropertiesBuilder(
-			final IRODSSession irodsSession) {
+	public ClientServerNegotationPolicyFromPropertiesBuilder(final IRODSSession irodsSession) {
 		if (irodsSession == null) {
 			throw new IllegalArgumentException("null irodsSession");
 		}
@@ -39,8 +38,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilder {
 		JargonProperties jargonProperties = irodsSession.getJargonProperties();
 
 		ClientServerNegotiationPolicy clientServerNegotiationPolicy = new ClientServerNegotiationPolicy();
-		clientServerNegotiationPolicy.setSslNegotiationPolicy(jargonProperties
-				.getNegotiationPolicy());
+		clientServerNegotiationPolicy.setSslNegotiationPolicy(jargonProperties.getNegotiationPolicy());
 		return clientServerNegotiationPolicy;
 
 	}

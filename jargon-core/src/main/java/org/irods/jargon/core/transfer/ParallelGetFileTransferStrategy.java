@@ -107,7 +107,7 @@ public final class ParallelGetFileTransferStrategy extends AbstractParallelFileT
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()

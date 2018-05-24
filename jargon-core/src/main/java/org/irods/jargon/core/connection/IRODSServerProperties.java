@@ -75,7 +75,7 @@ public class IRODSServerProperties {
 	/**
 	 * Does the server (based on version) support metadata 'set' operations as
 	 * opposed to 'add'
-	 * 
+	 *
 	 * @return <code>boolean</code> indicating whether metadata 'set' semantics are
 	 *         supported
 	 */
@@ -104,7 +104,7 @@ public class IRODSServerProperties {
 
 	/**
 	 * Does the server (based on version) support composable resources
-	 * 
+	 *
 	 * @return <code>boolean</code> indicating whether composable resources are
 	 *         supported
 	 */

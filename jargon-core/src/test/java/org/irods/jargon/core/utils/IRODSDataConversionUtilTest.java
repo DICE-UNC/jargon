@@ -14,22 +14,19 @@ public final class IRODSDataConversionUtilTest {
 
 	@Test
 	public void testGetLinkedCollFromIRODSValue() {
-		assertEquals("linked collection maps incorrectly",
-				SpecColType.LINKED_COLL,
+		assertEquals("linked collection maps incorrectly", SpecColType.LINKED_COLL,
 				getCollectionTypeFromIRODSValue(COLL_TYPE_LINK));
 	}
 
 	@Test
 	public void testGetMountedCollFromIRODSValue() {
-		assertEquals("mounted collection maps incorrectly",
-				SpecColType.MOUNTED_COLL,
+		assertEquals("mounted collection maps incorrectly", SpecColType.MOUNTED_COLL,
 				getCollectionTypeFromIRODSValue(COLL_TYPE_MOUNT));
 	}
 
 	@Test
 	public void testGetHAAWCollFromIRODSValue() {
-		assertEquals("HAAW file maps incorrectly",
-				SpecColType.STRUCT_FILE_COLL,
+		assertEquals("HAAW file maps incorrectly", SpecColType.STRUCT_FILE_COLL,
 				getCollectionTypeFromIRODSValue(COLL_TYPE_HAAW));
 	}
 

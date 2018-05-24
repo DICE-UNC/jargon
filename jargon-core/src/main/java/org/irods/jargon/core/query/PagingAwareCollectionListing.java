@@ -54,16 +54,14 @@ public class PagingAwareCollectionListing {
 	private int dataObjectsTotalRecords = 0;
 
 	/**
-	 * Indicates whether the set of collections is complete, or whether more
-	 * results exist. Will be {@code true} if complete OR if no collections
-	 * exist
+	 * Indicates whether the set of collections is complete, or whether more results
+	 * exist. Will be {@code true} if complete OR if no collections exist
 	 */
 	private boolean collectionsComplete = true;
 
 	/**
 	 * Indicates whether the set of data objects is complete, or whether more
-	 * results exist. Will be {@code true} if complete OR if no data
-	 * objects exist
+	 * results exist. Will be {@code true} if complete OR if no data objects exist
 	 */
 	private boolean dataObjectsComplete = true;
 
@@ -73,8 +71,8 @@ public class PagingAwareCollectionListing {
 	private int pageSizeUtilized = 0;
 
 	/**
-	 * List from the query, will contain a set of collections and data objects
-	 * with a paging status reflected in this object.
+	 * List from the query, will contain a set of collections and data objects with
+	 * a paging status reflected in this object.
 	 */
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 

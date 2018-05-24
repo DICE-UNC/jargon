@@ -14,8 +14,7 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferType;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class TransferStatusCallbackListenerTestingImplementation implements
-		TransferStatusCallbackListener {
+public class TransferStatusCallbackListenerTestingImplementation implements TransferStatusCallbackListener {
 
 	/**
 	 * Just counts the initial file callbacks no matter what
@@ -33,8 +32,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
 	/**
-	 * flag will cause even files (based on the callback counter) to be sent and
-	 * odd files to be skipped
+	 * flag will cause even files (based on the callback counter) to be sent and odd
+	 * files to be skipped
 	 */
 	private boolean transferThenSkip = false;
 	private TransferControlBlock transferControlBlock = null;
@@ -48,18 +47,15 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	}
 
-	public TransferStatusCallbackListenerTestingImplementation(
-			final TransferControlBlock transferControlBlock,
-			final int pauseAfter, final int cancelAfter,
-			final boolean transferThenSkip) {
+	public TransferStatusCallbackListenerTestingImplementation(final TransferControlBlock transferControlBlock,
+			final int pauseAfter, final int cancelAfter, final boolean transferThenSkip) {
 		this.transferControlBlock = transferControlBlock;
 		this.pauseAfter = pauseAfter;
 		this.cancelAfter = cancelAfter;
 		this.transferThenSkip = transferThenSkip;
 	}
 
-	public TransferStatusCallbackListenerTestingImplementation(
-			final TransferControlBlock transferControlBlock,
+	public TransferStatusCallbackListenerTestingImplementation(final TransferControlBlock transferControlBlock,
 			final int pauseAfter, final int cancelAfter) {
 		this.transferControlBlock = transferControlBlock;
 		this.pauseAfter = pauseAfter;
@@ -67,8 +63,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	}
 
 	@Override
-	public synchronized FileStatusCallbackResponse statusCallback(
-			final TransferStatus transferStatus) throws JargonException {
+	public synchronized FileStatusCallbackResponse statusCallback(final TransferStatus transferStatus)
+			throws JargonException {
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			intraFileCallbackCtr++;
@@ -113,8 +109,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 			pauseEncountered = true;
 		}
 
-		int totalCallback = getCallbackCtr + putCallbackCtr
-				+ exceptionCallbackCtr + replicateCallbackCtr + copyCallbackCtr;
+		int totalCallback = getCallbackCtr + putCallbackCtr + exceptionCallbackCtr + replicateCallbackCtr
+				+ copyCallbackCtr;
 
 		if (pauseAfter > 0 && totalCallback == pauseAfter) {
 			if (transferControlBlock != null) {
@@ -149,8 +145,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		return replicateCallbackCtr;
 	}
 
-	public synchronized void setReplicateCallbackCtr(
-			final int replicateCallbackCtr) {
+	public synchronized void setReplicateCallbackCtr(final int replicateCallbackCtr) {
 		this.replicateCallbackCtr = replicateCallbackCtr;
 	}
 
@@ -183,8 +178,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	}
 
 	@Override
-	public void overallStatusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public void overallStatusCallback(final TransferStatus transferStatus) throws JargonException {
 
 		overallCallbackCtr++;
 
@@ -205,8 +199,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	}
 
 	@Override
-	public CallbackResponse transferAsksWhetherToForceOperation(
-			final String irodsAbsolutePath, final boolean isCollection) {
+	public CallbackResponse transferAsksWhetherToForceOperation(final String irodsAbsolutePath,
+			final boolean isCollection) {
 		return forceOption;
 	}
 

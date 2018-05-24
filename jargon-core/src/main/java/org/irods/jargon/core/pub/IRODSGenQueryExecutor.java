@@ -205,7 +205,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 
 	/**
 	 * Get the next page of results
-	 * 
+	 *
 	 * @param irodsQueryResultSet
 	 *            {@link IRODSQueryResultSet} with the previous results
 	 * @return {@link IRODSQueryResultSet} with the next set of results

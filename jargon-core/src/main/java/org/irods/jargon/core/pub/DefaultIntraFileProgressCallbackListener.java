@@ -123,7 +123,7 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * connectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
@@ -175,7 +175,7 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -212,7 +212,7 @@ public class DefaultIntraFileProgressCallbackListener implements ConnectionProgr
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * finalConnectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)

@@ -1,10 +1,10 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class PamAuthRequestInpTest {
 
@@ -18,8 +18,7 @@ public class PamAuthRequestInpTest {
 
 	@Test
 	public final void testValidTag() throws Exception {
-		PamAuthRequestInp request = PamAuthRequestInp.instance("user",
-				"password", 100);
+		PamAuthRequestInp request = PamAuthRequestInp.instance("user", "password", 100);
 		String tagVal = request.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -28,8 +27,7 @@ public class PamAuthRequestInpTest {
 		sb.append("<timeToLive>100</timeToLive>\n");
 		sb.append("</pamAuthRequestInp_PI>\n");
 
-		Assert.assertEquals("did not get correct tag format", sb.toString(),
-				tagVal);
+		Assert.assertEquals("did not get correct tag format", sb.toString(), tagVal);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

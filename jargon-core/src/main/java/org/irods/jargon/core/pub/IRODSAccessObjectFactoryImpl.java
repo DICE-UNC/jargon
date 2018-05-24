@@ -51,7 +51,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * authenticateIRODSAccount (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -81,7 +81,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * authenticateIRODSAccountUtilizingCachedConnectionIfPresent
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -125,7 +125,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSession()
 	 */
 	@Override
@@ -139,7 +139,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * closeSessionAndEatExceptions()
 	 */
@@ -160,7 +160,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSession(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -181,7 +181,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * closeSessionAndEatExceptions (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -224,7 +224,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
@@ -236,7 +236,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserGroupAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -248,7 +248,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getEnvironmentalInfoAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -261,7 +261,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
@@ -273,7 +273,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getIRODSGenQueryExecutor (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -285,7 +285,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getZoneAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
@@ -297,7 +297,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -309,7 +309,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceGroupAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -321,7 +321,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileSystemAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -333,7 +333,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileFactory
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -345,7 +345,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -357,7 +357,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -369,7 +369,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -381,7 +381,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -393,7 +393,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -409,7 +409,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getDataTransferOperations (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -421,7 +421,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getBulkFileOperationsAO (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -433,7 +433,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getRemoteExecutionOfCommandsAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -447,7 +447,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getCollectionAndDataObjectListAndSearchAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -461,7 +461,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getSimpleQueryExecutorAO (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -473,7 +473,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -485,7 +485,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getMountedCollectionAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -498,7 +498,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getProtocolExtensionPoint (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -510,7 +510,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getIRODSRegistrationOfFilesAO (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -523,7 +523,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override
@@ -533,7 +533,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org
 	 * .irods.jargon.core.connection.IRODSSession)
 	 */
@@ -551,7 +551,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
 	@Override
@@ -563,7 +563,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getIRODSServerProperties (org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -589,7 +589,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * buildDefaultTransferControlBlockBasedOnJargonProperties()
 	 */
@@ -602,7 +602,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * buildTransferOptionsBasedOnJargonProperties()
 	 */
@@ -614,7 +614,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO
 	 * (org.irods .jargon.core.connection.IRODSAccount)
 	 */
@@ -626,7 +626,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getTrashOperationsAO(
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -645,7 +645,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getDiscoveredServerPropertiesCache()
 	 */
@@ -656,7 +656,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * isUsingDynamicServerPropertiesCache()
 	 */

@@ -49,12 +49,12 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
  *
  * <pre>
  *  IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
- * 
+ *
  * UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
  * adminUserAO.doSomething();
  * ZoneAO zoneAO = irodsFileSystem.getIRODSAccessObjectFactory().getZoneAO(irodsAccount);
  * zoneAO.doSomething()
- * 
+ *
  * irodsFileSystem.close();
  * </pre>
  *
@@ -560,7 +560,7 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Get object that handles the trash can operations
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link TrashOperationsAO}

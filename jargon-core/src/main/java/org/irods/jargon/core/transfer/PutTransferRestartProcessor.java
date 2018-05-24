@@ -74,7 +74,7 @@ public class PutTransferRestartProcessor extends AbstractTransferRestartProcesso
 	 * Note that jargon exceptions are passed back so the restart may be retried,
 	 * versus RestartFailedException and FileRestartManagerException where I don't
 	 * want to try a restart again.
-	 * 
+	 *
 	 */
 	private void processRestart(final String irodsAbsolutePath, final FileRestartInfo fileRestartInfo)
 			throws RestartFailedException, FileRestartManagementException, JargonException {

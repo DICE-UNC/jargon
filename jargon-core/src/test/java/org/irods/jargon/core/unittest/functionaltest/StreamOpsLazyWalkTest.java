@@ -38,12 +38,10 @@ public class StreamOpsLazyWalkTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -54,7 +52,7 @@ public class StreamOpsLazyWalkTest {
 
 	/**
 	 * Make sure fresh properties before each test, some tests manipulate them
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Before
@@ -62,16 +60,15 @@ public class StreamOpsLazyWalkTest {
 		if (originalProperties == null) {
 			originalProperties = irodsFileSystem.getJargonProperties();
 		} else {
-			irodsFileSystem.getIrodsSession().setJargonProperties(
-					originalProperties);
+			irodsFileSystem.getIrodsSession().setJargonProperties(originalProperties);
 		}
 	}
 
 	/**
 	 * test for https://github.com/DICE-UNC/jargon/issues/200
-	 * 
+	 *
 	 * IndexOutOfBoundsException in PackingIrodsOutputStream #200
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -95,25 +92,19 @@ public class StreamOpsLazyWalkTest {
 		for (int i = 0; i <= fileSizeIterations; i++) {
 
 			fileSizeBase = fileSizeBase
-					+ ThreadLocalRandom.current().nextInt(fileSizeBase,
-							fileSizeBase + fileSizeWalkBound) * 2;
+					+ ThreadLocalRandom.current().nextInt(fileSizeBase, fileSizeBase + fileSizeWalkBound) * 2;
 			putGetBufferSize = putGetBufferSizeSeed;
 			clientSpecifiedBufferSize = clientSpecifiedBufferSizeSeed;
 
 			for (int j = 0; j <= bufferTwiddleIterations; j++) {
 
-				doATest(putGetBufferSize, clientSpecifiedBufferSize,
-						fileSizeBase, testFileName);
+				doATest(putGetBufferSize, clientSpecifiedBufferSize, fileSizeBase, testFileName);
 
-				putGetBufferSize = putGetBufferSize
-						+ ThreadLocalRandom.current().nextInt(putGetBufferSize,
-								putGetBufferSize + putGetBufferSizeWalkBound);
+				putGetBufferSize = putGetBufferSize + ThreadLocalRandom.current().nextInt(putGetBufferSize,
+						putGetBufferSize + putGetBufferSizeWalkBound);
 
-				clientSpecifiedBufferSize = clientSpecifiedBufferSize
-						+ ThreadLocalRandom.current().nextInt(
-								clientSpecifiedBufferSize,
-								clientSpecifiedBufferSize
-										+ clientBufferSizeWalkBound);
+				clientSpecifiedBufferSize = clientSpecifiedBufferSize + ThreadLocalRandom.current()
+						.nextInt(clientSpecifiedBufferSize, clientSpecifiedBufferSize + clientBufferSizeWalkBound);
 
 			}
 
@@ -123,9 +114,9 @@ public class StreamOpsLazyWalkTest {
 
 	/**
 	 * test for https://github.com/DICE-UNC/jargon/issues/200
-	 * 
+	 *
 	 * IndexOutOfBoundsException in PackingIrodsOutputStream #200
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -149,25 +140,19 @@ public class StreamOpsLazyWalkTest {
 		for (int i = 0; i <= fileSizeIterations; i++) {
 
 			fileSizeBase = fileSizeBase
-					+ ThreadLocalRandom.current().nextInt(fileSizeBase,
-							fileSizeBase + fileSizeWalkBound) * 2;
+					+ ThreadLocalRandom.current().nextInt(fileSizeBase, fileSizeBase + fileSizeWalkBound) * 2;
 			putGetBufferSize = putGetBufferSizeSeed;
 			clientSpecifiedBufferSize = clientSpecifiedBufferSizeSeed;
 
 			for (int j = 0; j <= bufferTwiddleIterations; j++) {
 
-				doATest(putGetBufferSize, clientSpecifiedBufferSize,
-						fileSizeBase, testFileName);
+				doATest(putGetBufferSize, clientSpecifiedBufferSize, fileSizeBase, testFileName);
 
-				putGetBufferSize = putGetBufferSize
-						+ ThreadLocalRandom.current().nextInt(putGetBufferSize,
-								putGetBufferSize + putGetBufferSizeWalkBound);
+				putGetBufferSize = putGetBufferSize + ThreadLocalRandom.current().nextInt(putGetBufferSize,
+						putGetBufferSize + putGetBufferSizeWalkBound);
 
-				clientSpecifiedBufferSize = clientSpecifiedBufferSize
-						+ ThreadLocalRandom.current().nextInt(
-								clientSpecifiedBufferSize,
-								clientSpecifiedBufferSize
-										+ clientBufferSizeWalkBound);
+				clientSpecifiedBufferSize = clientSpecifiedBufferSize + ThreadLocalRandom.current()
+						.nextInt(clientSpecifiedBufferSize, clientSpecifiedBufferSize + clientBufferSizeWalkBound);
 
 			}
 
@@ -175,41 +160,29 @@ public class StreamOpsLazyWalkTest {
 
 	}
 
-	private void doATest(int putGetBufferSizeInProps,
-			int clientSpecifiedBufferSize, int fileSize, String fileName)
-			throws Exception {
+	private void doATest(final int putGetBufferSizeInProps, final int clientSpecifiedBufferSize, final int fileSize,
+			final String fileName) throws Exception {
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, fileName, fileSize);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, fileName, fileSize);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + fileName);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + fileName);
 		irodsFile.deleteWithForceOption();
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
-				.getIrodsSession().getJargonProperties();
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem.getIrodsSession()
+				.getJargonProperties();
 		settableJargonProperties.setPutBufferSize(putGetBufferSizeInProps);
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
-		PackingIrodsOutputStream packingIrodsOutputStream = new PackingIrodsOutputStream(
-				irodsFileOutputStream);
-		InputStream fileInputStream = new BufferedInputStream(
-				new FileInputStream(new File(localFilePath)));
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
+		PackingIrodsOutputStream packingIrodsOutputStream = new PackingIrodsOutputStream(irodsFileOutputStream);
+		InputStream fileInputStream = new BufferedInputStream(new FileInputStream(new File(localFilePath)));
 
 		byte[] buffer = new byte[clientSpecifiedBufferSize];
 
@@ -221,11 +194,10 @@ public class StreamOpsLazyWalkTest {
 		packingIrodsOutputStream.flush();
 		fileInputStream.close();
 		packingIrodsOutputStream.close();
-		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getDataObjectChecksumUtilitiesAO(irodsAccount);
-		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(
-				localFilePath, irodsFile.getAbsolutePath()); // throws exception
+		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(localFilePath,
+				irodsFile.getAbsolutePath()); // throws exception
 		File localFile = new File(localFilePath);
 		localFile.delete();
 		// if mismatch

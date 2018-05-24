@@ -32,7 +32,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Escape kvp chars for passwords that make iRODS angry, used in PAM login
-	 * 
+	 *
 	 * @param password
 	 *            {@link String} with desired password
 	 * @return {@link String} with the properly escaped password
@@ -64,7 +64,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given a user name and zone, build the trash home dir
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the user name
 	 * @param zoneName
@@ -92,7 +92,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Build the path to the trash orphan collection in the given zone
-	 * 
+	 *
 	 * @param zoneName
 	 *            zoneName <code>String</code> with the zone name
 	 * @return {@link String} with orphan path
@@ -112,7 +112,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given a zone, build the trash home dir
-	 * 
+	 *
 	 * @param zoneName
 	 *            <code>String</code> with the zone name
 	 * @return <code>String</code> with the trash path
@@ -227,7 +227,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * determine if the path is in the current zone
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @param pathComponents
@@ -401,8 +401,9 @@ public class MiscIRODSUtils {
 	 */
 	public static String humanReadableByteCount(final long bytes) {
 		int unit = 1024;
-		if (bytes < unit)
+		if (bytes < unit) {
 			return bytes + " B";
+		}
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		char pre = ("kMGTPE").charAt(exp - 1);
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);

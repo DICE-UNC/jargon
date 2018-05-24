@@ -41,7 +41,7 @@ public class ObjStat {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -145,8 +145,7 @@ public class ObjStat {
 	 * @param objectType
 	 *            the objectType to set
 	 */
-	public void setObjectType(
-			final CollectionAndDataObjectListingEntry.ObjectType objectType) {
+	public void setObjectType(final CollectionAndDataObjectListingEntry.ObjectType objectType) {
 		this.objectType = objectType;
 	}
 
@@ -271,11 +270,11 @@ public class ObjStat {
 	}
 
 	/**
-	 * Convenience methods determines if this is any type of collection, versus
-	 * a file or data object
+	 * Convenience methods determines if this is any type of collection, versus a
+	 * file or data object
 	 *
-	 * @return {@code boolean} of {@code true} if this is any type of
-	 *         collection or directory;
+	 * @return {@code boolean} of {@code true} if this is any type of collection or
+	 *         directory;
 	 */
 	public boolean isSomeTypeOfCollection() {
 		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.LOCAL_DIR);
@@ -292,9 +291,9 @@ public class ObjStat {
 
 	/**
 	 * @param collectionPath
-	 *            the collectionPath to set {@code String} that indicates
-	 *            that actual canonical path to the soft linked collection for
-	 *            soft linked data objects
+	 *            the collectionPath to set {@code String} that indicates that
+	 *            actual canonical path to the soft linked collection for soft
+	 *            linked data objects
 	 */
 	public void setCollectionPath(final String collectionPath) {
 		this.collectionPath = collectionPath;
@@ -346,9 +345,8 @@ public class ObjStat {
 	}
 
 	/**
-	 * @return the objectPath {@code String} with either the physical path,
-	 *         for a normal file, or the canonical path for a soft linked
-	 *         collection
+	 * @return the objectPath {@code String} with either the physical path, for a
+	 *         normal file, or the canonical path for a soft linked collection
 	 */
 	public String getObjectPath() {
 		return objectPath;
@@ -356,9 +354,9 @@ public class ObjStat {
 
 	/**
 	 * @param objectPath
-	 *            the objectPath to set {@code String} with either the
-	 *            physical path, for a normal file, or the canonical path for a
-	 *            soft linked collection
+	 *            the objectPath to set {@code String} with either the physical
+	 *            path, for a normal file, or the canonical path for a soft linked
+	 *            collection
 	 */
 	public void setObjectPath(final String objectPath) {
 		this.objectPath = objectPath;
@@ -366,8 +364,8 @@ public class ObjStat {
 
 	/**
 	 * Based on the collection type, determine the absolute path used to query
-	 * iRODS. This is meant to handle special collections, such as soft links,
-	 * where the iCAT data may be associated with the canonical path
+	 * iRODS. This is meant to handle special collections, such as soft links, where
+	 * the iCAT data may be associated with the canonical path
 	 *
 	 * @return {@code String} with the canonical iRODS path
 	 */

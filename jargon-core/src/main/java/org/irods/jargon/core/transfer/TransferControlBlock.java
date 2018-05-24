@@ -118,7 +118,7 @@ public interface TransferControlBlock {
 	/**
 	 * Gets the total number of files to be transferred. This is initialized
 	 * automatically if a callback listener has been added.
-	 * 
+	 *
 	 * @return {@code int}
 	 *
 	 */
@@ -136,14 +136,14 @@ public interface TransferControlBlock {
 	/**
 	 * Get a running total of the files transferred so far. This is initialized
 	 * automatically if a callback listener has been added.
-	 * 
+	 *
 	 * @return {@code int}
 	 */
 	int getTotalFilesTransferredSoFar();
 
 	/**
 	 * Get the total of files transferred, minus any files transferred by skipping
-	 * 
+	 *
 	 * @return {@code int}
 	 */
 	int getActualFilesTransferredWithoutSkippedSoFar();

@@ -1,8 +1,8 @@
 
 # Project: Jargon-core API
-#### Date:  
-#### Release Version: 4.2.2.1-SNAPSHOT
-#### git tag: 4.2.2.1-SNAPSHOT
+#### Date: 05/24/2018
+#### Release Version: 4.2.2.1-RELEASE
+#### git tag: 4.2.2.1-RELEASE
 #### Developer: Mike Conway
 
 ## News

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
@@ -12,9 +12,9 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 
 /**
  * POJO that describes a File tree and its characteristics
- * 
+ *
  * @author Mike Conway
- * 
+ *
  */
 public class TreeSummary {
 
@@ -61,8 +61,7 @@ public class TreeSummary {
 	public void processFileInfo(final File file) {
 
 		long length = file.length();
-		String extension = LocalFileUtils.getFileExtension(file.getName()
-				.toLowerCase());
+		String extension = LocalFileUtils.getFileExtension(file.getName().toLowerCase());
 
 		totalBytes += length;
 		totalFiles++;
@@ -112,8 +111,7 @@ public class TreeSummary {
 	 * @param fileSizeSummaryMap
 	 *            the fileSizeSummaryMap to set
 	 */
-	public void setFileSizeSummaryMap(
-			final ConcurrentMap<String, AtomicLong> fileSizeSummaryMap) {
+	public void setFileSizeSummaryMap(final ConcurrentMap<String, AtomicLong> fileSizeSummaryMap) {
 		this.fileSizeSummaryMap = fileSizeSummaryMap;
 	}
 

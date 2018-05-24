@@ -2,8 +2,6 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -17,6 +15,8 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class IRODSAccessObjectFactoryImplTest {
 
@@ -33,19 +33,15 @@ public class IRODSAccessObjectFactoryImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@Test
 	public final void testIRODSAccessObjectFactoryImpl() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.setIrodsSession(irodsSession);
 		UserAO userAO = irodsAccessObjectFactory.getUserAO(irodsAccount);
@@ -54,16 +50,12 @@ public class IRODSAccessObjectFactoryImplTest {
 	}
 
 	@Test
-	public final void testBuildTransferOptionsWhereIntraFileByteAndIntervalConfigured()
-			throws Exception {
+	public final void testBuildTransferOptionsWhereIntraFileByteAndIntervalConfigured() throws Exception {
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 
-		SettableJargonProperties settableProperties = new SettableJargonProperties(
-				irodsSession.getJargonProperties());
+		SettableJargonProperties settableProperties = new SettableJargonProperties(irodsSession.getJargonProperties());
 		settableProperties.setIntraFileStatusCallbacks(true);
 		settableProperties.setIntraFileStatusCallbacksNumberCallsInterval(1);
 		settableProperties.setIntraFileStatusCallbacksTotalBytesInterval(2);
@@ -71,36 +63,28 @@ public class IRODSAccessObjectFactoryImplTest {
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.setIrodsSession(irodsSession);
-		TransferControlBlock tcb = irodsAccessObjectFactory
-				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		TransferControlBlock tcb = irodsAccessObjectFactory.buildDefaultTransferControlBlockBasedOnJargonProperties();
 
-		Assert.assertEquals("did not set intra file callback interval", 1, tcb
-				.getTransferOptions()
-				.getIntraFileStatusCallbacksNumberCallsInterval());
-		Assert.assertEquals("did not set intra file callback bytes interval",
-				2, tcb.getTransferOptions()
-						.getIntraFileStatusCallbacksTotalBytesInterval());
+		Assert.assertEquals("did not set intra file callback interval", 1,
+				tcb.getTransferOptions().getIntraFileStatusCallbacksNumberCallsInterval());
+		Assert.assertEquals("did not set intra file callback bytes interval", 2,
+				tcb.getTransferOptions().getIntraFileStatusCallbacksTotalBytesInterval());
 
 	}
 
 	@Test
-	public final void testBuildDefaultTransferControlBlockFromJargonPropertiesWithSHA256()
-			throws Exception {
+	public final void testBuildDefaultTransferControlBlockFromJargonPropertiesWithSHA256() throws Exception {
 
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 
-		SettableJargonProperties settableProperties = new SettableJargonProperties(
-				irodsSession.getJargonProperties());
+		SettableJargonProperties settableProperties = new SettableJargonProperties(irodsSession.getJargonProperties());
 		settableProperties.setChecksumEncoding(ChecksumEncodingEnum.SHA256);
 		irodsSession.setJargonProperties(settableProperties);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.setIrodsSession(irodsSession);
-		TransferControlBlock tcb = irodsAccessObjectFactory
-				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		TransferControlBlock tcb = irodsAccessObjectFactory.buildDefaultTransferControlBlockBasedOnJargonProperties();
 
 		Assert.assertEquals("did not set sha256", ChecksumEncodingEnum.SHA256,
 				tcb.getTransferOptions().getChecksumEncoding());
@@ -108,47 +92,36 @@ public class IRODSAccessObjectFactoryImplTest {
 	}
 
 	@Test(expected = JargonException.class)
-	public final void testIRODSAccessObjectFactoryImplNoSessionSet()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public final void testIRODSAccessObjectFactoryImplNoSessionSet() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
 		irodsAccessObjectFactory.getUserAO(irodsAccount);
 	}
 
 	@Test(expected = AuthenticationException.class)
 	public final void authenticateWithValidThenInvalid() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		AuthResponse authResponse = irodsAccessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		AuthResponse authResponse = irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull("no auth response", authResponse);
-		irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setPassword("bogus");
-		authResponse = irodsAccessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		authResponse = irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
 	public final void authenticateWithValid() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		AuthResponse authResponse = irodsAccessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		AuthResponse authResponse = irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull("no auth response", authResponse);
 		// get again from cache
-		authResponse = irodsAccessObjectFactory
-				.authenticateIRODSAccount(irodsAccount);
+		authResponse = irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull("no auth response", authResponse);
 		irodsFileSystem.closeAndEatExceptions();
 
@@ -156,13 +129,11 @@ public class IRODSAccessObjectFactoryImplTest {
 
 	@Test(expected = AuthenticationException.class)
 	public final void authenticateWithInalid() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setPassword("bogus");
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 	}
 
@@ -171,13 +142,11 @@ public class IRODSAccessObjectFactoryImplTest {
 
 		int ctr = 300;
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setPassword("bogus");
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		for (int i = 0; i < ctr; i++) {
 

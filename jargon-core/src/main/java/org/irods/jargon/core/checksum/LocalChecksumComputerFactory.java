@@ -18,13 +18,12 @@ public interface LocalChecksumComputerFactory {
 	 *
 	 * @param checksumEncodingEnum
 	 *            {@link ChecksumEncodingEnum} value of a specific type
-	 * @return {@link AbstractChecksumComputeStrategy} that implements that
-	 *         encoding algorithm
+	 * @return {@link AbstractChecksumComputeStrategy} that implements that encoding
+	 *         algorithm
 	 * @throws ChecksumMethodUnavailableException
 	 *             if the algorithm is unsupported
 	 */
-	public abstract AbstractChecksumComputeStrategy instance(
-			ChecksumEncodingEnum checksumEncodingEnum)
-					throws ChecksumMethodUnavailableException;
+	public abstract AbstractChecksumComputeStrategy instance(ChecksumEncodingEnum checksumEncodingEnum)
+			throws ChecksumMethodUnavailableException;
 
 }

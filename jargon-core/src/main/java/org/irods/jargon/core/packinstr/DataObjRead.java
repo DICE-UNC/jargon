@@ -27,18 +27,15 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 	private final int fileDescriptor;
 	private final long length;
 
-	public static final DataObjRead instance(final int fileDescriptor,
-			final long length) throws JargonException {
+	public static final DataObjRead instance(final int fileDescriptor, final long length) throws JargonException {
 		return new DataObjRead(fileDescriptor, length);
 	}
 
-	private DataObjRead(final int fileDescriptor, final long length)
-			throws JargonException {
+	private DataObjRead(final int fileDescriptor, final long length) throws JargonException {
 		super();
 
 		if (fileDescriptor < 1) {
-			throw new JargonException("invalid fileDescriptor:"
-					+ fileDescriptor);
+			throw new JargonException("invalid fileDescriptor:" + fileDescriptor);
 		}
 
 		if (length < 1) {
@@ -75,8 +72,8 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 
 	/*
 	 *
-	 * 16237 [main] INFO edu.sdsc.grid.io.irods.IRODSConnection readMessage 632-
-	 * 2 millisecs 16237 [main] DEBUG edu.sdsc.grid.io.irods.IRODSCommands
+	 * 16237 [main] INFO edu.sdsc.grid.io.irods.IRODSConnection readMessage 632- 2
+	 * millisecs 16237 [main] DEBUG edu.sdsc.grid.io.irods.IRODSCommands
 	 * irodsFunction 704- <dataObjReadInp_PI><L1_DESC_INX>3</L1_DESC_INX>
 	 * <len>1</len> </dataObjReadInp_PI> (non-Javadoc)
 	 *
@@ -90,8 +87,8 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 
 		// shim code for Bug 40 - IRODSCommands.fileRead() with length of 0
 		// causes null message from irods, so it's set to 1 and unused
-		Tag message = new Tag(IRODSConstants.dataObjReadInp_PI, new Tag[] {
-				new Tag(L1DESCINX, fileDescriptor), new Tag(LEN, length), });
+		Tag message = new Tag(IRODSConstants.dataObjReadInp_PI,
+				new Tag[] { new Tag(L1DESCINX, fileDescriptor), new Tag(LEN, length), });
 
 		return message;
 	}

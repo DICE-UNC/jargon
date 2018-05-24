@@ -1,14 +1,14 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.userprofile;
 
 /**
  * Configuration settings for the user profile service. Controls behavior and
  * defaults of the user profile service
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfileServiceConfiguration {
 
@@ -55,8 +55,7 @@ public class UserProfileServiceConfiguration {
 	}
 
 	/**
-	 * @return the protectedProfileFileName the name of the protected profile
-	 *         file
+	 * @return the protectedProfileFileName the name of the protected profile file
 	 */
 	public String getProtectedProfileFileName() {
 		return protectedProfileFileName;
@@ -66,14 +65,13 @@ public class UserProfileServiceConfiguration {
 	 * @param protectedProfileFileName
 	 *            the protectedProfileFileName to set
 	 */
-	public void setProtectedProfileFileName(
-			final String protectedProfileFileName) {
+	public void setProtectedProfileFileName(final String protectedProfileFileName) {
 		this.protectedProfileFileName = protectedProfileFileName;
 	}
 
 	/**
-	 * @return the protectedProfileReadWriteGroup the iRODS user group that will
-	 *         be given read/write access to the protected part of the profile
+	 * @return the protectedProfileReadWriteGroup the iRODS user group that will be
+	 *         given read/write access to the protected part of the profile
 	 */
 	public String getProtectedProfileReadWriteGroup() {
 		return protectedProfileReadWriteGroup;
@@ -82,18 +80,17 @@ public class UserProfileServiceConfiguration {
 	/**
 	 * @param protectedProfileReadWriteGroup
 	 *            the protectedProfileReadWriteGroup to set the iRODS user group
-	 *            that will be given read/write access to the protected part of
-	 *            the profile
+	 *            that will be given read/write access to the protected part of the
+	 *            profile
 	 */
-	public void setProtectedProfileReadWriteGroup(
-			final String protectedProfileReadWriteGroup) {
+	public void setProtectedProfileReadWriteGroup(final String protectedProfileReadWriteGroup) {
 		this.protectedProfileReadWriteGroup = protectedProfileReadWriteGroup;
 	}
 
 	/**
-	 * @return the protectedProfileGroupHasWriteAccessToPublic indicates whether
-	 *         the protected profile read/write group has write access to the
-	 *         public part of the profile
+	 * @return the protectedProfileGroupHasWriteAccessToPublic indicates whether the
+	 *         protected profile read/write group has write access to the public
+	 *         part of the profile
 	 */
 	public boolean isProtectedProfileGroupHasWriteAccessToPublic() {
 		return protectedProfileGroupHasWriteAccessToPublic;
@@ -109,9 +106,9 @@ public class UserProfileServiceConfiguration {
 	}
 
 	/**
-	 * Get the subdirectory for the profile. Note that this may be blank,
-	 * indicating that no profile subdir is used
-	 * 
+	 * Get the subdirectory for the profile. Note that this may be blank, indicating
+	 * that no profile subdir is used
+	 *
 	 * @return the profileSubdirName
 	 */
 	public String getProfileSubdirName() {
@@ -120,7 +117,7 @@ public class UserProfileServiceConfiguration {
 
 	/**
 	 * Set the subdirectory for the profile, set to blank if no subdir is needed
-	 * 
+	 *
 	 * @param profileSubdirName
 	 *            the profileSubdirName to set
 	 */

@@ -3,8 +3,6 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -14,6 +12,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class ZoneAOTest {
 
@@ -32,14 +32,10 @@ public class ZoneAOTest {
 
 	@Test
 	public final void testListZones() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
 		ZoneAO zoneAO = accessObjectFactory.getZoneAO(irodsAccount);
 		List<Zone> zones = zoneAO.listZones();
 		irodsSession.closeSession();
@@ -48,14 +44,10 @@ public class ZoneAOTest {
 
 	@Test
 	public final void testListZoneNames() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
 		ZoneAO zoneAO = accessObjectFactory.getZoneAO(irodsAccount);
 		List<String> zones = zoneAO.listZoneNames();
 		irodsSession.closeSession();
@@ -64,17 +56,12 @@ public class ZoneAOTest {
 
 	@Test
 	public final void testFindZoneByZoneName() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
 		ZoneAO zoneAO = accessObjectFactory.getZoneAO(irodsAccount);
-		Zone zone = zoneAO.getZoneByName(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+		Zone zone = zoneAO.getZoneByName(testingProperties.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 		irodsSession.closeSession();
 		Assert.assertNotNull("no zones returned", zone);

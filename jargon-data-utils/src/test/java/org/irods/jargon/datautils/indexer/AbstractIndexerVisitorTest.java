@@ -106,8 +106,7 @@ public class AbstractIndexerVisitorTest {
 		avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
-		IRODSFileImpl irodsFile = (IRODSFileImpl) irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(dataObjectAbsPath);
+		irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(dataObjectAbsPath);
 
 		IrodsVisitedComposite composite = new IrodsVisitedComposite((IRODSFileImpl) parentDir);
 		TestIndexVisitor visitor = new TestIndexVisitor(irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);

@@ -3,8 +3,6 @@ package org.irods.jargon.core.unittest.functionaltest;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
@@ -25,6 +23,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Test Case for Bug #38 https://github.com/DICE-UNC/jargon/issues/38 Data Not
@@ -49,12 +49,10 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		irodsFileSystem = IRODSFileSystem.instance();
 
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 	}
 
@@ -80,18 +78,12 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 		String softLinkSubdir = "softlinkhere";
 		String localRetrievedDir = "localRetrievedDir";
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile irodsFile = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/"
-						+ testDir);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/" + testDir);
 		irodsFile.mkdirs();
 
 		// make some subfiles
@@ -101,34 +93,26 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		// use a local file and put it
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
-		String localFileName2 = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
+		String localFileName2 = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
 
 		File localFile1 = new File(localFileName);
 		File localFile2 = new File(localFileName2);
 
-		DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		IRODSFileFactory fileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile subFile = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile1);
+		IRODSFileFactory fileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile1);
 
-		IRODSFile subFile2 = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile2);
+		IRODSFile subFile2 = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		// TransferControlBlock tcb =
 
 		dataTransferOperations.putOperation(localFile1, subFile, null, null);
 
-		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(),
-				subfile2);
+		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile2, subFile2, null, null);
 		// now make a soft link under public
@@ -138,40 +122,34 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		if (!publicFile.exists()) {
 			publicFile.mkdirs();
-			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir,
-					"public", true, FilePermissionEnum.READ);
+			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir, "public", true,
+					FilePermissionEnum.READ);
 		}
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
 		String mountedDir = publicDir + "/" + softLinkSubdir;
 
-		mountedCollectionAO.unmountACollection(mountedDir,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(mountedDir, irodsAccount.getDefaultStorageResource());
 
 		// create a soft link between the 'irodsFile' that is the top subdir in
 		// the user directory to the public directory
 
-		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(),
-				mountedDir);
+		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(), mountedDir);
 
 		// now get one of the files
 
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + localRetrievedDir);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + localRetrievedDir);
 
-		dataTransferOperations.getOperation(mountedDir,
-				localCollectionAbsolutePath, "", null, null);
+		dataTransferOperations.getOperation(mountedDir, localCollectionAbsolutePath, "", null, null);
 
 		File returnDirFile = new File(localCollectionAbsolutePath);
 		Assert.assertTrue("local dir not created", returnDirFile.exists());
 
-		Assert.assertFalse("no files returned",
-				returnDirFile.listFiles().length == 0);
+		Assert.assertFalse("no files returned", returnDirFile.listFiles().length == 0);
 
 	}
 
@@ -184,20 +162,14 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 		String softLinkSubdir = "testBugCaseDoGetAsAnonsoftlinkhere";
 		String localRetrievedDir = "testBugCaseDoGetAsAnonlocalRetrievedDir";
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccount annonAccount = testingPropertiesHelper
 				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile irodsFile = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/"
-						+ testDir);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/" + testDir);
 		irodsFile.mkdirs();
 
 		// make some subfiles
@@ -207,34 +179,26 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		// use a local file and put it
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
-		String localFileName2 = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
+		String localFileName2 = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
 
 		File localFile1 = new File(localFileName);
 		File localFile2 = new File(localFileName2);
 
-		DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		IRODSFileFactory fileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile subFile = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile1);
+		IRODSFileFactory fileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile1);
 
-		IRODSFile subFile2 = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile2);
+		IRODSFile subFile2 = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		// TransferControlBlock tcb =
 
 		dataTransferOperations.putOperation(localFile1, subFile, null, null);
 
-		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(),
-				subfile2);
+		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile2, subFile2, null, null);
 		// now make a soft link under public
@@ -244,42 +208,35 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		if (!publicFile.exists()) {
 			publicFile.mkdirs();
-			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir,
-					"public", true, FilePermissionEnum.READ);
+			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir, "public", true,
+					FilePermissionEnum.READ);
 		}
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
 		String mountedDir = publicDir + "/" + softLinkSubdir;
 
-		mountedCollectionAO.unmountACollection(mountedDir,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(mountedDir, irodsAccount.getDefaultStorageResource());
 
 		// create a soft link between the 'irodsFile' that is the top subdir in
 		// the user directory to the public directory
 
-		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(),
-				mountedDir);
+		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(), mountedDir);
 
 		// now get one of the files
-		dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataTransferOperations(annonAccount);
+		dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(annonAccount);
 
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + localRetrievedDir);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + localRetrievedDir);
 
-		dataTransferOperations.getOperation(mountedDir,
-				localCollectionAbsolutePath, "", null, null);
+		dataTransferOperations.getOperation(mountedDir, localCollectionAbsolutePath, "", null, null);
 
 		File returnDirFile = new File(localCollectionAbsolutePath);
 		Assert.assertTrue("local dir not created", returnDirFile.exists());
 
-		Assert.assertFalse("no files returned",
-				returnDirFile.listFiles().length == 0);
+		Assert.assertFalse("no files returned", returnDirFile.listFiles().length == 0);
 
 	}
 
@@ -292,20 +249,14 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 		String softLinkSubdir = "softlinkhere2";
 		String localRetrievedDir = "localRetrievedDir2";
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccount irodsAccount2 = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile irodsFile = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/"
-						+ testDir);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/" + testDir);
 		irodsFile.mkdirs();
 
 		// make some subfiles
@@ -315,34 +266,26 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		// use a local file and put it
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
-		String localFileName2 = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
+		String localFileName2 = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
 
 		File localFile1 = new File(localFileName);
 		File localFile2 = new File(localFileName2);
 
-		DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		IRODSFileFactory fileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile subFile = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile1);
+		IRODSFileFactory fileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile1);
 
-		IRODSFile subFile2 = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile2);
+		IRODSFile subFile2 = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		// TransferControlBlock tcb =
 
 		dataTransferOperations.putOperation(localFile1, subFile, null, null);
 
-		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(),
-				subfile2);
+		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile2, subFile2, null, null);
 		// now make a soft link under public
@@ -352,65 +295,52 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		if (!publicFile.exists()) {
 			publicFile.mkdirs();
-			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir,
-					"public", true, FilePermissionEnum.READ);
+			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir, "public", true,
+					FilePermissionEnum.READ);
 		}
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
 		String mountedDir = publicDir + "/" + softLinkSubdir;
 
-		mountedCollectionAO.unmountACollection(mountedDir,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(mountedDir, irodsAccount.getDefaultStorageResource());
 
 		// create a soft link between the 'irodsFile' that is the top subdir in
 		// the user directory to the public directory
 
-		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(),
-				mountedDir);
+		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(), mountedDir);
 
 		// now get one of the files
 
 		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + localRetrievedDir);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + localRetrievedDir);
 
-		DataTransferOperations dataTransferOperations2 = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount2);
+		DataTransferOperations dataTransferOperations2 = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount2);
 
-		dataTransferOperations2.getOperation(mountedDir,
-				localCollectionAbsolutePath, "", null, null);
+		dataTransferOperations2.getOperation(mountedDir, localCollectionAbsolutePath, "", null, null);
 
 	}
 
 	@Test
-	public void testBugCaseFullObjectTypeForSoftLinkedCollectionAsAnon()
-			throws Exception {
+	public void testBugCaseFullObjectTypeForSoftLinkedCollectionAsAnon() throws Exception {
 
 		// make a dir as test1
 
 		String testDir = "softlinkme3";
 		String softLinkSubdir = "softlinkhere3";
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccount annonAccount = testingPropertiesHelper
 				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile irodsFile = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/"
-						+ testDir);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/" + testDir);
 		irodsFile.mkdirs();
 
 		// make some subfiles
@@ -420,32 +350,24 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		// use a local file and put it
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
-		String localFileName2 = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
+		String localFileName2 = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
 
 		File localFile1 = new File(localFileName);
 		File localFile2 = new File(localFileName2);
 
-		DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		IRODSFileFactory fileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile subFile = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile1);
+		IRODSFileFactory fileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile1);
 
-		IRODSFile subFile2 = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile2);
+		IRODSFile subFile2 = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile1, subFile, null, null);
 
-		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(),
-				subfile2);
+		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile2, subFile2, null, null);
 		// now make a soft link under public
@@ -455,30 +377,26 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		if (!publicFile.exists()) {
 			publicFile.mkdirs();
-			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir,
-					"public", true, FilePermissionEnum.READ);
+			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir, "public", true,
+					FilePermissionEnum.READ);
 		}
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
 		String mountedDir = publicDir + "/" + softLinkSubdir;
 
-		mountedCollectionAO.unmountACollection(mountedDir,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(mountedDir, irodsAccount.getDefaultStorageResource());
 
 		// create a soft link between the 'irodsFile' that is the top subdir in
 		// the user directory to the public directory
 
-		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(),
-				mountedDir);
+		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(), mountedDir);
 
 		// get the full object type, should be a coll
 
-		CollectionAndDataObjectListAndSearchAO collListAndSearch = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collListAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(annonAccount);
 		Object retObj = collListAndSearch.getFullObjectForType(mountedDir);
 		Assert.assertNotNull("null full object type", retObj);
@@ -486,29 +404,22 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 	}
 
 	@Test
-	public void testBugCaseFullObjectTypeForSoftLinkedCollectionAsLoggedInUser()
-			throws Exception {
+	public void testBugCaseFullObjectTypeForSoftLinkedCollectionAsLoggedInUser() throws Exception {
 
 		// make a dir as test1
 
 		String testDir = "softlinkme4";
 		String softLinkSubdir = "softlinkhere4";
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
-		IRODSFile irodsFile = collectionAO
-				.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/"
-						+ testDir);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		IRODSFile irodsFile = collectionAO.instanceIRODSFileForCollectionPath(targetIrodsCollection + "/" + testDir);
 		irodsFile.mkdirs();
 
 		// make some subfiles
@@ -518,32 +429,24 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		// use a local file and put it
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
-		String localFileName2 = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile1, 10);
+		String localFileName2 = FileGenerator.generateFileOfFixedLengthGivenName(absPath, subfile2, 100);
 
 		File localFile1 = new File(localFileName);
 		File localFile2 = new File(localFileName2);
 
-		DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		IRODSFileFactory fileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile subFile = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile1);
+		IRODSFileFactory fileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile1);
 
-		IRODSFile subFile2 = fileFactory.instanceIRODSFile(
-				irodsFile.getAbsolutePath(), subfile2);
+		IRODSFile subFile2 = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile1, subFile, null, null);
 
-		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(),
-				subfile2);
+		subFile = fileFactory.instanceIRODSFile(irodsFile.getAbsolutePath(), subfile2);
 
 		dataTransferOperations.putOperation(localFile2, subFile2, null, null);
 		// now make a soft link under public
@@ -553,30 +456,26 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
 		if (!publicFile.exists()) {
 			publicFile.mkdirs();
-			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir,
-					"public", true, FilePermissionEnum.READ);
+			collectionAO.setAccessPermission(irodsAccount.getZone(), publicDir, "public", true,
+					FilePermissionEnum.READ);
 		}
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
 		String mountedDir = publicDir + "/" + softLinkSubdir;
 
-		mountedCollectionAO.unmountACollection(mountedDir,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(mountedDir, irodsAccount.getDefaultStorageResource());
 
 		// create a soft link between the 'irodsFile' that is the top subdir in
 		// the user directory to the public directory
 
-		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(),
-				mountedDir);
+		mountedCollectionAO.createASoftLink(irodsFile.getAbsolutePath(), mountedDir);
 
 		// get the full object type, should be a coll
 
-		CollectionAndDataObjectListAndSearchAO collListAndSearch = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collListAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(secondaryAccount);
 		Object retObj = collListAndSearch.getFullObjectForType(mountedDir);
 		Assert.assertNotNull("null full object type", retObj);

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.indexer;
 
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Service to run an indexer
- * 
+ *
  * @author conwaymc
  *
  */
@@ -29,7 +29,8 @@ public class IndexerServiceImpl extends AbstractJargonService {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */
-	public IndexerServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public IndexerServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
@@ -38,7 +39,7 @@ public class IndexerServiceImpl extends AbstractJargonService {
 
 	/**
 	 * Start the indexing process
-	 * 
+	 *
 	 * @param startingCollectionPath
 	 *            {@code String} with starting point
 	 * @param visitor
@@ -61,7 +62,7 @@ public class IndexerServiceImpl extends AbstractJargonService {
 
 		log.info("beginning the crawl...east to west...north to south...");
 
-		IRODSFileImpl startingPoint = (IRODSFileImpl) this.getIrodsAccessObjectFactory()
+		IRODSFileImpl startingPoint = (IRODSFileImpl) getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(startingCollectionPath);
 
 		if (!startingPoint.isDirectory()) {

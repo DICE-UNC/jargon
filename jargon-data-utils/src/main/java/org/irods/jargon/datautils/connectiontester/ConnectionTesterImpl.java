@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ConnectionTesterImpl extends AbstractJargonService implements ConnectionTester {
 
@@ -44,8 +44,8 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */
-	public ConnectionTesterImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount,
-			ConnectionTesterConfiguration connectionTesterConfiguration) {
+	public ConnectionTesterImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount, final ConnectionTesterConfiguration connectionTesterConfiguration) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (connectionTesterConfiguration == null) {
@@ -57,11 +57,11 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 
 	/**
 	 * Run the given tests in the list, returning a result
-	 * 
+	 *
 	 * @param testTypes
 	 *            {@code List} of type
 	 *            {@link org.irods.jargon.datautils.connectiontester.ConnectionTester.TestType}
-	 * 
+	 *
 	 * @return {@link ConnectionTestResult}
 	 * @throws JargonException
 	 *             {@link JargonException}
@@ -92,14 +92,14 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 
 	/**
 	 * Do a put and get and return the results
-	 * 
+	 *
 	 * @param testType
 	 *            {@link TestType}
 	 * @return {@code List} of {@link TestResultEntry}
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	private List<TestResultEntry> processTest(TestType testType) throws JargonException {
+	private List<TestResultEntry> processTest(final TestType testType) throws JargonException {
 
 		log.info("processTest:{}", testType);
 		List<TestResultEntry> entries = new ArrayList<>();
@@ -150,7 +150,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 			parentFile.mkdirs();
 
 			log.info("using configuration:{}", connectionTesterConfiguration);
-			DataTransferOperations dataTransferOperations = this.getIrodsAccessObjectFactory()
+			DataTransferOperations dataTransferOperations = getIrodsAccessObjectFactory()
 					.getDataTransferOperations(getIrodsAccount());
 
 			generateFileOfFixedLengthGivenName(connectionTesterConfiguration.getLocalSourceParentDirectory(),
@@ -164,7 +164,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 			localGetFile.delete();
 			long startTime = System.currentTimeMillis();
 
-			irodsFile = this.getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+			irodsFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSFile(connectionTesterConfiguration.getIrodsParentDirectory(), testFileSourceName);
 			log.info("delete old irods file:{}", irodsFile);
 			irodsFile.deleteWithForceOption();
@@ -251,7 +251,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 			return entries;
 		} finally {
 
-			if (this.connectionTesterConfiguration.isCleanupOnCompletion()) {
+			if (connectionTesterConfiguration.isCleanupOnCompletion()) {
 				log.info("cleanup");
 				try {
 					localFile.delete();

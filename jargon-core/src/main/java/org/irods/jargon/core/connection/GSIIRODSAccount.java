@@ -90,7 +90,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/**
 	 * If one exists, gets the GSSCredential used to make a GSI authentication.
-	 * 
+	 *
 	 * @return {@link GSSCredential} used to sign on
 	 */
 	public GSSCredential getGSSCredential() {

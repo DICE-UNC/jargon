@@ -7,8 +7,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ RuleCompositionServiceImplTest.class,
-		HtmlLogTableFormatterTest.class })
+@SuiteClasses({ RuleCompositionServiceImplTest.class, HtmlLogTableFormatterTest.class })
 public class AllTests {
 
 }

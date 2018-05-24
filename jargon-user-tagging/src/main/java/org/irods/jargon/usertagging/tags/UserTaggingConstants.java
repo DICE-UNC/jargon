@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.tags;
 
 /**
  * Handy constants used in user tagging code.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserTaggingConstants {
 

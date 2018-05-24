@@ -5,9 +5,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Indicates that rule-driven thumbnail services are not available on the given
  * iRODS server.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSThumbnailProcessUnavailableException extends JargonException {
 

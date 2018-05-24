@@ -27,8 +27,7 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 
 		int i = reportedVersion.indexOf(RODS_PREFIX);
 		if (i == -1) {
-			throw new IllegalArgumentException(
-					"reported version is not a valid version string");
+			throw new IllegalArgumentException("reported version is not a valid version string");
 		}
 
 		origVersion = reportedVersion.substring(RODS_PREFIX.length());
@@ -36,8 +35,7 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 		String[] tokens = origVersion.split("\\.");
 		if (tokens.length == 3 || tokens.length == 2) {
 		} else {
-			throw new IllegalArgumentException(
-					"version is not major.minor.patch");
+			throw new IllegalArgumentException("version is not major.minor.patch");
 		}
 
 		majorAsString = tokens[0];
@@ -75,8 +73,8 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 		if (patchAsString != null) {
 			builder.append("patchAsString=").append(patchAsString).append(", ");
 		}
-		builder.append("major=").append(major).append(", minor=").append(minor)
-				.append(", patch=").append(patch).append("]");
+		builder.append("major=").append(major).append(", minor=").append(minor).append(", patch=").append(patch)
+				.append("]");
 		return builder.toString();
 	}
 
@@ -105,8 +103,8 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 	}
 
 	/**
-	 * Convenience method to see if the current version in this instance is at
-	 * least the given version in the parameter
+	 * Convenience method to see if the current version in this instance is at least
+	 * the given version in the parameter
 	 *
 	 * @param versionString
 	 *            {@code String} with the rodsx.x.x version number

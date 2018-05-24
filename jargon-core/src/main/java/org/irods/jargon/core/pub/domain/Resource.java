@@ -264,7 +264,7 @@ public class Resource extends IRODSDomainObject {
 		return parentId;
 	}
 
-	public void setParentId(String parentId) {
+	public void setParentId(final String parentId) {
 		this.parentId = parentId;
 	}
 
@@ -272,7 +272,7 @@ public class Resource extends IRODSDomainObject {
 		return parentResource;
 	}
 
-	public void setParentResource(Resource parentResource) {
+	public void setParentResource(final Resource parentResource) {
 		this.parentResource = parentResource;
 	}
 

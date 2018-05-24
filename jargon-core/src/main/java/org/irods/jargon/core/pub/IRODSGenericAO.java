@@ -65,7 +65,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#isInstrumented()
 	 */
 	@Override
@@ -75,7 +75,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSSession()
 	 */
 	@Override
@@ -85,7 +85,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccount()
 	 */
 	@Override
@@ -95,7 +95,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSServerProperties()
 	 */
 	@Override
@@ -112,7 +112,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSProtocol()
 	 */
 	@Override
@@ -122,7 +122,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getJargonProperties()
 	 */
 	@Override
@@ -132,7 +132,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getDefaultTransferControlBlock ()
 	 */
@@ -143,7 +143,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
 	 */
@@ -154,7 +154,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSFileFactory()
 	 */
 	@Override
@@ -164,7 +164,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
 	 * buildTransferOptionsBasedOnJargonProperties()
 	 */
@@ -175,7 +175,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#operationComplete(int)
 	 */
 	@Override

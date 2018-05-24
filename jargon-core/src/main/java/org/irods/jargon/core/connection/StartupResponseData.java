@@ -141,7 +141,7 @@ public class StartupResponseData {
 
 	/**
 	 * Convenience method to see if this is iRODS 4.1.0 or later version
-	 * 
+	 *
 	 * @return {@code boolean} indicating version after 4.1.0
 	 */
 	public boolean checkIs410OrLater() {

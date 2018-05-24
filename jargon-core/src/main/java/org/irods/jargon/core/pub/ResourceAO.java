@@ -149,7 +149,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Set AVU metadata for this resource. Be aware setting a metadata forces just
 	 * this one attribute name to exist (it will delete all the possibly existing
 	 * ones)
-	 * 
+	 *
 	 * @param resourceName
 	 *            {@code String} with the name of the resource
 	 * @param avuData
@@ -201,7 +201,7 @@ public interface ResourceAO extends IRODSAccessObject {
 
 	/**
 	 * Delete an iRODS resource
-	 * 
+	 *
 	 * @param resourceName
 	 *            {@link String} with resource name to delete
 	 * @throws JargonException
@@ -240,7 +240,7 @@ public interface ResourceAO extends IRODSAccessObject {
 
 	/**
 	 * List all resources for a given data object
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} describing a data object
 	 * @return <code>List</code> of {@link Resource} describing the resources

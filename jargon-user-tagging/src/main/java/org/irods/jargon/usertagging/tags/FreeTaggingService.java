@@ -9,14 +9,14 @@ public interface FreeTaggingService {
 	/**
 	 * For a data object, return a set of free tags in the form of a space-delimited
 	 * {@code String}.
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            {@code String} with the absolute path to the data object for which
 	 *            the tag string will be produced.
-	 * 
+	 *
 	 *            The user in the account used to initialize the service is used by
 	 *            default.
-	 * 
+	 *
 	 * @return {@link org.irods.jargon.usertagging.domain.IRODSTagGrouping} with the
 	 *         data object tags in free tag form.
 	 * @throws JargonException
@@ -28,7 +28,7 @@ public interface FreeTaggingService {
 	 * For an iRODS collection, return a set of free tags in the form of a
 	 * space-delimited {@code String}. The user in the account used to initialize
 	 * the service is used by default.
-	 * 
+	 *
 	 * @param collectionAbsolutePath
 	 *            {@code String} with the absolute path to an iRODS collection that
 	 *            has free tags associated.
@@ -51,7 +51,7 @@ public interface FreeTaggingService {
 	 * the user, but this default behavior prevents tagging on behalf of an
 	 * arbitrary user. This is not a severe issue, but sensible defaulting will help
 	 * prevent confusion.
-	 * 
+	 *
 	 * @param irodsTagGrouping
 	 *            {@link IRODSTagGrouping} that describes a set of free tags.
 	 * @throws JargonException
@@ -71,7 +71,7 @@ public interface FreeTaggingService {
 	 * object and collection domain types that can be utilized to page the different
 	 * types of results. Each result entry has a value that indicates the particular
 	 * domain (collection and data object) the entry is for.
-	 * 
+	 *
 	 * @param searchTags
 	 *            {@code String} with free space-delimited tags. These tags will be
 	 *            AND-d together.
@@ -86,7 +86,7 @@ public interface FreeTaggingService {
 	 * can determine the type of file based on absolute path. Given a free tag
 	 * String and a user, the proper updates to the underlying tags will be
 	 * accomplished.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with absolute path to the iRODS data object or
 	 *            collection

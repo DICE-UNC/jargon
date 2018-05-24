@@ -2,8 +2,6 @@ package org.irods.jargon.core.pub.io;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.MountedCollectionAO;
@@ -11,6 +9,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class IRODSFileOutputStreamForSoftLinksTest {
 
@@ -25,12 +25,10 @@ public class IRODSFileOutputStreamForSoftLinksTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -45,49 +43,37 @@ public class IRODSFileOutputStreamForSoftLinksTest {
 	 * @throws Exception
 	 */
 	@Test
-	public final void testWriteByteArrayForSoftLinkedDataObject()
-			throws Exception {
+	public final void testWriteByteArrayForSoftLinkedDataObject() throws Exception {
 		String sourceCollectionName = "testWriteByteArrayForSoftLinkedDataObjectSource";
 		String targetCollectionName = "testWriteByteArrayForSoftLinkedDataObjectTarget";
 		String testFileName = "testWriteByteArrayForSoftLinkedDataObject.txt";
 
-		scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount)
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFileOutputStream(irodsFile);
 
 		// get a simple byte array
@@ -104,8 +90,7 @@ public class IRODSFileOutputStreamForSoftLinksTest {
 
 		long length = irodsFile.length();
 
-		Assert.assertEquals("file length does not match bytes written",
-				myBytesArray.length * 2, length);
+		Assert.assertEquals("file length does not match bytes written", myBytesArray.length * 2, length);
 
 		irodsFileSystem.closeAndEatExceptions();
 	}

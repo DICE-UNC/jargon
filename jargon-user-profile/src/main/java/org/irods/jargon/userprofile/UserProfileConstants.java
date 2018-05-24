@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.userprofile;
 
 /**
  * Constants for serializing user profile data
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfileConstants {
 

@@ -126,7 +126,7 @@ public class GenQueryProcessor {
 
 	/**
 	 * Send the query
-	 * 
+	 *
 	 * @param genQueryInp
 	 *            {@link GenQueryInp} with the packing instruction
 	 * @return {@link Tag} with the return result
@@ -169,7 +169,7 @@ public class GenQueryProcessor {
 
 	/**
 	 * translate the given query
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link AbstractIRODSGenQuery}
 	 * @return {@link TranslatedIRODSGenQuery} translated into runnable form

@@ -37,14 +37,12 @@ public class IRODSCommandsFunctionalTest {
 	public void testLotsOfInvalidAuths() throws Exception {
 
 		int ctr = 1000;
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setPassword("bogus");
 
 		for (int i = 0; i < ctr; i++) {
 			try {
-				irodsFileSystem.getIRODSAccessObjectFactory()
-						.authenticateIRODSAccount(irodsAccount);
+				irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(irodsAccount);
 			} catch (AuthenticationException ae) {
 				// ok
 			}

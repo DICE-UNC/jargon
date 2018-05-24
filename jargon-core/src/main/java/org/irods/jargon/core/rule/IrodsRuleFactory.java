@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory to create iRODS rule representation {@link IRODSRule} from a raw
  * textual form
- * 
+ *
  * @author conwaymc
  *
  */
@@ -27,14 +27,14 @@ public class IrodsRuleFactory {
 
 	/**
 	 * Constructor with required fields
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the current user
-	 * 
+	 *
 	 */
-	public IrodsRuleFactory(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public IrodsRuleFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount) {
 		super();
 
 		if (irodsAccessObjectFactory == null) {
@@ -51,7 +51,7 @@ public class IrodsRuleFactory {
 
 	/**
 	 * Create an <code>IRODSRule</code> representation from the base text
-	 * 
+	 *
 	 * @param irodsRuleAsString
 	 *            <code>String</code> with the rule text, including the input and
 	 *            output lines
@@ -66,8 +66,9 @@ public class IrodsRuleFactory {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	public IRODSRule instanceIrodsRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
-			RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {
+	public IRODSRule instanceIrodsRule(final String irodsRuleAsString,
+			final List<IRODSRuleParameter> inputParameterOverrides,
+			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {
 
 		log.info("instanceIrodsRule()");
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.rule;
 
@@ -7,7 +7,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class NoUserRuleSubdirException extends JargonException {
 

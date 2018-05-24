@@ -190,7 +190,7 @@ public class IRODSRuleParameter {
 
 	/**
 	 * Return the value with leading and trailing quotes stripped out
-	 * 
+	 *
 	 * @return {@code String} with the stripped value
 	 */
 	public String getValueAsStringWithQuotesStripped() {

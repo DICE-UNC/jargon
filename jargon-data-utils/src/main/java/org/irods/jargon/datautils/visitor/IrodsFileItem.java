@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.visitor;
 
@@ -11,14 +11,14 @@ import org.irods.jargon.core.pub.io.IRODSFileImpl;
 
 /**
  * Represents an iRODS file extended to include visitor semantics
- * 
+ *
  * @author conwaymc
  *
  */
 public abstract class IrodsFileItem extends IRODSFileImpl implements HierComponent {
 
-	/** 
-	 * 
+	/**
+	 *
 	 */
 	private static final long serialVersionUID = 3234717720636343981L;
 
@@ -30,7 +30,7 @@ public abstract class IrodsFileItem extends IRODSFileImpl implements HierCompone
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	public IrodsFileItem(String pathName, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
+	public IrodsFileItem(final String pathName, final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(pathName, irodsFileSystemAO);
 	}
 
@@ -44,7 +44,8 @@ public abstract class IrodsFileItem extends IRODSFileImpl implements HierCompone
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	public IrodsFileItem(String parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
+	public IrodsFileItem(final String parent, final String child, final IRODSFileSystemAO irodsFileSystemAO)
+			throws JargonException {
 		super(parent, child, irodsFileSystemAO);
 	}
 
@@ -58,7 +59,8 @@ public abstract class IrodsFileItem extends IRODSFileImpl implements HierCompone
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	public IrodsFileItem(File parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
+	public IrodsFileItem(final File parent, final String child, final IRODSFileSystemAO irodsFileSystemAO)
+			throws JargonException {
 		super(parent, child, irodsFileSystemAO);
 	}
 

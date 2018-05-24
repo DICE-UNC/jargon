@@ -29,12 +29,10 @@ public class ConnectionTesterImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -45,19 +43,15 @@ public class ConnectionTesterImplTest {
 
 	@Test
 	public void testRunTestsSmall() throws Exception {
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
 		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// now put the file
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsFile);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsFile);
 		irodsFile.mkdirs();
 
 		File localFile = new File(absPath);
@@ -68,29 +62,25 @@ public class ConnectionTesterImplTest {
 		connectionTesterConfiguration.setIrodsParentDirectory(targetIrodsFile);
 		connectionTesterConfiguration.setLocalSourceParentDirectory(absPath);
 
-		ConnectionTester connectionTester = new ConnectionTesterImpl(
-				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount,
-				connectionTesterConfiguration);
+		ConnectionTester connectionTester = new ConnectionTesterImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
+				irodsAccount, connectionTesterConfiguration);
 
 		List<TestType> testTypes = new ArrayList<TestType>();
 		testTypes.add(TestType.SMALL);
 
 		ConnectionTestResult actual = connectionTester.runTests(testTypes);
 		Assert.assertNotNull("null result", actual);
-		Assert.assertEquals("did not set two entries", 2, actual
-				.getTestResults().size());
+		Assert.assertEquals("did not set two entries", 2, actual.getTestResults().size());
 
 		TestResultEntry putResult = actual.getTestResults().get(0);
 
-		Assert.assertEquals("did not get put result", OperationType.PUT,
-				putResult.getOperationType());
+		Assert.assertEquals("did not get put result", OperationType.PUT, putResult.getOperationType());
 		Assert.assertTrue(putResult.isSuccess());
 		Assert.assertTrue(putResult.getTransferRateBytesPerSecond() > 0);
 
 		TestResultEntry getResult = actual.getTestResults().get(1);
 
-		Assert.assertEquals("did not get get result", OperationType.GET,
-				getResult.getOperationType());
+		Assert.assertEquals("did not get get result", OperationType.GET, getResult.getOperationType());
 		Assert.assertTrue(getResult.isSuccess());
 		Assert.assertTrue(getResult.getTransferRateBytesPerSecond() > 0);
 
@@ -98,19 +88,15 @@ public class ConnectionTesterImplTest {
 
 	@Test
 	public void testRunTestsSmallAndLarge() throws Exception {
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
 		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// now put the file
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsFile);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsFile);
 		irodsFile.mkdirs();
 
 		File localFile = new File(absPath);
@@ -121,9 +107,8 @@ public class ConnectionTesterImplTest {
 		connectionTesterConfiguration.setIrodsParentDirectory(targetIrodsFile);
 		connectionTesterConfiguration.setLocalSourceParentDirectory(absPath);
 
-		ConnectionTester connectionTester = new ConnectionTesterImpl(
-				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount,
-				connectionTesterConfiguration);
+		ConnectionTester connectionTester = new ConnectionTesterImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
+				irodsAccount, connectionTesterConfiguration);
 
 		List<TestType> testTypes = new ArrayList<TestType>();
 		testTypes.add(TestType.SMALL);
@@ -131,8 +116,7 @@ public class ConnectionTesterImplTest {
 
 		ConnectionTestResult actual = connectionTester.runTests(testTypes);
 		Assert.assertNotNull("null result", actual);
-		Assert.assertEquals("did not set four entries", 4, actual
-				.getTestResults().size());
+		Assert.assertEquals("did not set four entries", 4, actual.getTestResults().size());
 
 	}
 

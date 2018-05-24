@@ -24,15 +24,14 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param queryString
 	 *            {@code String} with the sql query to execute.
 	 * @param arguments
-	 *            {@code List<String>} with arguments to the query. This
-	 *            may be set to null if no arguments desired.
+	 *            {@code List<String>} with arguments to the query. This may be set
+	 *            to null if no arguments desired.
 	 * @param continuationValue
-	 *            {@code int} with the offset into the results., 0 if no
-	 *            offset.
+	 *            {@code int} with the offset into the results., 0 if no offset.
 	 * @return {@code SimpleQuery}
 	 */
-	public static SimpleQuery instance(final String queryString,
-			final List<String> arguments, final int continuationValue) {
+	public static SimpleQuery instance(final String queryString, final List<String> arguments,
+			final int continuationValue) {
 		return new SimpleQuery(queryString, arguments, continuationValue);
 	}
 
@@ -42,32 +41,28 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param queryString
 	 *            {@code String} with the sql query to execute.
 	 * @param continuationValue
-	 *            {@code int} with the offset into the results., 0 if no
-	 *            offset.
+	 *            {@code int} with the offset into the results., 0 if no offset.
 	 * @return {@link SimpleQuery}
 	 */
-	public static SimpleQuery instanceWithNoArguments(final String queryString,
-			final int continuationValue) {
+	public static SimpleQuery instanceWithNoArguments(final String queryString, final int continuationValue) {
 		List<String> args = new ArrayList<String>();
 		return new SimpleQuery(queryString, args, continuationValue);
 	}
 
 	/**
-	 * Creates an instance of a {@code SimpleQuery} object giving one
-	 * argument.
+	 * Creates an instance of a {@code SimpleQuery} object giving one argument.
 	 *
 	 * @param queryString
 	 *            {@code String} with the sql query to execute.
 	 * @param arg
-	 *            {@code String} with the arugment for the query. Set to
-	 *            blank if unused.
+	 *            {@code String} with the arugment for the query. Set to blank if
+	 *            unused.
 	 * @param continuationValue
-	 *            {@code int} with the offset into the results., 0 if no
-	 *            offset.
+	 *            {@code int} with the offset into the results., 0 if no offset.
 	 * @return {@link SimpleQuery}
 	 */
-	public static SimpleQuery instanceWithOneArgument(final String queryString,
-			final String arg, final int continuationValue) {
+	public static SimpleQuery instanceWithOneArgument(final String queryString, final String arg,
+			final int continuationValue) {
 
 		if (arg == null) {
 			throw new IllegalArgumentException("arg is null");
@@ -82,8 +77,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	}
 
 	/**
-	 * Creates an instance of a {@code SimpleQuery} object giving two
-	 * arguments.
+	 * Creates an instance of a {@code SimpleQuery} object giving two arguments.
 	 *
 	 * @param queryString
 	 *            {@code String} with the sql query to execute.
@@ -92,12 +86,10 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param arg2
 	 *            {@code String} with the second argument for the query.
 	 * @param continuationValue
-	 *            {@code int} with the offset into the results., 0 if no
-	 *            offset.
+	 *            {@code int} with the offset into the results., 0 if no offset.
 	 * @return {@link SimpleQuery}
 	 */
-	public static SimpleQuery instanceWithTwoArguments(
-			final String queryString, final String arg1, final String arg2,
+	public static SimpleQuery instanceWithTwoArguments(final String queryString, final String arg1, final String arg2,
 			final int continuationValue) {
 
 		if (arg1 == null || arg1.isEmpty()) {
@@ -124,8 +116,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param arguments
 	 * @param continuationValue
 	 */
-	private SimpleQuery(final String queryString, final List<String> arguments,
-			final int continuationValue) {
+	private SimpleQuery(final String queryString, final List<String> arguments, final int continuationValue) {
 		super(queryString, arguments, continuationValue);
 	}
 

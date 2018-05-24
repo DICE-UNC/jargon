@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.indexer;
 
@@ -25,7 +25,7 @@ public class NodeVisitLogEntry {
 	private boolean resultOfVisit;
 
 	/**
-	 * 
+	 *
 	 */
 	public NodeVisitLogEntry() {
 	}
@@ -34,7 +34,7 @@ public class NodeVisitLogEntry {
 		return visitType;
 	}
 
-	public void setVisitType(VisitTypeEnum visitType) {
+	public void setVisitType(final VisitTypeEnum visitType) {
 		this.visitType = visitType;
 	}
 
@@ -42,7 +42,7 @@ public class NodeVisitLogEntry {
 		return nodeAbsolutePath;
 	}
 
-	public void setNodeAbsolutePath(String nodeAbsolutePath) {
+	public void setNodeAbsolutePath(final String nodeAbsolutePath) {
 		this.nodeAbsolutePath = nodeAbsolutePath;
 	}
 
@@ -50,7 +50,7 @@ public class NodeVisitLogEntry {
 		return nodeName;
 	}
 
-	public void setNodeName(String nodeName) {
+	public void setNodeName(final String nodeName) {
 		this.nodeName = nodeName;
 	}
 
@@ -58,7 +58,7 @@ public class NodeVisitLogEntry {
 		return metadataThisLevel;
 	}
 
-	public void setMetadataThisLevel(List<MetaDataAndDomainData> metadataThisLevel) {
+	public void setMetadataThisLevel(final List<MetaDataAndDomainData> metadataThisLevel) {
 		this.metadataThisLevel = metadataThisLevel;
 	}
 
@@ -66,7 +66,7 @@ public class NodeVisitLogEntry {
 		return resultOfVisit;
 	}
 
-	public void setResultOfVisit(boolean resultOfVisit) {
+	public void setResultOfVisit(final boolean resultOfVisit) {
 		this.resultOfVisit = resultOfVisit;
 	}
 

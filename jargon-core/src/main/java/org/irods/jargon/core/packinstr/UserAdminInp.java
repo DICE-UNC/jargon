@@ -93,7 +93,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the packing instruction to add a user to a group
-	 * 
+	 *
 	 * @param userGroupName
 	 *            <code>String</code> with userGroupName
 	 * @param userName
@@ -104,8 +104,8 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	public static UserAdminInp instanceForAddUserToGroup(String userGroupName, String userName, String zoneName)
-			throws JargonException {
+	public static UserAdminInp instanceForAddUserToGroup(final String userGroupName, final String userName,
+			final String zoneName) throws JargonException {
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null userGroupName");
 		}

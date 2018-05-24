@@ -80,7 +80,7 @@ public final class IRODSRule {
 
 	private IRODSRule(final String ruleAsOriginalText, final List<IRODSRuleParameter> irodsRuleInputParameters,
 			final List<IRODSRuleParameter> irodsRuleOutputParameters, final String ruleBody,
-			RuleInvocationConfiguration ruleInvocationConfiguration) {
+			final RuleInvocationConfiguration ruleInvocationConfiguration) {
 		if (ruleAsOriginalText == null || ruleAsOriginalText.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ruleAsOriginalText");
 		}

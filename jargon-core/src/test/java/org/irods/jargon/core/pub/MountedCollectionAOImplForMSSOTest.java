@@ -3,8 +3,6 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
@@ -16,6 +14,8 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class MountedCollectionAOImplForMSSOTest {
 
@@ -31,12 +31,10 @@ public class MountedCollectionAOImplForMSSOTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -56,50 +54,38 @@ public class MountedCollectionAOImplForMSSOTest {
 		String subMountCollection = "testMountMSSOWorkflowMounted";
 		String mssoFile = "/msso/eCWkflow.mss";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		String mountedCollectionPath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ subMountCollection);
+		String mountedCollectionPath = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName + "/" + subMountCollection);
 
-		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		parentCollection.mkdirs();
 
-		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
-				+ "eCWkflow.mss";
+		String workflowFileTransferredToIrods = targetIrodsCollection + "/" + "eCWkflow.mss";
 		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(mountedCollectionPath,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(mountedCollectionPath, irodsAccount.getDefaultStorageResource());
 
 		// create the msso workflow mount
 
-		mountedCollectionAO.createAnMSSOMountForWorkflow(
-				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
+		mountedCollectionAO.createAnMSSOMountForWorkflow(mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
 				mountedCollectionPath);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
-				.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+				.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		ObjStat mountedCollection = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(mountedCollectionPath);
 		Assert.assertNotNull("no objstat", mountedCollection);
-		Assert.assertEquals("did not mount a struct file type",
-				SpecColType.STRUCT_FILE_COLL,
+		Assert.assertEquals("did not mount a struct file type", SpecColType.STRUCT_FILE_COLL,
 				mountedCollection.getSpecColType());
 		ObjStat wssObjStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(workflowFileTransferredToIrods);

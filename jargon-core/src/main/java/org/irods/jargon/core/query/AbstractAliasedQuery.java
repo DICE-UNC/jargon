@@ -16,29 +16,27 @@ public class AbstractAliasedQuery {
 	 * @param queryString
 	 *            {@code String} query string or alias, required
 	 * @param arguments
-	 *            {@code List<String>} of arguments, may be set to
-	 *            {@code null} if no args. If arguments are specified, they
-	 *            are wrapped in an unmodifiable list
+	 *            {@code List<String>} of arguments, may be set to {@code null} if
+	 *            no args. If arguments are specified, they are wrapped in an
+	 *            unmodifiable list
 	 * @param continuationValue
-	 *            {@code int} with a continuation value as returned from a
-	 *            previous query result. Used for paging, set to zero if no
-	 *            paging is done, or is initial query
+	 *            {@code int} with a continuation value as returned from a previous
+	 *            query result. Used for paging, set to zero if no paging is done,
+	 *            or is initial query
 	 */
-	protected AbstractAliasedQuery(final String queryString,
-			final List<String> arguments, final int continuationValue) {
+	protected AbstractAliasedQuery(final String queryString, final List<String> arguments,
+			final int continuationValue) {
 
 		if (queryString == null || queryString.isEmpty()) {
 			throw new IllegalArgumentException("null or empty queryString");
 		}
 
 		if (continuationValue < 0) {
-			throw new IllegalArgumentException(
-					"continuation value is less than zero");
+			throw new IllegalArgumentException("continuation value is less than zero");
 		}
 
 		if (arguments == null) {
-			this.arguments = Collections
-					.unmodifiableList(new ArrayList<String>());
+			this.arguments = Collections.unmodifiableList(new ArrayList<String>());
 		} else {
 			if (arguments.size() > 4) {
 				throw new IllegalArgumentException("limit of 4 arguments");

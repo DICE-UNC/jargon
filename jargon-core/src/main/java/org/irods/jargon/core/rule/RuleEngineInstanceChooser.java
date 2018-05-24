@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility to set the iRODS rule engine instance based on a provided rule as
  * well as server configuration information
- * 
+ *
  * @author conwaymc
  *
  */
@@ -23,7 +23,7 @@ public class RuleEngineInstanceChooser {
 
 	/**
 	 * Default constructor with required dependencies
-	 * 
+	 *
 	 * @param jargonProperties
 	 *            {@link JargonProperties} containing rule engine mappings
 	 * @param irodsServerProperties
@@ -52,8 +52,8 @@ public class RuleEngineInstanceChooser {
 	 * try and set it based on Jargon and irods configuration. Note that you can
 	 * also just directly set the value in the <code>ruleEngineSpecifier</code> also
 	 * in the <code>RuleInvocationSpecification</code>
-	 * 
-	 * 
+	 *
+	 *
 	 * @param irodsRule
 	 *            {@link IRODSRule} to set with the instance. Note that invoking
 	 *            this method will alter the {@link RuleInvocationConfiguration} in

@@ -18,7 +18,7 @@ public interface TicketAdminService {
 	 * This operation may be done on files or collections. Note that, for
 	 * collections, the inheritance bit will be set, so that the ticket creator may
 	 * have permissions on any files that grantees create in the collection.
-	 * 
+	 *
 	 * @param mode
 	 *            {@link TicketCreateModeEnum} ticket create mode - read or write
 	 * @param file
@@ -29,13 +29,13 @@ public interface TicketAdminService {
 	 * @return {@code String} with ticket id
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	String createTicket(TicketCreateModeEnum mode, IRODSFile file, String ticketId) throws JargonException;
 
 	/**
 	 * Delete a ticket for access to iRODS
-	 * 
+	 *
 	 * @param ticketId
 	 *            used to specify ticket key to be deleted
 	 * @return {@code boolean} that will be {@code true} if the ticket was found to
@@ -43,7 +43,7 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean deleteTicket(String ticketId) throws JargonException;
 
@@ -51,7 +51,7 @@ public interface TicketAdminService {
 	 * Generate a list of all tickets for data objects (files). Note that, for a
 	 * regular user, this will be tickets for that user. For a rodsadmin, this will
 	 * be all tickets.
-	 * 
+	 *
 	 * @param ticketId
 	 *            string used to identify the ticket
 	 * @return {@link Ticket} object for specified ticket string identifier
@@ -66,7 +66,7 @@ public interface TicketAdminService {
 	 * Generate a list of all tickets for data objects (files). Note that, for a
 	 * regular user, this will be tickets for that user. For a rodsadmin, this will
 	 * be all tickets.
-	 * 
+	 *
 	 * @param partialStartIndex
 	 *            {@code int} value which provides an offset into results for paging
 	 * @return {@code List} of {@link Ticket} objects for data objects
@@ -79,7 +79,7 @@ public interface TicketAdminService {
 	 * Generate a list of all tickets for collections (directories). Note that, for
 	 * a regular user, this will be tickets for that user. For a rodsadmin, this
 	 * will be all tickets.
-	 * 
+	 *
 	 * @param partialStartIndex
 	 *            {@code int} value which provides an offset into results for paging
 	 * @return {@code List} of {@link Ticket} objects for collections
@@ -92,7 +92,7 @@ public interface TicketAdminService {
 	 * Generate a list of all tickets. Note that, for a regular user, this will be
 	 * tickets for that user. For a rodsadmin, this will be all tickets. Also this
 	 * will not return associated collections or data objects
-	 * 
+	 *
 	 * @param partialStartIndex
 	 *            {@code int} value which provides an offset into results for paging
 	 * @return {@code List} of {@link Ticket} objects for collections
@@ -103,7 +103,7 @@ public interface TicketAdminService {
 
 	/**
 	 * Modify the uses limit of a ticket for access to iRODS
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param usesLimit
@@ -114,13 +114,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean setTicketUsesLimit(String ticketId, int usesLimit) throws JargonException;
 
 	/**
 	 * Modify the file write limit of a ticket for access to iRODS
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param fileWriteLimit
@@ -131,13 +131,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean setTicketFileWriteLimit(String ticketId, int fileWriteLimit) throws JargonException;
 
 	/**
 	 * Modify the byte write of a ticket for access to iRODS
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param byteWriteLimit
@@ -148,13 +148,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean setTicketByteWriteLimit(String ticketId, long byteWriteLimit) throws JargonException;
 
 	/**
 	 * Modify the expire time of a ticket for access to iRODS
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param expirationTime
@@ -165,14 +165,14 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean setTicketExpiration(String ticketId, Date expirationTime) throws JargonException;
 
 	/**
 	 * Generate a list of all iRODS users that can use this ticket. Passing a
 	 * {@code null} expiration will cause the expiration to be removed altogether.
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to use for retrieval of
 	 *            user restrictions
@@ -187,7 +187,7 @@ public interface TicketAdminService {
 
 	/**
 	 * Generate a list of all iRODS groups that can use this ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to use for retrieval of
 	 *            group restrictions
@@ -202,12 +202,12 @@ public interface TicketAdminService {
 
 	/**
 	 * Generate a list of all hosts that can use this ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to use for retrieval of
 	 *            host restrictions
 	 * @param partialStartIndex
-	 * 
+	 *
 	 *            {@code int} value which provides an offset into results for paging
 	 * @return {@code List} of hosts
 	 * @throws JargonException
@@ -218,7 +218,7 @@ public interface TicketAdminService {
 
 	/**
 	 * Modify the user access for an IRODS ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param userId
@@ -228,14 +228,14 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	boolean addTicketUserRestriction(String ticketId, String userId) throws JargonException;
 
 	/**
 	 * Modify the user access for an IRODS ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param userId
@@ -245,13 +245,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean removeTicketUserRestriction(String ticketId, String userId) throws JargonException;
 
 	/**
 	 * Modify the group access for an IRODS ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param groupId
@@ -261,13 +261,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean addTicketGroupRestriction(String ticketId, String groupId) throws JargonException;
 
 	/**
 	 * Modify the group access for an IRODS ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param groupId
@@ -277,13 +277,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean removeTicketGroupRestriction(String ticketId, String groupId) throws JargonException;
 
 	/**
 	 * Modify the host access for an IRODS ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param host
@@ -293,13 +293,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean addTicketHostRestriction(String ticketId, String host) throws JargonException;
 
 	/**
 	 * Modify the host access for an IRODS ticket
-	 * 
+	 *
 	 * @param ticketId
 	 *            {@code String} used to specify ticket key to be modified
 	 * @param host
@@ -309,13 +309,13 @@ public interface TicketAdminService {
 	 *         to the ticket not being found. This can be ignored.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean removeTicketHostRestriction(String ticketId, String host) throws JargonException;
 
 	/**
 	 * delete all IRODS access tickets for this user
-	 * 
+	 *
 	 * @return {@code boolean} that will be {@code true} if the delete ticket
 	 *         operation was successful. {@code false} means that the delete was not
 	 *         successful, due to no tickets found. This can be ignored. NOTE: Use
@@ -324,13 +324,13 @@ public interface TicketAdminService {
 	 *         user this will delete ALL tickets.
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
+	 *
 	 */
 	boolean deleteAllTicketsForThisUser() throws JargonException;
 
 	/**
 	 * Is the given ticket string already in use?
-	 * 
+	 *
 	 * @param ticketString
 	 *            {@code String} which is the generated key for the ticket
 	 * @return {@code boolean} of {@code true} if the ticket is in use
@@ -342,7 +342,7 @@ public interface TicketAdminService {
 	/**
 	 * Create a listing of ticket objects in effect for a given collection at an
 	 * iRODS absolute path
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with an iRODS absolute path for a collection
 	 * @param partialStartIndex
@@ -359,7 +359,7 @@ public interface TicketAdminService {
 	/**
 	 * Create a listing of ticket objects in effect for a given data object at an
 	 * iRODS absolute path
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with an iRODS absolute path for a collection
 	 * @param partialStartIndex
@@ -386,7 +386,7 @@ public interface TicketAdminService {
 	 * will not happen a atomically. This is not something that the client can do
 	 * anything about. However, this still isolates the operations into a well
 	 * tested unit.
-	 * 
+	 *
 	 * @param ticket
 	 *            {@link Ticket} to be added. Note that the only data that really
 	 *            needs to be in the {@code Ticket} is the (optional) ticket string,
@@ -402,7 +402,7 @@ public interface TicketAdminService {
 	 *            returned from this method will carry all of the values properly
 	 *            initialized.
 	 * @return {@link Ticket}
-	 * 
+	 *
 	 * @throws DuplicateDataException
 	 *             if the {@code Ticket.ticketString} is already in use
 	 * @throws DataNotFoundException
@@ -425,7 +425,7 @@ public interface TicketAdminService {
 	 * <p>
 	 * The current update-able fields are the various access and write limits, as
 	 * well as the expiration data, other fields will be ignored.
-	 * 
+	 *
 	 * @param ticketWithDesiredData
 	 *            {@link Ticket} containing a valid ticket string, and reflecting
 	 *            the update-able fields in the state they should be in.
@@ -453,7 +453,7 @@ public interface TicketAdminService {
 	 * will not happen a atomically. This is not something that the client can do
 	 * anything about. However, this still isolates the operations into a well
 	 * tested unit.
-	 * 
+	 *
 	 * @param ticket
 	 *            {@link Ticket} to be added. Note that the only data that really
 	 *            needs to be in the {@code Ticket} is the (optional) ticket string,

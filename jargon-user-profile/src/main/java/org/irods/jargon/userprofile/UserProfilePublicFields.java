@@ -8,29 +8,30 @@ package org.irods.jargon.userprofile;
  * Note that some of the base attributes are based on the RFC for eduPerson at:
  * http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-
  * 200806.html And going forward more attributes may be added.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfilePublicFields {
 
 	/**
-	 * Open-ended; whatever the person or the directory manager puts here.
-	 * According to RFC 4519,
-	 * "The 'description' attribute type contains human-readable descriptive phrases about the object. Each description is one value of this multi-valued attribute."
+	 * Open-ended; whatever the person or the directory manager puts here. According
+	 * to RFC 4519, "The 'description' attribute type contains human-readable
+	 * descriptive phrases about the object. Each description is one value of this
+	 * multi-valued attribute."
 	 */
 	private String description = "";
 
 	/**
-	 * Person's nickname, or the informal name by which they are accustomed to
-	 * be hailed.
+	 * Person's nickname, or the informal name by which they are accustomed to be
+	 * hailed.
 	 */
 	private String nickName = "";
 
 	/**
-	 * The 'cn' ('commonName' in X.500) attribute type contains names of an
-	 * object. Each name is one value of this multi-valued attribute. If the
-	 * object corresponds to a person, it is typically the person's full name."
+	 * The 'cn' ('commonName' in X.500) attribute type contains names of an object.
+	 * Each name is one value of this multi-valued attribute. If the object
+	 * corresponds to a person, it is typically the person's full name."
 	 */
 	private String cn = "";
 
@@ -40,75 +41,84 @@ public class UserProfilePublicFields {
 	private String givenName = "";
 
 	/**
-	 * Surname or family name. From RFC 4519:
-	 * "The 'sn' ('surname' in X.500) attribute type contains name strings for the family names of a person. Each string is one value of this multi-valued attribute."
+	 * Surname or family name. From RFC 4519: "The 'sn' ('surname' in X.500)
+	 * attribute type contains name strings for the family names of a person. Each
+	 * string is one value of this multi-valued attribute."
 	 */
 	private String sn = "";
 
 	/**
 	 * Campus or office address. inetOrgPerson has a homePostalAddress that
-	 * complements this attribute. X.520(2000) reads:
-	 * "The Postal Address attribute type specifies the address information required for the physical postal delivery to an object."
+	 * complements this attribute. X.520(2000) reads: "The Postal Address attribute
+	 * type specifies the address information required for the physical postal
+	 * delivery to an object."
 	 */
 	private String postalAddress = "";
 
 	/**
-	 * Follow X.500(2001): "The postal code attribute type specifies the postal
-	 * code of the named object. If this attribute
+	 * Follow X.500(2001): "The postal code attribute type specifies the postal code
+	 * of the named object. If this attribute
 	 * <p>
-	 * value is present, it will be part of the object's postal address." Zip
-	 * code in USA, postal code for other countries.
+	 * value is present, it will be part of the object's postal address." Zip code
+	 * in USA, postal code for other countries.
 	 */
 	private String postalCode = "";
 
 	/**
-	 * From RFC 4519:
-	 * "The 'postOfficeBox' attribute type contains postal box identifiers that a Postal Service uses when a customer arranges to receive mail at a box on the premises of the Postal Service. Each postal box identifier is a single value of this multi-valued attribute."
+	 * From RFC 4519: "The 'postOfficeBox' attribute type contains postal box
+	 * identifiers that a Postal Service uses when a customer arranges to receive
+	 * mail at a box on the premises of the Postal Service. Each postal box
+	 * identifier is a single value of this multi-valued attribute."
 	 */
 	private String postOfficeBox = "";
 
 	/**
-	 * According to RFC 4519,
-	 * "The 'l' ('localityName' in X.500) attribute type contains names of a locality or place, such as a city, county, or other geographic region. Each name is one value of this multi-valued attribute."
+	 * According to RFC 4519, "The 'l' ('localityName' in X.500) attribute type
+	 * contains names of a locality or place, such as a city, county, or other
+	 * geographic region. Each name is one value of this multi-valued attribute."
 	 */
 	private String localityName = "";
 
 	/**
-	 * From RFC 4519:
-	 * "The 'street' ('streetAddress' in X.500) attribute type contains site information from a postal address (i.e., the street name, place, avenue, and the house number). Each street is one value of this multi-valued attribute."
+	 * From RFC 4519: "The 'street' ('streetAddress' in X.500) attribute type
+	 * contains site information from a postal address (i.e., the street name,
+	 * place, avenue, and the house number). Each street is one value of this
+	 * multi-valued attribute."
 	 */
 	private String street = "";
 
 	/**
 	 * IRODS URI or URL to a publicly available photo in String form
 	 * <p>
-	 * Follow inetOrgPerson definition of RFC 2798:
-	 * "Used to store one or more images of a person using the JPEG File Interchange Format [JFIF]."
-	 * 
+	 * Follow inetOrgPerson definition of RFC 2798: "Used to store one or more
+	 * images of a person using the JPEG File Interchange Format [JFIF]."
+	 *
 	 */
 	private String jpegPhoto = "";
 
 	/**
-	 * Follow inetOrgPerson definition of RFC 2079:
-	 * "Uniform Resource Identifier with optional label."
+	 * Follow inetOrgPerson definition of RFC 2079: "Uniform Resource Identifier
+	 * with optional label."
 	 */
 	private String labeledURL = "";
 
 	/**
 	 * Abbreviation for state or province name.
 	 * <p>
-	 * Format: The values should be coordinated on a national level. If
-	 * well-known shortcuts exist, like the two-letter state abbreviations in
-	 * the US, these abbreviations are preferred over longer full names.
+	 * Format: The values should be coordinated on a national level. If well-known
+	 * shortcuts exist, like the two-letter state abbreviations in the US, these
+	 * abbreviations are preferred over longer full names.
 	 * <p>
-	 * From RFC 4519:
-	 * "The 'st' ('stateOrProvinceName' in X.500) attribute type contains the full names of states or provinces. Each name is one value of this multi-valued attribute."
+	 * From RFC 4519: "The 'st' ('stateOrProvinceName' in X.500) attribute type
+	 * contains the full names of states or provinces. Each name is one value of
+	 * this multi-valued attribute."
 	 */
 	private String st = "";
 
 	/**
-	 * From RFC 4519:
-	 * "The 'title' attribute type contains the title of a person in their organizational context. Each title is one value of this multi-valued attribute."
+	 * From RFC 4519: "The 'title' attribute type contains the title of a person in
+	 * their organizational context. Each title is one value of this multi-valued
+	 * attribute."
 	 */
 	private String title = "";
 

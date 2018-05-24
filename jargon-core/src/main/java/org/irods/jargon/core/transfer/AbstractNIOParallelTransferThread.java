@@ -26,15 +26,13 @@ public class AbstractNIOParallelTransferThread {
 	public static final int PUT_OPR = 1;
 	public static final int GET_OPR = 2;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractNIOParallelTransferThread.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractNIOParallelTransferThread.class);
 
 	protected AbstractNIOParallelTransferThread() {
 		super();
 	}
 
-	private ByteBuffer readLenFromSocket(final int length)
-			throws JargonException {
+	private ByteBuffer readLenFromSocket(final int length) throws JargonException {
 		final ByteBuffer b = ByteBuffer.allocate(length);
 
 		int read;
@@ -57,8 +55,7 @@ public class AbstractNIOParallelTransferThread {
 			}
 		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, e);
-			throw new JargonException(
-					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+			throw new JargonException(IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 		return b;
 	}
@@ -105,8 +102,8 @@ public class AbstractNIOParallelTransferThread {
 	 * Any exception that occurs in this transfer thread is saved so that the
 	 * parallel transfer process can access it and handle any errors.
 	 *
-	 * @return {@code Exception} that occured in this thread, or
-	 *         {@code null} if no error occurred.
+	 * @return {@code Exception} that occured in this thread, or {@code null} if no
+	 *         error occurred.
 	 */
 	public Exception getExceptionInTransfer() {
 		return exceptionInTransfer;

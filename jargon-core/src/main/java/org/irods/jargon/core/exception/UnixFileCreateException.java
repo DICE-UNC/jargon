@@ -18,8 +18,7 @@ public class UnixFileCreateException extends JargonException {
 	 */
 	private static final long serialVersionUID = -3454704694291976986L;
 
-	public UnixFileCreateException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public UnixFileCreateException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
@@ -36,8 +35,7 @@ public class UnixFileCreateException extends JargonException {
 		super(message);
 	}
 
-	public UnixFileCreateException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public UnixFileCreateException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 

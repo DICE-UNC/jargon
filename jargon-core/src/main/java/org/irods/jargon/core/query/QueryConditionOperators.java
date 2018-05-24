@@ -9,12 +9,11 @@ package org.irods.jargon.core.query;
  */
 public enum QueryConditionOperators {
 
-	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_LIKE(
-			"not like"), SOUNDS_LIKE("sounds like"), SOUNDS_NOT_LIKE(
-			"sounds not like"), TABLE("table"), NUMERIC_LESS_THAN("n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO(
-			"n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO("n>="), NUMERIC_GREATER_THAN(
-			"n>"), NUMERIC_EQUAL("n="), EQUAL("="), LESS_THAN("<"), GREATER_THAN(
-			">"), IN("in"), BETWEEN("between"), LIKE("like");
+	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_LIKE("not like"), SOUNDS_LIKE(
+			"sounds like"), SOUNDS_NOT_LIKE("sounds not like"), TABLE("table"), NUMERIC_LESS_THAN(
+					"n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO("n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO(
+							"n>="), NUMERIC_GREATER_THAN("n>"), NUMERIC_EQUAL("n="), EQUAL(
+									"="), LESS_THAN("<"), GREATER_THAN(">"), IN("in"), BETWEEN("between"), LIKE("like");
 
 	private String operatorAsString;
 
@@ -26,8 +25,7 @@ public enum QueryConditionOperators {
 		return operatorAsString;
 	}
 
-	public static QueryConditionOperators getOperatorFromStringValue(
-			final String stringValue) {
+	public static QueryConditionOperators getOperatorFromStringValue(final String stringValue) {
 		if (stringValue == null || stringValue.isEmpty()) {
 			throw new IllegalArgumentException("null or empty stringValue");
 		}
@@ -61,8 +59,7 @@ public enum QueryConditionOperators {
 		if (stringValue.equals(NUMERIC_LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
 			return NUMERIC_LESS_THAN_OR_EQUAL_TO;
 		}
-		if (stringValue
-				.equals(NUMERIC_GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
+		if (stringValue.equals(NUMERIC_GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
 			return NUMERIC_GREATER_THAN_OR_EQUAL_TO;
 		}
 		if (stringValue.equals(NUMERIC_GREATER_THAN.operatorAsString)) {

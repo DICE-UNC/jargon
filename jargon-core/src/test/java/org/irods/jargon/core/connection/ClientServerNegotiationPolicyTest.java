@@ -1,9 +1,9 @@
 package org.irods.jargon.core.connection;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class ClientServerNegotiationPolicyTest {
 
@@ -12,9 +12,7 @@ public class ClientServerNegotiationPolicyTest {
 		ClientServerNegotiationPolicy policy = new ClientServerNegotiationPolicy();
 		policy.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		String actual = policy.buildStartupOptionsForNegotiation();
-		Assert.assertEquals(
-				ClientServerNegotiationPolicy.REQUEST_NEGOTIATION_STARTUP_OPTION,
-				actual);
+		Assert.assertEquals(ClientServerNegotiationPolicy.REQUEST_NEGOTIATION_STARTUP_OPTION, actual);
 	}
 
 	@Test

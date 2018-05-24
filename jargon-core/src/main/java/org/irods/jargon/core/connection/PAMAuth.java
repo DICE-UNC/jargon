@@ -157,7 +157,7 @@ public class PAMAuth extends AuthMechanism {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol,

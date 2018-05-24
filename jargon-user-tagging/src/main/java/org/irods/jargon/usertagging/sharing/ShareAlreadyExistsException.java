@@ -4,9 +4,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * A share already exists for the given file or collection
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ShareAlreadyExistsException extends JargonException {
 
@@ -16,8 +16,7 @@ public class ShareAlreadyExistsException extends JargonException {
 		super(message);
 	}
 
-	public ShareAlreadyExistsException(final String message,
-			final Throwable cause) {
+	public ShareAlreadyExistsException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -25,18 +24,16 @@ public class ShareAlreadyExistsException extends JargonException {
 		super(cause);
 	}
 
-	public ShareAlreadyExistsException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public ShareAlreadyExistsException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public ShareAlreadyExistsException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public ShareAlreadyExistsException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	public ShareAlreadyExistsException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public ShareAlreadyExistsException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

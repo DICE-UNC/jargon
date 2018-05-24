@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.CollectionAO;
@@ -27,6 +25,8 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
+import junit.framework.Assert;
+
 public class IRODSStarringServiceImplTest {
 
 	private static Properties testingProperties = new Properties();
@@ -37,8 +37,7 @@ public class IRODSStarringServiceImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -47,54 +46,41 @@ public class IRODSStarringServiceImplTest {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.COLLECTION);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.STAR_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
 		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQueryForCollection(
-						Matchers.anyList(), Matchers.anyString())).thenReturn(
-				metadataList);
+				collectionAO.findMetadataValuesByMetadataQueryForCollection(Matchers.anyList(), Matchers.anyString()))
+				.thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		IRODSStarredFileOrCollection actual = irodsStarringService
-				.findStarredForAbsolutePath(absolutePath);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
+		IRODSStarredFileOrCollection actual = irodsStarringService.findStarredForAbsolutePath(absolutePath);
 
 		Assert.assertNotNull("did not return a starredFile", actual);
-		Assert.assertEquals("did not get description", description,
-				actual.getDescription());
-		Assert.assertEquals("did not get user", irodsAccount.getUserName(),
-				actual.getUserName());
+		Assert.assertEquals("did not get description", description, actual.getDescription());
+		Assert.assertEquals("did not get user", irodsAccount.getUserName(), actual.getUserName());
 
 	}
 
@@ -104,115 +90,84 @@ public class IRODSStarringServiceImplTest {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
-		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath)).thenReturn(irodsFile);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.STAR_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
-		Mockito.when(
-				dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(
-						Matchers.anyList(), Matchers.anyString(),
-						Matchers.anyString())).thenReturn(metadataList);
+		Mockito.when(dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(Matchers.anyList(), Matchers.anyString(),
+				Matchers.anyString())).thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		IRODSStarredFileOrCollection actual = irodsStarringService
-				.findStarredForAbsolutePath(absolutePath);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
+		IRODSStarredFileOrCollection actual = irodsStarringService.findStarredForAbsolutePath(absolutePath);
 
 		Assert.assertNotNull("did not return a starredFile", actual);
-		Assert.assertEquals("did not get description", description,
-				actual.getDescription());
-		Assert.assertEquals("did not get user", irodsAccount.getUserName(),
-				actual.getUserName());
+		Assert.assertEquals("did not get description", description, actual.getDescription());
+		Assert.assertEquals("did not get user", irodsAccount.getUserName(), actual.getUserName());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testFindStarredForAbsolutePathWhenDataObjectNoData()
-			throws Exception {
+	public void testFindStarredForAbsolutePathWhenDataObjectNoData() throws Exception {
 		String absolutePath = "/absolutePath";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
-		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath)).thenReturn(irodsFile);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 
-		Mockito.when(
-				dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(
-						Matchers.anyList(), Matchers.anyString(),
-						Matchers.anyString())).thenReturn(metadataList);
+		Mockito.when(dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(Matchers.anyList(), Matchers.anyString(),
+				Matchers.anyString())).thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		IRODSStarredFileOrCollection actual = irodsStarringService
-				.findStarredForAbsolutePath(absolutePath);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
+		IRODSStarredFileOrCollection actual = irodsStarringService.findStarredForAbsolutePath(absolutePath);
 
 		Assert.assertNull("should be null..no data", actual);
 
@@ -220,63 +175,52 @@ public class IRODSStarringServiceImplTest {
 
 	/**
 	 * The AVU has the wrong unit, it's not a 'starred'
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	@Test(expected = IllegalArgumentException.class)
-	public void testFindStarredForAbsolutePathAvuTypeIncorrect()
-			throws Exception {
+	public void testFindStarredForAbsolutePathAvuTypeIncorrect() throws Exception {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.COLLECTION);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.TAG_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.TAG_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
 		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQueryForCollection(
-						Matchers.anyList(), Matchers.anyString())).thenReturn(
-				metadataList);
+				collectionAO.findMetadataValuesByMetadataQueryForCollection(Matchers.anyList(), Matchers.anyString()))
+				.thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.findStarredForAbsolutePath(absolutePath);
 
 	}
 
 	/**
 	 * the file does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -285,42 +229,32 @@ public class IRODSStarringServiceImplTest {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenThrow(
-				new FileNotFoundException("not found"));
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenThrow(new FileNotFoundException("not found"));
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.TAG_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.TAG_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
 		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQueryForCollection(
-						Matchers.anyList(), Matchers.anyString())).thenReturn(
-				metadataList);
+				collectionAO.findMetadataValuesByMetadataQueryForCollection(Matchers.anyList(), Matchers.anyString()))
+				.thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.findStarredForAbsolutePath(absolutePath);
 
 	}
@@ -329,10 +263,9 @@ public class IRODSStarringServiceImplTest {
 	public void testFindStarredForAbsolutePathNullAbsPath() throws Exception {
 		String absolutePath = null;
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.findStarredForAbsolutePath(absolutePath);
 
 	}
@@ -342,72 +275,56 @@ public class IRODSStarringServiceImplTest {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.COLLECTION);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.starFileOrCollection(absolutePath, description);
 
-		AvuData avuData = AvuData.instance(description,
-				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		Mockito.verify(collectionAO).addAVUMetadata(absolutePath, avuData);
 
 	}
 
 	@Test(expected = FileNotFoundException.class)
-	public void testStarFileOrCollectionWhenCollectionNotFound()
-			throws Exception {
+	public void testStarFileOrCollectionWhenCollectionNotFound() throws Exception {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenThrow(
-				new FileNotFoundException("file not found"));
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenThrow(new FileNotFoundException("file not found"));
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.starFileOrCollection(absolutePath, description);
 
 	}
@@ -417,116 +334,88 @@ public class IRODSStarringServiceImplTest {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
-		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath)).thenReturn(irodsFile);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.starFileOrCollection(absolutePath, description);
 
-		AvuData avuData = AvuData.instance(description,
-				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		Mockito.verify(dataObjectAO).addAVUMetadata(absolutePath, avuData);
 
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testStarFileOrCollectionWhenDataObjectAsAnUpdate()
-			throws Exception {
+	public void testStarFileOrCollectionWhenDataObjectAsAnUpdate() throws Exception {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 		String oldDescription = "oldDescription";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		IRODSFileFactory irodsFileFactory = Mockito
-				.mock(IRODSFileFactory.class);
+		IRODSFileFactory irodsFileFactory = Mockito.mock(IRODSFileFactory.class);
 
-		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount))
-				.thenReturn(irodsFileFactory);
+		Mockito.when(irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)).thenReturn(irodsFileFactory);
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
-		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath))
-				.thenReturn(irodsFile);
+		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath)).thenReturn(irodsFile);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath, 1,
-						oldDescription, irodsAccount.getUserName(),
-						UserTaggingConstants.STAR_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1",
+				absolutePath, 1, oldDescription, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
-		Mockito.when(
-				dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(
-						Matchers.anyList(), Matchers.anyString(),
-						Matchers.anyString())).thenReturn(metadataList);
+		Mockito.when(dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(Matchers.anyList(), Matchers.anyString(),
+				Matchers.anyString())).thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.starFileOrCollection(absolutePath, description);
 
-		AvuData oldAvu = AvuData.instance(oldDescription,
-				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
-		AvuData avuData = AvuData.instance(description,
-				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
-		Mockito.verify(dataObjectAO).modifyAVUMetadata(absolutePath, oldAvu,
-				avuData);
+		AvuData oldAvu = AvuData.instance(oldDescription, irodsAccount.getUserName(),
+				UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
+		Mockito.verify(dataObjectAO).modifyAVUMetadata(absolutePath, oldAvu, avuData);
 
 	}
 
@@ -536,49 +425,38 @@ public class IRODSStarringServiceImplTest {
 		String absolutePath = "/absolutePath";
 		String description = "description";
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
 		objStat.setObjectType(ObjectType.COLLECTION);
 
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(absolutePath)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePath))
+				.thenReturn(objStat);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.STAR_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
 		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQueryForCollection(
-						Matchers.anyList(), Matchers.anyString())).thenReturn(
-				metadataList);
+				collectionAO.findMetadataValuesByMetadataQueryForCollection(Matchers.anyList(), Matchers.anyString()))
+				.thenReturn(metadataList);
 
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		irodsStarringService.unstarFileOrCollection(absolutePath);
-		AvuData avuData = AvuData.instance(description,
-				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		Mockito.verify(collectionAO).deleteAVUMetadata(absolutePath, avuData);
 	}
 
@@ -587,39 +465,28 @@ public class IRODSStarringServiceImplTest {
 	public void testListStarredCollections() throws Exception {
 		String absolutePath = "/absolute/path/to/coll";
 		String description = "description";
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.STAR_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
-		Mockito.when(
-				collectionAO.findMetadataValuesByMetadataQuery(Matchers
-						.anyList())).thenReturn(metadataList);
+		Mockito.when(collectionAO.findMetadataValuesByMetadataQuery(Matchers.anyList())).thenReturn(metadataList);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		List<IRODSStarredFileOrCollection> collections = irodsStarringService
-				.listStarredCollections(0);
-		Assert.assertEquals("did not find the one metadata value", 1,
-				collections.size());
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
+		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredCollections(0);
+		Assert.assertEquals("did not find the one metadata value", 1, collections.size());
 
 	}
 
@@ -628,39 +495,28 @@ public class IRODSStarringServiceImplTest {
 	public void testListStarredDataObjects() throws Exception {
 		String absolutePath = "/absolute/path/to/dataobj.txt";
 		String description = "description";
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath, 1,
-						description, irodsAccount.getUserName(),
-						UserTaggingConstants.STAR_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1",
+				absolutePath, 1, description, irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
 
-		Mockito.when(
-				dataObjectAO.findMetadataValuesByMetadataQuery(Matchers
-						.anyList())).thenReturn(metadataList);
+		Mockito.when(dataObjectAO.findMetadataValuesByMetadataQuery(Matchers.anyList())).thenReturn(metadataList);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
-		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		List<IRODSStarredFileOrCollection> collections = irodsStarringService
-				.listStarredDataObjects(0);
-		Assert.assertEquals("did not find the one metadata value", 1,
-				collections.size());
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
+		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
+		List<IRODSStarredFileOrCollection> collections = irodsStarringService.listStarredDataObjects(0);
+		Assert.assertEquals("did not find the one metadata value", 1, collections.size());
 
 	}
 

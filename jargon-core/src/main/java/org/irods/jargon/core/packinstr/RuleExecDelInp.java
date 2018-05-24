@@ -24,8 +24,8 @@ public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 	 * Instance method for delete of a rule in the delayed rule execution queue
 	 *
 	 * @param ruleExecId
-	 *            {@code String} with the id of a rule in the delayed rule
-	 *            execution queue
+	 *            {@code String} with the id of a rule in the delayed rule execution
+	 *            queue
 	 * @return {@link RuleExecDelInp}
 	 */
 	public static RuleExecDelInp instanceForDeleteRule(final String ruleExecId) {
@@ -46,7 +46,7 @@ public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

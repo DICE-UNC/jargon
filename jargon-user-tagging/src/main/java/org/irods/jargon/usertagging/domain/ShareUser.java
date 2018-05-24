@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -11,14 +11,14 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 /**
  * Represents a share for a user, which consists of the user name, user zone,
  * and permission type desired
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ShareUser extends IRODSDomainObject implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4660577038224822489L;
 
@@ -52,17 +52,16 @@ public class ShareUser extends IRODSDomainObject implements Serializable {
 
 	/**
 	 * Constructor for an immutable share permission
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the userName to share with
 	 * @param zone
-	 *            {@code String} with the zone (can be blank to denote
-	 *            current zone user)
+	 *            {@code String} with the zone (can be blank to denote current zone
+	 *            user)
 	 * @param filePermission
 	 *            {@link FilePermissionEnum with desired permission to set}
 	 */
-	public ShareUser(final String userName, final String zone,
-			final FilePermissionEnum filePermission) {
+	public ShareUser(final String userName, final String zone, final FilePermissionEnum filePermission) {
 		super();
 		this.userName = userName;
 		this.zone = zone;

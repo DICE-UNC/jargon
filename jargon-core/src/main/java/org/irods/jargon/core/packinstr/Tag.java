@@ -233,7 +233,7 @@ public class Tag implements Cloneable {
 	 *
 	 * So if tagname = taggy, and index = 2, get the 3rd subtag with the name of
 	 * 'taggy'.
-	 * 
+	 *
 	 * @param tagName
 	 *            {@code String} with the name of the tag
 	 * @param index
@@ -276,7 +276,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Returns the values of this tags subtags. Which are probably more tags unless
 	 * we've finally reached a leaf.
-	 * 
+	 *
 	 * @return {@code Object[]} at the tag location
 	 */
 	public Object[] getTagValues() {
@@ -293,7 +293,7 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Convenience for addTag( new Tag(name, val) )
-	 * 
+	 *
 	 * @param name
 	 *            {@code String} with the tag name
 	 * @param val
@@ -366,7 +366,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Outputs a string to send communications (function calls) to the iRODS server.
 	 * All values are strings
-	 * 
+	 *
 	 * @return {@code String} with the parsed tag value
 	 */
 	public String parseTag() {
@@ -422,7 +422,7 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Just a simple message to check if there was an error.
-	 * 
+	 *
 	 * @param message
 	 *            {@link Tag}
 	 * @throws IOException
@@ -438,7 +438,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Read the data buffer to discover the first tag. Fill the values of that tag
 	 * according to the above defined static final values.
-	 * 
+	 *
 	 * @param data
 	 *            {@code byte[]}
 	 * @param encoding
@@ -490,7 +490,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Read the data buffer to discover a sub tag. Fill the values of that tag
 	 * according to the above defined static final values.
-	 * 
+	 *
 	 * @param tag
 	 *            {@link Tag} to read
 	 * @param data
@@ -537,7 +537,7 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Creates the KeyValPair_PI tag.
-	 * 
+	 *
 	 * @param keyword
 	 *            {@code String} with the keyword
 	 * @param value
@@ -550,7 +550,7 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Creates the KeyValPair_PI tag.
-	 * 
+	 *
 	 * @param keyValue
 	 *            {@code String[][]} array with the kvps
 	 * @return {@link Tag}

@@ -30,8 +30,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 	private final IRODSAccount irodsAccount;
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ChecksumManagerImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(ChecksumManagerImpl.class);
 
 	/**
 	 * @param irodsAccount
@@ -49,41 +48,36 @@ public class ChecksumManagerImpl implements ChecksumManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.checksum.ChecksumManager#
 	 * determineChecksumEncodingForTargetServer()
 	 */
 	@Override
-	public ChecksumEncodingEnum determineChecksumEncodingForTargetServer()
-			throws JargonException {
+	public ChecksumEncodingEnum determineChecksumEncodingForTargetServer() throws JargonException {
 
 		log.info("determineChecksumEncodingForTargetServer()");
 
 		log.info("checking discovered cache to see if I have stored a checksum type...");
 
-		String checksumTypeRetrievedFromCache = irodsAccessObjectFactory
-				.getDiscoveredServerPropertiesCache().retrieveValue(
-						irodsAccount.getHost(), irodsAccount.getZone(),
+		String checksumTypeRetrievedFromCache = irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()
+				.retrieveValue(irodsAccount.getHost(), irodsAccount.getZone(),
 						DiscoveredServerPropertiesCache.CHECKSUM_TYPE);
 
 		if (checksumTypeRetrievedFromCache != null) {
-			log.info("found cached checksum encoding:{}",
-					checksumTypeRetrievedFromCache);
-			return ChecksumEncodingEnum
-					.findTypeByString(checksumTypeRetrievedFromCache);
+			log.info("found cached checksum encoding:{}", checksumTypeRetrievedFromCache);
+			return ChecksumEncodingEnum.findTypeByString(checksumTypeRetrievedFromCache);
 		}
 
 		/*
-		 * No cache hit...If I've specified in the jargon.properties exactly,
-		 * use that encoding
+		 * No cache hit...If I've specified in the jargon.properties exactly, use that
+		 * encoding
 		 */
 
-		ChecksumEncodingEnum encodingFromProperties = irodsAccessObjectFactory
-				.getJargonProperties().getChecksumEncoding();
+		ChecksumEncodingEnum encodingFromProperties = irodsAccessObjectFactory.getJargonProperties()
+				.getChecksumEncoding();
 
 		if (encodingFromProperties == null) {
-			throw new JargonRuntimeException(
-					"jargon properties has null checksum encoding");
+			throw new JargonRuntimeException("jargon properties has null checksum encoding");
 		}
 
 		log.info("encoding from properties:{}", encodingFromProperties);
@@ -99,15 +93,13 @@ public class ChecksumManagerImpl implements ChecksumManager {
 		}
 
 		/*
-		 * The jargon properties settings need some interpretation based on the
-		 * version and other discoverable qualities of the target server.
+		 * The jargon properties settings need some interpretation based on the version
+		 * and other discoverable qualities of the target server.
 		 */
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties serverProperties = environmentalInfoAO
-				.getIRODSServerProperties();
+		IRODSServerProperties serverProperties = environmentalInfoAO.getIRODSServerProperties();
 
 		boolean isConsortium = serverProperties.isAtLeastIrods410();
 
@@ -115,9 +107,9 @@ public class ChecksumManagerImpl implements ChecksumManager {
 
 		/*
 		 * Negotiation:
-		 * 
+		 *
 		 * DEFAULT - use MD5 pre consortium and SHA256 post
-		 * 
+		 *
 		 * STRONG - use MD5 pre 3.3.1 and SHA256 after
 		 */
 
@@ -135,8 +127,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 				log.error("unhandled checksum type:{}", encodingFromProperties);
 				throw new JargonException("unknown checksum type");
 			}
-		} else if (serverProperties
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.3.1")) {
+		} else if (serverProperties.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.3.1")) {
 			log.info("is at least iRODS3.3.1");
 			if (encodingFromProperties == ChecksumEncodingEnum.DEFAULT) {
 				log.info("checksumEncoding set to MD5");
@@ -159,21 +150,18 @@ public class ChecksumManagerImpl implements ChecksumManager {
 	}
 
 	private void cacheEncoding(final ChecksumEncodingEnum checksumEncoding) {
-		irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()
-				.cacheAProperty(irodsAccount.getHost(), irodsAccount.getZone(),
-						DiscoveredServerPropertiesCache.CHECKSUM_TYPE,
-						checksumEncoding.toString());
+		irodsAccessObjectFactory.getDiscoveredServerPropertiesCache().cacheAProperty(irodsAccount.getHost(),
+				irodsAccount.getZone(), DiscoveredServerPropertiesCache.CHECKSUM_TYPE, checksumEncoding.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.checksum.ChecksumManager#
 	 * determineChecksumEncodingFromIrodsData(java.lang.String)
 	 */
 	@Override
-	public ChecksumValue determineChecksumEncodingFromIrodsData(
-			final String irodsChecksumValue)
+	public ChecksumValue determineChecksumEncodingFromIrodsData(final String irodsChecksumValue)
 			throws ChecksumMethodUnavailableException {
 
 		log.info("determineChecksumEncodingFromIrodsData()");
@@ -197,8 +185,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 				checksumEncodingEnum = ChecksumEncodingEnum.SHA256;
 			} else {
 				log.error("unknown checksum type:{}", beforeColon);
-				throw new ChecksumMethodUnavailableException(
-						"unknown checksum type:" + beforeColon);
+				throw new ChecksumMethodUnavailableException("unknown checksum type:" + beforeColon);
 			}
 		}
 

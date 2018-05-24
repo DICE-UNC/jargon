@@ -19,9 +19,9 @@ import org.irods.jargon.usertagging.domain.ShareUser;
  * every file or collection in a deeply nested shared collection as 'shared', as
  * it would be based purely on the ACL settings. As a first class object, a
  * share can have an alias name, and is considered one unit.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface IRODSSharingService {
 
@@ -35,7 +35,7 @@ public interface IRODSSharingService {
 	 * <p>
 	 * Note that the share is only settable as originating from the file or
 	 * collection owner
-	 * 
+	 *
 	 * @param irodsSharedFileOrCollection
 	 *            {@link IRODSSharedFileOrCollection} representing the share
 	 * @throws ShareAlreadyExistsException
@@ -53,7 +53,7 @@ public interface IRODSSharingService {
 	 * {@code IRODSSahredFileOrCollection} that may exist. Note that {@code null} is
 	 * returned if no such share exists, and a {@code FileNotFoundException} is
 	 * returned if the absolute path does not exist.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with a valid iRODS absolute path to a file or
 	 *            collection
@@ -76,7 +76,7 @@ public interface IRODSSharingService {
 	 * but the ACLs remain. It is under consideration to remove all ACLs, or add a
 	 * flag or method variant that will either preserve or delete the associated
 	 * ACLs.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with a valid iRODS absolute path to a file or
 	 *            collection
@@ -95,7 +95,7 @@ public interface IRODSSharingService {
 	 * returned in this variant. It is intended that obtaining the listing would be
 	 * done as a separate request. A variant may be added later that does do this
 	 * extra processing
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the name of the user who is doing the sharing,
 	 *            based on the owner of the collection.
@@ -127,7 +127,7 @@ public interface IRODSSharingService {
 	 * returned in this variant. It is intended that obtaining the listing would be
 	 * done as a separate request. A variant may be added later that does do this
 	 * extra processing
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the name of the user who is doing the sharing,
 	 *            based on the owner of the collection.
@@ -155,7 +155,7 @@ public interface IRODSSharingService {
 	 * Handy method to retrieve ACL share details for a share at the given absolute
 	 * path. Note that if there is no share, an empty list is returned. This seems
 	 * to convey the message with the least amount of surprise.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with a valid iRODS absolute path to a file or
 	 *            collection
@@ -171,7 +171,7 @@ public interface IRODSSharingService {
 
 	/**
 	 * Update the name of the share at the given path
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with a valid iRODS absolute path to a file or
 	 *            collection
@@ -190,7 +190,7 @@ public interface IRODSSharingService {
 	/**
 	 * Short-cut method to create a share with minimum information. This method does
 	 * not attempt to set users
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with a valid iRODS absolute path to a file or
 	 *            collection

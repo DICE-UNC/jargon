@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.rule;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
 /**
  * Represents a file that contains a user rule
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserRuleDefinition extends IRODSDomainObject {
 

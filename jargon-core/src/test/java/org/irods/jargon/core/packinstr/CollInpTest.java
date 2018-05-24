@@ -1,11 +1,11 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class CollInpTest {
 
@@ -41,8 +41,7 @@ public class CollInpTest {
 		sb.append("</CollInpNew_PI>\n");
 		String expected = sb.toString();
 		CollInp collInp = CollInp.instance("testcollname", true);
-		Assert.assertEquals("did not get expected xml", expected,
-				collInp.getParsedTags());
+		Assert.assertEquals("did not get expected xml", expected, collInp.getParsedTags());
 	}
 
 	@Test
@@ -62,8 +61,7 @@ public class CollInpTest {
 		String expected = sb.toString();
 		CollInp collInp = CollInp
 				.instanceForRecursiveDeleteCollectionWithForce("/test1/home/test1/test-scratch/testForcedDeleteDir");
-		Assert.assertEquals("did not get expected xml", expected,
-				collInp.getParsedTags());
+		Assert.assertEquals("did not get expected xml", expected, collInp.getParsedTags());
 	}
 
 	@Test
@@ -81,15 +79,13 @@ public class CollInpTest {
 		String expected = sb.toString();
 		CollInp collInp = CollInp
 				.instanceForRecursiveDeleteCollectionNoForce("/test1/home/test1/test-scratch/testForcedDeleteDir");
-		Assert.assertEquals("did not get expected xml", expected,
-				collInp.getParsedTags());
+		Assert.assertEquals("did not get expected xml", expected, collInp.getParsedTags());
 	}
 
 	@Test
 	public final void testGetCollectionName() throws JargonException {
 		CollInp collInp = CollInp.instance("testcollname", true);
-		Assert.assertEquals("coll name not set", "testcollname",
-				collInp.getCollectionName());
+		Assert.assertEquals("coll name not set", "testcollname", collInp.getCollectionName());
 	}
 
 }

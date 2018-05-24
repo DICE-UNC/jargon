@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -17,9 +17,9 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * share.
  * <p>
  * All fields are final and immutable.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem implements Serializable {
 
@@ -67,7 +67,7 @@ public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem implem
 	/**
 	 * A shared folder or collection. Describes the user and object that is being
 	 * starred, and providing a description.
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
 	 *            identifies the domain object type that is tagged (e.g. DataObject,

@@ -8,11 +8,10 @@ import org.slf4j.LoggerFactory;
 
 public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractDataUtilsServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractDataUtilsServiceImpl.class);
 	/**
-	 * Factory to create necessary Jargon access objects, which interact with
-	 * the iRODS server
+	 * Factory to create necessary Jargon access objects, which interact with the
+	 * iRODS server
 	 */
 	protected IRODSAccessObjectFactory irodsAccessObjectFactory;
 	/**
@@ -22,15 +21,13 @@ public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} that can create necessary
-	 *            objects
+	 *            {@link IRODSAccessObjectFactory} that can create necessary objects
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that contains the login information
 	 */
-	public AbstractDataUtilsServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public AbstractDataUtilsServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
@@ -71,8 +68,7 @@ public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 	}
 
 	@Override
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 

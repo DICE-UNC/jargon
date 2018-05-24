@@ -63,7 +63,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/**
 	 * Static instance method for a remote execution service.
-	 * 
+	 *
 	 * @param irodsCommands
 	 *            {@link AbstractIRODSMidLevelProtocol}
 	 * @param commandToExecuteWithoutArguments
@@ -123,7 +123,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	/**
 	 * Static instance method for a remote execution service when using the provided
 	 * iRODS absolute path to find the host upon which to execute.
-	 * 
+	 *
 	 * @param irodsCommands
 	 *            {@link AbstractIRODSMidLevelProtocol}
 	 * @param commandToExecuteWithoutArguments
@@ -221,7 +221,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
 	 */
 	@Override
@@ -276,7 +276,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
 	 */
 	@Override

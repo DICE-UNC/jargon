@@ -3,9 +3,9 @@
  */
 package org.irods.jargon.core.connection;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DFC
@@ -17,14 +17,11 @@ public class IrodsVersionTest {
 	public void testCreateAndGetParts() {
 		String versionString = "rods4.1.9";
 		IrodsVersion version = new IrodsVersion(versionString);
-		Assert.assertEquals("missing major string", "4",
-				version.getMajorAsString());
+		Assert.assertEquals("missing major string", "4", version.getMajorAsString());
 		Assert.assertEquals("missing major int", 4, version.getMajor());
-		Assert.assertEquals("missing minor string", "1",
-				version.getMinorAsString());
+		Assert.assertEquals("missing minor string", "1", version.getMinorAsString());
 		Assert.assertEquals("missing minor int", 1, version.getMinor());
-		Assert.assertEquals("missing patch string", "9",
-				version.getPatchAsString());
+		Assert.assertEquals("missing patch string", "9", version.getPatchAsString());
 		Assert.assertEquals("missing patch int", 9, version.getPatch());
 
 	}

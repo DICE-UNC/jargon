@@ -45,7 +45,7 @@ public class IRODSFileInputStream extends InputStream {
 	 *            input stream
 	 * @param fileIOOperations
 	 *            {@link FileIOOperations} that supports iRODS protocol
-	 * 
+	 *
 	 * @exception FileNotFoundException
 	 *                if the file does not exist, is a directory rather than a
 	 *                regular file, or for some other reason cannot be opened for
@@ -73,10 +73,10 @@ public class IRODSFileInputStream extends InputStream {
 		}
 
 		/*
-		 * 
+		 *
 		 * TODO: replace(?) when bug is resolved: [#621] error reading file w/group
 		 * permissions
-		 * 
+		 *
 		 * if (!irodsFile.canRead()) { final String msg = "cannot read the file:" +
 		 * irodsFile.getAbsolutePath(); log.error(msg); throw new
 		 * FileNotFoundException(msg); }
@@ -269,7 +269,7 @@ public class IRODSFileInputStream extends InputStream {
 	 *         there is no more data because the end of the stream has been reached.
 	 * @exception IOException
 	 *                if an I/O error occurs.
-	 * 
+	 *
 	 * @see java.io.InputStream#read()
 	 */
 	@Override

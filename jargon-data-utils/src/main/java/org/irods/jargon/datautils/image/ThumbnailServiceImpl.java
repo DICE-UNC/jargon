@@ -28,27 +28,23 @@ import org.slf4j.LoggerFactory;
 /**
  * Manage the creation and maintenance of thumb-nail images for image files
  * stored in iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
-		implements ThumbnailService {
+public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl implements ThumbnailService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ThumbnailServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(ThumbnailServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} that can create necessary
-	 *            objects
+	 *            {@link IRODSAccessObjectFactory} that can create necessary objects
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that contains the login information
 	 */
-	public ThumbnailServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public ThumbnailServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -62,7 +58,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.image.ThumbnailService#
 	 * isIRODSThumbnailGeneratorAvailable()
 	 */
@@ -70,12 +66,10 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 	public boolean isIRODSThumbnailGeneratorAvailable() throws JargonException {
 		log.info("isIRODSThumbnailGeneratorAvailable()");
 		boolean found = false;
-		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory
-				.getEnvironmentalInfoAO(getIrodsAccount());
+		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory.getEnvironmentalInfoAO(getIrodsAccount());
 		try {
 			log.info("listing available scripts...");
-			List<RemoteCommandInformation> scripts = environmentalInfoAO
-					.listAvailableRemoteCommands();
+			List<RemoteCommandInformation> scripts = environmentalInfoAO.listAvailableRemoteCommands();
 
 			for (RemoteCommandInformation script : scripts) {
 				if (script.getCommand().equals("makeThumbnail.py")) {
@@ -95,13 +89,12 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.image.ThumbnailService#
 	 * generateThumbnailForIRODSPathViaRule(java.io.File, java.lang.String)
 	 */
 	@Override
-	public File generateThumbnailForIRODSPathViaRule(
-			final File workingDirectory,
+	public File generateThumbnailForIRODSPathViaRule(final File workingDirectory,
 			final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws IRODSThumbnailProcessUnavailableException, JargonException {
 
@@ -111,10 +104,8 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 			throw new IllegalArgumentException("null workingDirectory");
 		}
 
-		if (irodsAbsolutePathToGenerateThumbnailFor == null
-				|| irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
-			throw new IllegalArgumentException(
-					"nul irodsAbsolutePathToGenerateThumbnailFor");
+		if (irodsAbsolutePathToGenerateThumbnailFor == null || irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
+			throw new IllegalArgumentException("nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
@@ -138,8 +129,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 
 		InputStream is = retrieveThumbnailByIRODSAbsolutePathViaRule(myPath);
 		try {
-			OutputStream fos = new BufferedOutputStream(new FileOutputStream(
-					targetTempFile));
+			OutputStream fos = new BufferedOutputStream(new FileOutputStream(targetTempFile));
 			log.info("have image data, stream to temp file");
 			byte[] buffer = new byte[1024];
 			int len = is.read(buffer);
@@ -152,34 +142,28 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 			is.close();
 			return targetTempFile;
 		} catch (FileNotFoundException e) {
-			log.error("file not found exception for temp image output stream",
-					e);
-			throw new JargonException(
-					"no file found when generating temp image output stream", e);
+			log.error("file not found exception for temp image output stream", e);
+			throw new JargonException("no file found when generating temp image output stream", e);
 		} catch (IOException e) {
 			log.error("IOException for temp image output stream", e);
-			throw new JargonException(
-					"IOException when generating temp image output stream", e);
+			throw new JargonException("IOException when generating temp image output stream", e);
 		}
 	}
 
 	/**
 	 * Create any necessary directories in the working directory to house the
 	 * generated image.
-	 * 
+	 *
 	 * @param workingDirectory
 	 * @param irodsAbsolutePathToGenerateThumbnailFor
 	 * @return
 	 * @throws JargonException
 	 */
 	private File createWorkingDirectoryImageFile(final File workingDirectory,
-			final String irodsAbsolutePathToGenerateThumbnailFor)
-			throws JargonException {
+			final String irodsAbsolutePathToGenerateThumbnailFor) throws JargonException {
 
-		log.info("createWorkingDirectoryImageFile(), working directory is:{}",
-				workingDirectory);
-		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
-				irodsAbsolutePathToGenerateThumbnailFor);
+		log.info("createWorkingDirectoryImageFile(), working directory is:{}", workingDirectory);
+		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}", irodsAbsolutePathToGenerateThumbnailFor);
 		if (workingDirectory.exists()) {
 			if (workingDirectory.isDirectory()) {
 				// OK
@@ -191,36 +175,30 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 			workingDirectory.mkdirs();
 		}
 
-		File targetTempFile = new File(workingDirectory,
-				irodsAbsolutePathToGenerateThumbnailFor);
+		File targetTempFile = new File(workingDirectory, irodsAbsolutePathToGenerateThumbnailFor);
 		targetTempFile.getParentFile().mkdirs();
 
-		log.info("thumbnail target temp file:${}",
-				targetTempFile.getAbsolutePath());
+		log.info("thumbnail target temp file:${}", targetTempFile.getAbsolutePath());
 		return targetTempFile;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.image.ThumbnailService#
 	 * retrieveThumbnailByIRODSAbsolutePathViaRule(java.lang.String)
 	 */
 	@Override
-	public InputStream retrieveThumbnailByIRODSAbsolutePathViaRule(
-			final String irodsAbsolutePathToGenerateThumbnailFor)
+	public InputStream retrieveThumbnailByIRODSAbsolutePathViaRule(final String irodsAbsolutePathToGenerateThumbnailFor)
 			throws JargonException {
 
 		log.info("retrieveThumbnailByIRODSAbsolutePath()");
 
-		if (irodsAbsolutePathToGenerateThumbnailFor == null
-				|| irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePathToGenerateThumbnailFor");
+		if (irodsAbsolutePathToGenerateThumbnailFor == null || irodsAbsolutePathToGenerateThumbnailFor.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePathToGenerateThumbnailFor");
 		}
 
-		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
-				irodsAbsolutePathToGenerateThumbnailFor);
+		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}", irodsAbsolutePathToGenerateThumbnailFor);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
@@ -261,22 +239,17 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		sb.append("'\n");
 		sb.append("OUTPUT ");
 		sb.append(THUMBNAIL_RULE_DATA_PARAMETER);
-		RuleProcessingAO ruleProcessingAO = getIrodsAccessObjectFactory()
-				.getRuleProcessingAO(getIrodsAccount());
-		IRODSRuleExecResult result = ruleProcessingAO
-				.executeRule(sb.toString());
+		RuleProcessingAO ruleProcessingAO = getIrodsAccessObjectFactory().getRuleProcessingAO(getIrodsAccount());
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(sb.toString());
 
 		String execOut;
 		try {
-			execOut = (String) result.getOutputParameterResults()
-					.get(THUMBNAIL_RULE_DATA_PARAMETER).getResultObject();
+			execOut = (String) result.getOutputParameterResults().get(THUMBNAIL_RULE_DATA_PARAMETER).getResultObject();
 		} catch (NullPointerException npe) {
-			throw new IRODSThumbnailProcessUnavailableException(
-					"no iRODS rule-based thumbnail generation available");
+			throw new IRODSThumbnailProcessUnavailableException("no iRODS rule-based thumbnail generation available");
 		}
 
-		InputStream is = new java.io.ByteArrayInputStream(
-				Base64.fromString(execOut));
+		InputStream is = new java.io.ByteArrayInputStream(Base64.fromString(execOut));
 		return is;
 
 	}

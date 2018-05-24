@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -12,9 +12,9 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 /**
  * Represents a search on a set of tags, and includes both the originating
  * query, and the result values.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TagQuerySearchResult {
 
@@ -23,7 +23,7 @@ public class TagQuerySearchResult {
 
 	/**
 	 * Static initializer.
-	 * 
+	 *
 	 * @param searchTags
 	 *            {@code String} with the free tags used to search.
 	 * @param queryResultEntries
@@ -40,7 +40,7 @@ public class TagQuerySearchResult {
 
 	/**
 	 * Private constructor.
-	 * 
+	 *
 	 * @param searchTags
 	 *            {@code String} with the free tags used to search.
 	 * @param queryResultEntries
@@ -67,7 +67,7 @@ public class TagQuerySearchResult {
 
 	/**
 	 * Get the tags used to generate the search.
-	 * 
+	 *
 	 * @return {@code String} with the free-form set of tags used to search
 	 */
 	public String getSearchTags() {
@@ -76,7 +76,7 @@ public class TagQuerySearchResult {
 
 	/**
 	 * Get the objects that are in response to the query.
-	 * 
+	 *
 	 * @return {@code List} of {@code CollectionAndDataObjectListingEntry}
 	 */
 	public List<CollectionAndDataObjectListingEntry> getQueryResultEntries() {

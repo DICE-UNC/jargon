@@ -16,11 +16,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Mike Conway - DICE
  */
-public class MD5LocalChecksumComputerStrategy extends
-AbstractChecksumComputeStrategy {
+public class MD5LocalChecksumComputerStrategy extends AbstractChecksumComputeStrategy {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(MD5LocalChecksumComputerStrategy.class);
+	public static final Logger log = LoggerFactory.getLogger(MD5LocalChecksumComputerStrategy.class);
 
 	/*
 	 * (non-Javadoc)
@@ -29,23 +27,19 @@ AbstractChecksumComputeStrategy {
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */
 	@Override
-	public ChecksumValue computeChecksumValueForLocalFile(
-			final String localFileAbsolutePath) throws FileNotFoundException,
-			JargonException {
+	public ChecksumValue computeChecksumValueForLocalFile(final String localFileAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		log.info("instanceChecksumForPackingInstruction()");
 
 		if (localFileAbsolutePath == null || localFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty localFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty localFileAbsolutePath");
 		}
 
-		byte[] digest = LocalFileUtils
-				.computeMD5FileCheckSumViaAbsolutePath(localFileAbsolutePath);
+		byte[] digest = LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(localFileAbsolutePath);
 		ChecksumValue value = new ChecksumValue();
 		value.setChecksumEncoding(ChecksumEncodingEnum.MD5);
-		value.setChecksumStringValue(LocalFileUtils
-				.digestByteArrayToString(digest));
+		value.setChecksumStringValue(LocalFileUtils.digestByteArrayToString(digest));
 		value.setChecksumTransmissionFormat(value.getChecksumStringValue());
 		return value;
 

@@ -212,7 +212,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * object is added. If the AttName is used only by this one object, the AVU
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the user name whose password will change.
 	 * @param avuData

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.filearchive;
 
@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Archiver that will tar a given local collection
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class LocalTarFileArchiver extends AbstractArchiver {
 
@@ -45,7 +45,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.filearchive.AbstractArchiver#completeArchiving ()
 	 */
@@ -66,7 +66,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.filearchive.AbstractArchiver#addFileToArchive
 	 * (java.io.File)
 	 */
@@ -95,7 +95,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.filearchive.AbstractArchiver#
 	 * initializeTargetArchive()
 	 */

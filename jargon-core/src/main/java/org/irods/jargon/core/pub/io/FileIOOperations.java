@@ -78,7 +78,7 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * to that point are stored into {@code b} and the number of bytes read before
 	 * the exception occurred is returned. Subclasses are encouraged to provide a
 	 * more efficient implementation of this method.
-	 * 
+	 *
 	 * @param fd
 	 *            {@code int} with the file descriptor
 	 * @param buffer
@@ -110,7 +110,7 @@ public interface FileIOOperations extends IRODSAccessObject {
 
 	/**
 	 * Convenience method to compute a checksum on a given iRODS file
-	 * 
+	 *
 	 * @param irodsFileAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a file
 	 * @return {@link ChecksumValue} with the resulting checksum

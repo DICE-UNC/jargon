@@ -1,10 +1,10 @@
 package org.irods.jargon.core.protovalues;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class AuditActionEnumTest {
 
@@ -18,10 +18,8 @@ public class AuditActionEnumTest {
 
 	@Test
 	public void testValueOf() {
-		AuditActionEnum actual = AuditActionEnum
-				.valueOf(AuditActionEnum.ACCESS_GRANTED.getAuditCode());
-		Assert.assertTrue(actual.getAuditCode() == AuditActionEnum.ACCESS_GRANTED
-				.getAuditCode());
+		AuditActionEnum actual = AuditActionEnum.valueOf(AuditActionEnum.ACCESS_GRANTED.getAuditCode());
+		Assert.assertTrue(actual.getAuditCode() == AuditActionEnum.ACCESS_GRANTED.getAuditCode());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

@@ -39,12 +39,10 @@ public class IRODSFileOutputStreamPEPFunctionalTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -58,76 +56,57 @@ public class IRODSFileOutputStreamPEPFunctionalTest {
 	public final void testPepFiresOnClose() throws Exception {
 		String testFileName = "testPepFiresOnClose.txt";
 		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
 
 		new File(localFilePath);
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		irodsFileOutputStream.write(string1.getBytes());
 		irodsFileOutputStream.close();
-		assertionHelper.assertDataObjectFlaggedWithAVU(
-				irodsFile.getAbsolutePath(), "postProcForPutFired",
+		assertionHelper.assertDataObjectFlaggedWithAVU(irodsFile.getAbsolutePath(), "postProcForPutFired",
 				accessObjectFactory, irodsAccount);
 
 	}
 
 	/**
-	 * Test of bug 146, requires jargon-functional.re rule for postProcForPut to
-	 * be enabled!
+	 * Test of bug 146, requires jargon-functional.re rule for postProcForPut to be
+	 * enabled!
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testIRODSFileOutputStreamOverwriteNonexistentBug146()
-			throws Exception {
+	public final void testIRODSFileOutputStreamOverwriteNonexistentBug146() throws Exception {
 		String testFileName = "testIRODSFileOutputStreamOverwriteNonexistentBug146.txt";
 		String string = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
 
 		new File(localFilePath);
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile,
-						OpenFlags.WRITE_TRUNCATE);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile,
+				OpenFlags.WRITE_TRUNCATE);
 
 		irodsFileOutputStream.write(string.getBytes());
 		irodsFileOutputStream.close();
-		assertionHelper.assertDataObjectFlaggedWithAVU(
-				irodsFile.getAbsolutePath(), "postProcForPutFired",
+		assertionHelper.assertDataObjectFlaggedWithAVU(irodsFile.getAbsolutePath(), "postProcForPutFired",
 				accessObjectFactory, irodsAccount);
 
 	}

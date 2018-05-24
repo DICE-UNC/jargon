@@ -30,7 +30,7 @@ public final class AvuData extends IRODSDomainObject {
 	 * @param unit
 	 *            {@code String} with AVU unit.
 	 * @return {@link AvuData}
-	 * 
+	 *
 	 */
 	public static AvuData instance(final String attribute, final String value, final String unit) {
 		return new AvuData(attribute, value, unit);
@@ -49,7 +49,7 @@ public final class AvuData extends IRODSDomainObject {
 	 *            {@code String} with the AVU value.
 	 * @param unit
 	 *            {@code String} with AVU unit.
-	 * 
+	 *
 	 */
 	public AvuData(final String attribute, final String value, final String unit) {
 		if (attribute == null || attribute.isEmpty()) {

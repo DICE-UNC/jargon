@@ -58,7 +58,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForGetOperation(
 	 * java.lang.String, java.lang.String)
 	 */
@@ -121,7 +121,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForPutOperation(
 	 * java.lang.String, java.lang.String)
 	 */
@@ -182,7 +182,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getObjectStatForAbsolutePath
 	 * (java.lang.String)

@@ -23,8 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
-	private Logger log = LoggerFactory
-			.getLogger(IRODSSimpleProtocolManager.class);
+	private Logger log = LoggerFactory.getLogger(IRODSSimpleProtocolManager.class);
 
 	public static IRODSSimpleProtocolManager instance() {
 		return new IRODSSimpleProtocolManager();
@@ -37,21 +36,17 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
+	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
 	 * (org.irods.jargon.core.connection.IRODSAccount,
 	 * org.irods.jargon.core.connection.PipelineConfiguration,
 	 * org.irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
-	public AbstractIRODSMidLevelProtocol getIRODSProtocol(
-			final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
-			final IRODSSession irodsSession) throws AuthenticationException,
-			JargonException {
+	public AbstractIRODSMidLevelProtocol getIRODSProtocol(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession)
+			throws AuthenticationException, JargonException {
 
-		log.debug("creating an IRODSSimpleConnection for account:{}",
-				irodsAccount);
+		log.debug("creating an IRODSSimpleConnection for account:{}", irodsAccount);
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -66,8 +61,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 		}
 
 		checkMidLevelProtocolFactory(irodsSession);
-		return createNewProtocol(irodsAccount, pipelineConfiguration,
-				irodsSession);
+		return createNewProtocol(irodsAccount, pipelineConfiguration, irodsSession);
 	}
 
 	/**
@@ -75,14 +69,13 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	 *
 	 * @throws JargonException
 	 */
-	private synchronized void checkMidLevelProtocolFactory(
-			final IRODSSession irodsSession) throws JargonException {
+	private synchronized void checkMidLevelProtocolFactory(final IRODSSession irodsSession) throws JargonException {
 		if (getIrodsMidLevelProtocolFactory() == null) {
 			IRODSConnectionFactory irodsConnectionFactory = getIrodsConnectionFactoryProducingFactory()
 					.instance(irodsSession.getJargonProperties());
 
-			setIrodsMidLevelProtocolFactory(new IRODSMidLevelProtocolFactory(
-					irodsConnectionFactory, getAuthenticationFactory()));
+			setIrodsMidLevelProtocolFactory(
+					new IRODSMidLevelProtocolFactory(irodsConnectionFactory, getAuthenticationFactory()));
 		}
 	}
 
@@ -94,9 +87,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
 	 */
 	@Override
-	public void returnIRODSProtocol(
-			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
-					throws JargonException {
+	public void returnIRODSProtocol(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) throws JargonException {
 		log.debug("irodsMidLevelProtocol returned:{}", irodsMidLevelProtocol);
 		irodsMidLevelProtocol.shutdown();
 

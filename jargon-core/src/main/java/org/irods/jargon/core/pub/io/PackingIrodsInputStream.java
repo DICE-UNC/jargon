@@ -26,19 +26,16 @@ public class PackingIrodsInputStream extends InputStream {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private boolean done = false;
 
-	public PackingIrodsInputStream(
-			final IRODSFileInputStream irodsFileInputStream) {
+	public PackingIrodsInputStream(final IRODSFileInputStream irodsFileInputStream) {
 		super();
 		if (irodsFileInputStream == null) {
 			throw new IllegalArgumentException("null irodsFileInputStream");
 		}
 		this.irodsFileInputStream = irodsFileInputStream;
-		bufferSizeForIrods = irodsFileInputStream.getFileIOOperations()
-				.getJargonProperties().getGetBufferSize();
+		bufferSizeForIrods = irodsFileInputStream.getFileIOOperations().getJargonProperties().getGetBufferSize();
 		log.info("buffer size for gets from iRODS:{}", bufferSizeForIrods);
 		if (bufferSizeForIrods <= 0) {
-			throw new JargonRuntimeException(
-					"misconfiguration in jargon.properties, getBufferSize is <= 0");
+			throw new JargonRuntimeException("misconfiguration in jargon.properties, getBufferSize is <= 0");
 		}
 	}
 
@@ -54,8 +51,8 @@ public class PackingIrodsInputStream extends InputStream {
 	}
 
 	/**
-	 * Fill up a new byte array input stream from iRODS using the requested
-	 * buffer size, tries to fill that buffer
+	 * Fill up a new byte array input stream from iRODS using the requested buffer
+	 * size, tries to fill that buffer
 	 *
 	 * @throws IOException
 	 */
@@ -102,13 +99,12 @@ public class PackingIrodsInputStream extends InputStream {
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	@Override
-	public int read(final byte[] b, final int off, final int len)
-			throws IOException {
+	public int read(final byte[] b, final int off, final int len) throws IOException {
 		log.debug("read()");
 		checkAndInitializeNextByteInputStream();
 		/*
-		 * I either have a byte buffer representing a chunk from iRODS, or it's
-		 * null as I hit end of file and no data was read at all.
+		 * I either have a byte buffer representing a chunk from iRODS, or it's null as
+		 * I hit end of file and no data was read at all.
 		 */
 		if (byteArrayInputStream == null) {
 			log.info("at end of stream");
@@ -125,20 +121,17 @@ public class PackingIrodsInputStream extends InputStream {
 		 */
 		while (myLen > 0) { // fill successive buffers until all requested read
 			// or end of data
-			log.debug("looping to fill buffer while length remaining is:{}",
-					myLen);
+			log.debug("looping to fill buffer while length remaining is:{}", myLen);
 
 			if (byteArrayInputStream.available() > 0) { // get what's already
 				// buffered
 				log.debug("have available, copy into output array");
 				lenToRead = Math.min(myLen, byteArrayInputStream.available());
-				readFromCurrent = byteArrayInputStream.read(b, myOffset,
-						lenToRead);
+				readFromCurrent = byteArrayInputStream.read(b, myOffset, lenToRead);
 				myLen -= lenToRead;
 				totalRead += readFromCurrent;
 				myOffset += readFromCurrent;
-				log.debug("read a total of:{} from current buffer",
-						readFromCurrent);
+				log.debug("read a total of:{} from current buffer", readFromCurrent);
 			} else {
 				log.debug("read all of current stream, get next buffer from iRODS...");
 				fillByteBufferFromIrods();
@@ -147,8 +140,7 @@ public class PackingIrodsInputStream extends InputStream {
 					break;
 				}
 				/*
-				 * I refilled the buffer, consult the available again by
-				 * looping.
+				 * I refilled the buffer, consult the available again by looping.
 				 */
 			}
 
@@ -156,8 +148,8 @@ public class PackingIrodsInputStream extends InputStream {
 
 		log.debug("len for this read:{}", totalRead);
 		/*
-		 * If I've read some data, return that, otherwise, return a -1 to show
-		 * end of data.
+		 * If I've read some data, return that, otherwise, return a -1 to show end of
+		 * data.
 		 */
 		return totalRead > 0 ? totalRead : -1;
 
@@ -190,8 +182,8 @@ public class PackingIrodsInputStream extends InputStream {
 		}
 
 		/*
-		 * I got everything I could out of the stream, so skip further if need
-		 * be in the actual underlying stream
+		 * I got everything I could out of the stream, so skip further if need be in the
+		 * actual underlying stream
 		 */
 		if (mySkip > 0) {
 			skipped += irodsFileInputStream.skip(mySkip);
