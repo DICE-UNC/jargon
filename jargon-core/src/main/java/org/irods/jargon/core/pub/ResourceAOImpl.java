@@ -922,10 +922,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 */
 	private void buildConditionPart(final AVUQueryElement queryElement, final IRODSGenQueryBuilder builder) {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
-					QueryConditionOperators.getOperatorFromEnumStringValue(queryElement
-
-							.getOperator().getOperatorAsString()),
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME, queryElement.getOperator(),
 					queryElement.getValue());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 
