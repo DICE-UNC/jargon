@@ -19,12 +19,13 @@ import org.irods.jargon.core.exception.JargonException;
 public class FileShoppingCart implements Serializable {
 
 	private static final long serialVersionUID = 2046906353965566056L;
-	private final Map<String, ShoppingCartEntry> shoppingCartEntries = new ConcurrentHashMap<String, ShoppingCartEntry>();
+	private final Map<String, ShoppingCartEntry> shoppingCartEntries = new ConcurrentHashMap<>();
 
 	/**
 	 * Static initializer takes creates a shopping cart
 	 *
-	 * @return {@code FileShoppingCart} instane.
+	 * 
+	 * @return {@code FileShoppingCart} instance.
 	 */
 	public static FileShoppingCart instance() {
 		return new FileShoppingCart();
@@ -99,6 +100,7 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Handy method to check if cart has any entries.
 	 *
+	 * 
 	 * @return {@code boolean} of {@code true} if cart has entries
 	 */
 	public boolean hasItems() {
@@ -143,12 +145,13 @@ public class FileShoppingCart implements Serializable {
 	}
 
 	/**
+	 * 
 	 * Get a {@code List<String>} of the file names in the shopping cart
 	 *
-	 * @return {@code List<String>} with the files in the shopping cart
+	 * @return {@code List<String>} with the files in the shopping carts
 	 */
 	public List<String> getShoppingCartFileList() {
-		List<String> fileNames = new ArrayList<String>();
+		List<String> fileNames = new ArrayList<>();
 		for (ShoppingCartEntry shoppingCartEntry : shoppingCartEntries.values()) {
 			fileNames.add(shoppingCartEntry.getFileName());
 		}

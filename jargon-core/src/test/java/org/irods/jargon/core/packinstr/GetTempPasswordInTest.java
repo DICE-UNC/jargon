@@ -1,10 +1,9 @@
 package org.irods.jargon.core.packinstr;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class GetTempPasswordInTest {
 

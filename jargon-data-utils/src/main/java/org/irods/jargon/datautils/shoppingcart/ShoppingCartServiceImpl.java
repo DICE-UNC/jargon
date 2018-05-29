@@ -44,6 +44,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 	/**
 	 * Constructor creates a {@code ShoppingCartService} with necessary dependencies
 	 *
+	 * 
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount

@@ -6,10 +6,9 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)

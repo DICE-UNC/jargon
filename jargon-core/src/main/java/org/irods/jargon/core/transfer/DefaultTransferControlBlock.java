@@ -40,7 +40,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * defaults will be used. Specifying here overrides the default settings for
 	 * this transfer
 	 */
-	private TransferOptions transferOptions = null;
+	private TransferOptions transferOptions = new TransferOptions();
 	private long totalBytesTransferredSoFar = 0L;
 	private long totalBytesToTransfer = 0L;
 
@@ -276,13 +276,6 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		return cancelForErrors;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalFilesToTransfer
-	 * ()
-	 */
 	@Override
 	public int getTotalFilesToTransfer() {
 		synchronized (this) {
@@ -294,13 +287,6 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalFilesToTransfer
-	 * (int)
-	 */
 	@Override
 	public void setTotalFilesToTransfer(final int totalFilesToTransfer) {
 		synchronized (this) {
@@ -391,48 +377,21 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		this.totalBytesTransferredSoFar += totalBytesTransferredSoFar;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalBytesToTransfer
-	 * ()
-	 */
 	@Override
 	public synchronized long getTotalBytesToTransfer() {
 		return totalBytesToTransfer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalBytesToTransfer
-	 * (long)
-	 */
 	@Override
 	public synchronized void setTotalBytesToTransfer(final long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getRestartAbsolutePath ()
-	 */
 	@Override
 	public synchronized String getRestartAbsolutePath() {
 		return restartAbsolutePath;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setRestartAbsolutePath
-	 * (java.lang.String)
-	 */
 	@Override
 	public void setRestartAbsolutePath(final String restartAbsolutePath) {
 		if (restartAbsolutePath == null) {
@@ -443,36 +402,16 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalFilesSkippedSoFar
-	 * ()
-	 */
 	@Override
 	public synchronized int getTotalFilesSkippedSoFar() {
 		return totalFilesSkippedSoFar;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalFilesSkippedSoFar
-	 * (int)
-	 */
 	@Override
 	public synchronized void setTotalFilesSkippedSoFar(final int totalFilesSkippedSoFar) {
 		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
-	 * getActualFilesTransferredWithoutSkippedSoFar()
-	 */
 	@Override
 	public int getActualFilesTransferredWithoutSkippedSoFar() {
 		return totalFilesTransferredSoFar - totalFilesSkippedSoFar;

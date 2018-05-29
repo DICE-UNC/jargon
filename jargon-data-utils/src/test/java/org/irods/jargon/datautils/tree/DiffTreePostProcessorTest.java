@@ -2,9 +2,8 @@ package org.irods.jargon.datautils.tree;
 
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DiffTreePostProcessorTest {
 

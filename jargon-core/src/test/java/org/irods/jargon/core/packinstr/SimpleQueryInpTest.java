@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.SimpleQuery;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class SimpleQueryInpTest {
 

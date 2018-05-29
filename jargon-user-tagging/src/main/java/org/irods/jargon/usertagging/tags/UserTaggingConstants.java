@@ -15,5 +15,6 @@ public class UserTaggingConstants {
 	public static final String DESCRIPTION_AVU_UNIT = "iRODSUserTagging:Description";
 	public static final String STAR_AVU_UNIT = "iRODSUserTagging:Star";
 	public static final String SHARE_AVU_UNIT = "iRODSUserTagging:Share";
+	public static final String MIME_TYPE_AVU_UNIT = "iRODS:MimeType";
 
 }

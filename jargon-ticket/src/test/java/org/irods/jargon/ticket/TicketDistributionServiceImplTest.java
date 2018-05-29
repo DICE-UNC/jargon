@@ -7,11 +7,10 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class TicketDistributionServiceImplTest {
 
@@ -173,11 +172,10 @@ public class TicketDistributionServiceImplTest {
 
 	}
 
-	/**
+	/*
 	 * Get a ticket distribution for a valid ticket and context where I don't have a
-	 * mid-tier host, so no URL generated
-	 *
-	 * @throws Exception
+	 * mid-tier host, so no URL generated <<<<<<< HEAD
+	 * 
 	 */
 	@Test
 	public final void testGetTicketDistributionForTicketNoHostInContext() throws Exception {
@@ -203,7 +201,7 @@ public class TicketDistributionServiceImplTest {
 
 	}
 
-	/**
+	/*
 	 * Get a ticket distribution for a ticket that appears not to be initialized
 	 *
 	 * @throws Exception
@@ -226,11 +224,9 @@ public class TicketDistributionServiceImplTest {
 
 	}
 
-	/**
+	/*
 	 * Get a ticket distribution for a ticket that appears not to be initialized
 	 * with an irods path
-	 *
-	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testGetTicketDistributionForTicketThatsMissingIRODSPath() throws Exception {

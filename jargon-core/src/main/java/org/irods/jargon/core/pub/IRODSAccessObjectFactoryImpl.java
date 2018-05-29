@@ -391,11 +391,18 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 		return new CollectionAuditAOImpl(irodsSession, irodsAccount);
 	}
 
+	@Override
+	public CollectionPagerAO getCollectionPagerAO(final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new CollectionPagerAOImpl(irodsSession, irodsAccount);
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
-	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO(org.
+	 * irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public RuleProcessingAO getRuleProcessingAO(final IRODSAccount irodsAccount) throws JargonException {

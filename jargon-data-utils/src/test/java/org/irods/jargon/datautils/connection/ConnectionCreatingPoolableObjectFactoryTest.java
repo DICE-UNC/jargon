@@ -8,10 +8,9 @@ import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class ConnectionCreatingPoolableObjectFactoryTest {
 
@@ -39,6 +38,7 @@ public class ConnectionCreatingPoolableObjectFactoryTest {
 		Assert.assertNotNull("null factory", factory);
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public void testConnectionCreatingPoolableObjectFactoryNullAccount() {
 		IRODSAccount irodsAccount = null;

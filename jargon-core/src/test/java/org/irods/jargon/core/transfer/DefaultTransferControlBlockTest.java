@@ -1,9 +1,8 @@
 package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DefaultTransferControlBlockTest {
 

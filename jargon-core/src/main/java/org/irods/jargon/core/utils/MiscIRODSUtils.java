@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -29,6 +30,26 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
  *
  */
 public class MiscIRODSUtils {
+
+	/**
+	 * Given an iRODS path, do path cleanup and normalization, also checking for max
+	 * size violations
+	 * 
+	 * @param irodsPath
+	 *            {@link String} with an iRODS path
+	 * @return {@link String} with a normalized iRODS path
+	 * @throws PathTooLongException
+	 */
+	public static String normalizeIrodsPath(final String irodsPath) throws PathTooLongException {
+		if (irodsPath == null) {
+			throw new IllegalArgumentException("null or empty iRODS path");
+		}
+
+		checkPathSizeForMax(irodsPath);
+
+		return FilenameUtils.normalizeNoEndSeparator(irodsPath, true); // use / unix separator
+
+	}
 
 	/**
 	 * Escape kvp chars for passwords that make iRODS angry, used in PAM login
@@ -310,13 +331,16 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Handy method to take the given input stream and make it a String
+	 * Handy method to take the given input stream and make it a String using a
+	 * default UTF-8 encoding
 	 *
 	 * @param inputStream
+	 * 
 	 *            {@link InputStream} to be converted to a string using the given
 	 *            encoding
 	 * @return {@link String} with the stream contents
 	 */
+
 	public static String convertStreamToString(final InputStream inputStream) {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
@@ -543,7 +567,8 @@ public class MiscIRODSUtils {
 	 *            {@code String} to pull last path component from
 	 * @return {@code String} with the last component of the absolute path
 	 */
-	public static String getLastPathComponentForGiveAbsolutePath(final String collectionPath) {
+
+	public static String getLastPathComponentForGivenAbsolutePath(final String collectionPath) {
 
 		if (collectionPath == null || collectionPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty collection path");

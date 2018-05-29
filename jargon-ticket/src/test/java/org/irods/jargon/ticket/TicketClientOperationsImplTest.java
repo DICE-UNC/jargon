@@ -30,11 +30,12 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.irods.jargon.ticket.io.FileStreamAndInfo;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import junit.framework.TestCase;
 
 public class TicketClientOperationsImplTest {
 
@@ -148,12 +149,6 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	/**
-	 * Put a file to irods, then put to it as a secondary user with a ticket using
-	 * overwrite, giving that existing file name, and using a force option
-	 *
-	 * @throws Exception
-	 */
 	@Test
 	public final void testPutFileToIRODSUsingTicketExistingFileSpecifyFile() throws Exception {
 
@@ -492,7 +487,12 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
+	 * <<<<<<< HEAD
+	 * 
+	 * =======
 	 *
+	 * >>>>>>> master
+	 * 
 	 * @throws Exception
 	 */
 	@Ignore
@@ -570,7 +570,12 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
+	 * <<<<<<< HEAD
+	 * 
+	 * =======
 	 *
+	 * >>>>>>> master
+	 * 
 	 * @throws Exception
 	 */
 	@Ignore
@@ -728,8 +733,12 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * Get a ticket on a data object whose abs path has embedded spaces, then get
-	 * the data back as a stream
+	 * the data back as a stream <<<<<<< HEAD
+	 * 
+	 * =======
 	 *
+	 * >>>>>>> master
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -1068,8 +1077,8 @@ public class TicketClientOperationsImplTest {
 		// make sure iRODS file exists with right length
 		IRODSFile actual = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsFile,
 				testFileName);
-		Assert.assertTrue("file does not exist in iRODS", actual.exists());
-		Assert.assertEquals("not all data streamed", size, actual.length());
+		TestCase.assertTrue("file does not exist in iRODS", actual.exists());
+		TestCase.assertEquals("not all data streamed", size, actual.length());
 
 	}
 
@@ -1138,8 +1147,8 @@ public class TicketClientOperationsImplTest {
 		// make sure iRODS file exists with right length
 		IRODSFile actual = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsFile,
 				testFileName);
-		Assert.assertTrue("file does not exist in iRODS", actual.exists());
-		Assert.assertEquals("not all data streamed", 0, actual.length());
+		TestCase.assertTrue("file does not exist in iRODS", actual.exists());
+		TestCase.assertEquals("not all data streamed", 0, actual.length());
 
 	}
 

@@ -234,12 +234,68 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	}
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.ruleservice.composition.RuleCompositionService#storeRule
-	 * (java.lang.String, org.irods.jargon.ruleservice.composition.Rule)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
+	 * loadRuleFromIrodsAsString(java.lang.String)
 	 */
+	@Override
+	public String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
+			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException {
+		log.info("loadRuleFromIrodsAsString()");
+
+		log.info("loadRuleFromIrods()");
+
+		if (absolutePathToRuleFile == null || absolutePathToRuleFile.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutepPathToRuleFile");
+		}
+
+		IRODSFileFactory irodsFileFactory = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount());
+
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(absolutePathToRuleFile);
+		if (!irodsFile.exists()) {
+			log.error("did not find rule file");
+			throw new FileNotFoundException("rule file not found");
+		}
+
+		IRODSFileReader irodsFileReader = irodsFileFactory.instanceIRODSFileReader(absolutePathToRuleFile);
+
+		StringWriter writer = null;
+		String ruleString = null;
+
+		try {
+			writer = new StringWriter();
+			char[] buff = new char[1024];
+			int i = 0;
+			while ((i = irodsFileReader.read(buff)) > -1) {
+				writer.write(buff, 0, i);
+			}
+
+			ruleString = writer.toString();
+
+			if (ruleString == null || ruleString.isEmpty()) {
+				log.error("null or empty rule string");
+				throw new MissingOrInvalidRuleException("no rule found");
+			}
+
+		} catch (IOException ioe) {
+			log.error("io exception reading rule data from resource", ioe);
+			throw new JargonException("error reading rule from resource", ioe);
+		} finally {
+			try {
+				irodsFileReader.close();
+				if (writer != null) {
+					writer.close();
+				}
+			} catch (IOException e) {
+				// ignore
+			}
+
+		}
+
+		return ruleString;
+	}
+
 	@Override
 	public Rule storeRule(final String ruleAbsolutePath, final Rule rule) throws JargonException {
 
@@ -264,7 +320,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			sb = new StringBuilder();
 			sb.append(parm.getUniqueName());
 			sb.append("=");
-			sb.append(parm.getStringValue());
+			sb.append(parm.retrieveStringValue());
 			inputParameters.add(sb.toString());
 		}
 
@@ -537,6 +593,49 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	public RuleCompositionServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ruleservice.composition.RuleCompositionService#storeRule
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Rule storeRule(final String ruleAbsolutePath, final String rule) throws JargonException {
+
+		log.info("storeRule() from String");
+		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleAbsolutePath");
+		}
+
+		if (rule == null || rule.isEmpty()) {
+			throw new IllegalArgumentException("null or empty rule");
+		}
+
+		log.info("ruleAbsolutePath:{}", ruleAbsolutePath);
+		log.info("rule:{}", rule);
+
+		log.info("parsing into a Rule");
+		Rule parsedRule = parseStringIntoRule(rule);
+		log.info("now store it");
+		return storeRule(ruleAbsolutePath, parsedRule);
+	}
+
+	@Override
+	public IRODSRuleExecResult executeRuleAsRawString(final String rule) throws JargonException {
+
+		if (rule == null || rule.isEmpty()) {
+			throw new IllegalArgumentException("null or empty rule");
+		}
+
+		log.info("rule:{}", rule);
+
+		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory.getRuleProcessingAO(getIrodsAccount());
+
+		return ruleProcessingAO.executeRule(rule);
+
 	}
 
 }

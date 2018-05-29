@@ -23,6 +23,7 @@ public interface ShoppingCartService extends DataUtilsService {
 	 * directory of the user represented by the {@code IRODSAccount} provided by
 	 * this service.
 	 *
+	 * 
 	 * @param fileShoppingCart
 	 *            {@link FileShoppingCart} with the contents. Note that, if the cart
 	 *            is empty, an empty cart file is generated.
@@ -39,6 +40,8 @@ public interface ShoppingCartService extends DataUtilsService {
 	/**
 	 * Get the factory (required) used to create data cache service components.
 	 *
+	 * 
+	 *
 	 * @return {@link DataCacheServiceFactory}
 	 */
 	DataCacheServiceFactory getDataCacheServiceFactory();
@@ -54,6 +57,7 @@ public interface ShoppingCartService extends DataUtilsService {
 	/**
 	 * Retrieve a {@code FileShoppingCart} from iRODS. This has been serialized and
 	 * encrypted by an arbitrary key for the user that is logged in.
+	 * 
 	 *
 	 * @param key
 	 *            {@code String} that was used to serialize the shopping cart using
@@ -74,7 +78,10 @@ public interface ShoppingCartService extends DataUtilsService {
 	 * <p>
 	 * This method may only be called by a rodsadmin user, as it needs to generate a
 	 * temporary password. This functionality was added after iRODS 3.0, and will
-	 * cause an error if used on a prior iRODS version.
+	 * cause an error if used on a prior iRODS version. This method may only be
+	 * called by a rodsadmin user, as it needs to generate a temporary password.
+	 * This functionality was added after iRODS 3.0, and will cause an error if used
+	 * on a prior iRODS version.
 	 *
 	 * @param fileShoppingCart
 	 *            {@link FileShoppingCart} representing the file cart data to
@@ -91,6 +98,7 @@ public interface ShoppingCartService extends DataUtilsService {
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
+
 	String serializeShoppingCartAsSpecifiedUser(FileShoppingCart fileShoppingCart, String key, String userName)
 			throws JargonException;
 

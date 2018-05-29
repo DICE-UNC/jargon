@@ -6,6 +6,7 @@ package org.irods.jargon.core.connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,8 @@ public class DiscoveredServerPropertiesCache {
 			8, 0.9f, 1);
 	private ConcurrentHashMap<String, IRODSServerProperties> cacheOfIRODSServerProperties = new ConcurrentHashMap<String, IRODSServerProperties>(
 			8, 0.9f, 1);
+	private ConcurrentHashMap<String, ClientHints> cacheOfClientHints = new ConcurrentHashMap<String, ClientHints>(8,
+			0.9f, 1);
 
 	public static final Logger log = LoggerFactory.getLogger(DiscoveredServerPropertiesCache.class);
 
@@ -82,6 +85,34 @@ public class DiscoveredServerPropertiesCache {
 		log.info("now retriving server properties from cache with zone:{}", myZone);
 
 		return getIRODSServerPropertiesForHostAndZone(host, myZone);
+	}
+
+	/**
+	 *
+	 * If an {@code IRODSServerProperties} was already cached, then just return it,
+	 * if not cached, this method will return null
+	 *
+	 * @param host
+	 *            {@code String} with the name of the iRODS host this applies to
+	 * @param zoneName
+	 *            {@code String} with the name of the iRODS zone this applies to
+	 * @return {@link IRODSServerProperties} or {@code null} if not cached
+	 */
+	public ClientHints retrieveClientHints(final String host, final String zoneName) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		String myZone = zoneName;
+
+		if (zoneName == null) {
+			myZone = "";
+		}
+
+		log.info("now retriving clientHints from cache with zone:{}", myZone);
+
+		String cacheKey = buildHostPlusZone(host, myZone);
+		return cacheOfClientHints.get(cacheKey);
 	}
 
 	/**
@@ -148,8 +179,9 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Delete the {@code IRODSServerProperties} If the zone has no cache, silently
-	 * ignore
+	 * <<<<<<< HEAD Delete the {@code ClientHints} If the zone has no cache,
+	 * silently ignore ======= Delete the {@code IRODSServerProperties} If the zone
+	 * has no cache, silently ignore >>>>>>> origin/master
 	 *
 	 * @param host
 	 *            {@link String} with the hostname
@@ -158,6 +190,32 @@ public class DiscoveredServerPropertiesCache {
 	 * @param propertyName
 	 *            {@link String} with the property name
 	 */
+	public void deleteCachedClientHints(final String host, final String zoneName) {
+
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		String myZone = zoneName;
+
+		if (zoneName == null) {
+			myZone = "";
+		}
+
+		String cacheKey = buildHostPlusZone(host, myZone);
+		cacheOfClientHints.remove(cacheKey);
+
+	}
+
+	/**
+	 * Delete the {@code IRODSServerProperties} If the zone has no cache, silently
+	 * ignore
+	 *
+	 * @param host
+	 * @param zoneName
+	 * @param propertyName
+	 */
+
 	public void deleteCachedIRODSServerProperties(final String host, final String zoneName, final String propertyName) {
 
 		if (host == null || host.isEmpty()) {
@@ -232,6 +290,36 @@ public class DiscoveredServerPropertiesCache {
 		String cacheKey = buildHostPlusZone(host, myZone);
 		discoveredServerPropertiesCache.remove(cacheKey);
 
+	}
+
+	/**
+	 * Add an {@code ClientHints} to the cache
+	 *
+	 * @param host
+	 *            {@code String} with the name of the iRODS host this applies to
+	 * @param zoneName
+	 *            {@code String} with the name of the iRODS zone this applies to
+	 * @param clientHints
+	 *            {@link ClientHints} to cache
+	 */
+	public void cacheClientHints(final String host, final String zoneName, final ClientHints clientHints) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		String myZone = zoneName;
+
+		if (zoneName == null) {
+			myZone = "";
+		}
+
+		if (clientHints == null) {
+			throw new IllegalArgumentException("null clientHints");
+		}
+
+		String cacheKey = buildHostPlusZone(host, myZone);
+
+		cacheOfClientHints.put(cacheKey, clientHints);
 	}
 
 	/**

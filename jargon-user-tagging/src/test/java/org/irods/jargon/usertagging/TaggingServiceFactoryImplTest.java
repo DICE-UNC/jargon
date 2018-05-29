@@ -10,11 +10,10 @@ import org.irods.jargon.usertagging.tags.IRODSTaggingService;
 import org.irods.jargon.usertagging.tags.TaggingServiceFactory;
 import org.irods.jargon.usertagging.tags.TaggingServiceFactoryImpl;
 import org.irods.jargon.usertagging.tags.UserTagCloudService;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class TaggingServiceFactoryImplTest {
 

@@ -1,10 +1,9 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DiscoveredServerPropertiesCacheTest {
 

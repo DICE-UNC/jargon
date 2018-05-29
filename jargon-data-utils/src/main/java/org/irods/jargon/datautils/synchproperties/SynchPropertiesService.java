@@ -18,6 +18,7 @@ public interface SynchPropertiesService {
 	 * Get the information regarding the state of synchronization between iRODS and
 	 * a local file system for a given user and device.
 	 *
+	 * 
 	 * @param userName
 	 *            {@code String} with the iRODS user name for the synch
 	 * @param deviceName
@@ -37,6 +38,7 @@ public interface SynchPropertiesService {
 			final String irodsAbsolutePath) throws DataNotFoundException, JargonException;
 
 	/**
+	 * 
 	 * Given the device name and other information, set up a synchronizing device on
 	 * iRODS.
 	 *
@@ -80,6 +82,7 @@ public interface SynchPropertiesService {
 	 * Get the local and iRODS timetamps that reflect the current system time on
 	 * each
 	 *
+	 * 
 	 * @return {@link SynchTimestamps} value with the local and iRODS current time
 	 *         since epoch
 	 * @throws JargonException
@@ -88,6 +91,7 @@ public interface SynchPropertiesService {
 	SynchTimestamps getSynchTimestamps() throws JargonException;
 
 	/**
+	 * 
 	 * Update the iRODS metadata about this synch to record the now time locally and
 	 * on iRODS as the last synch time
 	 *

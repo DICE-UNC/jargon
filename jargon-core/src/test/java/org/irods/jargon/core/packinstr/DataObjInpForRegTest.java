@@ -3,10 +3,9 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.exception.ProtocolFormException;
 import org.irods.jargon.core.packinstr.DataObjInpForReg.ChecksumHandling;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DataObjInpForRegTest {
 

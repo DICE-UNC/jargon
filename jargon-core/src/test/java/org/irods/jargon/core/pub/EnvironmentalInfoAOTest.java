@@ -12,13 +12,13 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -94,6 +94,47 @@ public class EnvironmentalInfoAOTest {
 		} catch (DataNotFoundException ex) {
 			System.out.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
 		}
+
+	}
+
+	@Test
+	public void testGetClientHints() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0")) {
+			return;
+
+		}
+
+		ClientHints hints = ((EnvironmentalInfoAOImpl) environmentalInfoAO).retrieveClientHints(true);
+		Assert.assertNotNull("null hints", hints);
+
+	}
+
+	@Test
+	public void testGetClientHintsAndThenAccessCache() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0")) {
+			return;
+		}
+
+		ClientHints hints = environmentalInfoAO.retrieveClientHints(true);
+		ClientHints cachedHints = environmentalInfoAO.retrieveClientHints(false);
+		Assert.assertNotNull("null hints", hints);
+		Assert.assertNotNull("null cached hints", cachedHints);
 
 	}
 

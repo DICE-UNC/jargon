@@ -922,19 +922,22 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 */
 	private void buildConditionPart(final AVUQueryElement queryElement, final IRODSGenQueryBuilder builder) {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
-					QueryConditionOperators.getOperatorFromStringValue(queryElement.getOperator().getOperatorValue()),
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME, queryElement.getOperator(),
 					queryElement.getValue());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE,
-					QueryConditionOperators.getOperatorFromStringValue(queryElement.getOperator().getOperatorValue()),
+					QueryConditionOperators
+							.getOperatorFromEnumStringValue(queryElement.getOperator().getOperatorAsString()),
+
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS,
-					QueryConditionOperators.getOperatorFromStringValue(queryElement.getOperator().getOperatorValue()),
+					QueryConditionOperators
+							.getOperatorFromEnumStringValue(queryElement.getOperator().getOperatorAsString()),
+
 					queryElement.getValue());
 
 		}

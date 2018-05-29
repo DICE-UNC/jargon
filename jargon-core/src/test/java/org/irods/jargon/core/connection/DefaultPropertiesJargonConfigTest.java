@@ -1,9 +1,8 @@
 package org.irods.jargon.core.connection;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /*
  * Rather than bind the test to the props too closely, test if I can access the given props with no errors and we're good

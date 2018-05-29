@@ -19,11 +19,10 @@ import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -1040,6 +1039,19 @@ public class UserAOTest {
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		List<String> users = userAO.findUserNameLike("t");
+		Assert.assertTrue("no users returned", users.size() > 0);
+
+	}
+
+	@Test
+	public void testFindUsers() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		List<User> users = userAO.findUsersLike("");
 		Assert.assertTrue("no users returned", users.size() > 0);
 
 	}

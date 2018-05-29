@@ -1,9 +1,8 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class PipelineConfigurationTest {
 

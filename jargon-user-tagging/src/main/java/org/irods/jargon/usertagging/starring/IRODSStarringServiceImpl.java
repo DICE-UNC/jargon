@@ -21,9 +21,9 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
@@ -198,7 +198,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
-		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<>();
 
 		// Do collections, then do files
 
@@ -233,10 +233,9 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
-		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<>();
 
 		// Do collections, then do files
-
 		log.info("querying metadata as a data object to look for starred");
 		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
 		try {
@@ -260,12 +259,13 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 	 * @throws JargonException
 	 */
 	private List<AVUQueryElement> buildAVUQueryForStarred() throws JargonException {
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.STAR_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-					getIrodsAccount().getUserName()));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.STAR_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
+
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -352,10 +352,15 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 		IRODSStarredFileOrCollection irodsStarredFileOrCollection = new IRODSStarredFileOrCollection(
 				metadataAndDomainData.getMetadataDomain(), metadataAndDomainData.getDomainObjectUniqueName(),
-				metadataAndDomainData.getAvuAttribute(), metadataAndDomainData.getAvuValue());
+
+				metadataAndDomainData.getAvuAttribute(), metadataAndDomainData.getAvuValue(),
+				metadataAndDomainData.getSize(), metadataAndDomainData.getCreatedAt(),
+				metadataAndDomainData.getModifiedAt());
 
 		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
 		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData.isLastResult());
+		log.debug("irodsStarredFileOrCollection:{}", irodsStarredFileOrCollection);
+
 		return irodsStarredFileOrCollection;
 
 	}

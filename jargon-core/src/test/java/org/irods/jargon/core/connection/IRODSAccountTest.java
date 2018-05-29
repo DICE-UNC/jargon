@@ -3,9 +3,8 @@ package org.irods.jargon.core.connection;
 import java.net.URI;
 
 import org.irods.jargon.core.utils.IRODSUriUtils;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public final class IRODSAccountTest {
 

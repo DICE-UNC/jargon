@@ -1,9 +1,8 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class ExecCmdTest {
 

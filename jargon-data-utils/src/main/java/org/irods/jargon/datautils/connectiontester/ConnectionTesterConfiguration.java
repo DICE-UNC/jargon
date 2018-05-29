@@ -47,6 +47,7 @@ public class ConnectionTesterConfiguration {
 	 *            the localSourceParentDirectory to set
 	 */
 	public void setLocalSourceParentDirectory(final String localSourceParentDirectory) {
+
 		this.localSourceParentDirectory = localSourceParentDirectory;
 	}
 

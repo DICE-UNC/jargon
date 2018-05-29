@@ -62,6 +62,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	private static final String AND = " AND ";
 	private static final String EQUALS = " = ";
 	private static final String STRING_TO_HASH_WITH = "stringToHashWith";
+
+	private static final String RODS_GROUP = "rodsgroup";
 	private IRODSGenQueryExecutor irodsGenQueryExecutor = null;
 
 	protected UserAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
@@ -69,10 +71,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserId(java.lang.
+	 * =======
 	 *
 	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserId(java.lang.
-	 * String)
+	 * >>>>>>> origin/master String)
 	 */
 	@Override
 	public List<AvuData> listUserMetadataForUserId(final String userId) throws JargonException {
@@ -129,10 +134,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserName(java.lang
+	 * =======
 	 *
 	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserName(java.lang
-	 * .String)
+	 * >>>>>>> origin/master .String)
 	 */
 	@Override
 	public List<AvuData> listUserMetadataForUserName(final String userName) throws JargonException {
@@ -182,10 +190,11 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.accessobject.UserAO#addUser(org.irods.jargon.core
 	 * .domain.User)
 	 */
+
 	@Override
 	public User addUser(final User user) throws JargonException, DuplicateDataException {
 
@@ -236,7 +245,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findAll()
 	 */
 	@Override
@@ -250,6 +259,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			UserAOHelper.addUserSelectsToBuilder(builder);
 			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC);
+
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(irodsQuery, 0);
@@ -275,7 +285,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findWhere(java.lang.String)
 	 */
 	@Override
@@ -323,12 +333,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findById(java.lang.String)
 	 */
 	@Override
 	@FederationEnabled
 	public User findById(final String userId) throws JargonException, DataNotFoundException {
+
 		return findByIdInZone(userId, getIRODSAccount().getZone());
 
 	}
@@ -347,7 +358,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findByIdInZone(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -406,7 +417,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findByName(java.lang.String)
 	 */
 	@Override
@@ -478,7 +489,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#findUserNameLike(java.lang.String)
 	 */
 	@Override
@@ -501,6 +512,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 			UserAOHelper.addUserSelectsToBuilder(builder);
 			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.NOT_EQUAL,
+							RODS_GROUP)
 					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.LIKE,
 							userQuery.toString().trim());
 			IRODSGenQueryFromBuilder irodsQuery = builder
@@ -530,10 +543,62 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
+	@Override
+	public List<User> findUsersLike(final String userName) throws JargonException {
+
+		if (userName == null) {
+			throw new IllegalArgumentException("null userName");
+		}
+
+		log.info("findUserNameLike {}", userName);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		StringBuilder userQuery = new StringBuilder();
+		userQuery.append(userName.trim());
+		userQuery.append("%");
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			UserAOHelper.addUserSelectsToBuilder(builder);
+			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.NOT_EQUAL,
+							RODS_GROUP)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.LIKE,
+							userQuery.toString().trim());
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
+		}
+
+		List<User> users = new ArrayList<User>();
+		User user;
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			user = UserAOHelper.buildUserFromResultSet(row, getGenQueryExecutor(), false);
+			user.setTotalRecords(resultSet.getTotalRecords());
+			users.add(user);
+		}
+
+		return users;
+
+	}
+
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
+	 * =======
 	 *
 	 * @see org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
+	 * >>>>>>> origin/master
 	 */
 	@Override
 	public String retriveUserDNByUserId(final String userId) throws JargonException {
@@ -542,7 +607,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#deleteUser(java.lang.String)
 	 */
 	@Override
@@ -572,6 +637,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#updateUser(org.irods.jargon.core.pub
 	 * .domain.User)
 	 */
+
 	@Override
 	public void updateUser(final User user) throws JargonException, DataNotFoundException {
 
@@ -626,9 +692,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
+	 * =======
 	 *
 	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
+	 * >>>>>>> origin/master
 	 */
 	@Override
 	public String getTemporaryPasswordForConnectedUser() throws JargonException {
@@ -645,10 +715,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
+	 * =======
 	 *
 	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
-	 * (java.lang.String)
+	 * >>>>>>> origin/master (java.lang.String)
 	 */
 	@Override
 	public String getTemporaryPasswordForASpecifiedUser(final String targetUserName) throws JargonException {
@@ -678,6 +751,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	 * @see org.irods.jargon.core.pub.UserAO#changeUserPassword(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
+
 	@Override
 	public void changeAUserPasswordByThatUser(final String userName, final String currentPassword,
 			final String newPassword) throws JargonException {
@@ -703,10 +777,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
+	 * 
+	 * @see org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
+	 * =======
 	 *
 	 * @see org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
-	 * .String, java.lang.String)
+	 * >>>>>>> origin/master .String, java.lang.String)
 	 */
 	@Override
 	public void changeAUserPasswordByAnAdmin(final String userName, final String newPassword) throws JargonException {
@@ -759,7 +836,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -842,7 +919,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#modifyAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -856,7 +933,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#deleteAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -925,7 +1002,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#updateUserDN(java.lang.String,
 	 * java.lang.String)
 	 */

@@ -9,11 +9,10 @@ import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class CollectionListingUtilsTest {
 
@@ -56,9 +55,8 @@ public class CollectionListingUtilsTest {
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		CollectionListingUtils listingUtils = new CollectionListingUtils(collectionAndDataObjectListAndSearchAO);
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/";
 		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
@@ -76,9 +74,8 @@ public class CollectionListingUtilsTest {
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		CollectionListingUtils listingUtils = new CollectionListingUtils(collectionAndDataObjectListAndSearchAO);
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/" + irodsAccount.getZone();
 		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
@@ -96,9 +93,8 @@ public class CollectionListingUtilsTest {
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		CollectionListingUtils listingUtils = new CollectionListingUtils(collectionAndDataObjectListAndSearchAO);
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/" + irodsAccount.getZone() + "/home";
 		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
@@ -116,9 +112,8 @@ public class CollectionListingUtilsTest {
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		CollectionListingUtils listingUtils = new CollectionListingUtils(collectionAndDataObjectListAndSearchAO);
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/" + irodsAccount.getZone() + "imnotazonebub";
 		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);

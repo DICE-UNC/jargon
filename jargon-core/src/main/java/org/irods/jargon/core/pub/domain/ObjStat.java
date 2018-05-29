@@ -277,7 +277,8 @@ public class ObjStat {
 	 *         directory;
 	 */
 	public boolean isSomeTypeOfCollection() {
-		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.LOCAL_DIR);
+		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.LOCAL_DIR
+				|| objectType == ObjectType.COLLECTION_HEURISTIC_STANDIN);
 	}
 
 	/**

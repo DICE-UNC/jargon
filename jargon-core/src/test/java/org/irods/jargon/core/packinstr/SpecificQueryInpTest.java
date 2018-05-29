@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.query.SpecificQueryResultSet;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class SpecificQueryInpTest {
 

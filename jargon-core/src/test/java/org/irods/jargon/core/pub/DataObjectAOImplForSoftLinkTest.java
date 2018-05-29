@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
@@ -16,18 +17,17 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DataObjectAOImplForSoftLinkTest {
 
@@ -231,8 +231,8 @@ public class DataObjectAOImplForSoftLinkTest {
 		dataObjectAO.deleteAVUMetadata(targetIrodsDataObject, avuData);
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribName));
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO.findDomainByMetadataQuery(avuQueryElements);
 
@@ -240,7 +240,8 @@ public class DataObjectAOImplForSoftLinkTest {
 			if (dataObject.getAbsolutePath().contains("trash")) {
 				// ok
 			} else {
-				Assert.fail("found a non-trash data object");
+				Assert.fail("non trash instance of avu found!");
+
 			}
 		}
 
@@ -305,8 +306,8 @@ public class DataObjectAOImplForSoftLinkTest {
 		dataObjectAO.addAVUMetadata(sourceIrodsDataObject, avuData);
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribName));
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> metadataFromSource = dataObjectAO
 				.findMetadataValuesForDataObject(sourceIrodsCollection, testFileName);
@@ -379,8 +380,8 @@ public class DataObjectAOImplForSoftLinkTest {
 		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribName));
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> metadataFromSource = dataObjectAO
 				.findMetadataValuesForDataObject(sourceIrodsCollection, testFileName);
@@ -503,6 +504,11 @@ public class DataObjectAOImplForSoftLinkTest {
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = listAndSearch.retrieveObjectStatForPath(destFile.getAbsolutePath());
+		Assert.assertNotNull("null objStat", objStat);
+
 		String computedChecksum = dataObjectAO.computeMD5ChecksumOnDataObject(destFile);
 		Assert.assertTrue("did not return a checksum", computedChecksum.length() > 0);
 

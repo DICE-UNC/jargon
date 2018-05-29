@@ -46,6 +46,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 	 */
 	public ConnectionTesterImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount, final ConnectionTesterConfiguration connectionTesterConfiguration) {
+
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (connectionTesterConfiguration == null) {
@@ -99,6 +100,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
+
 	private List<TestResultEntry> processTest(final TestType testType) throws JargonException {
 
 		log.info("processTest:{}", testType);
@@ -154,6 +156,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 					.getDataTransferOperations(getIrodsAccount());
 
 			generateFileOfFixedLengthGivenName(connectionTesterConfiguration.getLocalSourceParentDirectory(),
+
 					testFileSourceName, dataSize);
 			log.info("test file generated at:{}", testFileSourceName);
 			sb = new StringBuilder();
@@ -166,6 +169,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 
 			irodsFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSFile(connectionTesterConfiguration.getIrodsParentDirectory(), testFileSourceName);
+
 			log.info("delete old irods file:{}", irodsFile);
 			irodsFile.deleteWithForceOption();
 
@@ -331,6 +335,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements Conne
 		} catch (IOException ioe) {
 			throw new TestConfigurationException(
 					"error generating random file with dir:" + fileDirectory + " and generated name:" + fileName, ioe);
+
 		} finally {
 			if (outStream != null) {
 				try {

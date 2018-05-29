@@ -2,9 +2,8 @@ package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class TransferStatusTest {
 

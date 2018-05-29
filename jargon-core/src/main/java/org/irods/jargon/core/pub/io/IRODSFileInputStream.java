@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileInputStream extends InputStream {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private transient final IRODSFile irodsFile;
 	private transient final FileIOOperations fileIOOperations;
@@ -33,6 +33,7 @@ public class IRODSFileInputStream extends InputStream {
 	/**
 	 * Creates a {@code FileInputStream} by opening a connection to an actual file,
 	 * the file named by the path name {@code name} in the file system.
+	 * 
 	 * <p>
 	 * First, the security is checked to verify the file can be written.
 	 * <p>
@@ -183,6 +184,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * {@code -1} is returned. This method blocks until input data is available, the
 	 * end of the stream is detected, or an exception is thrown.
 	 *
+	 * 
 	 * @return the next byte of data, or {@code -1} if the end of the stream is
 	 *         reached.
 	 * @exception IOException
@@ -208,11 +210,10 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	/**
-	 * Reads up to {@code len} bytes of data from the input stream into an array of
-	 * bytes. An attempt is made to read as many as {@code len} bytes, but a smaller
-	 * number may be read, possibly zero. The number of bytes actually read is
-	 * returned as an integer.
-	 *
+	 * \ Reads up to {@code len} bytes of data from the input stream into an array
+	 * of bytes. An attempt is made to read as many as {@code len} bytes, but a
+	 * smaller number may be read, possibly zero. The number of bytes actually read
+	 * is returned as an integer.
 	 * <p>
 	 * This method blocks until input data is available, end of file is detected, or
 	 * an exception is thrown.
@@ -232,6 +233,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * returned; otherwise, at least one byte is read and stored into {@code b}.
 	 *
 	 * <p>
+	 * 
 	 * The first byte read is stored into element {@code b[off]}, the next one into
 	 * {@code b[off+1]}, and so on. The number of bytes read is, at most, equal to
 	 * {@code len}. Let <i>k</i> be the number of bytes actually read; these bytes
@@ -434,6 +436,13 @@ public class IRODSFileInputStream extends InputStream {
 			throw new IOException(e);
 		}
 		filePointer = 0L;
+	}
+
+	/**
+	 * @return the irodsFile
+	 */
+	protected IRODSFile getIrodsFile() {
+		return irodsFile;
 	}
 
 }

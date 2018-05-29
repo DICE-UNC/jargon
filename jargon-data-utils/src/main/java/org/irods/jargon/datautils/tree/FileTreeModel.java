@@ -14,6 +14,7 @@ public class FileTreeModel extends DefaultTreeModel {
 	private static final long serialVersionUID = -4326229056412362449L;
 
 	/**
+	 * 
 	 * Creates a tree specifying whether any node can have children, or whether only
 	 * certain nodes can have children.
 	 *

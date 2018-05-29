@@ -15,6 +15,7 @@ public interface FileTreeDiffUtility {
 	 * differ from the perspective of the 'left hand side' file.
 	 * <p>
 	 * The {@code FileTreeDiffEntry} will indicate the type of difference found.
+	 * 
 	 * This is the user data object that is kept in a {@code FileTreeNode} in the
 	 * resulting {@code FileTreeModel}.
 	 * <p>
@@ -29,6 +30,7 @@ public interface FileTreeDiffUtility {
 	 * appropriate for an initial synch operation.
 	 *
 	 * @param localFileRoot
+	 * 
 	 *            {@code File} that is the left hand side of the comparison
 	 *
 	 * @param irodsAbsolutePath
@@ -55,6 +57,7 @@ public interface FileTreeDiffUtility {
 			throws JargonException;
 
 	/**
+	 * 
 	 * Handy method that checks a local and iRODS file trees and verifies that there
 	 * are no differences
 	 *
@@ -71,6 +74,7 @@ public interface FileTreeDiffUtility {
 	 *            date of the given left hand files, indicates that the file has
 	 *            changed. Leave as zero to turn off this check.
 	 * @param timestampForLastSynchRightHandSide
+	 * 
 	 *            {@code long} with the timestamp that, if before the last modified
 	 *            date of the given right hand files, indicates that the file has
 	 *            changed. Leave as zero to turn off this check.

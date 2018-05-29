@@ -13,9 +13,9 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.rule.UserRuleDefinition.RuleAproposTo;
@@ -130,8 +130,10 @@ public class UserRuleServiceImpl extends AbstractJargonService implements UserRu
 	private List<AVUQueryElement> buildAVUQueryForUserRule() throws JargonException {
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					USER_RULE_UNIT));
+			avuQueryElements
+					.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
+							USER_RULE_UNIT));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);

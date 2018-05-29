@@ -52,6 +52,13 @@ public class Collection extends IRODSDomainObject {
 	private Date createdAt = new Date();
 	private Date modifiedAt = new Date();
 	private SpecColType specColType = SpecColType.NORMAL;
+	/**
+	 * Indicates that the collection is a stand-in proxy for a collection the user
+	 * cannot see, this is done to handle strict acls and simulating the ability to
+	 * drill down from the root of the hierarchy, using heuristics to get the
+	 * available intervening paths like zone and zone/home
+	 */
+	private boolean isProxy = false;
 
 	public int getCollectionId() {
 		return collectionId;
@@ -174,37 +181,49 @@ public class Collection extends IRODSDomainObject {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Collection:");
-		sb.append("\n   id:");
-		sb.append(collectionId);
-		sb.append("\n   name:");
-		sb.append(collectionName);
-		sb.append("\n   parentName:");
-		sb.append(collectionParentName);
-		sb.append("\n   ownerName:");
-		sb.append(collectionOwnerName);
-		sb.append("\n   collectionOwnerZone:");
-		sb.append(collectionOwnerZone);
-		sb.append("\n   collectionMapId:");
-		sb.append(collectionMapId);
-		sb.append("\n   collectionInheritance:");
-		sb.append(collectionInheritance);
-		sb.append("\n   comments:");
-		sb.append(comments);
-		sb.append("\n   specialCollectionType:");
-		sb.append(specColType);
-		sb.append("\n   objectPath:");
-		sb.append(objectPath);
-		sb.append("\n   info1:");
-		sb.append(info1);
-		sb.append("\n   info2:");
-		sb.append(info2);
-		sb.append("\n   createdAt:");
-		sb.append(createdAt);
-		sb.append("\n   modifiedAt:");
-		sb.append(modifiedAt);
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("Collection [collectionId=").append(collectionId).append(", ");
+		if (collectionName != null) {
+			builder.append("collectionName=").append(collectionName).append(", ");
+		}
+		if (objectPath != null) {
+			builder.append("objectPath=").append(objectPath).append(", ");
+		}
+		if (collectionParentName != null) {
+			builder.append("collectionParentName=").append(collectionParentName).append(", ");
+		}
+		if (collectionOwnerName != null) {
+			builder.append("collectionOwnerName=").append(collectionOwnerName).append(", ");
+		}
+		if (collectionOwnerZone != null) {
+			builder.append("collectionOwnerZone=").append(collectionOwnerZone).append(", ");
+		}
+		if (collectionMapId != null) {
+			builder.append("collectionMapId=").append(collectionMapId).append(", ");
+		}
+		if (collectionInheritance != null) {
+			builder.append("collectionInheritance=").append(collectionInheritance).append(", ");
+		}
+		if (comments != null) {
+			builder.append("comments=").append(comments).append(", ");
+		}
+		if (info1 != null) {
+			builder.append("info1=").append(info1).append(", ");
+		}
+		if (info2 != null) {
+			builder.append("info2=").append(info2).append(", ");
+		}
+		if (createdAt != null) {
+			builder.append("createdAt=").append(createdAt).append(", ");
+		}
+		if (modifiedAt != null) {
+			builder.append("modifiedAt=").append(modifiedAt).append(", ");
+		}
+		if (specColType != null) {
+			builder.append("specColType=").append(specColType).append(", ");
+		}
+		builder.append("isProxy=").append(isProxy).append("]");
+		return builder.toString();
 	}
 
 	/**
@@ -232,6 +251,14 @@ public class Collection extends IRODSDomainObject {
 
 	public void setSpecColType(final SpecColType specColType) {
 		this.specColType = specColType;
+	}
+
+	public boolean isProxy() {
+		return isProxy;
+	}
+
+	public void setProxy(boolean isProxy) {
+		this.isProxy = isProxy;
 	}
 
 }

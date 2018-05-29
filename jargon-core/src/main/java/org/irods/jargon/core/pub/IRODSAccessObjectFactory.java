@@ -547,6 +547,16 @@ public interface IRODSAccessObjectFactory {
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
 	/**
+	 * Service for pagable collection listings
+	 * 
+	 * @param irodsAccount
+	 *            {@IRODSAccount} with the authenticating principal
+	 * @return {@link CollectionPagerAO}
+	 * @throws JargonException
+	 */
+	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount) throws JargonException;
+
+	/**
 	 * Get a utility to deal with checksums in iRODS
 	 *
 	 * @param irodsAccount
@@ -567,6 +577,7 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
+
 	TrashOperationsAO getTrashOperationsAO(IRODSAccount irodsAccount) throws JargonException;
 
 }

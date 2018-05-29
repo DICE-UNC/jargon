@@ -14,6 +14,12 @@ import org.irods.jargon.core.packinstr.Tag;
 public final class IRODSConstants {
 
 	/**
+	 * iRODS path separator
+	 */
+
+	public static final String IRODS_PATH_SEPARATOR = "/";
+
+	/**
 	 * Approximate maximum number of bytes transfered by each thread during a
 	 * parallel transfer.
 	 */

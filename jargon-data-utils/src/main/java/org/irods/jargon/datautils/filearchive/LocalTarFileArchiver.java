@@ -64,12 +64,6 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.datautils.filearchive.AbstractArchiver#addFileToArchive
-	 * (java.io.File)
-	 */
 	@Override
 	protected void addFileToArchive(final File file) throws JargonException {
 
@@ -112,6 +106,10 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		log.info("creating tar archive stream from file");
 
 		try {
+			/*
+			 * Stream will be closed by client of this API
+			 */
+			@SuppressWarnings("resource")
 			FileOutputStream fos = new FileOutputStream(tarArchiveFile);
 
 			tarArchiveOutputStream = (TarArchiveOutputStream) new ArchiveStreamFactory()

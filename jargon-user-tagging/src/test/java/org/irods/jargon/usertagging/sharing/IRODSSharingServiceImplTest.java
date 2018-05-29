@@ -19,10 +19,9 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.usertagging.domain.IRODSSharedFileOrCollection;
 import org.irods.jargon.usertagging.domain.ShareUser;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /*
  * This one does direct iRODS tests instead of mocks to help play with queries, etc

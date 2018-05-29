@@ -6,11 +6,10 @@ import org.irods.jargon.core.query.IRODSGenQueryTranslator;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class GenQueryInpTest {
 

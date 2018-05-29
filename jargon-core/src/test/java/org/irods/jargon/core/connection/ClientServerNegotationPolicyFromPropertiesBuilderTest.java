@@ -1,10 +1,9 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class ClientServerNegotationPolicyFromPropertiesBuilderTest {
 

@@ -27,17 +27,14 @@ import org.slf4j.LoggerFactory;
  *         visible. Instead, the various IRODS-specific steam classes should be
  *         used.
  */
-final class FileIOOperationsAOImpl extends IRODSGenericAO implements FileIOOperations {
+
+public final class FileIOOperationsAOImpl extends IRODSGenericAO implements FileIOOperations {
 
 	static Logger log = LoggerFactory.getLogger(FileIOOperationsAOImpl.class);
 
-	/**
-	 * @param irodsSession
-	 * @param irodsAccount
-	 * @throws JargonException
-	 */
-	protected FileIOOperationsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+	public FileIOOperationsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
+
 		super(irodsSession, irodsAccount);
 	}
 

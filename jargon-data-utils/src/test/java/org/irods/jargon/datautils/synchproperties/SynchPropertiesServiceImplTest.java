@@ -15,15 +15,14 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class SynchPropertiesServiceImplTest {
 
@@ -60,9 +59,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -165,9 +165,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -218,9 +219,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -268,9 +270,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -320,9 +323,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -372,9 +376,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -454,9 +459,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+
 				userDevAttrib.toString());
 		avuQuery.add(avuQueryElement);
 
@@ -512,9 +518,10 @@ public class SynchPropertiesServiceImplTest {
 		// build expected query
 		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
 		AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
+				QueryConditionOperators.EQUAL, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		avuQuery.add(avuQueryElement);
-		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.LIKE,
+		avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.LIKE,
+
 				testUserName + ":%");
 		avuQuery.add(avuQueryElement);
 

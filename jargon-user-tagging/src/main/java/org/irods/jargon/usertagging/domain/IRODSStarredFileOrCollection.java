@@ -1,6 +1,7 @@
 package org.irods.jargon.usertagging.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
@@ -45,6 +46,45 @@ public final class IRODSStarredFileOrCollection extends UserAnnotatedCatalogItem
 
 		super(metadataDomain, domainUniqueName, userName);
 
+		if (description == null) {
+			throw new JargonException("null spaceDelimitedTagsForDomain");
+		}
+
+		this.description = description.trim();
+
+	}
+
+	/**
+	 * * Constructor describes the user and object that is being starred, and
+	 * providing a description. Includes information on data size, create, and
+	 * modified dates
+	 * 
+	 * @param metadataDomain
+	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
+	 *            that identifies the domain object type that is tagged (e.g.
+	 *            DataObject, Collection)
+	 * @param domainUniqueName
+	 *            <code>String</code> with the unque name for the tagged data
+	 *            object (e.g. iRODS absolute path for a data object or
+	 *            collection).
+	 * @param description
+	 *            <code>String</code> with a description of the favorite.
+	 * @param userName
+	 *            <code>String</code> with the user name who is associated with
+	 *            the tags.
+	 * @param dataSize
+	 *            <code>long</code> with the data size
+	 * @param createdAt
+	 *            {@link Date} created, can be null
+	 * @param modifiedAt
+	 *            {@link Date} modified, can be null
+	 */
+	public IRODSStarredFileOrCollection(MetadataDomain metadataDomain,
+			String domainUniqueName, final String description, String userName,
+			long dataSize, Date createdAt, Date modifiedAt)
+			throws JargonException {
+		super(metadataDomain, domainUniqueName, userName, dataSize, createdAt,
+				modifiedAt);
 		if (description == null) {
 			throw new JargonException("null spaceDelimitedTagsForDomain");
 		}

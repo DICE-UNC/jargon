@@ -46,6 +46,7 @@ public class ConnectionTestResult {
 	 * @param configuration
 	 *            the configuration to set
 	 */
+
 	public void setConfiguration(final ConnectionTesterConfiguration configuration) {
 		this.configuration = configuration;
 	}

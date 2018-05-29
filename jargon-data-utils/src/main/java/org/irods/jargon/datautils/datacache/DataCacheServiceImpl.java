@@ -274,8 +274,10 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 * for the cache file
 	 *
 	 * @param keyHash
+	 *            {@code int}
 	 * @param userName
-	 * @return
+	 *            {@code String}
+	 * @return {@code String}
 	 */
 	private String buildIRODSFileAbsolutePath(final int keyHash, final String userName) {
 		StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(userName);
@@ -291,13 +293,13 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	}
 
 	/**
-	 * Given a user and zone, come up with the absolute path to the cach dir parent
-	 * directory based on the standard /zone/home/user/cacheDir as configured in teh
-	 * CacheDirConfig
+	 * Given a user and zone, come up with the absolute path to the cache directorh
+	 * parent directory based on the standard /zone/home/user/cacheDir as configured
+	 * in the CacheDirConfig
 	 *
 	 * @param userName
 	 *            {@code String} with the name of the user for whom the home cache
-	 *            dir will be computed
+	 *            directory will be computed
 	 * @return {@code StringBuilder} with computed part of the abs path
 	 */
 	private StringBuilder computeCacheDirPathFromHomeDirFromUserAndZone(final String userName) {
@@ -374,6 +376,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 		} else {
 			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
 					.instanceIRODSFile(cacheServiceConfiguration.getCacheDirPath());
+
 		}
 
 		// list the files in the cache and purge any expired

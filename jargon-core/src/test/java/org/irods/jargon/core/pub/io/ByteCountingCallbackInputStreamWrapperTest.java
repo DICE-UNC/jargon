@@ -5,12 +5,11 @@ import java.io.InputStream;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class ByteCountingCallbackInputStreamWrapperTest {
 

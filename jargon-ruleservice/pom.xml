@@ -3,7 +3,8 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>4.2.2.2-SNAPSHOT</version>
+
+		<version>4.3.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-ruleservice</artifactId>
@@ -18,9 +19,9 @@
 		<dependency>
 			<groupId>org.irods.jargon</groupId>
 			<artifactId>jargon-core</artifactId>
-			<scope>compile</scope>
+			<version>${project.version}</version>
 		</dependency>
-	</dependencies>  
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -54,11 +55,10 @@
 									jargon.test.user.group=${jargon.test.user.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
-									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 									test.option.exercise.ticket=${jargon.test.option.exercise.ticket}
 									test.option.python=${test.option.python}
-									
+
 		</echo>
 							</tasks>
 						</configuration>

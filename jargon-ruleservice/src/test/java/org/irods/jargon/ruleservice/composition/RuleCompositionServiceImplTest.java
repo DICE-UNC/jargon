@@ -21,10 +21,9 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class RuleCompositionServiceImplTest {
 
@@ -144,7 +143,7 @@ public class RuleCompositionServiceImplTest {
 			sb = new StringBuilder();
 			sb.append(parm.getUniqueName());
 			sb.append("=");
-			sb.append(parm.getStringValue());
+			sb.append(parm.retrieveStringValue());
 			inputParameters.add(sb.toString());
 		}
 
@@ -168,10 +167,11 @@ public class RuleCompositionServiceImplTest {
 				actual.getOutputParameters().size());
 
 		for (int i = 0; i < rule.getInputParameters().size(); i++) {
+
 			Assert.assertEquals("unmatched input parm", rule.getInputParameters().get(i).getUniqueName(),
 					actual.getInputParameters().get(i).getUniqueName());
-			Assert.assertEquals("unmatched input value", rule.getInputParameters().get(i).getStringValue(),
-					actual.getInputParameters().get(i).getStringValue());
+			Assert.assertEquals("unmatched input value", rule.getInputParameters().get(i).retrieveStringValue(),
+					actual.getInputParameters().get(i).retrieveStringValue());
 		}
 	}
 
@@ -206,7 +206,7 @@ public class RuleCompositionServiceImplTest {
 			sb = new StringBuilder();
 			sb.append(parm.getUniqueName());
 			sb.append("=");
-			sb.append(parm.getStringValue());
+			sb.append(parm.retrieveStringValue());
 			inputParameters.add(sb.toString());
 		}
 
@@ -216,6 +216,32 @@ public class RuleCompositionServiceImplTest {
 
 		IRODSRuleExecResult execResult = ruleCompositionService.executeRuleFromParts(rule.getRuleBody(),
 				inputParameters, outputParameters);
+
+		Assert.assertNotNull("null result returned", execResult);
+
+	}
+
+	@Test
+	public void testExecuteRuleAsRawString() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiGetIcatTime.r";
+
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString(ruleFile);
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(accessObjectFactory,
+				irodsAccount);
+
+		IRODSRuleExecResult execResult = ruleCompositionService.executeRuleAsRawString(ruleString);
 
 		Assert.assertNotNull("null result returned", execResult);
 
@@ -266,10 +292,11 @@ public class RuleCompositionServiceImplTest {
 				actual.getOutputParameters().size());
 
 		for (int i = 0; i < rule.getInputParameters().size(); i++) {
+
 			Assert.assertEquals("unmatched input parm", rule.getInputParameters().get(i).getUniqueName(),
 					actual.getInputParameters().get(i).getUniqueName());
-			Assert.assertEquals("unmatched input value", rule.getInputParameters().get(i).getStringValue(),
-					actual.getInputParameters().get(i).getStringValue());
+			Assert.assertEquals("unmatched input value", rule.getInputParameters().get(i).retrieveStringValue(),
+					actual.getInputParameters().get(i).retrieveStringValue());
 		}
 	}
 
@@ -408,6 +435,48 @@ public class RuleCompositionServiceImplTest {
 
 		Assert.assertEquals("unequal number of output params", rule.getOutputParameters().size() - 1,
 				actual.getOutputParameters().size());
+
+	}
+
+	@Test
+	public void testLoadRuleAsString() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiDataObjChksum.r";
+		String irodsRuleFile = "testLoadRuleAsString.r";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString(ruleFile);
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+		IRODSFileWriter irodsFileWriter = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFileWriter(targetIrodsCollection + "/" + irodsRuleFile);
+		char[] buff = new char[1024];
+		StringReader reader = new StringReader(ruleString);
+
+		int len = 0;
+		while ((len = reader.read(buff)) > -1) {
+			irodsFileWriter.write(buff, 0, len);
+		}
+
+		irodsFileWriter.close();
+		reader.close();
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(accessObjectFactory,
+				irodsAccount);
+		String actual = ruleCompositionService.loadRuleFromIrodsAsString(irodsRuleFileAsFile.getAbsolutePath());
+		Assert.assertNotNull(actual);
 
 	}
 

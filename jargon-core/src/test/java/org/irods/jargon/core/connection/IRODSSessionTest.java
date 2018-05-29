@@ -5,10 +5,9 @@ import java.util.concurrent.Executor;
 
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class IRODSSessionTest {
 

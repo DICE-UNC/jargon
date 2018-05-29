@@ -24,10 +24,9 @@ import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
 import org.irods.jargon.usertagging.tags.UserTagCloudService;
 import org.irods.jargon.usertagging.tags.UserTagCloudServiceImpl;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class UserTagCloudServiceImplTest {
 

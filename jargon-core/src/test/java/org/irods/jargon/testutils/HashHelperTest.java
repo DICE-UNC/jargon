@@ -5,11 +5,10 @@ package org.irods.jargon.testutils;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)

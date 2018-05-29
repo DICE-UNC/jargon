@@ -32,6 +32,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	private final Logger log = LoggerFactory.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
+	 * 
 	 * Create a protocol manager that will cache a single temporary connection in a
 	 * pool for reuse. This is because temp passwords are one-time only. This allows
 	 * client applications to (somewhat) transparently simulate the ability to get a
@@ -49,6 +50,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 */
 	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager baseProtocolManager) throws JargonException {
+
 		super();
 
 		if (irodsAccount == null) {
@@ -91,11 +93,6 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#destroy()
-	 */
 	@Override
 	public void destroy() throws JargonException {
 		log.info("destroy");
@@ -108,12 +105,6 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#initialize
-	 * ()
-	 */
 	@Override
 	public void initialize() throws JargonException {
 		log.info("initialize()");
@@ -150,6 +141,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	@Override
 	public void returnIRODSProtocol(final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException {
+
 		try {
 			objectPool.returnObject(abstractIRODSMidLevelProtocol);
 		} catch (Exception e) {

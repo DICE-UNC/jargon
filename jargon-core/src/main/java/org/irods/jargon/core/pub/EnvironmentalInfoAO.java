@@ -2,9 +2,11 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.connection.EnvironmentalInfoAccessor;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 
 public interface EnvironmentalInfoAO extends IRODSAccessObject {
@@ -73,5 +75,22 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *             for iRODS error
 	 */
 	boolean isAbleToRunSpecificQuery() throws JargonException;
+
+	/**
+	 * Make a call and retrieve the available client hints. Note this may be
+	 * <code>null</code> if the version of iRODS does not support client hints API.
+	 * <p/>
+	 * Note that the {@link EnvironmentalInfoAccessor} folds this information into
+	 * the {@link IRODSServerProperties} object and does simple caching to reduce
+	 * traffic to iRODS. A refresh flag will force the data to be updated and
+	 * re-cached.
+	 * 
+	 * @param refresh
+	 *            <code>boolean</code> to refresh any cached value
+	 * @return {@link ClientHints} describing the iRODS server or <code>null</code>
+	 *         if that data is not available
+	 * @throws JargonException
+	 */
+	ClientHints retrieveClientHints(final boolean refresh) throws JargonException;
 
 }

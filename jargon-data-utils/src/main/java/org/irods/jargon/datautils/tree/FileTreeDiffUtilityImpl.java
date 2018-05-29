@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.swing.tree.TreeNode;
+
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -125,9 +127,9 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 		FileTreeNode childNode = null;
 		boolean noDiffs = true;
 		@SuppressWarnings("unchecked")
-		Enumeration<FileTreeNode> children = fileTreeNode.children();
+		Enumeration<TreeNode> children = fileTreeNode.children();
 		while (children.hasMoreElements()) {
-			childNode = children.nextElement();
+			childNode = (FileTreeNode) children.nextElement();
 			noDiffs = assertNoDiffsInTree(childNode);
 			if (noDiffs) {
 				break;
@@ -218,8 +220,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 	}
 
 	/**
-	 * Given two relative paths, do the diff. This is the recursive call that will
-	 * descend into child directories and update a shared tree model.
+	 * <<<<<<< HEAD Given two relative paths, do the diff. This is the recursive
+	 * call that will descend into child directories and update a shared tree model.
+	 * ======= Given two relative paths, do the diff. This is the recursive call
+	 * that will descend into child directories and update a shared tree model.
+	 * >>>>>>> master
 	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
@@ -296,8 +301,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 	}
 
 	/**
-	 * Two relative paths are matched. Decide if they are files or directories, and
-	 * diff appropriately.
+	 * <<<<<<< HEAD Two relative paths are matched. Decide if they are files or
+	 * directories, and diff appropriately. ======= Two relative paths are matched.
+	 * Decide if they are files or directories, and diff appropriately. >>>>>>>
+	 * master
 	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
@@ -605,9 +612,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 	}
 
 	/**
-	 * I've matched two files by relative paths. Now inspect for changes and
-	 * generate any appropriate diff. If either the right or left timestamp is set
-	 * to no checks, then timestamps are not checked at all.
+	 * I've matched two files by relative paths. Now inspect for changes and <<<<<<<
+	 * HEAD generate any appropriate diff. If either the right or left timestamp is
+	 * set to no checks, then timestamps are not checked at all. ======= generate
+	 * any appropriate diff. If either the right or left timestamp is set to no
+	 * checks, then timestamps are not checked at all. >>>>>>> master
 	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide

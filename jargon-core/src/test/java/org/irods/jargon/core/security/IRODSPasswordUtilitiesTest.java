@@ -1,10 +1,9 @@
 package org.irods.jargon.core.security;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class IRODSPasswordUtilitiesTest {
 

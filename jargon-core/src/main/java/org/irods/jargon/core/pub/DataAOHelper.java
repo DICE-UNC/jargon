@@ -30,7 +30,6 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileInputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.BuilderQueryUtils;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
@@ -88,7 +87,8 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Create a set of selects for a data object, used in general query.
+	 * <<<<<<< HEAD ======= Create a set of selects for a data object, used in
+	 * general query.
 	 *
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be appended with the
@@ -745,19 +745,15 @@ public final class DataAOHelper extends AOHelper {
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
-					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
-
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME, queryElement.getOperator(),
+					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
-					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
-
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE, queryElement.getOperator(),
+					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
-					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS, queryElement.getOperator(),
+					queryElement.getValue().trim());
+
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}
@@ -793,7 +789,7 @@ public final class DataAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)

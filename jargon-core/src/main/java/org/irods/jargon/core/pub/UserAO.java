@@ -128,6 +128,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
+
 	void deleteUser(String userName) throws InvalidUserException, JargonException;
 
 	/**
@@ -356,5 +357,16 @@ public interface UserAO extends IRODSAccessObject {
 	 *             for iRODS error
 	 */
 	void removeUserDN(String userName, String userDN) throws JargonException;
+
+	/**
+	 * Find users using a like query with a given name. Blank queries will return
+	 * all users
+	 * 
+	 * @param userName
+	 *            <code>String</code> with a partial search
+	 * @return <code>List</code> of {@link User}
+	 * @throws JargonException
+	 */
+	List<User> findUsersLike(String userName) throws JargonException;
 
 }

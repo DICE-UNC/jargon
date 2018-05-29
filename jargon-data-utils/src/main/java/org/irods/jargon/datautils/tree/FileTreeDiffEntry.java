@@ -33,6 +33,7 @@ public class FileTreeDiffEntry {
 	private final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry;
 
 	/**
+	 * 
 	 * Classify this as a diff (an actual difference was noted), or as a non-diff
 	 * entry that simply describes the tree
 	 *

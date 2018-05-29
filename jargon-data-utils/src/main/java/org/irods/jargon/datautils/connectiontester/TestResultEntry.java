@@ -96,6 +96,7 @@ public class TestResultEntry {
 	 * @param transferRateBytesPerSecond
 	 *            the transferRateBytesPerSecond to set
 	 */
+
 	public void setTransferRateBytesPerSecond(final int transferRateBytesPerSecond) {
 		this.transferRateBytesPerSecond = transferRateBytesPerSecond;
 	}

@@ -64,4 +64,20 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 		return specificQuery;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SpecificQueryResultSet [");
+		if (specificQuery != null) {
+			builder.append("specificQuery=").append(specificQuery);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

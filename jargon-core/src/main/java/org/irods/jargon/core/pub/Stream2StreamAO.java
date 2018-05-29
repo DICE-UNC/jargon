@@ -66,6 +66,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * Transfer the contents of a stream to a given file. Note that this method will
 	 * detect if the target file is an {@code IRODSFile}, and in that case, it will
 	 * properly handle the transfer via iRODS.
+	 * 
 	 * <p>
 	 * Transfers are done in this method by doing a normal copy between java.io
 	 * streams.
@@ -77,6 +78,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * Note that the {@code inputStream} will be buffered if it is not passed in as
 	 * a buffered stream, using the characteristics described in jargon.properties.
 	 *
+	 * 
 	 * @param inputStream
 	 *            {@link InputStream} for the transfer, note that this method does
 	 *            not wrap the stream with any buffering, so a properly buffered

@@ -20,10 +20,12 @@ public interface DataCacheService {
 	 * and store the data in the appropriate iRODS file. This will be determined by
 	 * the given {@link CacheServiceConfiguration}.
 	 *
+	 * 
 	 * @param stringToCache
 	 *            {@code String} with the data to be cached
 	 * @param key
 	 *            {@code String} with the key that will be used to encrypt the data
+	 * 
 	 * @return {@code String} with the absolute path to the iRODS file that will
 	 *         hold the encrypted data cache
 	 * @throws JargonException
@@ -35,6 +37,7 @@ public interface DataCacheService {
 	 * Put the given object into a special place in the users home directory. Note
 	 * that this method uses the
 	 *
+	 * 
 	 * @param informationObject
 	 *            {@code Object} that will be serialized and stored in encrypted
 	 *            form in the appropriate cache directory
@@ -53,6 +56,7 @@ public interface DataCacheService {
 	 * object. The file is located based on the parameters, and the settings in the
 	 * {@link CacheServiceConfiguration}.
 	 *
+	 * 
 	 * @param userName
 	 *            {@code String} with the user name
 	 * @param key
@@ -73,11 +77,21 @@ public interface DataCacheService {
 
 	IRODSAccessObjectFactory getIrodsAccessObjectFactory();
 
+	/**
+	 * @param irodsAccessObjectFactory
+	 *            the irodsAccessObjectFactory to set
+	 */
+
 	void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory);
 
 	IRODSAccount getIrodsAccount();
 
 	void setIrodsAccount(final IRODSAccount irodsAccount);
+
+	/**
+	 * @param cacheServiceConfiguration
+	 *            the cacheServiceConfiguration to set
+	 */
 
 	void setCacheServiceConfiguration(CacheServiceConfiguration cacheServiceConfiguration);
 

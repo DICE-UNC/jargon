@@ -23,11 +23,11 @@ import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -376,7 +376,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		log.info("found AVU:{}", avuValue);
 
 		log.info("gathering shareUsers...");
-		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
+		List<UserFilePermission> userFilePermissions = new ArrayList<>();
 		MetadataDomain metadataDomain;
 
 		if (objStat.isSomeTypeOfCollection()) {
@@ -391,7 +391,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 		log.info("got shareUsers...processing");
 
-		List<ShareUser> shareUsers = new ArrayList<ShareUser>(userFilePermissions.size());
+		List<ShareUser> shareUsers = new ArrayList<>(userFilePermissions.size());
 
 		for (UserFilePermission userFilePermission : userFilePermissions) {
 			shareUsers.add(new ShareUser(userFilePermission.getUserName(), userFilePermission.getUserZone(),
@@ -413,7 +413,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 	private List<MetaDataAndDomainData> retrieveAVUsForShare(final String irodsAbsolutePath, final ObjStat objStat,
 			final List<AVUQueryElement> avuQueryElements) throws JargonException {
 
-		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
+		List<MetaDataAndDomainData> queryResults = new ArrayList<>();
 		if (objStat.isSomeTypeOfCollection()) {
 			log.info("querying metadata as a collection to look for shared");
 			CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
@@ -445,10 +445,11 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 	 * @throws JargonException
 	 */
 	private List<AVUQueryElement> buildAVUQueryForShared() throws JargonException {
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.SHARE_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.SHARE_AVU_UNIT));
+
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -546,7 +547,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		 * Runs the listSharedCollectionsOwnedByUser specific query, which must be
 		 * loaded on the the iRODS server arguments are userName and userZone
 		 */
-		List<String> arguments = new ArrayList<String>();
+		List<String> arguments = new ArrayList<>();
 		arguments.add(userName);
 		arguments.add(userZone);
 
@@ -554,7 +555,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 				"");
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 
-		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>(
+		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<>(
 				specificQueryResultSet.getResults().size());
 
 		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
@@ -603,7 +604,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		 * Runs the listSharedCollectionsSharedWithUser specific query, which must be
 		 * loaded on the the iRODS server arguments are userName and userZone
 		 */
-		List<String> arguments = new ArrayList<String>();
+		List<String> arguments = new ArrayList<>();
 		arguments.add(userName);
 		arguments.add(userZone);
 		arguments.add(userName);
@@ -612,7 +613,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 				0, "");
 		SpecificQueryResultSet specificQueryResultSet = runSpecificQuery(specificQuery);
 
-		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<IRODSSharedFileOrCollection>();
+		List<IRODSSharedFileOrCollection> irodsSharedFileOrCollections = new ArrayList<>();
 
 		for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
 			addSharedFileOrCollectionToListFromRow(specificQueryResultSet, irodsSharedFileOrCollections, row);
@@ -638,13 +639,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.usertagging.sharing.IRODSSharingService#listUsersForShare
-	 * (java.lang.String)
-	 */
 	@Override
 	public List<ShareUser> listUsersForShare(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
@@ -654,7 +648,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		List<ShareUser> shareUsers;
 		if (share == null) {
 			log.info("no share, return empty list");
-			shareUsers = new ArrayList<ShareUser>();
+			shareUsers = new ArrayList<>();
 		} else {
 			shareUsers = share.getShareUsers();
 		}
@@ -663,11 +657,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	}
 
-	/**
-	 * @param specificQueryResultSet
-	 * @param irodsSharedFileOrCollection
-	 * @param row
-	 */
 	private void augmentRowWithCountData(final SpecificQueryResultSet specificQueryResultSet,
 			final IRODSSharedFileOrCollection irodsSharedFileOrCollection, final IRODSQueryResultRow row) {
 		// add count info
@@ -676,11 +665,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		irodsSharedFileOrCollection.setTotalRecords(specificQueryResultSet.getTotalRecords());
 	}
 
-	/**
-	 * @param specificQuery
-	 * @throws JargonException
-	 * @throws DataNotFoundException
-	 */
 	private SpecificQueryResultSet runSpecificQuery(final SpecificQuery specificQuery)
 			throws OperationNotSupportedByThisServerException, JargonException {
 
@@ -721,7 +705,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	}
 
-	/**
+	/*
 	 * Cache a determination that sharing is or is not supported
 	 *
 	 * @param isSupported
@@ -745,11 +729,10 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	}
 
-	/**
+	/*
 	 * Will return {@code true} if I have already checked, and know that the sharing
 	 * specific queries are not set up on iRODS.
-	 *
-	 * @return
+	 * 
 	 */
 	private boolean isDeterminedThatSharingQueriesNotSupported() {
 		if (getIrodsAccessObjectFactory().isUsingDynamicServerPropertiesCache()) {

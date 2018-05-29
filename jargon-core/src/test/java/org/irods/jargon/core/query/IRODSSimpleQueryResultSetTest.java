@@ -2,10 +2,9 @@ package org.irods.jargon.core.query;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class IRODSSimpleQueryResultSetTest {
 

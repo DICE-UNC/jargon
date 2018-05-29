@@ -1,8 +1,11 @@
 **/.classpath
-**/.DS_Store
+.DS_Store
 **/nb-configuration.xml
 **/.springBeans
 **/testing.properties
+**/*.eml
+**/Scripts
+.idea
 *.iml
 .project
 .idea
@@ -23,4 +26,6 @@ testing.properties
 */test-output
 JargonVersion.java
 **/${test.option.mount.basedir}
+**/*.*~
 *.*~
+.dbeaver*

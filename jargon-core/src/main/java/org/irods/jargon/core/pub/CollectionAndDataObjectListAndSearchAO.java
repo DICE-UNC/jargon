@@ -369,9 +369,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @return {@code Object} that will be either a {@code DataObject} or
 	 *         {@code Collection} object based on the object at the given absolute
 	 *         path in iRODS.
-	 * @throws FileNotFoundException
-	 *             , if no data object or collection found for the given path. The
-	 *             method does not return null in this case
+	 * 
 	 * @throws FileNotFoundException
 	 *             if the given objectAbsolutePath does not exist
 	 * @throws JargonException
@@ -419,9 +417,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *            root is used. If the path is really a file, the method will list
 	 *            from the parent of the file.
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset from which to start returning
-	 *            results.
-	 * @return {@link List} of
+	 *            {@code int} with the offset from which to start returning results.
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         with included per-user ACL information
 	 * @throws FileNotFoundException
@@ -517,6 +514,31 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 			throws FileNotFoundException, JargonException;
 
 	/**
+	 * Return the {@code CollectionAndDataObjectListingEntry} that is associated
+	 * with the given iRODS absolute path. This is equivalent to doing an 'objStat'
+	 * on the given path, and in fact, this is how the data is retrieved from iRODS.
+	 * <p/>
+	 * This variant of the method is appropriate for interfaces or occasions where a
+	 * user may need to drill down from the top past collections that are not
+	 * actually visible due to strict acls. In this case, the method will 'guess' at
+	 * things like 'home' is under the zone name, and the user and/or public dir are
+	 * under the home directory.
+	 *
+	 * @param absolutePath
+	 *            {@code String} with the absolute path to an iRODS collection or
+	 *            data object.
+	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         containing information on the given file or directory at the given
+	 *         absolute path.
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePathWithHeuristicPathGuessing(
+			final String absolutePath) throws FileNotFoundException, JargonException;
+
+	/**
 	 * Retrieve the {@code ObjStat} for a collection or data object at the given
 	 * absolute path in iRODS. This is the result of a call to rsObjStat. Note that
 	 * a {@code FileNotFoundException} results if the objStat cannot be determined.
@@ -571,7 +593,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
-	 * @return List of {@link CollectionAndDataObjectListingEntry}
+	 * @return <code>List</code> of {@CollectionAndDataObjectListingEntry} that
+	 *         represents the collections and data objects beneath the parent
 	 * @throws FileNotFoundException
 	 *             if file is missing
 	 * @throws JargonException
@@ -580,6 +603,20 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(ObjStat objStat)
 			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Given a parent path, get a total of the data sizes underneath that path
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the path to the parent collection,
+	 *            children data objects are totaled
+	 * @return <code>long</code> with a total size
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	long totalDataObjectSizesUnderPath(String absolutePathToParent) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Retrieve an {@code ObjStat} for a given path. This version of ObjStat will
@@ -593,12 +630,70 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path.
 	 * @return {@link ObjStat} associated witha path
+	 * 
 	 * @throws FileNotFoundException
+	 * 
 	 *             if file is missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
+
+	/**
+	 * List data objects underneath a given parent path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} that has already been obtained
+	 * @param partialStartIndex
+	 *            <code>int</code> with a paging offset
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(ObjStat objStat, int partialStartIndex)
+			throws JargonException;
+
+	/**
+	 * List collections underneath a given parent path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} that has already been obtained
+	 * @param partialStartIndex
+	 *            <code>int</code> with a paging offset
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(final ObjStat objStat,
+			final int partialStartIndex) throws FileNotFoundException, JargonException;
+
+	/**
+	 * Return a count of the number of collections under the path represented by the
+	 * objStat
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the target collection
+	 * @return <code>int</code> with the collection count
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	int countCollectionsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException;
+
+	/**
+	 * Return a count of the number of data objects under the path represented by
+	 * the objStat
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the target collection
+	 * @return <code>int</code> with the data object count
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	int countDataObjectsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException;
 
 }

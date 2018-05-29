@@ -3,9 +3,8 @@ package org.irods.jargon.core.query;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class SimpleQueryTest {
 

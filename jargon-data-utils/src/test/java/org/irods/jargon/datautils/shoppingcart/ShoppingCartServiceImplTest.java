@@ -10,10 +10,9 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactoryImpl;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class ShoppingCartServiceImplTest {
 	private static Properties testingProperties = new Properties();
@@ -61,6 +60,7 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public final void testSerializeCartNoDataCacheService() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);

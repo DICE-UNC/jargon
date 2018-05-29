@@ -90,6 +90,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * Transfer a file between iRODS resources
 	 *
 	 * @param absolutePathToSourceFile
+	 * 
 	 *            {@code String} with the absolute path to the source file in iRODS.
 	 * @param targetResource
 	 *            {@code String} with the target resource name iRODS.
@@ -122,6 +123,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param absolutePathToSourceFile
 	 *            {@code String} with the absolute path to the source file.
 	 * @param absolutePathToTargetFile
+	 * 
 	 *            {@code String} with the absolute path to the target of the move.
 	 * @throws JargonException
 	 *             for iRODS error
@@ -226,7 +228,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * default should be to throw an {@code OverwriteException} if a local file
 	 * already exists.
 	 * <p>
-	 * There is a force option setting in {@code TransferOptions} for
+	 * There is a force option setting in {@code TransferOptions} for <<<<<<< HEAD
 	 * {@code ForceOption.ASK_CALLBACK_LISTENER}. If this option is set, and a file
 	 * overwrite is detected, the {@code TransferStatusCallbackListener} will be
 	 * consulted. The client that implements the callback listener interface will
@@ -244,6 +246,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param sourceResourceName
 	 *            {@code String} with the optional resource from which the file will
 	 *            be obtained. This should be left blank if not specified (not null)
+	 * 
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive call-backs indicating the
@@ -306,6 +309,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param irodsSourceFileAbsolutePath
 	 *            {@code String} with the absolute path to the source collection or
 	 *            data object. This will be copied up to the target
+	 * 
 	 * @param targetResource
 	 *            {@code String} with the optional (blank if not specified) resource
 	 *            to which the file or collection will be copied
@@ -432,6 +436,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * listener, then the {@code TransferStatusCallbackListener} will receive a
 	 * message asking for the overwrite option for this transfer operation. This is
 	 * the appropriate mode when the client is interactive.
+	 * 
 	 *
 	 * @param irodsSourceFileAbsolutePath
 	 *            {@code String} with the absolute path to the source file or
@@ -443,6 +448,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            {@code String} with the absolute path to the target file or
 	 *            collection in iRODS.
 	 * @param transferControlBlock
+	 * 
 	 *            {@link TransferControlBlock} that will control aspects of the data
 	 *            transfer. Note that the {@link TransferOptions} that are a member
 	 *            of the {@code TransferControlBlock} may be specified here to pass
@@ -469,11 +475,13 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * Copy a file or collection from one iRODS location to another. This is the
 	 * preferred method signature for copy operations, with other forms now
 	 * deprecated. Note that the {@code transferControlBlock} and
+	 * 
 	 * {@code TransferStatusCallbackListener} objects are optional and may be set to
 	 * {@code null} if not required.
 	 * <p>
 	 * Note that this operation can handle a single data object, or a collection.
 	 * <p>
+	 * 
 	 * If the {@code TransferOptions} specified in the {@code TransferControlBlock}
 	 * indicates no force, then an attempted overwrite will throw the
 	 * {@code OverwriteException}. If the transfer option is set to ask the callback
@@ -488,6 +496,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to the
 	 *            target of the copy operation.
 	 * @param transferControlBlock
+	 * 
 	 *            {@link TransferControlBlock} that will control aspects of the data
 	 *            transfer. Note that the {@link TransferOptions} that are a member
 	 *            of the {@code TransferControlBlock} may be specified here to pass
@@ -509,4 +518,20 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	void copy(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile,
 			TransferStatusCallbackListener transferStatusCallbackListener, TransferControlBlock transferControlBlock)
 			throws OverwriteException, DataNotFoundException, JargonException;
+
+	/**
+	 * Rename a source to a target file in place, as opposed to a move or copy
+	 * operation.
+	 * <p/>
+	 * This means that renaming from source xxx/yyy/zzz to target xxx/yyy/rrr will
+	 * result in xxx/yyy/rrr as the new path of the source file
+	 * 
+	 * @param sourceFileAbsolutePath
+	 * @param targetFileAbsolutePath
+	 * @throws JargonException
+	 */
+	void rename(String sourceFileAbsolutePath, String targetFileAbsolutePath)
+
+			throws OverwriteException, DataNotFoundException, JargonException;
+
 }

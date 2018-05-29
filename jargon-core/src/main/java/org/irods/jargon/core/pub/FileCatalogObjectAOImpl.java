@@ -15,6 +15,8 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,12 +58,6 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForGetOperation(
-	 * java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String getHostForGetOperation(final String sourceAbsolutePath, final String resourceName)
 			throws JargonException {
@@ -119,12 +115,6 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 		return evaluateGetHostResponseAndReturnReroutingHost(dataObjInp);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForPutOperation(
-	 * java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String getHostForPutOperation(final String targetAbsolutePath, final String resourceName)
 			throws JargonException {
@@ -278,7 +268,8 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 
 		log.info("resoveAbsolutePathViaObjStat()");
 
-		ObjStat objStat = retrieveObjStat(MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath));
+		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
+
 		return resolveAbsolutePathGivenObjStat(objStat);
 
 	}
@@ -320,6 +311,44 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public CollectionAndDataObjectListingEntry getListingEntryForAbsolutePath(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
+		log.info("getListingEntryForAbsolutePath()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		ObjStat objStat = this.retrieveObjStat(irodsAbsolutePath);
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(0);
+		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setDataSize(objStat.getObjSize());
+		entry.setModifiedAt(objStat.getModifiedAt());
+		entry.setObjectType(objStat.getObjectType());
+		entry.setOwnerName(objStat.getOwnerName());
+		entry.setOwnerZone(objStat.getOwnerZone());
+		entry.setSpecColType(objStat.getSpecColType());
+		entry.setSpecialObjectPath(objStat.getObjectPath());
+
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
+
+		if (objStat.isSomeTypeOfCollection()) {
+			entry.setPathOrName(irodsAbsolutePath);
+			entry.setParentPath(collectionAndPath.getCollectionParent());
+
+		} else {
+			entry.setPathOrName(MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(irodsAbsolutePath));
+			entry.setParentPath(collectionAndPath.getCollectionParent());
+
+		}
+		log.info("entry was:{}", entry);
+
+		return entry;
+
 	}
 
 }

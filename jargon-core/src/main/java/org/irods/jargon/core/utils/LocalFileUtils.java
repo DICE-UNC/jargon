@@ -4,12 +4,15 @@
 package org.irods.jargon.core.utils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -43,8 +46,60 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff after the last '.' character to treat as
-	 * the file extension
+	 * <<<<<<< HEAD Write the string to a file
+	 * 
+	 * @param file
+	 * @param string
+	 * @throws IOException
+	 */
+	public static void stringToFile(final File file, final String string) throws IOException {
+		if (file == null) {
+			throw new IllegalArgumentException("null file");
+		}
+
+		if (string == null || string.isEmpty()) {
+			throw new IllegalArgumentException("null or empty string");
+		}
+
+		final PrintWriter out = new PrintWriter(file.getAbsolutePath());
+		out.println(string);
+		out.flush();
+		out.close();
+
+	}
+
+	/**
+	 * Return the contents of a file as a string
+	 * 
+	 * @param file
+	 *            {@link File} to read
+	 * @return <code>String</code> with the file contents
+	 * @throws IOException
+	 */
+	public static String fileContentsAsString(final File file) throws IOException {
+		if (file == null) {
+			throw new IllegalArgumentException("null file");
+		}
+		final BufferedReader reader = new BufferedReader(new FileReader(file));
+		String line = null;
+		final StringBuilder stringBuilder = new StringBuilder();
+		final String ls = System.getProperty("line.separator");
+
+		try {
+			while ((line = reader.readLine()) != null) {
+				stringBuilder.append(line);
+				stringBuilder.append(ls);
+			}
+
+			return stringBuilder.toString();
+		} finally {
+			reader.close();
+		}
+	}
+
+	/**
+	 * ======= >>>>>>> origin/master Parse a file name to get the stuff after the
+	 * last '.' character to treat as the file extension
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
@@ -55,7 +110,7 @@ public class LocalFileUtils {
 			throw new IllegalArgumentException("null fileName");
 		}
 
-		int lastDot = fileName.lastIndexOf('.');
+		final int lastDot = fileName.lastIndexOf('.');
 		if (lastDot == -1) {
 			return "";
 		} else {
@@ -99,7 +154,7 @@ public class LocalFileUtils {
 			throw new IllegalArgumentException("null fileName");
 		}
 
-		int lastDot = fileName.lastIndexOf('.');
+		final int lastDot = fileName.lastIndexOf('.');
 		if (lastDot == -1) {
 			return "";
 		} else {
@@ -116,11 +171,11 @@ public class LocalFileUtils {
 	 * @return {@code String} with the updated file name containing a time stamp
 	 */
 	public static String getFileNameWithTimeStampInterposed(final String fileName) {
-		String namePart = getFileNameUpToExtension(fileName);
-		String extension = getFileExtension(fileName);
-		StringBuilder newName = new StringBuilder(namePart);
+		final String namePart = getFileNameUpToExtension(fileName);
+		final String extension = getFileExtension(fileName);
+		final StringBuilder newName = new StringBuilder(namePart);
 		newName.append(".[backup from - ");
-		DateFormat dateFormat = DateFormat.getDateTimeInstance();
+		final DateFormat dateFormat = DateFormat.getDateTimeInstance();
 		newName.append(dateFormat.format(new Date()));
 		newName.append("]");
 		newName.append(extension);
@@ -145,9 +200,9 @@ public class LocalFileUtils {
 		if (directory.isFile()) {
 			count = 1;
 		} else {
-			File[] files = directory.listFiles();
+			final File[] files = directory.listFiles();
 			if (files != null) {
-				for (File file : files) {
+				for (final File file : files) {
 					if (file.isFile()) {
 						count++;
 					}
@@ -174,6 +229,7 @@ public class LocalFileUtils {
 					localFileToHoldData.getAbsolutePath());
 			try {
 				localFileToHoldData.createNewFile();
+
 			} catch (IOException e) {
 				log.error("IOException when trying to create a new file for the local output stream for {}",
 						localFileToHoldData.getAbsolutePath(), e);
@@ -199,21 +255,23 @@ public class LocalFileUtils {
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
+
 		} catch (FileNotFoundException e1) {
 			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
-		CheckedInputStream check = new CheckedInputStream(file, new CRC32());
-		BufferedInputStream in = new BufferedInputStream(check);
+		final CheckedInputStream check = new CheckedInputStream(file, new CRC32());
+		final BufferedInputStream in = new BufferedInputStream(check);
 		try {
 			while (in.read() != -1) {
 			}
+
 		} catch (IOException e) {
 			throw new JargonException("error computing checksum for file:" + absolutePathToLocalFile, e);
 		} finally {
 			try {
 				in.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 		}
@@ -244,6 +302,7 @@ public class LocalFileUtils {
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
+
 		} catch (FileNotFoundException e1) {
 			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
@@ -251,8 +310,8 @@ public class LocalFileUtils {
 
 		MessageDigest complete;
 		int numRead;
-		BufferedInputStream in = new BufferedInputStream(file);
-		byte[] buffer = new byte[4096];
+		final BufferedInputStream in = new BufferedInputStream(file);
+		final byte[] buffer = new byte[4096];
 
 		try {
 			complete = MessageDigest.getInstance("SHA-256");
@@ -264,19 +323,19 @@ public class LocalFileUtils {
 			} while (numRead != -1);
 
 			return complete.digest();
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new JargonException("no such algorithm exception for MD5");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new JargonException("Error computing MD5 checksum", e);
 		} finally {
 			try {
 				in.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 			try {
 				file.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 		}
@@ -298,6 +357,7 @@ public class LocalFileUtils {
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
+
 		} catch (FileNotFoundException e1) {
 			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
@@ -305,8 +365,8 @@ public class LocalFileUtils {
 
 		MessageDigest complete;
 		int numRead;
-		BufferedInputStream in = new BufferedInputStream(file);
-		byte[] buffer = new byte[4096];
+		final BufferedInputStream in = new BufferedInputStream(file);
+		final byte[] buffer = new byte[4096];
 
 		try {
 			complete = MessageDigest.getInstance("MD5");
@@ -318,19 +378,19 @@ public class LocalFileUtils {
 			} while (numRead != -1);
 
 			return complete.digest();
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new JargonException("no such algorithm exception for MD5");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new JargonException("Error computing MD5 checksum", e);
 		} finally {
 			try {
 				in.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 			try {
 				file.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 		}
@@ -345,8 +405,8 @@ public class LocalFileUtils {
 	 * @return {@code byte[]} with the actual translation
 	 */
 	public static byte[] hexStringToByteArray(final String s) {
-		int len = s.length();
-		byte[] data = new byte[len / 2];
+		final int len = s.length();
+		final byte[] data = new byte[len / 2];
 		for (int i = 0; i < len; i += 2) {
 			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
 		}
@@ -357,6 +417,7 @@ public class LocalFileUtils {
 	 * Given a checksum digest as a {@code byte[]}, return a {@code String} as used
 	 * in iRODS packing instructions
 	 *
+	 * 
 	 * @param digestAsByteArray
 	 *            {@code byte[]} which is a checksum value
 	 * @return {@code String} in hex that represents this checkSum
@@ -367,9 +428,9 @@ public class LocalFileUtils {
 			throw new IllegalArgumentException("unknown format, not recognized as an MD5 checksum in a byte array");
 		}
 
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 
-		for (byte element : digestAsByteArray) {
+		for (final byte element : digestAsByteArray) {
 			sb.append(String.format("%02x", element));
 		}
 
@@ -392,7 +453,7 @@ public class LocalFileUtils {
 			throw new IllegalArgumentException("null or empty resourcePath");
 		}
 		// Load the directory as a resource
-		URL resourceUrl = LocalFileUtils.class.getResource(resourcePath);
+		final URL resourceUrl = LocalFileUtils.class.getResource(resourcePath);
 
 		if (resourceUrl == null) {
 			throw new JargonException("null resource, cannot find file");
@@ -400,12 +461,12 @@ public class LocalFileUtils {
 
 		// Turn the resource into a File object
 		try {
-			File resourceFile = new File(resourceUrl.toURI());
+			final File resourceFile = new File(resourceUrl.toURI());
 			if (!resourceFile.exists()) {
 				throw new JargonException("resource file does not exist");
 			}
 			return resourceFile;
-		} catch (URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			throw new JargonException("unable to create uri from file path");
 		}
 	}
@@ -425,7 +486,8 @@ public class LocalFileUtils {
 			throw new IllegalArgumentException("null or empty resourcePath");
 		}
 
-		InputStreamReader resourceReader = new InputStreamReader(
+		final InputStreamReader resourceReader = new InputStreamReader(
+
 				new BufferedInputStream(RuleProcessingAOImpl.class.getResourceAsStream(resourcePath)));
 
 		StringWriter writer = null;
@@ -433,7 +495,7 @@ public class LocalFileUtils {
 
 		try {
 			writer = new StringWriter();
-			char[] buff = new char[1024];
+			final char[] buff = new char[1024];
 			int i = 0;
 			while ((i = resourceReader.read(buff)) > -1) {
 				writer.write(buff, 0, i);
@@ -441,7 +503,7 @@ public class LocalFileUtils {
 
 			ruleString = writer.toString();
 
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 			log.error("io exception reading rule data from resource", ioe);
 			throw new JargonException("error reading rule from resource", ioe);
 		} finally {
@@ -450,7 +512,7 @@ public class LocalFileUtils {
 				if (writer != null) {
 					writer.close();
 				}
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// ignore
 			}
 
@@ -469,12 +531,12 @@ public class LocalFileUtils {
 	 *             {@link IOException}
 	 */
 	public static byte[] getBytesFromFile(final File file) throws IOException {
-		InputStream is = new FileInputStream(file);
+		final InputStream is = new FileInputStream(file);
 		byte[] bytes;
 
 		try {
 			// Get the size of the file
-			long length = file.length();
+			final long length = file.length();
 
 			// You cannot create an array using a long type.
 			// It needs to be an int type.

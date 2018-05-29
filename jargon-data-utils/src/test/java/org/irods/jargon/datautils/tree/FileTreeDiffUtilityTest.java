@@ -22,11 +22,10 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class FileTreeDiffUtilityTest {
 
@@ -417,8 +416,9 @@ public class FileTreeDiffUtilityTest {
 				diffEntriesFound.get(0).getCollectionAndDataObjectListingEntry().getObjectType());
 
 		Assert.assertEquals("unexpectedFileName", newChildDirName,
-				MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(
+				MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(
 						diffEntriesFound.get(0).getCollectionAndDataObjectListingEntry().getPathOrName()));
+
 	}
 
 	@Ignore
@@ -1079,8 +1079,9 @@ public class FileTreeDiffUtilityTest {
 		Assert.assertEquals("should have just 1 diff", 1, ctr);
 		Assert.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
 		Assert.assertEquals("unexpectedFileName", newChildFileName,
-				MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(
+				MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(
 						diffEntriesFound.get(0).getCollectionAndDataObjectListingEntry().getPathOrName()));
+
 	}
 
 	@Test
@@ -1147,8 +1148,9 @@ public class FileTreeDiffUtilityTest {
 		Assert.assertEquals("wrong diff type", DiffType.LEFT_HAND_PLUS, diffEntriesFound.get(0).getDiffType());
 
 		Assert.assertEquals("unexpectedFileName", newChildFileName,
-				MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(
+				MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(
 						diffEntriesFound.get(0).getCollectionAndDataObjectListingEntry().getPathOrName()));
+
 	}
 
 	@Ignore

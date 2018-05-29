@@ -189,6 +189,17 @@ public interface UserGroupAO extends IRODSAccessObject {
 	void removeUserGroup(String userGroupName) throws JargonException;
 
 	/**
+	 * Given a search term, find user groups like that term. A blank term will find
+	 * all
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with
+	 * @return
+	 * @throws JargonException
+	 */
+	List<UserGroup> findUserGroups(String userGroupName) throws JargonException;
+
+	/**
 	 * Add a user group as a user with groupadmin privilages
 	 *
 	 * @param userGroup

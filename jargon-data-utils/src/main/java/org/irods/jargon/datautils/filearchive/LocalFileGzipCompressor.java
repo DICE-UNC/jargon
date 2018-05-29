@@ -32,6 +32,7 @@ public class LocalFileGzipCompressor {
 	public static final Logger log = LoggerFactory.getLogger(LocalFileGzipCompressor.class);
 
 	/**
+	 * 
 	 * Take the given file and compress it to a gzip with a .gzip extension added
 	 *
 	 * @param inputFileAbsolutePath
@@ -43,6 +44,7 @@ public class LocalFileGzipCompressor {
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
+
 	public File compress(final String inputFileAbsolutePath) throws FileNotFoundException, JargonException {
 
 		log.info("compress");
@@ -81,6 +83,9 @@ public class LocalFileGzipCompressor {
 			gzOut.close();
 
 			log.info("done!");
+			/*
+			 * Stream will be closed by client of this API
+			 */
 			return outputFile;
 
 		} catch (IOException e) {
@@ -106,6 +111,7 @@ public class LocalFileGzipCompressor {
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
+
 	public File uncompress(final String inputFileAbsolutePath) throws FileNotFoundException, JargonException {
 
 		log.info("uncompressToTar()");
@@ -153,6 +159,9 @@ public class LocalFileGzipCompressor {
 			outputStream.close();
 
 			log.info("done!");
+			/*
+			 * Stream will be closed by the client of this API
+			 */
 			return outputFile;
 
 		} catch (IOException e) {

@@ -28,7 +28,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -297,9 +297,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			}
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(collectionAbsolutePath);
 
-		log.info("absPath for querying iCAT:{}", collectionAbsolutePath);
+		log.info("absPath for querying iCAT:{}", myPath);
 
 		log.info("building a metadata query for: {}", avuQuery);
 
@@ -445,7 +445,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("adding avu metadata to collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForAddCollectionMetadata(myPath,
 				avuData);
@@ -491,7 +491,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new OperationNotSupportedByThisServerException("metadata set not supported in this iRODS version");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForSetCollectionMetadata(myPath,
 				avuData);
@@ -536,10 +536,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		log.info("deleting avu metadata from collection: {}", avuData);
-		log.info("absolute path: {}", absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		log.info("deleting avu metadata from collection: {}", avuData);
+		log.info("absolute path: {}", myPath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForDeleteCollectionMetadata(myPath,
 				avuData);
@@ -626,7 +626,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("with  avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
@@ -635,10 +635,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		try {
 			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-					AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+					QueryConditionOperators.EQUAL, avuData.getAttribute()));
 			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.UNITS,
-					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+					QueryConditionOperators.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesByMetadataQueryForCollection(queryElements, myPath);
+
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -688,7 +689,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForModifyCollectionMetadata(myPath,
 				currentAvuData, newAvuData);
@@ -944,26 +945,40 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		List<Collection> collectionList = CollectionAOHelper.buildListFromResultSet(resultSet);
 
+		Collection collection;
 		if (collectionList.size() == 0) {
-			log.error("No collection found for path:{}", absPath);
-			throw new DataNotFoundException("no collection found for path");
+			log.info("No collection found for path, see if heuristic path guessing was done:{}", absPath);
+			if (objStat.getObjectType() == ObjectType.COLLECTION_HEURISTIC_STANDIN) {
+				log.info(
+						"collection is a stand in proxy for a hierarchy layer the user cannot see, generate a proxy collection for:{}",
+						objStat);
+			}
+			collection = new Collection();
+			collection.setCollectionId(0);
+			collection.setCollectionName(objStat.getAbsolutePath());
+			CollectionAndPath collAndPath = MiscIRODSUtils
+					.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
+			collection.setCollectionParentName(collAndPath.getCollectionParent());
+			collection.setObjectPath(objStat.getObjectPath());
+			collection.setSpecColType(objStat.getSpecColType());
+			collection.setProxy(true);
+		} else {
+			collection = collectionList.get(0);
+			if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+				log.info("this is a special collection,so update the paths and add an object path");
+			}
+
+			collection.setObjectPath(objStat.getObjectPath());
+			CollectionAndPath collectionAndPath = MiscIRODSUtils
+					.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(collectionAndPath.getCollectionParent());
+			sb.append("/");
+			collection.setCollectionParentName(sb.toString());
+			collection.setCollectionName(objStat.getAbsolutePath());
+			collection.setSpecColType(objStat.getSpecColType());
 		}
-
-		Collection collection = collectionList.get(0);
-		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-			log.info("this is a special collection,so update the paths and add an object path");
-		}
-
-		collection.setObjectPath(objStat.getObjectPath());
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(collectionAndPath.getCollectionParent());
-		sb.append("/");
-		collection.setCollectionParentName(sb.toString());
-		collection.setCollectionName(objStat.getAbsolutePath());
-		collection.setSpecColType(objStat.getSpecColType());
 
 		return collection;
 
@@ -1564,9 +1579,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 					MiscIRODSUtils.getZoneInPath(absPath));
-		} catch (JargonQueryException e) {
-			throw new JargonException("error querying for inheritance flag", e);
-		} catch (GenQueryBuilderException e) {
+		} catch (JargonQueryException | GenQueryBuilderException e) {
+			log.error("error querying for inheritance flag", e);
 			throw new JargonException("error querying for inheritance flag", e);
 		}
 
@@ -1603,9 +1617,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null zone");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
+		log.info("getPermissionForCollection for absPath:{}", myPath);
 		log.info("userName:{}", userName);
 
 		UserFilePermission permission = getPermissionForUserName(myPath, userName);
@@ -1637,7 +1651,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(myPath);
 
@@ -1934,9 +1948,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("irodsAbsolutePath:{}", myPath);
 		log.info("userName:{}", userName);
 
 		UserFilePermission derivedPermission = getPermissionForUserName(myPath, userName);

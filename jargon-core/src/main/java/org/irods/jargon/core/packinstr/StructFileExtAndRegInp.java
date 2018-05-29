@@ -30,6 +30,9 @@ public final class StructFileExtAndRegInp extends AbstractIRODSPackingInstructio
 	public static final String DEST_RESOURCE_NAME_KW = "destRescName";
 	public static final String DATA_TYPE = "dataType";
 	public static final String TAR_DATA_TYPE_KW_VALUE = "tar file";
+	public static final String ZIP_DATA_TYPE_KW_VALUE = "zipFile";
+	public static final String GZIP_DATA_TYPE_KW_VALUE = "gzip";
+	public static final String BZIP_DATA_TYPE_KW_VALUE = "bzip";
 
 	public static final int STRUCT_FILE_EXTRACT_AND_REG_API_NBR = 665;
 	public static final int STRUCT_FILE_BUNDLE_API_NBR = 666;
@@ -44,11 +47,16 @@ public final class StructFileExtAndRegInp extends AbstractIRODSPackingInstructio
 		FORCE, NO_FORCE
 	}
 
+	public enum BundleType {
+		DEFAULT, ZIP, TAR, GZIP, BZIP
+	}
+
 	private final String tarFileAbsolutePath;
 	private final String tarCollectionAbsolutePath;
 	private final int operationType;
 	private final String resourceName;
 	private final boolean extractAsBulkOperation;
+	private BundleType bundleType = BundleType.DEFAULT;
 
 	/**
 	 * Create a packing instruction to cause the specified tar file that exists in
@@ -233,7 +241,15 @@ public final class StructFileExtAndRegInp extends AbstractIRODSPackingInstructio
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		kvps.add(KeyValuePair.instance(DATA_TYPE, TAR_DATA_TYPE_KW_VALUE));
+		if (this.bundleType == BundleType.TAR || bundleType == BundleType.DEFAULT) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, TAR_DATA_TYPE_KW_VALUE));
+		} else if (this.bundleType == BundleType.GZIP) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, GZIP_DATA_TYPE_KW_VALUE));
+		} else if (this.bundleType == BundleType.BZIP) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, BZIP_DATA_TYPE_KW_VALUE));
+		} else if (this.bundleType == BundleType.ZIP) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, ZIP_DATA_TYPE_KW_VALUE));
+		}
 
 		// formatted resource keyword
 		if (resourceName.length() > 0) {

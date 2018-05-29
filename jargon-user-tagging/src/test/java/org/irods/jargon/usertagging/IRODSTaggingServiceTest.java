@@ -20,11 +20,10 @@ import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.tags.IRODSTaggingService;
 import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import junit.framework.Assert;
 
 public class IRODSTaggingServiceTest {
 

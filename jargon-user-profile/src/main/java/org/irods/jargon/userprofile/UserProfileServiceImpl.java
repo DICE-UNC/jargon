@@ -25,9 +25,9 @@ import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -129,7 +129,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements Use
 		List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
 
 		try {
-			query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+			query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
 					UserProfileService.AVU_UNIT_NAMESPACE));
 		} catch (JargonQueryException e) {
 			log.error("error building AVU query", e);
@@ -316,7 +317,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements Use
 			log.info("delete all avu's associated with profile", userProfileFile.getAbsolutePath());
 			List<AVUQueryElement> queryList = new ArrayList<AVUQueryElement>();
 			try {
-				queryList.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+				queryList.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
 						AVU_UNIT_NAMESPACE));
 				List<MetaDataAndDomainData> metadataList = dataObjectAO.findMetadataValuesByMetadataQuery(queryList);
 				AvuData avuData;

@@ -64,23 +64,11 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.apache.commons.pool.PoolableObjectFactory#activateObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public void activateObject(final Object objectToActivate) throws Exception {
 		log.info("activateObject:{}", objectToActivate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.apache.commons.pool.PoolableObjectFactory#destroyObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public void destroyObject(final Object objectToDestroy) throws Exception {
 		log.info("destroyObject:{}", objectToDestroy);
@@ -104,24 +92,12 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 		return irodsProtocolManager.getIRODSProtocol(cachedIRODSAccount, pipelineConfiguration, irodsSession);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.apache.commons.pool.PoolableObjectFactory#passivateObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public void passivateObject(final Object arg0) throws Exception {
 		log.info("passivateObject()");
 		// nothing done here
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.apache.commons.pool.PoolableObjectFactory#validateObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public boolean validateObject(final Object arg0) {
 		return true;

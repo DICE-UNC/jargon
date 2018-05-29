@@ -1,8 +1,7 @@
 package org.irods.jargon.datautils.shoppingcart;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class ShoppingCartEntryTest {
 

@@ -8,15 +8,14 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 /**
  * Tests handling of soft links in {@code CollectionAOImpl}
@@ -39,6 +38,7 @@ public class CollectionAOImplForSoftLinkTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -88,7 +88,7 @@ public class CollectionAOImplForSoftLinkTest {
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		// make sure data is there, ask by source
 		List<MetaDataAndDomainData> result = collectionAO.findMetadataValuesByMetadataQueryForCollection(queryElements,
@@ -154,7 +154,7 @@ public class CollectionAOImplForSoftLinkTest {
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		// make sure data is there, ask by source
 		List<MetaDataAndDomainData> result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
@@ -218,7 +218,7 @@ public class CollectionAOImplForSoftLinkTest {
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> sourceMetadata = collectionAO
 				.findMetadataValuesForCollection(sourceIrodsCollection);

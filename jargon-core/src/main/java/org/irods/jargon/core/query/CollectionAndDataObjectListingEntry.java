@@ -30,14 +30,28 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	/**
-	 * Analogous to objType_t defined in rodsType.h
+	 * Analogous to objType_t defined in rodsType.h with the addition of heuristic
+	 * standin, which is a way of creating phantom objects to simulate browsing down
+	 * a tree past the first few strict-acl limited folders. This is set by the
+	 * jargon bits that do the heuristic creation of objstats as a way of tellig
+	 * other parts of the api these are just 'proxy' folders.
 	 */
 	public enum ObjectType {
-		UNKNOWN, DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT
+		UNKNOWN, DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT, COLLECTION_HEURISTIC_STANDIN
 	}
 
 	private String parentPath = "";
 	private String pathOrName = "";
+	/**
+	 * Optional arbitrary string value that can contain a description or special
+	 * note. This can be useful for special types of collection listings
+	 */
+	private String description = "";
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	private String specialObjectPath = "";
 	private ObjectType objectType = null;
 	private Date createdAt = null;
@@ -147,15 +161,54 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		return parentPath.hashCode() + pathOrName.hashCode();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		String thisPath = pathOrName.substring(pathOrName.lastIndexOf('/') + 1);
-
-		if (thisPath.isEmpty()) {
-			thisPath = "/";
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("CollectionAndDataObjectListingEntry [");
+		if (parentPath != null) {
+			builder.append("parentPath=").append(parentPath).append(", ");
 		}
-
-		return thisPath;
+		if (pathOrName != null) {
+			builder.append("pathOrName=").append(pathOrName).append(", ");
+		}
+		if (description != null) {
+			builder.append("description=").append(description).append(", ");
+		}
+		if (specialObjectPath != null) {
+			builder.append("specialObjectPath=").append(specialObjectPath).append(", ");
+		}
+		if (objectType != null) {
+			builder.append("objectType=").append(objectType).append(", ");
+		}
+		if (createdAt != null) {
+			builder.append("createdAt=").append(createdAt).append(", ");
+		}
+		if (modifiedAt != null) {
+			builder.append("modifiedAt=").append(modifiedAt).append(", ");
+		}
+		builder.append("dataSize=").append(dataSize).append(", ");
+		if (ownerName != null) {
+			builder.append("ownerName=").append(ownerName).append(", ");
+		}
+		if (ownerZone != null) {
+			builder.append("ownerZone=").append(ownerZone).append(", ");
+		}
+		if (userFilePermission != null) {
+			builder.append("userFilePermission=")
+					.append(userFilePermission.subList(0, Math.min(userFilePermission.size(), maxLen))).append(", ");
+		}
+		builder.append("id=").append(id).append(", ");
+		if (specColType != null) {
+			builder.append("specColType=").append(specColType);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**
@@ -171,7 +224,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public String getFormattedAbsolutePath() {
 		StringBuilder sb = new StringBuilder();
-		if (objectType == ObjectType.COLLECTION) {
+		if (isCollection()) {
 			sb.append(pathOrName);
 		} else {
 			sb.append(parentPath);
@@ -192,8 +245,9 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public String getNodeLabelDisplayValue() {
 		String nodeVal;
-		if (objectType == ObjectType.COLLECTION) {
-			nodeVal = MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(getPathOrName());
+		if (isCollection()) {
+			nodeVal = MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(getPathOrName());
+
 		} else {
 			nodeVal = pathOrName;
 		}
@@ -202,7 +256,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	public boolean isCollection() {
-		return (objectType == ObjectType.COLLECTION);
+		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.COLLECTION_HEURISTIC_STANDIN);
 	}
 
 	public boolean isDataObject() {
@@ -288,5 +342,9 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public void setSpecialObjectPath(final String specialObjectPath) {
 		this.specialObjectPath = specialObjectPath;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

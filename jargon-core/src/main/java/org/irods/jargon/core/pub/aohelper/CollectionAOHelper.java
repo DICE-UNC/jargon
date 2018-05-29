@@ -13,7 +13,6 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.BuilderQueryUtils;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
@@ -167,7 +166,9 @@ public class CollectionAOHelper extends AOHelper {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME.getName());
 			queryCondition.append(SPACE);
-			queryCondition.append(queryElement.getOperator().getOperatorValue());
+
+			queryCondition.append(queryElement.getOperator().getOperatorAsString());
+
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -177,7 +178,8 @@ public class CollectionAOHelper extends AOHelper {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE.getName());
 			queryCondition.append(SPACE);
-			queryCondition.append(queryElement.getOperator().getOperatorValue());
+			queryCondition.append(queryElement.getOperator().getOperatorAsString());
+
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -187,7 +189,9 @@ public class CollectionAOHelper extends AOHelper {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS.getName());
 			queryCondition.append(SPACE);
-			queryCondition.append(queryElement.getOperator().getOperatorValue());
+
+			queryCondition.append(queryElement.getOperator().getOperatorAsString());
+
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -213,19 +217,16 @@ public class CollectionAOHelper extends AOHelper {
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
-					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
 
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME, queryElement.getOperator(),
+					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
-					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
-
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE, queryElement.getOperator(),
+					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
-					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS, queryElement.getOperator(),
+					queryElement.getValue().trim());
+
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}
@@ -244,7 +245,7 @@ public class CollectionAOHelper extends AOHelper {
 	public static List<Collection> buildListFromResultSet(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 
-		final List<Collection> collections = new ArrayList<Collection>();
+		final List<Collection> collections = new ArrayList<>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			collections.add(buildCollectionFromResultSetRow(row));

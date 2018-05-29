@@ -2,10 +2,9 @@ package org.irods.jargon.datautils.shoppingcart;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class FileShoppingCartTest {
 
