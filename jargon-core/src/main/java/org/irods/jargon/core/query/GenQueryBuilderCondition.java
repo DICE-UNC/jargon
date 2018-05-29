@@ -42,61 +42,52 @@ class GenQueryBuilderCondition {
 	}
 
 	/**
-	 * Create an immutable instance of an individual condition in a general
-	 * query
+	 * Create an immutable instance of an individual condition in a general query
 	 *
 	 * @param selectFieldColumnName
 	 *            {@code String} with the column name
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} that reflects the type of field
 	 * @param selectFieldNumericTranslation
-	 *            {@code String} with the numeric iRODS gen query protocol
-	 *            value that maps to this field
+	 *            {@code String} with the numeric iRODS gen query protocol value
+	 *            that maps to this field
 	 * @param operator
-	 *            {@linkQueryConditionOperators} value with the operation for
-	 *            the condition
-	 * @param value
-	 *            {@code String} with the right hand side of the query
+	 *            {@linkQueryConditionOperators} value with the operation for the
 	 *            condition
+	 * @param value
+	 *            {@code String} with the right hand side of the query condition
 	 * @return
 	 */
-	static GenQueryBuilderCondition instance(
-			final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
-			final String selectFieldNumericTranslation,
+	static GenQueryBuilderCondition instance(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource, final String selectFieldNumericTranslation,
 			final QueryConditionOperators operator, final String value) {
 
-		return new GenQueryBuilderCondition(selectFieldColumnName,
-				selectFieldSource, selectFieldNumericTranslation, operator,
-				value);
+		return new GenQueryBuilderCondition(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation,
+				operator, value);
 	}
 
 	/**
-	 * Create a query condition for an 'BETWEEN' condition. Note that the
-	 * individual values for the BETWEEN are to be provided in an array without
-	 * quotes, which will be added during processing
+	 * Create a query condition for an 'BETWEEN' condition. Note that the individual
+	 * values for the BETWEEN are to be provided in an array without quotes, which
+	 * will be added during processing
 	 *
 	 * @param selectFieldColumnName
 	 *            {@code String} with the column name
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} that reflects the type of field
 	 * @param selectFieldNumericTranslation
-	 *            {@code String} with the numeric iRODS gen query protocol
-	 *            value that maps to this field
+	 *            {@code String} with the numeric iRODS gen query protocol value
+	 *            that maps to this field
 	 * @param valuesWithoutQuotes
-	 *            {@code List<String>} of in arguments, as non quoted
-	 *            strings
+	 *            {@code List<String>} of in arguments, as non quoted strings
 	 * @return
 	 */
-	static GenQueryBuilderCondition instanceForBetween(
-			final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
-			final String selectFieldNumericTranslation,
+	static GenQueryBuilderCondition instanceForBetween(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource, final String selectFieldNumericTranslation,
 			final List<String> valuesWithoutQuotes) {
 
 		if (valuesWithoutQuotes == null || valuesWithoutQuotes.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty valueWithoutQuotes");
+			throw new IllegalArgumentException("null or empty valueWithoutQuotes");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -108,37 +99,32 @@ class GenQueryBuilderCondition {
 
 		}
 
-		return new GenQueryBuilderCondition(selectFieldColumnName,
-				selectFieldSource, selectFieldNumericTranslation,
+		return new GenQueryBuilderCondition(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation,
 				QueryConditionOperators.BETWEEN, sb.toString());
 	}
 
 	/**
 	 * Create a query condition for an 'IN' condition. Note that the individual
-	 * values for the IN are to be provided in an array without quotes, which
-	 * will be added during processing
+	 * values for the IN are to be provided in an array without quotes, which will
+	 * be added during processing
 	 *
 	 * @param selectFieldColumnName
 	 *            {@code String} with the column name
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} that reflects the type of field
 	 * @param selectFieldNumericTranslation
-	 *            {@code String} with the numeric iRODS gen query protocol
-	 *            value that maps to this field
+	 *            {@code String} with the numeric iRODS gen query protocol value
+	 *            that maps to this field
 	 * @param valuesWithoutQuotes
-	 *            {@code List<String>} of in arguments, as non quoted
-	 *            strings
+	 *            {@code List<String>} of in arguments, as non quoted strings
 	 * @return
 	 */
-	static GenQueryBuilderCondition instanceForIn(
-			final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
-			final String selectFieldNumericTranslation,
+	static GenQueryBuilderCondition instanceForIn(final String selectFieldColumnName,
+			final SelectFieldSource selectFieldSource, final String selectFieldNumericTranslation,
 			final List<String> valuesWithoutQuotes) {
 
 		if (valuesWithoutQuotes == null || valuesWithoutQuotes.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty valueWithoutQuotes");
+			throw new IllegalArgumentException("null or empty valueWithoutQuotes");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -158,8 +144,7 @@ class GenQueryBuilderCondition {
 
 		sb.append(")");
 
-		return new GenQueryBuilderCondition(selectFieldColumnName,
-				selectFieldSource, selectFieldNumericTranslation,
+		return new GenQueryBuilderCondition(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation,
 				QueryConditionOperators.IN, sb.toString());
 	}
 
@@ -171,10 +156,8 @@ class GenQueryBuilderCondition {
 	 * @param operator
 	 * @param value
 	 */
-	private GenQueryBuilderCondition(final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
-			final String selectFieldNumericTranslation,
-			final QueryConditionOperators operator, final String value) {
+	private GenQueryBuilderCondition(final String selectFieldColumnName, final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation, final QueryConditionOperators operator, final String value) {
 		this.selectFieldColumnName = selectFieldColumnName;
 		this.selectFieldSource = selectFieldSource;
 		this.selectFieldNumericTranslation = selectFieldNumericTranslation;

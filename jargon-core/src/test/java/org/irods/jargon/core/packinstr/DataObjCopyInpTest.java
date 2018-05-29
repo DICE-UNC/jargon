@@ -3,9 +3,8 @@
  */
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,8 +30,7 @@ public class DataObjCopyInpTest {
 
 	@Test
 	public final void testGetParsedTagsCheckXML() throws Exception {
-		DataObjCopyInp copy = DataObjCopyInp.instanceForRenameCollection(
-				"fromFile", "toFile");
+		DataObjCopyInp copy = DataObjCopyInp.instanceForRenameCollection("fromFile", "toFile");
 
 		StringBuilder b = new StringBuilder();
 		b.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>fromFile</objPath>\n");
@@ -57,8 +55,7 @@ public class DataObjCopyInpTest {
 		b.append("</DataObjInp_PI>\n");
 		b.append("</DataObjCopyInp_PI>\n");
 		String expected = b.toString();
-		Assert.assertEquals("unexpected xml protocol values", expected,
-				copy.getParsedTags());
+		Assert.assertEquals("unexpected xml protocol values", expected, copy.getParsedTags());
 
 	}
 
@@ -69,17 +66,13 @@ public class DataObjCopyInpTest {
 		String testResource = "resc";
 		long testLength = 123;
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
-				testFileName, testNewFileName, testResource, testLength, false);
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource,
+				testLength, false);
 
-		Assert.assertEquals("invalid api number set",
-				DataObjCopyInp.COPY_API_NBR, dataObjCopyInp.getApiNumber());
-		Assert.assertEquals("invalid source path", testFileName,
-				dataObjCopyInp.getFromFileAbsolutePath());
-		Assert.assertEquals("invalid target path", testNewFileName,
-				dataObjCopyInp.getToFileAbsolutePath());
-		Assert.assertEquals("invalid resource", testResource,
-				dataObjCopyInp.getResourceName());
+		Assert.assertEquals("invalid api number set", DataObjCopyInp.COPY_API_NBR, dataObjCopyInp.getApiNumber());
+		Assert.assertEquals("invalid source path", testFileName, dataObjCopyInp.getFromFileAbsolutePath());
+		Assert.assertEquals("invalid target path", testNewFileName, dataObjCopyInp.getToFileAbsolutePath());
+		Assert.assertEquals("invalid resource", testResource, dataObjCopyInp.getResourceName());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -89,8 +82,7 @@ public class DataObjCopyInpTest {
 		String testResource = "resc";
 		long testLength = 123;
 
-		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName,
-				testResource, testLength, false);
+		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource, testLength, false);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -100,8 +92,7 @@ public class DataObjCopyInpTest {
 		String testResource = "resc";
 		long testLength = 123;
 
-		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName,
-				testResource, testLength, false);
+		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource, testLength, false);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -111,8 +102,7 @@ public class DataObjCopyInpTest {
 		String testResource = "resc";
 		long testLength = 123;
 
-		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName,
-				testResource, testLength, false);
+		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource, testLength, false);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -122,8 +112,7 @@ public class DataObjCopyInpTest {
 		String testResource = "resc";
 		long testLength = 123;
 
-		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName,
-				testResource, testLength, false);
+		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource, testLength, false);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -133,8 +122,7 @@ public class DataObjCopyInpTest {
 		String testResource = null;
 		long testLength = 123;
 
-		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName,
-				testResource, testLength, false);
+		DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource, testLength, false);
 	}
 
 	@Test
@@ -142,8 +130,7 @@ public class DataObjCopyInpTest {
 		String testFileName = "/sourceFile/testRenameOriginal.txt";
 		String testNewFileName = "/destFile/testRenameNew.txt";
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(
-				testFileName, testNewFileName);
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(testFileName, testNewFileName);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>/sourceFile/testRenameOriginal.txt</objPath>\n");
@@ -168,10 +155,8 @@ public class DataObjCopyInpTest {
 		sb.append("</DataObjInp_PI>\n");
 		sb.append("</DataObjCopyInp_PI>\n");
 
-		Assert.assertEquals("did not get expected packing instruction",
-				sb.toString(), dataObjCopyInp.getParsedTags());
-		Assert.assertEquals("did not get expected API number",
-				DataObjCopyInp.RENAME_FILE_API_NBR,
+		Assert.assertEquals("did not get expected packing instruction", sb.toString(), dataObjCopyInp.getParsedTags());
+		Assert.assertEquals("did not get expected API number", DataObjCopyInp.RENAME_FILE_API_NBR,
 				dataObjCopyInp.getApiNumber());
 
 	}
@@ -181,8 +166,7 @@ public class DataObjCopyInpTest {
 		String testFileName = "/source/sourceColl";
 		String testNewFileName = "/dest/destColl";
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp
-				.instanceForRenameCollection(testFileName, testNewFileName);
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(testFileName, testNewFileName);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>/source/sourceColl</objPath>\n");
@@ -207,10 +191,8 @@ public class DataObjCopyInpTest {
 		sb.append("</DataObjInp_PI>\n");
 		sb.append("</DataObjCopyInp_PI>\n");
 
-		Assert.assertEquals("did not get expected packing instruction",
-				sb.toString(), dataObjCopyInp.getParsedTags());
-		Assert.assertEquals("did not get expected API number",
-				DataObjCopyInp.RENAME_FILE_API_NBR,
+		Assert.assertEquals("did not get expected packing instruction", sb.toString(), dataObjCopyInp.getParsedTags());
+		Assert.assertEquals("did not get expected API number", DataObjCopyInp.RENAME_FILE_API_NBR,
 				dataObjCopyInp.getApiNumber());
 
 	}
@@ -223,8 +205,8 @@ public class DataObjCopyInpTest {
 		String testResource = "resc";
 		long testLength = 123;
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
-				testFileName, testNewFileName, testResource, testLength, false);
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(testFileName, testNewFileName, testResource,
+				testLength, false);
 
 		StringBuilder b = new StringBuilder();
 		b.append("<DataObjCopyInp_PI><DataObjInp_PI><objPath>/sourceFile/testRenameOriginal.txt</objPath>\n");
@@ -252,8 +234,7 @@ public class DataObjCopyInpTest {
 		b.append("</DataObjCopyInp_PI>\n");
 
 		String expected = b.toString();
-		Assert.assertEquals("unexpected xml protocol values", expected,
-				dataObjCopyInp.getParsedTags());
+		Assert.assertEquals("unexpected xml protocol values", expected, dataObjCopyInp.getParsedTags());
 
 	}
 

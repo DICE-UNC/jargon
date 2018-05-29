@@ -25,6 +25,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *            the user to be added.
 	 * @return {@link User} that is the result for updates
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DuplicateDataException
 	 *             thrown if the user already exists.
 	 */
@@ -35,6 +36,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List} of {@link org.irods.jargon.core.pub.domain.User}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<User> findAll() throws JargonException;
 
@@ -55,6 +57,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @return {@link org.irods.jargon.core.pub.domain.User} that is the result of
 	 *         the query
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
 	 *             if user does not exist.
 	 */
@@ -68,6 +71,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *            {@code String} with the unique database key for the user.
 	 * @return {@link org.irods.jargon.core.pub.domain.User}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
 	 *             if the user does not exist
 	 */
@@ -82,8 +86,11 @@ public interface UserAO extends IRODSAccessObject {
 	 *
 	 * @param userId
 	 *            {@code String} with the unique database key for the user.
-	 * @return {@link org.irods.jargon.core.pub.domain.User}
+	 * @param zone
+	 *            {@code String} with the target zone
+	 * @return {@link User}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
 	 *             if the user does not exist
 	 */
@@ -94,9 +101,9 @@ public interface UserAO extends IRODSAccessObject {
 	 *
 	 * @param userId
 	 *            {@code String} with the unique database key for the user.
-	 * @return {@code List} of {@link org.irods.jargon.core.pub.domain.AvuData} with
-	 *         query results.
+	 * @return {@code List} of {@link AvuData} with query results.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<AvuData> listUserMetadataForUserId(String userId) throws JargonException;
 
@@ -105,9 +112,9 @@ public interface UserAO extends IRODSAccessObject {
 	 *
 	 * @param userName
 	 *            {@code String} with the user name for the user.
-	 * @return {@code List} of {@link org.irods.jargon.core.pub.domain.AvuData} with
-	 *         query results.
+	 * @return {@code List} of {@link AvuData} with query results.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<AvuData> listUserMetadataForUserName(String userName) throws JargonException;
 
@@ -119,6 +126,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws InvalidUserException
 	 *             if the user is not in iRODS
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
 	void deleteUser(String userName) throws InvalidUserException, JargonException;
@@ -132,6 +140,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *            {@link org.irods.jargon.core.pub.domain.User} with the updated
 	 *            data.
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
 	 *             if user is not found.
 	 */
@@ -145,6 +154,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *            does not include the actual {@code Where}
 	 * @return {@code List<User>} containing users that match the given query
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<User> findWhere(String whereStatement) throws JargonException;
 
@@ -160,6 +170,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param newPassword
 	 *            {@code String} with the new password value.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void changeAUserPasswordByThatUser(String userName, String currentPassword, String newPassword)
 			throws JargonException;
@@ -174,6 +185,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param newPassword
 	 *            {@code String} with the password to set for the given user.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void changeAUserPasswordByAnAdmin(String userName, String newPassword) throws JargonException;
 
@@ -187,6 +199,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link AvuData} to be added for the user
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addAVUMetadata(String userName, AvuData avuData) throws JargonException;
 
@@ -194,19 +207,21 @@ public interface UserAO extends IRODSAccessObject {
 	 * * Add or update the AVU metadata for the given user. This is only possible
 	 * when a rods admin. This method is only available on iRODS 4.1+ and is more
 	 * straightforward than the add or modify.
-	 * <p/>
+	 * <p>
 	 * 'set' modifies an AVU if it exists, or creates one if it does not. If the
 	 * AttName does not exist, or is used by multiple objects, the AVU for this
 	 * object is added. If the AttName is used only by this one object, the AVU
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the user name whose password will change.
 	 * @param avuData
 	 *            {@link AvuData} to be added for the user
 	 * @throws DataNotFoundException
+	 *             for missing target file
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void setAVUMetadata(final String userName, final AvuData avuData) throws DataNotFoundException, JargonException;
 
@@ -220,7 +235,9 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link AvuData} to be removed from the user
 	 * @throws DataNotFoundException
+	 *             for missing AVU
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void deleteAVUMetadata(String userName, AvuData avuData) throws DataNotFoundException, JargonException;
 
@@ -234,7 +251,9 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link AvuData} to be modified
 	 * @throws DataNotFoundException
+	 *             for missing AVU
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void modifyAVUMetadata(String userName, AvuData avuData) throws DataNotFoundException, JargonException;
 
@@ -247,9 +266,11 @@ public interface UserAO extends IRODSAccessObject {
 	 * card to the provided term
 	 *
 	 * @param userName
+	 *            {@code String} with search pattern, % will be added
 	 * @return {@code List<String>} that are the user names that match the partial
 	 *         query
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> findUserNameLike(String userName) throws JargonException;
 
@@ -259,6 +280,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *
 	 * @return {@code String} with the temporary password
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	String getTemporaryPasswordForConnectedUser() throws JargonException;
 
@@ -273,6 +295,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *            temporary password will be issued
 	 * @return {@code String} with the temporary password
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	String getTemporaryPasswordForASpecifiedUser(String targetUserName) throws JargonException;
 
@@ -289,6 +312,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @return {@code String} with the user DN, or {@code null} if the DN does not
 	 *         exist for the user
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	String retriveUserDNByUserId(String userId) throws JargonException;
 
@@ -303,6 +327,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws DataNotFoundException
 	 *             if the user is not found
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void updateUserInfo(String userName, String userInfo) throws DataNotFoundException, JargonException;
 
@@ -316,6 +341,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws InvalidUserException
 	 *             if the user does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void updateUserDN(String userName, String userDN) throws InvalidUserException, JargonException;
 
@@ -328,6 +354,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @param userDN
 	 *            {@code DN} to remove from the user
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void removeUserDN(String userName, String userDN) throws JargonException;
 

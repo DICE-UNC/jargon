@@ -17,14 +17,11 @@ import org.slf4j.LoggerFactory;
  */
 class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(IRODSTCPConnectionFactoryImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(IRODSTCPConnectionFactoryImpl.class);
 
 	@Override
-	protected AbstractConnection instance(final IRODSAccount irodsAccount,
-			final IRODSSession irodsSession,
-			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException {
+	protected AbstractConnection instance(final IRODSAccount irodsAccount, final IRODSSession irodsSession,
+			final IRODSProtocolManager irodsProtocolManager) throws JargonException {
 
 		log.info("instance()");
 
@@ -32,11 +29,8 @@ class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		IRODSBasicTCPConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount,
-				irodsSession
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				irodsProtocolManager, irodsSession);
+		IRODSBasicTCPConnection connection = new IRODSBasicTCPConnection(irodsAccount,
+				irodsSession.buildPipelineConfigurationBasedOnJargonProperties(), irodsProtocolManager, irodsSession);
 
 		return connection;
 	}

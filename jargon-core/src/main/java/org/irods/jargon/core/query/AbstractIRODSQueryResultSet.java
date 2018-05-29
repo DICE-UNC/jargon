@@ -12,15 +12,14 @@ import org.irods.jargon.core.exception.DataNotFoundException;
  * {@code java.sql.ResultSet}, but is greatly simplified.
  * <p>
  * Jargon may contain, in the future, an actual implementation of
- * {@code java.sql.ResultSet}, and that implementation would wrap this
- * simple result set based on rows and columns, and delegate operations to this
- * simpler implementation.
+ * {@code java.sql.ResultSet}, and that implementation would wrap this simple
+ * result set based on rows and columns, and delegate operations to this simpler
+ * implementation.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public abstract class AbstractIRODSQueryResultSet implements
-IRODSQueryResultSetInterface {
+public abstract class AbstractIRODSQueryResultSet implements IRODSQueryResultSetInterface {
 
 	protected final List<IRODSQueryResultRow> results;
 	protected final boolean hasMoreRecords;
@@ -32,14 +31,16 @@ IRODSQueryResultSetInterface {
 	 * Constructor for a result set without supplying total records
 	 *
 	 * @param results
+	 *            {@code List} of {@link IRODSQueryResultRow}
 	 * @param columnNames
+	 *            {@code List} of {@code String} with the column names
 	 * @param hasMoreRecords
+	 *            {@code boolean} indicates more records
 	 * @param continuationIndex
+	 *            {@code int}
 	 */
-	protected AbstractIRODSQueryResultSet(
-			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final boolean hasMoreRecords,
-			final int continuationIndex) {
+	protected AbstractIRODSQueryResultSet(final List<IRODSQueryResultRow> results, final List<String> columnNames,
+			final boolean hasMoreRecords, final int continuationIndex) {
 		this(results, columnNames, hasMoreRecords, continuationIndex, 0);
 	}
 
@@ -47,15 +48,18 @@ IRODSQueryResultSetInterface {
 	 * Constructor for a result set
 	 *
 	 * @param results
+	 *            {@code List} of {@link IRODSQueryResultRow}
 	 * @param columnNames
+	 *            {@code List} of {@code String} with the column names
 	 * @param hasMoreRecords
+	 *            {@code boolean} indicates more records
 	 * @param continuationIndex
+	 *            {@code int} with the next index
 	 * @param totalRecords
+	 *            {@code int} with the total records in the complete result set
 	 */
-	protected AbstractIRODSQueryResultSet(
-			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final boolean hasMoreRecords,
-			final int continuationIndex, final int totalRecords) {
+	protected AbstractIRODSQueryResultSet(final List<IRODSQueryResultRow> results, final List<String> columnNames,
+			final boolean hasMoreRecords, final int continuationIndex, final int totalRecords) {
 
 		if (results == null) {
 			throw new IllegalArgumentException("results was null");
@@ -79,8 +83,7 @@ IRODSQueryResultSetInterface {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getResults()
+	 * @see org.irods.jargon.core.query.IRODSQueryResultSetInterface#getResults()
 	 */
 	@Override
 	public List<IRODSQueryResultRow> getResults() {
@@ -105,8 +108,7 @@ IRODSQueryResultSetInterface {
 	 * (non-Javadoc)
 	 *
 	 * @see
-	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#isHasMoreRecords
-	 * ()
+	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#isHasMoreRecords ()
 	 */
 	@Override
 	public boolean isHasMoreRecords() {
@@ -142,8 +144,7 @@ IRODSQueryResultSetInterface {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getTotalRecords
+	 * @see org.irods.jargon.core.query.IRODSQueryResultSetInterface#getTotalRecords
 	 * ()
 	 */
 	@Override

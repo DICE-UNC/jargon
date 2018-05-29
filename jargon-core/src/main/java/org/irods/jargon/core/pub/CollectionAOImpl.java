@@ -78,8 +78,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	 * Default constructor
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected CollectionAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -88,7 +91,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#instanceIRODSFileForCollectionPath
 	 * (java.lang.String)
@@ -102,7 +105,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
 	 * .util.List)
 	 */
@@ -116,7 +119,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
 	 * .util.List, int)
 	 */
@@ -129,7 +132,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
 	 * .util.List, int, boolean)
 	 */
@@ -191,7 +194,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int)
 	 */
@@ -203,7 +206,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int, boolean)
 	 */
@@ -215,7 +218,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
 	 */
@@ -227,7 +230,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, boolean)
 	 */
@@ -239,7 +242,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
 	 * java.lang.String)
@@ -254,7 +257,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
 	 * java.lang.String, int)
@@ -270,7 +273,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
 	 * java.lang.String, int, boolean)
@@ -340,7 +343,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#addBulkAVUMetadataToCollection
 	 * (java.lang.String, java.util.List)
 	 */
@@ -385,7 +388,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#deleteBulkAVUMetadataFromCollection
 	 * (java.lang.String, java.util.List)
@@ -423,7 +426,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -484,7 +487,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("setting avu metadata to collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		if (!this.getIRODSServerProperties().isSupportsMetadataSet()) {
+		if (!getIRODSServerProperties().isSupportsMetadataSet()) {
 			throw new OperationNotSupportedByThisServerException("metadata set not supported in this iRODS version");
 		}
 
@@ -517,7 +520,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#deleteAVUMetadata(java.lang.String ,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -560,7 +563,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#deleteAllAVUMetadata(java.lang
 	 * .String)
 	 */
@@ -602,7 +605,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -660,7 +663,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#modifyAVUMetadata(java.lang.String ,
 	 * org.irods.jargon.core.pub.domain.AvuData,
@@ -712,7 +715,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection
 	 * (java.lang.String, int)
 	 */
@@ -738,7 +741,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValueForCollectionByMetadataId(java.lang.String, int)
 	 */
@@ -766,7 +769,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValueForCollectionById
 	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
@@ -880,7 +883,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection
 	 * (java.lang.String)
 	 */
@@ -894,7 +897,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#findGivenObjStat(org.irods.jargon
 	 * .core.pub.domain.ObjStat)
 	 */
@@ -983,7 +986,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findByAbsolutePath(java.lang.String )
 	 */
@@ -1033,7 +1036,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.pub.CollectionAO#
 	 * countAllFilesUnderneathTheGivenCollection(java.lang.String)
 	 */
@@ -1100,7 +1103,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInherit(java
 	 * .lang.String, java.lang.String, boolean)
 	 */
@@ -1130,7 +1133,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInheritAsAdmin
 	 * (java.lang.String, java.lang.String, boolean)
 	 */
@@ -1160,7 +1163,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionToNotInherit
 	 * (java.lang.String, java.lang.String, boolean)
 	 */
@@ -1191,7 +1194,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * setAccessPermissionToNotInheritInAdminMode(java.lang.String,
 	 * java.lang.String, boolean)
@@ -1223,7 +1226,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionRead(java.lang
 	 * .String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1255,7 +1258,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionReadAsAdmin
 	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1327,7 +1330,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWrite(java.
 	 * lang.String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1364,7 +1367,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWriteAsAdmin
 	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1400,7 +1403,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwn(java.lang
 	 * .String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1437,7 +1440,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwnAsAdmin(
 	 * java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1473,7 +1476,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUser(
 	 * java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
@@ -1510,7 +1513,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUserAsAdmin
 	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -1548,7 +1551,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * isCollectionSetForPermissionInheritance(java.lang.String)
 	 */
@@ -1594,7 +1597,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#getPermissionForCollection(java
 	 * .lang.String, java.lang.String, java.lang.String)
 	 */
@@ -1674,7 +1677,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#getPermissionForUserName(java.
 	 * lang.String, java.lang.String)
 	 */
@@ -1861,7 +1864,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#listPermissionsForCollection(java
 	 * .lang.String)
 	 */
@@ -1930,7 +1933,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.FileCatalogObjectAOImpl#isUserHasAccess(java
 	 * .lang.String, java.lang.String)
 	 */
@@ -1962,7 +1965,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#replicateCollectionAsynchronously
 	 * (java.lang.String, java.lang.String, int)
 	 */
@@ -2004,7 +2007,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 				.add(new IRODSRuleParameter("*DelayInfo", RuleUtils.buildDelayParamForMinutes(delayInMinutes)));
 
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/rulemsiCollReplAsync.r",

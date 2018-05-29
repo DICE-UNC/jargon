@@ -22,31 +22,29 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
-implements ShoppingCartService {
+public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implements ShoppingCartService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ShoppingCartServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
 
 	/**
-	 * Factory for {@code DataCacheService} creation, must be set via
-	 * constructor or injected via setter.
+	 * Factory for {@code DataCacheService} creation, must be set via constructor or
+	 * injected via setter.
 	 */
 	private DataCacheServiceFactory dataCacheServiceFactory = null;
 
 	/**
-	 * Default (no values) constructor. Note that dependencies may be injected
-	 * by setter methods, and will be checked on invocation of the various
-	 * service methods.
+	 * Default (no values) constructor. Note that dependencies may be injected by
+	 * setter methods, and will be checked on invocation of the various service
+	 * methods.
 	 */
 	public ShoppingCartServiceImpl() {
 		super();
 	}
 
 	/**
-	 * Constructor creates a {@code ShoppingCartService} with necessary
-	 * dependencies
+	 * Constructor creates a {@code ShoppingCartService} with necessary dependencies
 	 *
+	 * 
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
@@ -56,10 +54,8 @@ implements ShoppingCartService {
 	 *            {@link DataCacheServiceFactory} used to create
 	 *            DataCacheServiceComponents
 	 */
-	public ShoppingCartServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount,
-			final DataCacheServiceFactory dataCacheServiceFactory) {
+	public ShoppingCartServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount, final DataCacheServiceFactory dataCacheServiceFactory) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (dataCacheServiceFactory == null) {
@@ -75,13 +71,11 @@ implements ShoppingCartService {
 	 *
 	 * @see org.irods.jargon.datautils.shoppingcart.ShoppingCartService#
 	 * serializeShoppingCartAsLoggedInUser
-	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart,
-	 * java.lang.String)
+	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart, java.lang.String)
 	 */
 	@Override
-	public String serializeShoppingCartAsLoggedInUser(
-			final FileShoppingCart fileShoppingCart, final String key)
-					throws JargonException {
+	public String serializeShoppingCartAsLoggedInUser(final FileShoppingCart fileShoppingCart, final String key)
+			throws JargonException {
 
 		log.info("serializeShoppingCartAsLoggedInUser()");
 
@@ -100,21 +94,20 @@ implements ShoppingCartService {
 		log.info("key:${}", key);
 
 		/*
-		 * For the shopping cart, have it clean up old carts and cache in the
-		 * standard place in the user home directory
+		 * For the shopping cart, have it clean up old carts and cache in the standard
+		 * place in the user home directory
 		 */
 		CacheServiceConfiguration config = new CacheServiceConfiguration();
 		config.setDoCleanupDuringRequests(true);
 		config.setCacheInHomeDir(true);
 
 		log.info("create data cache service from factory");
-		DataCacheService dataCacheService = dataCacheServiceFactory
-				.instanceDataCacheService(getIrodsAccount());
+		DataCacheService dataCacheService = dataCacheServiceFactory.instanceDataCacheService(getIrodsAccount());
 
 		dataCacheService.setCacheServiceConfiguration(config);
 		log.info("putting data into cache");
-		return dataCacheService.putStringValueIntoCache(fileShoppingCart
-				.serializeShoppingCartContentsToStringOneItemPerLine(), key);
+		return dataCacheService
+				.putStringValueIntoCache(fileShoppingCart.serializeShoppingCartContentsToStringOneItemPerLine(), key);
 
 	}
 
@@ -140,28 +133,25 @@ implements ShoppingCartService {
 		log.info("key:{}", key);
 
 		/*
-		 * For the shopping cart, have it clean up old carts and cache in the
-		 * standard place in the user home directory
+		 * For the shopping cart, have it clean up old carts and cache in the standard
+		 * place in the user home directory
 		 */
 		CacheServiceConfiguration config = new CacheServiceConfiguration();
 		config.setDoCleanupDuringRequests(true);
 		config.setCacheInHomeDir(true);
 
 		log.info("create data cache service from factory");
-		DataCacheService dataCacheService = dataCacheServiceFactory
-				.instanceDataCacheService(getIrodsAccount());
+		DataCacheService dataCacheService = dataCacheServiceFactory.instanceDataCacheService(getIrodsAccount());
 
 		/*
-		 * Use the user name and key value to find the cart file in iRODS. It
-		 * will be decrypted and returned back as a string.
+		 * Use the user name and key value to find the cart file in iRODS. It will be
+		 * decrypted and returned back as a string.
 		 */
 		dataCacheService.setCacheServiceConfiguration(config);
 		log.info("retrieve data from cache");
 		log.info("serializing back to cart...");
-		return FileShoppingCart
-				.instanceFromSerializedStringRepresentation(dataCacheService
-						.retrieveStringValueFromCache(
-								irodsAccount.getUserName(), key));
+		return FileShoppingCart.instanceFromSerializedStringRepresentation(
+				dataCacheService.retrieveStringValueFromCache(irodsAccount.getUserName(), key));
 
 	}
 
@@ -169,8 +159,7 @@ implements ShoppingCartService {
 	protected void checkContracts() {
 		super.checkContracts();
 		if (dataCacheServiceFactory == null) {
-			throw new JargonRuntimeException(
-					"dataCacheServiceFactory was not set");
+			throw new JargonRuntimeException("dataCacheServiceFactory was not set");
 		}
 
 	}
@@ -180,12 +169,11 @@ implements ShoppingCartService {
 	 *
 	 * @see org.irods.jargon.datautils.shoppingcart.ShoppingCartService#
 	 * serializeShoppingCartAsSpecifiedUser
-	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart,
-	 * java.lang.String, java.lang.String)
+	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
-	public String serializeShoppingCartAsSpecifiedUser(
-			final FileShoppingCart fileShoppingCart, final String key,
+	public String serializeShoppingCartAsSpecifiedUser(final FileShoppingCart fileShoppingCart, final String key,
 			final String userName) throws JargonException {
 
 		log.info("serializeShoppingCartAsSpecifiedUser()");
@@ -211,45 +199,37 @@ implements ShoppingCartService {
 
 		// generate a temp password for the given user
 		UserAO userAO = getIrodsAccessObjectFactory().getUserAO(irodsAccount);
-		String tempPassword = userAO
-				.getTemporaryPasswordForASpecifiedUser(userName);
-		IRODSAccount tempUserAccount = IRODSAccount.instance(getIrodsAccount()
-				.getHost(), getIrodsAccount().getPort(), userName,
-				tempPassword, "", getIrodsAccount().getZone(),
-				getIrodsAccount().getDefaultStorageResource());
+		String tempPassword = userAO.getTemporaryPasswordForASpecifiedUser(userName);
+		IRODSAccount tempUserAccount = IRODSAccount.instance(getIrodsAccount().getHost(), getIrodsAccount().getPort(),
+				userName, tempPassword, "", getIrodsAccount().getZone(), getIrodsAccount().getDefaultStorageResource());
 
-		log.info("generated temp password and created temp account:${}",
-				tempUserAccount);
+		log.info("generated temp password and created temp account:${}", tempUserAccount);
 
 		/*
-		 * For the shopping cart, have it clean up old carts and cache in the
-		 * standard place in the user home directory
+		 * For the shopping cart, have it clean up old carts and cache in the standard
+		 * place in the user home directory
 		 */
 		CacheServiceConfiguration config = new CacheServiceConfiguration();
 		config.setDoCleanupDuringRequests(true);
 		config.setCacheInHomeDir(true);
 
 		log.info("create data cache service from factory");
-		DataCacheService dataCacheService = dataCacheServiceFactory
-				.instanceDataCacheService(tempUserAccount);
+		DataCacheService dataCacheService = dataCacheServiceFactory.instanceDataCacheService(tempUserAccount);
 
 		dataCacheService.setCacheServiceConfiguration(config);
 		log.info("putting data into cache");
-		dataCacheService.putStringValueIntoCache(fileShoppingCart
-				.serializeShoppingCartContentsToStringOneItemPerLine(), key);
+		dataCacheService.putStringValueIntoCache(fileShoppingCart.serializeShoppingCartContentsToStringOneItemPerLine(),
+				key);
 		// close and regenerate a temp password to pass to the caller
 		getIrodsAccessObjectFactory().closeSession(tempUserAccount);
 
 		log.info("generate a new temp password that the caller can use");
 
 		tempPassword = userAO.getTemporaryPasswordForASpecifiedUser(userName);
-		tempUserAccount = IRODSAccount.instance(getIrodsAccount().getHost(),
-				getIrodsAccount().getPort(), userName, tempPassword, "",
-				getIrodsAccount().getZone(), getIrodsAccount()
-				.getDefaultStorageResource());
+		tempUserAccount = IRODSAccount.instance(getIrodsAccount().getHost(), getIrodsAccount().getPort(), userName,
+				tempPassword, "", getIrodsAccount().getZone(), getIrodsAccount().getDefaultStorageResource());
 
-		log.info("generated temp password and created temp account:${}",
-				tempUserAccount);
+		log.info("generated temp password and created temp account:${}", tempUserAccount);
 		return tempPassword;
 	}
 
@@ -264,8 +244,7 @@ implements ShoppingCartService {
 	}
 
 	@Override
-	public void setDataCacheServiceFactory(
-			final DataCacheServiceFactory dataCacheServiceFactory) {
+	public void setDataCacheServiceFactory(final DataCacheServiceFactory dataCacheServiceFactory) {
 		this.dataCacheServiceFactory = dataCacheServiceFactory;
 	}
 

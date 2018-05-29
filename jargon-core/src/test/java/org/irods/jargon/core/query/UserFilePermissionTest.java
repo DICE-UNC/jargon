@@ -1,10 +1,9 @@
 package org.irods.jargon.core.query;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class UserFilePermissionTest {
@@ -14,14 +13,11 @@ public class UserFilePermissionTest {
 		String userName = "user";
 		String userId = "10";
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		UserFilePermission userFilePermission = new UserFilePermission(
-				userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
-		Assert.assertEquals("user name not valid", userName,
-				userFilePermission.getUserName());
-		Assert.assertEquals("user id not valid", userId,
-				userFilePermission.getUserId());
-		Assert.assertEquals("fpe invalid", fpe,
-				userFilePermission.getFilePermissionEnum());
+		UserFilePermission userFilePermission = new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
+				"zoom");
+		Assert.assertEquals("user name not valid", userName, userFilePermission.getUserName());
+		Assert.assertEquals("user id not valid", userId, userFilePermission.getUserId());
+		Assert.assertEquals("fpe invalid", fpe, userFilePermission.getFilePermissionEnum());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -29,8 +25,7 @@ public class UserFilePermissionTest {
 		String userName = null;
 		String userId = "10";
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
-				"zoom");
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -38,8 +33,7 @@ public class UserFilePermissionTest {
 		String userName = "";
 		String userId = "10";
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
-				"zoom");
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -47,8 +41,7 @@ public class UserFilePermissionTest {
 		String userName = "xxx";
 		String userId = null;
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
-				"zoom");
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -56,8 +49,7 @@ public class UserFilePermissionTest {
 		String userName = "";
 		String userId = null;
 		FilePermissionEnum fpe = FilePermissionEnum.OWN;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
-				"zoom");
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -65,8 +57,7 @@ public class UserFilePermissionTest {
 		String userName = "xxx";
 		String userId = "xx";
 		FilePermissionEnum fpe = null;
-		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER,
-				"zoom");
+		new UserFilePermission(userName, userId, fpe, UserTypeEnum.RODS_USER, "zoom");
 	}
 
 }

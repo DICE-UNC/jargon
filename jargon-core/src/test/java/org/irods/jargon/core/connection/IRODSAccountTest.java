@@ -2,35 +2,30 @@ package org.irods.jargon.core.connection;
 
 import java.net.URI;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.utils.IRODSUriUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 public final class IRODSAccountTest {
 
 	@Test
 	public final void testToURIWithoutProxy() throws Exception {
-		final IRODSAccount proxy = IRODSAccount.instance("localhost", 1247,
-				"client", "password", "/zone/home/client", "zone", "");
+		final IRODSAccount proxy = IRODSAccount.instance("localhost", 1247, "client", "password", "/zone/home/client",
+				"zone", "");
 		proxy.toURI(true);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public final void testToURIWithProxySameZone() throws Exception {
-		final IRODSAccount proxy = IRODSAccount.instanceWithProxy("localhost",
-				1247, "client", "proxyPassword", "/zone/home/client", "zone",
-				"", "proxy", "zone");
+		final IRODSAccount proxy = IRODSAccount.instanceWithProxy("localhost", 1247, "client", "proxyPassword",
+				"/zone/home/client", "zone", "", "proxy", "zone");
 		proxy.toURI(true);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
-	public final void testToURIWithProxySameNameDifferentZone()
-			throws Exception {
-		final IRODSAccount proxy = IRODSAccount.instanceWithProxy("localhost",
-				1247, "user", "proxyPassword",
-				"/proxyZone/home/user#clientZone", "clientZone", "", "user",
-				"proxyZone");
+	public final void testToURIWithProxySameNameDifferentZone() throws Exception {
+		final IRODSAccount proxy = IRODSAccount.instanceWithProxy("localhost", 1247, "user", "proxyPassword",
+				"/proxyZone/home/user#clientZone", "clientZone", "", "user", "proxyZone");
 		proxy.toURI(true);
 	}
 
@@ -42,16 +37,15 @@ public final class IRODSAccountTest {
 	 */
 	@Test
 	public final void testToUriWithHomePathBug48() throws Exception {
-		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
-				"client", "password", "/zone/home/client", "zone", "");
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247, "client", "password", "/zone/home/client",
+				"zone", "");
 		account.toURI(true);
 	}
 
 	@Test
 	public final void testToUriWithoutPassword() throws Exception {
-		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
-				"client", "password", "/zone/home/client whitespace", "zone",
-				"");
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247, "client", "password",
+				"/zone/home/client whitespace", "zone", "");
 		URI actual = account.toURI(false);
 		Assert.assertNotNull("no uri", actual);
 
@@ -59,14 +53,13 @@ public final class IRODSAccountTest {
 
 	@Test
 	public final void testToUriWithPassword() throws Exception {
-		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
-				"client", "password", "/zone/home/path with stuff", "zone", "");
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247, "client", "password",
+				"/zone/home/path with stuff", "zone", "");
 		URI actual = account.toURI(true);
 		Assert.assertNotNull("no uri", actual);
 
 		String returnPath = IRODSUriUtils.getAbsolutePathFromURI(actual);
-		Assert.assertEquals("path not encoded/decoded",
-				"/zone/home/path with stuff", returnPath);
+		Assert.assertEquals("path not encoded/decoded", "/zone/home/path with stuff", returnPath);
 
 	}
 
@@ -77,9 +70,8 @@ public final class IRODSAccountTest {
 	 */
 	@Test
 	public final void testToUriWithWhiteSpaceInPathBug189() throws Exception {
-		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
-				"client", "password", "/zone/home/client whitespace", "zone",
-				"");
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247, "client", "password",
+				"/zone/home/client whitespace", "zone", "");
 		URI actual = account.toURI(true);
 		Assert.assertNotNull("no uri", actual);
 

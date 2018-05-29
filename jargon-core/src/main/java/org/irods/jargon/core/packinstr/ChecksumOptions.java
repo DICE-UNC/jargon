@@ -15,8 +15,8 @@ public class ChecksumOptions {
 
 	private ChecksumEncodingEnum checksumEncodingEnum = ChecksumEncodingEnum.DEFAULT;
 	/**
-	 * Force the checksum operation, even if a previous checksum was registered
-	 * in iCAT
+	 * Force the checksum operation, even if a previous checksum was registered in
+	 * iCAT
 	 */
 	private boolean force = false;
 	/**
@@ -116,8 +116,7 @@ public class ChecksumOptions {
 	 * @param checksumEncodingEnum
 	 *            the checksumEncodingEnum to set
 	 */
-	protected void setChecksumEncodingEnum(
-			final ChecksumEncodingEnum checksumEncodingEnum) {
+	protected void setChecksumEncodingEnum(final ChecksumEncodingEnum checksumEncodingEnum) {
 		this.checksumEncodingEnum = checksumEncodingEnum;
 	}
 

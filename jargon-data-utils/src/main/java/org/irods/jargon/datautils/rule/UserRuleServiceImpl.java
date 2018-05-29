@@ -29,11 +29,9 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class UserRuleServiceImpl extends AbstractJargonService implements
-		UserRuleService {
+public class UserRuleServiceImpl extends AbstractJargonService implements UserRuleService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(UserRuleServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(UserRuleServiceImpl.class);
 
 	private static final String USER_RULE_UNIT = "iRODSUserTagging:UserRule";
 
@@ -41,23 +39,25 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public UserRuleServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+	public UserRuleServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsAccessObjectFactory, irodsAccount);
 		getIrodsAccessObjectFactory().getRuleProcessingAO(getIrodsAccount());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.rule.UserRulesService#listUserRules()
 	 */
 	@Override
-	public List<UserRuleDefinition> listUserRulesInUserHomeDir()
-			throws JargonException {
+	public List<UserRuleDefinition> listUserRulesInUserHomeDir() throws JargonException {
 		log.info("listUserRules()");
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForUserRule();
@@ -66,16 +66,13 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 
 		// Do data objects only
 		log.info("querying metadata as a data object to look for rules in the user rule directory");
-		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
-				.getDataObjectAO(getIrodsAccount());
+		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
 		try {
 			List<MetaDataAndDomainData> metadata = dataObjectAO
-					.findMetadataValuesForDataObjectUsingAVUQuery(
-							avuQueryElements, buildRuleSubidrPath());
+					.findMetadataValuesForDataObjectUsingAVUQuery(avuQueryElements, buildRuleSubidrPath());
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding rule file:{}", metadataAndDomainData);
-				userRules
-						.add(transformMetadataValueToUserRule(metadataAndDomainData));
+				userRules.add(transformMetadataValueToUserRule(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {
@@ -86,11 +83,9 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 
 	}
 
-	public void addNewUserRuleInUserHomeDir(final String userFileName,
-			final String description, final String ruleName,
+	public void addNewUserRuleInUserHomeDir(final String userFileName, final String description, final String ruleName,
 			final RuleAproposTo aproposTo, final String ruleBody)
-			throws NoUserRuleSubdirException, DuplicateDataException,
-			JargonException {
+			throws NoUserRuleSubdirException, DuplicateDataException, JargonException {
 		log.info("addNewUserRule()");
 
 		if (userFileName == null || userFileName.isEmpty()) {
@@ -98,8 +93,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 		}
 
 		if (description == null) {
-			throw new IllegalArgumentException(
-					"null description, make blank if not used");
+			throw new IllegalArgumentException("null description, make blank if not used");
 		}
 
 		if (ruleName == null || ruleName.isEmpty()) {
@@ -116,8 +110,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 
 	}
 
-	private UserRuleDefinition transformMetadataValueToUserRule(
-			final MetaDataAndDomainData metadataAndDomainData) {
+	private UserRuleDefinition transformMetadataValueToUserRule(final MetaDataAndDomainData metadataAndDomainData) {
 		log.info("transformMetadataValueToUserRule()");
 
 		if (metadataAndDomainData == null) {
@@ -127,21 +120,20 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 		log.info("metadataAndDomainData:{}", metadataAndDomainData);
 
 		UserRuleDefinition userRuleDefinition = new UserRuleDefinition();
-		userRuleDefinition.setRuleAbsolutePath(metadataAndDomainData
-				.getDomainObjectUniqueName());
+		userRuleDefinition.setRuleAbsolutePath(metadataAndDomainData.getDomainObjectUniqueName());
 
 		userRuleDefinition.setCount(metadataAndDomainData.getCount());
 		userRuleDefinition.setLastResult(metadataAndDomainData.isLastResult());
 		return userRuleDefinition;
 	}
 
-	private List<AVUQueryElement> buildAVUQueryForUserRule()
-			throws JargonException {
+	private List<AVUQueryElement> buildAVUQueryForUserRule() throws JargonException {
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
-					USER_RULE_UNIT));
+			avuQueryElements
+					.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
+							USER_RULE_UNIT));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -151,8 +143,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 
 	private String buildRuleSubidrPath() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(MiscIRODSUtils
-				.buildIRODSUserHomeForAccountUsingDefaultScheme(getIrodsAccount()));
+		sb.append(MiscIRODSUtils.buildIRODSUserHomeForAccountUsingDefaultScheme(getIrodsAccount()));
 		sb.append(userRuleServiceConfiguration.getRuleSubdirName());
 		String expectedPath = sb.toString();
 		log.info("computed path:{}", expectedPath);

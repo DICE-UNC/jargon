@@ -61,7 +61,7 @@ public interface JargonProperties {
 
 	/**
 	 * Am I using an executor pool for parallel transfer threads
-	 * 
+	 *
 	 * @return {@code boolean} if using a transfer thread pool
 	 */
 	boolean isUseTransferThreadsPool();
@@ -150,16 +150,16 @@ public interface JargonProperties {
 	 * Get the internal buffer size used for the input stream between Jargon and
 	 * iRODS. See https://code.renci.org/gf/project/jargon/wiki/?pagename=
 	 * NormalIOArrangement
-	 * 
+	 *
 	 * <p>
 	 * jargon.io.internal.input.stream.buffer.size
-	 * 
+	 *
 	 * @return {@code int} with the buffer size for the input stream buffer. (0 =
 	 *         use defaults, -1 = do not wrap with buffered input stream)
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 */
 	int getInternalInputStreamBufferSize();
 
@@ -167,14 +167,14 @@ public interface JargonProperties {
 	 * Get the internal buffer size used for the output stream between Jargon and
 	 * iRODS. See https://code.renci.org/gf/project/jargon/wiki/?pagename=
 	 * NormalIOArrangement
-	 * 
+	 *
 	 * <p>
-	 * 
+	 *
 	 * jargon.io.internal.output.stream.buffer.size
-	 * 
+	 *
 	 * @return {@code int} with the buffer size for the output stream buffer. (0 =
 	 *         use defaults, -1 = do not wrap with buffered input stream)
-	 * 
+	 *
 	 */
 	int getInternalOutputStreamBufferSize();
 
@@ -187,13 +187,13 @@ public interface JargonProperties {
 	 * but the benefits of this cache have not yet been measured. Setting this as a
 	 * parameter to turn off will assist in testing the use of the buffer, and the
 	 * option of eliminating the buffer altogether.
-	 * 
+	 *
 	 * <p>
 	 * jargon.io.internal.cache.buffer.size
-	 * 
+	 *
 	 * @return {@code int} with the size of the internal cache (0 = do not utilize
 	 *         the cache buffer)
-	 * 
+	 *
 	 */
 	int getInternalCacheBufferSize();
 
@@ -210,12 +210,12 @@ public interface JargonProperties {
 	 *
 	 * See https://code.renci.org/gf/project/jargon/wiki/?pagename=
 	 * NormalIOArrangement
-	 * 
+	 *
 	 * @return {@code int} with the buffer size for the buffered stream that will
 	 *         wrap an {@code InputStream} to be sent to iRODS. (0 = use defaults,
 	 *         -1 = do not wrap with buffered input stream)
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	int getSendInputStreamBufferSize();
 
@@ -227,7 +227,7 @@ public interface JargonProperties {
 	 * jargon.io.input.to.output.copy.byte.buffer.size
 	 *
 	 * @return {@code int} with the size of the read/write loop buffer
-	 * 
+	 *
 	 */
 	int getInputToOutputCopyBufferByteSize();
 
@@ -502,7 +502,7 @@ public interface JargonProperties {
 	 * Get the renewal interval in seconds, after which a connection is discarded
 	 * and renewed. Used for preventing timeouts in recursive transfers. Expressed
 	 * as a number of seconds. Set to 0 to turn off this behavior
-	 * 
+	 *
 	 * @return {@code} int with the socket renewal interval
 	 */
 	int getSocketRenewalIntervalInSeconds();
@@ -571,7 +571,7 @@ public interface JargonProperties {
 	/**
 	 * Default instance name for the iRODS pluggable rule engine used to route
 	 * requests.
-	 * 
+	 *
 	 * @return <code>String</code> with an instance name suitable for rule routing
 	 */
 	String getDefaultIrodsRuleEngineIdentifier();
@@ -579,14 +579,14 @@ public interface JargonProperties {
 	/**
 	 * Default instance name for the iRODS python rule engine used to route
 	 * requests.
-	 * 
+	 *
 	 * @return <code>String</code> with an instance name suitable for rule routing
 	 */
 	String getDefaultPythonRuleEngineIdentifier();
 
 	/**
 	 * Default instance name for iRODS C++ rule engine used to route requests
-	 * 
+	 *
 	 * @return <code>String</code> with an instance name suitable for rule routing
 	 */
 	String getDefaultCppRuleEngineIdentifier();
@@ -596,7 +596,7 @@ public interface JargonProperties {
 	 * on the detected or set rule type. Without this setting an iRODS is assumed to
 	 * treat iRODS native rule language as the default rule engine, so that rules
 	 * Jargon guesses are iRODS rules are sent as equivalent to not setting
-	 * 
+	 *
 	 * @return <code>boolean</code> if Jargon should set the rule destination when
 	 *         sending a rule to run on iRODS
 	 */

@@ -1,9 +1,8 @@
 package org.irods.jargon.core.query;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,42 +17,34 @@ public class GenQuerySelectFieldTest {
 	}
 
 	@Test
-	public final void testInstanceRodsGenQueryEnumSelectFieldTypesSelectFieldSource()
-			throws Exception {
-		GenQuerySelectField selectField = GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+	public final void testInstanceRodsGenQueryEnumSelectFieldTypesSelectFieldSource() throws Exception {
+		GenQuerySelectField selectField = GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		Assert.assertNotNull("null instance", selectField);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullRodsGenQueryEnum() throws Exception {
-		GenQuerySelectField.instance(null,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
+		GenQuerySelectField.instance(null, GenQuerySelectField.SelectFieldTypes.FIELD,
 				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelectFieldType() throws Exception {
-		GenQuerySelectField
-				.instance(
-						RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-						null,
-						GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID, null,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelectFieldSource() throws Exception {
-		GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD, null);
+		GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID, GenQuerySelectField.SelectFieldTypes.FIELD,
+				null);
 	}
 
 	@Test
 	public final void testInstanceWithNameAndType() throws Exception {
-		GenQuerySelectField selectField = GenQuerySelectField.instance("blah",
-				"1234", GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		GenQuerySelectField selectField = GenQuerySelectField.instance("blah", "1234",
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		Assert.assertNotNull("null instance", selectField);
 	}
 

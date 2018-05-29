@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.userprofile;
 
@@ -7,9 +7,9 @@ package org.irods.jargon.userprofile;
  * Represents profile information kept about iRODS users. This is divided into
  * public and protected fields. It is up to the profile service to enforce the
  * necessary protection levels for this data.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfile {
 
@@ -72,8 +72,7 @@ public class UserProfile {
 	 * @param userProfilePublicFields
 	 *            the userProfilePublicFields to set
 	 */
-	public void setUserProfilePublicFields(
-			final UserProfilePublicFields userProfilePublicFields) {
+	public void setUserProfilePublicFields(final UserProfilePublicFields userProfilePublicFields) {
 		this.userProfilePublicFields = userProfilePublicFields;
 	}
 
@@ -88,8 +87,7 @@ public class UserProfile {
 	 * @param userProfileProtectedFields
 	 *            the userProfileProtectedFields to set
 	 */
-	public void setUserProfileProtectedFields(
-			final UserProfileProtectedFields userProfileProtectedFields) {
+	public void setUserProfileProtectedFields(final UserProfileProtectedFields userProfileProtectedFields) {
 		this.userProfileProtectedFields = userProfileProtectedFields;
 	}
 

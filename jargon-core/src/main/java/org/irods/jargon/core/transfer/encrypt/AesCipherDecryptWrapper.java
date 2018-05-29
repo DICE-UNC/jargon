@@ -47,8 +47,7 @@ import org.slf4j.LoggerFactory;
  */
 class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AesCipherDecryptWrapper.class);
+	public static final Logger log = LoggerFactory.getLogger(AesCipherDecryptWrapper.class);
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -62,8 +61,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	 *
 	 * @throws ClientServerNegotiationException
 	 */
-	AesCipherDecryptWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	AesCipherDecryptWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
 			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
@@ -79,8 +77,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	private void initImplementation() {
 		try {
 			log.info("initCipher()");
-			setCipher(Cipher.getInstance(getPipelineConfiguration()
-					.getEncryptionAlgorithmEnum().getCypherKey()));
+			setCipher(Cipher.getInstance(getPipelineConfiguration().getEncryptionAlgorithmEnum().getCypherKey()));
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			log.error("error initing for cipher", e);
@@ -91,26 +88,23 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
+	 *
+	 * @see org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
 	 * (org.irods.jargon.core.transfer.EncryptionBuffer)
 	 */
 	@Override
 	protected byte[] doDecrypt(final EncryptionBuffer input) {
 		try {
-			getCipher().init(Cipher.DECRYPT_MODE,
-					getNegotiatedClientServerConfiguration().getSecretKey(),
+			getCipher().init(Cipher.DECRYPT_MODE, getNegotiatedClientServerConfiguration().getSecretKey(),
 					new IvParameterSpec(input.getInitializationVector()));
 
 			byte[] original = getCipher().doFinal(input.getEncryptedData());
 			return original;
 
-		} catch (IllegalBlockSizeException | BadPaddingException
-				| InvalidKeyException | InvalidAlgorithmParameterException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException
+				| InvalidAlgorithmParameterException e) {
 			log.error("error during encryption", e);
-			throw new JargonRuntimeException(
-					"Unable to decrypt given negotiated settings", e);
+			throw new JargonRuntimeException("Unable to decrypt given negotiated settings", e);
 		}
 	}
 
@@ -133,11 +127,9 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 		log.debug("fullbuffer length:{}", fullBuffer.length);
 		log.debug("buffer - iv length:{}", fullBuffer.length - 32);
 
-		EncryptionBuffer encryptionBuffer = new EncryptionBuffer(
-				Arrays.copyOfRange(fullBuffer, 0, 16),
+		EncryptionBuffer encryptionBuffer = new EncryptionBuffer(Arrays.copyOfRange(fullBuffer, 0, 16),
 				extractEncryptedData(fullBuffer));
-		log.debug("length of encrypted buffer:{}",
-				encryptionBuffer.getEncryptedData().length);
+		log.debug("length of encrypted buffer:{}", encryptionBuffer.getEncryptedData().length);
 		return doDecrypt(encryptionBuffer);
 
 	}

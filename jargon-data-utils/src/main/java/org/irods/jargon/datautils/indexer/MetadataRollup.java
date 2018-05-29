@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.indexer;
 
@@ -12,7 +12,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 /**
  * Represents a Deque containing the rollup of metadata from the current node up
  * to its parents
- * 
+ *
  * @author conwaymc
  *
  */
@@ -21,7 +21,7 @@ public class MetadataRollup {
 	private Deque<List<MetaDataAndDomainData>> metadata = new ArrayDeque<List<MetaDataAndDomainData>>();
 
 	/**
-	 * 
+	 *
 	 */
 	public MetadataRollup() {
 	}
@@ -30,7 +30,7 @@ public class MetadataRollup {
 		return metadata;
 	}
 
-	public void setMetadata(Deque<List<MetaDataAndDomainData>> metadata) {
+	public void setMetadata(final Deque<List<MetaDataAndDomainData>> metadata) {
 		this.metadata = metadata;
 	}
 

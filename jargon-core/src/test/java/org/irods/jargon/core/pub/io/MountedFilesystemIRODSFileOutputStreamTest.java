@@ -2,13 +2,12 @@ package org.irods.jargon.core.pub.io;
 
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.MountedCollectionAO;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,8 +30,7 @@ public class MountedFilesystemIRODSFileOutputStreamTest {
 
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -55,36 +53,26 @@ public class MountedFilesystemIRODSFileOutputStreamTest {
 
 		String targetCollectionSubdir = "testWriteByteArray";
 
-		String localCollectionAbsolutePath = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+		String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ targetCollectionSubdir);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + targetCollectionSubdir);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, targetIrodsCollection,
+		mountedCollectionAO.createMountedFileSystemCollection(localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		// get a simple byte array
 		String myBytes = "ajjjjjjjjjjjjjjjjjjjjjjjjfeiiiiiiiiiiiiiii54454545";
@@ -95,13 +83,11 @@ public class MountedFilesystemIRODSFileOutputStreamTest {
 
 		irodsFile.close();
 
-		irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection
-				+ '/' + testFileName);
+		irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
 		long length = irodsFile.length();
 
-		Assert.assertEquals("file length does not match bytes written",
-				myBytesArray.length * 2, length);
+		Assert.assertEquals("file length does not match bytes written", myBytesArray.length * 2, length);
 
 		irodsFileSystem.closeAndEatExceptions();
 	}

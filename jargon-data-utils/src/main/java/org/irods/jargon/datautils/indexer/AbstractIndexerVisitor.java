@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.indexer;
 
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * indexing. This adapter introduces automatically maintained metadata as well
  * as the notion of a filter and 'control rod' to tune the behavior of the
  * indexer.
- * 
+ *
  * @author conwaymc
  *
  */
@@ -61,25 +61,28 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public AbstractIndexerVisitor(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount)
-			throws JargonException {
+	public AbstractIndexerVisitor(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsAccessObjectFactory, irodsAccount);
-		this.collectionAO = irodsAccessObjectFactory.getCollectionAO(getIrodsAccount());
-		this.dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(getIrodsAccount());
+		collectionAO = irodsAccessObjectFactory.getCollectionAO(getIrodsAccount());
+		dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(getIrodsAccount());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.visitor.AbstractIrodsVisitor#visitEnter(org.irods.
 	 * jargon.datautils.visitor.HierComposite)
 	 */
 	@Override
-	public boolean visitEnter(HierComposite node) {
+	public boolean visitEnter(final HierComposite node) {
 		log.info("visitEnter()");
 		if (node == null) {
 			throw new IllegalArgumentException("null node");
@@ -97,7 +100,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		try {
 			List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesForCollection(node.getAbsolutePath(),
 					0);
-			this.metadataRollup.getMetadata().push(metadata);
+			metadataRollup.getMetadata().push(metadata);
 			log.info(
 					"pushed metadata in the stack...now filter and then delegate to visitEnterWithMetadata() in the impl class to make any determinations");
 
@@ -110,7 +113,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 				return false;
 			}
 
-			boolean shortCircuit = visitEnterWithMetadata(node, this.metadataRollup);
+			boolean shortCircuit = visitEnterWithMetadata(node, metadataRollup);
 			// even if short circuited the visitLeave will be called and the metadata will
 			// be popped back off of the stack
 			return shortCircuit;
@@ -124,25 +127,25 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	/**
 	 * Indicate whether the visitor should enter a collection and process its
 	 * children. This processes the collection before any children are processed.
-	 * <p/>
+	 * <p>
 	 * Alternately, the implementation can wait until all children are processed in
 	 * the visitLeaveWithMetadata() method
-	 * 
+	 *
 	 * To be extended by the indexer, this will call visitEnter with the
 	 * already-obtained metadata values rolled up to the parent
-	 * 
+	 *
 	 * @param node
 	 *            {@link HierComposite} with the parent node to enter
 	 * @param metadataRollup
-	 *            {@link MetadataRolloup} with the metadata from the root down to
-	 *            the current node
+	 *            {@link MetadataRollup} with the metadata from the root down to the
+	 *            current node
 	 * @return {@code boolean} with a return of <code>true</code> if the visitor
 	 *         should enter the collection
 	 */
 	public abstract boolean visitEnterWithMetadata(HierComposite node, MetadataRollup metadataRollup);
 
 	@Override
-	public boolean visitLeave(HierComposite node, boolean wasEntered) {
+	public boolean visitLeave(final HierComposite node, final boolean wasEntered) {
 
 		log.info("visitLeave()");
 		if (node == null) {
@@ -156,7 +159,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		log.info("visitLeave for node:{}", node);
 
 		log.info("delegating to visit leave before popping metadata off the stack");
-		boolean shortCircuit = this.visitLeaveWithMetadata(node, metadataRollup, wasEntered);
+		boolean shortCircuit = visitLeaveWithMetadata(node, metadataRollup, wasEntered);
 		metadataRollup.getMetadata().pop();
 		return shortCircuit;
 	}
@@ -164,37 +167,37 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	/**
 	 * To be extended by the particular indexer, indicates a visitor is leaving a
 	 * collection and has processed its children.
-	 * 
+	 *
 	 * To be extended by the indexer, this will map to visitLeave with the
 	 * already-obtained metadata values rolled up to the parent
-	 * 
+	 *
 	 * @param node
 	 *            {@link HierComposite} with the parent node to enter
 	 * @param metadataRollup
-	 *            {@link MetadataRolloup} with the metadata from the root down to
-	 *            the current node
+	 *            {@link MetadataRollup} with the metadata from the root down to the
+	 *            current node
 	 * @param visitorEntered
-	 *            {@link boolean} indicating that the operation had been short
+	 *            {@code boolean} indicating that the operation had been short
 	 *            circuited (returning <code>false</code>). This indicates that the
 	 *            indexer may want to ignore any further indexing action on the
 	 *            visitLeave(). This is indexer-dependent. Note that the current
 	 *            metadata stack has been popped to remove the metadata at this
 	 *            child level.
-	 * 
+	 *
 	 * @return {@code boolean} with a return of <code>true</code> if the visitor
 	 *         should enter the collection
 	 */
 	public abstract boolean visitLeaveWithMetadata(HierComposite node, MetadataRollup metadataRollup,
-			boolean vistorEntered);
+			boolean visitorEntered);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.visitor.AbstractIrodsVisitor#visit(org.irods.
 	 * jargon.datautils.visitor.HierLeaf)
 	 */
 	@Override
-	public boolean visit(HierLeaf node) {
+	public boolean visit(final HierLeaf node) {
 		log.info("visit()");
 		if (node == null) {
 			throw new IllegalArgumentException("null node");
@@ -210,7 +213,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		log.info("obtaining metadata for:{}", node);
 		try {
 			List<MetaDataAndDomainData> metadata = dataObjectAO.findMetadataValuesForDataObject(node.getAbsolutePath());
-			this.metadataRollup.getMetadata().push(metadata);
+			metadataRollup.getMetadata().push(metadata);
 			log.info(
 					"pushed metadata in the stack...filter and then delegate to visitMetadata() in the impl class to make any determinations");
 
@@ -220,14 +223,14 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 			 */
 			if (!checkIfIndexable(node, metadataRollup)) {
 				log.info("not indexable by filter but don't short circuit, keep processing other siblings");
-				this.metadataRollup.getMetadata().pop();
+				metadataRollup.getMetadata().pop();
 				return true;
 			}
 
 			log.info("passes filter");
-			boolean shortCircuit = visitWithMetadata(node, this.metadataRollup);
+			boolean shortCircuit = visitWithMetadata(node, metadataRollup);
 			// now pop the data back off the stack for the next child
-			this.metadataRollup.getMetadata().pop();
+			metadataRollup.getMetadata().pop();
 			return shortCircuit;
 		} catch (JargonException e) {
 			log.error("error in obtaining metadata", e);
@@ -235,7 +238,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		}
 
 	}
-	
+
 	@Override
 	public void launch(final String startingCollectionPath) {
 		log.info("launch");
@@ -247,8 +250,8 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 		IRODSFileImpl startingPoint;
 		try {
-			startingPoint = (IRODSFileImpl) this.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(startingCollectionPath);
+			startingPoint = (IRODSFileImpl) getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+					.instanceIRODSFile(startingCollectionPath);
 			if (!startingPoint.isDirectory()) {
 				log.info("starting point is not a leaf node:{}", startingPoint);
 				throw new JargonException("cannot start a crawl on a leaf node!");
@@ -262,19 +265,19 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 			log.error("error in obtaining metadata", e);
 			throw new JargonRuntimeException("error lauching visitor", e);
 		}
-		
+
 	}
 
 	/**
 	 * To be extended by the particular indexer, this method is delegated from the
 	 * <code>visit()</code> method and adds the metadata associated with the given
 	 * leaf in the hierarchy.
-	 * 
+	 *
 	 * @param hierLeaf
 	 *            {@link HierLeaf} with the leaf node (File) being visited
 	 * @param metadataRollup
-	 *            {@link MetadataRolloup} with the metadata from the root down to
-	 *            the current node
+	 *            {@link MetadataRollup} with the metadata from the root down to the
+	 *            current node
 	 * @return {@code boolean} with a return of <code>true</code> if the visitor
 	 *         should short circuit the rest of the siblings of the node
 	 */
@@ -284,7 +287,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		return indexerFilter;
 	}
 
-	public void setIndexerFilter(IndexerFilterInterface indexerFilter) {
+	public void setIndexerFilter(final IndexerFilterInterface indexerFilter) {
 		this.indexerFilter = indexerFilter;
 	}
 
@@ -292,15 +295,15 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		return controlRod;
 	}
 
-	public void setControlRod(ControlRod controlRod) {
+	public void setControlRod(final ControlRod controlRod) {
 		this.controlRod = controlRod;
 	}
 
-	/**
+	/*
 	 * Give a space for a pause or end of processing
 	 *
 	 */
-	private boolean checkControlRod(HierComponent component) {
+	private boolean checkControlRod(final HierComponent component) {
 
 		if (controlRod == null) {
 			return false;
@@ -310,10 +313,10 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 	}
 
-	/**
+	/*
 	 * Returns <code>true</code> if indexable otherwise it should be ignored
 	 */
-	private boolean checkIfIndexable(HierComponent component, MetadataRollup metadataRollup) {
+	private boolean checkIfIndexable(final HierComponent component, final MetadataRollup metadataRollup) {
 		log.info("checkIfFiltered()");
 		if (indexerFilter == null) {
 			log.info("no filter present");
@@ -333,7 +336,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 		return metadataRollup;
 	}
 
-	public void setMetadataRollup(MetadataRollup metadataRollup) {
+	public void setMetadataRollup(final MetadataRollup metadataRollup) {
 		this.metadataRollup = metadataRollup;
 	}
 

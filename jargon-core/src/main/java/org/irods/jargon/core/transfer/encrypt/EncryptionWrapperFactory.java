@@ -20,21 +20,20 @@ import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 public class EncryptionWrapperFactory {
 
 	/**
-	 * Given the properties from configuration and negotiation, return the
-	 * correct encryption wrapper for a parallel transfer thread. This method
-	 * should not be called if no negotiated encryption was established.
+	 * Given the properties from configuration and negotiation, return the correct
+	 * encryption wrapper for a parallel transfer thread. This method should not be
+	 * called if no negotiated encryption was established.
 	 *
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration}
-	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer
-	 *         threads
+	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer threads
 	 *
 	 * @throws ClientServerNegotiationException
+	 *             {@link ClientServerNegotiationException}
 	 */
-	public static ParallelEncryptionCipherWrapper instanceEncrypt(
-			final PipelineConfiguration pipelineConfiguration,
+	public static ParallelEncryptionCipherWrapper instanceEncrypt(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
 			throws ClientServerNegotiationException {
 
@@ -43,43 +42,37 @@ public class EncryptionWrapperFactory {
 		}
 
 		if (negotiatedClientServerConfiguration == null) {
-			throw new IllegalArgumentException(
-					"null negotiatedClientServerConfiguration");
+			throw new IllegalArgumentException("null negotiatedClientServerConfiguration");
 		}
 
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
-			throw new JargonRuntimeException(
-					"no encryption was negotiated,should not call this factory");
+			throw new JargonRuntimeException("no encryption was negotiated,should not call this factory");
 		}
 
 		if (pipelineConfiguration.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
 
-			return new AesCipherEncryptWrapper(pipelineConfiguration,
-					negotiatedClientServerConfiguration);
+			return new AesCipherEncryptWrapper(pipelineConfiguration, negotiatedClientServerConfiguration);
 		} else {
 			throw new ClientServerNegotiationException(
-					"unsuppored encryption algo:"
-							+ pipelineConfiguration
-									.getEncryptionAlgorithmEnum());
+					"unsuppored encryption algo:" + pipelineConfiguration.getEncryptionAlgorithmEnum());
 		}
 
 	}
 
 	/**
-	 * Given the properties from configuration and negotiation, return the
-	 * correct decryption wrapper for a parallel transfer thread. This method
-	 * should not be called if no negotiated encryption was established.
+	 * Given the properties from configuration and negotiation, return the correct
+	 * decryption wrapper for a parallel transfer thread. This method should not be
+	 * called if no negotiated encryption was established.
 	 *
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration}
-	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer
-	 *         threads
+	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer threads
 	 * @throws ClientServerNegotiationException
+	 *             {@link ClientServerNegotiationException}
 	 */
-	public static ParallelDecryptionCipherWrapper instanceDecrypt(
-			final PipelineConfiguration pipelineConfiguration,
+	public static ParallelDecryptionCipherWrapper instanceDecrypt(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
 			throws ClientServerNegotiationException {
 		if (pipelineConfiguration == null) {
@@ -87,24 +80,19 @@ public class EncryptionWrapperFactory {
 		}
 
 		if (negotiatedClientServerConfiguration == null) {
-			throw new IllegalArgumentException(
-					"null negotiatedClientServerConfiguration");
+			throw new IllegalArgumentException("null negotiatedClientServerConfiguration");
 		}
 
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
-			throw new JargonRuntimeException(
-					"no encryption was negotiated,should not call this factory");
+			throw new JargonRuntimeException("no encryption was negotiated,should not call this factory");
 		}
 
 		if (pipelineConfiguration.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
 
-			return new AesCipherDecryptWrapper(pipelineConfiguration,
-					negotiatedClientServerConfiguration);
+			return new AesCipherDecryptWrapper(pipelineConfiguration, negotiatedClientServerConfiguration);
 		} else {
 			throw new ClientServerNegotiationException(
-					"unsuppored decryption algo:"
-							+ pipelineConfiguration
-									.getEncryptionAlgorithmEnum());
+					"unsuppored decryption algo:" + pipelineConfiguration.getEncryptionAlgorithmEnum());
 		}
 
 	}

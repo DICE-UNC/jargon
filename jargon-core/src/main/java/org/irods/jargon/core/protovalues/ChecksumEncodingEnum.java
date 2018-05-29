@@ -23,12 +23,12 @@ public enum ChecksumEncodingEnum {
 	 * Given a text value resolve the encoding
 	 *
 	 * @param userType
+	 *            {@code String} with user type
 	 * @return {@link ChecksumEncodingEnum}
 	 */
 	public static ChecksumEncodingEnum findTypeByString(final String userType) {
 		ChecksumEncodingEnum checksumEncodingValue = null;
-		for (ChecksumEncodingEnum checksumEnumValue : ChecksumEncodingEnum
-				.values()) {
+		for (ChecksumEncodingEnum checksumEnumValue : ChecksumEncodingEnum.values()) {
 			if (checksumEnumValue.getTextValue().equals(userType)) {
 				checksumEncodingValue = checksumEnumValue;
 				break;

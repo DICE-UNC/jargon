@@ -27,37 +27,36 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Typical usage would be to create an instance of this object, then use the
  * {@code IRODSFileSystem} class to obtain a reference of an
- * {@code IRODSAccessObjectFactory} and a {@code IRODSFileFactory} .
- * These two factory objects allow creation of various iRODS file
- * implementations that map to the {@code java.io.*} packages, and to
- * create various Access Objects.
+ * {@code IRODSAccessObjectFactory} and a {@code IRODSFileFactory} . These two
+ * factory objects allow creation of various iRODS file implementations that map
+ * to the {@code java.io.*} packages, and to create various Access Objects.
  * <p>
  * An Access Object represents the various domains within iRODS (such as User,
  * Resource, Collection) and allows accessing, updating, managing metadata, and
  * other operations specific to each of these objects. Access Objects will
  * operate and return various domain objects that represent data within iRODS.
  * The factories will return instances of file objects and Access Objects upon
- * request using the provided {@code IRODSAccount}. The
- * {@code IRODSAccount} indicates the iRODS server to which that Access or
- * file object is connected. In other words, one IRODSFileSystem object will
- * manage connections to multiple iRODS servers.
+ * request using the provided {@code IRODSAccount}. The {@code IRODSAccount}
+ * indicates the iRODS server to which that Access or file object is connected.
+ * In other words, one IRODSFileSystem object will manage connections to
+ * multiple iRODS servers.
  * <p>
  * After a connection is no longer needed, it must be closed by using the proper
- * close method contained in the {@code IRODSFileSystem} object. Please
- * consult the method documentation of this class for various close options.
+ * close method contained in the {@code IRODSFileSystem} object. Please consult
+ * the method documentation of this class for various close options.
  * <p>
  * It is important to note that the {@code IRODSFileSystem} is not created
  * multiple times in typical usage. The proper technique is to create the
- * {@code IRODSFileSystem}, and place it in a shared context (such as in
- * the ApplicationContext of a servlet application, use a shared reference, or
- * wrap this object in a singleton for lookup. The JUnit tests can be somewhat
+ * {@code IRODSFileSystem}, and place it in a shared context (such as in the
+ * ApplicationContext of a servlet application, use a shared reference, or wrap
+ * this object in a singleton for lookup. The JUnit tests can be somewhat
  * misleading in terms of proper usage. The object is safe to share between
  * multiple threads. The underlying connections are tied to a
  * {@code ThreadLocal}, such that they are not shared between threads. This
- * {@code IRODSFileSystem} object does hold shared instances of objects
- * that manage connections, and these objects are intended to manage the
- * creation of connections across the entire application. The shared objects are
- * designed to manage these connections across multiple threads.
+ * {@code IRODSFileSystem} object does hold shared instances of objects that
+ * manage connections, and these objects are intended to manage the creation of
+ * connections across the entire application. The shared objects are designed to
+ * manage these connections across multiple threads.
  * <p>
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -69,15 +68,14 @@ public final class IRODSFileSystem {
 	private final IRODSSession irodsSession;
 	private transient IRODSAccessObjectFactory irodsAccessObjectFactory = null;
 
-	private static final Logger log = LoggerFactory
-			.getLogger(IRODSFileSystem.class);
+	private static final Logger log = LoggerFactory.getLogger(IRODSFileSystem.class);
 
 	/**
 	 * Create a default IRODSFileSystem
 	 *
-	 * @return {@code IRODSFileSystem} that is initialized and ready to
-	 *         connect
+	 * @return {@code IRODSFileSystem} that is initialized and ready to connect
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static IRODSFileSystem instance() throws JargonException {
 		return new IRODSFileSystem();
@@ -90,17 +88,16 @@ public final class IRODSFileSystem {
 	}
 
 	/**
-	 * Constructor that accepts an {@code irodsProtocolManager}. This
-	 * object is in charge of producing iRODS connections upon request, through
-	 * some arbitrary mechanism. This constructor allows pool, proxy, and other
-	 * connection sources.
+	 * Constructor that accepts an {@code irodsProtocolManager}. This object is in
+	 * charge of producing iRODS connections upon request, through some arbitrary
+	 * mechanism. This constructor allows pool, proxy, and other connection sources.
 	 *
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} instance
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSFileSystem(final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException {
+	public IRODSFileSystem(final IRODSProtocolManager irodsProtocolManager) throws JargonException {
 		if (irodsProtocolManager == null) {
 			throw new IllegalArgumentException("null irodsProtocolManager");
 		}
@@ -115,79 +112,79 @@ public final class IRODSFileSystem {
 	 *
 	 * @return {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSAccessObjectFactory getIRODSAccessObjectFactory()
-			throws JargonException {
+	public IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException {
 		if (irodsAccessObjectFactory == null) {
-			irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl
-					.instance(irodsSession);
+			irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
 		}
 		return irodsAccessObjectFactory;
 	}
 
 	/**
-	 * For a given {@code IRODSAccount} create an
-	 * {@code IRODSFileFactory} that can return iRODS file objects for the
-	 * particular connection.
+	 * For a given {@code IRODSAccount} create an {@code IRODSFileFactory} that can
+	 * return iRODS file objects for the particular connection.
 	 *
 	 * @param irodsAccount
 	 *            {@link org.irods.jargon.core.connection.IRODSAccount}
-	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileFactory}
+	 * @return {@link IRODSFileFactory}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSFileFactory getIRODSFileFactory(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public IRODSFileFactory getIRODSFileFactory(final IRODSAccount irodsAccount) throws JargonException {
 		return new IRODSFileFactoryImpl(irodsSession, irodsAccount);
 	}
 
 	/**
-	 * Close all open iRODS connections that were used in this Thread. Note that
-	 * if there are other threads that refer to this
-	 * {@code IRODSFileSystem}, that Thread must close their own
-	 * connection. Connections are stored in a {@code ThreadLocal} which
-	 * means a Thread's connections to iRODS are only visible from that Thread.
+	 * Close all open iRODS connections that were used in this Thread. Note that if
+	 * there are other threads that refer to this {@code IRODSFileSystem}, that
+	 * Thread must close their own connection. Connections are stored in a
+	 * {@code ThreadLocal} which means a Thread's connections to iRODS are only
+	 * visible from that Thread.
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public void close() throws JargonException {
 		irodsSession.closeSession();
 	}
 
 	/**
-	 * Convenience method to close all connections, logging and ignoring any
-	 * close errors. This is commonly used in finally blocks and makes code
-	 * slightly cleaner. Be sure you do not want an error thrown! If you do, use
-	 * the close() method instead.
+	 * Convenience method to close all connections, logging and ignoring any close
+	 * errors. This is commonly used in finally blocks and makes code slightly
+	 * cleaner. Be sure you do not want an error thrown! If you do, use the close()
+	 * method instead.
 	 */
 	public void closeAndEatExceptions() {
 		try {
 			irodsSession.closeSession();
 		} catch (Exception e) {
-			log.error(
-					"exception closing connection, this is logged and ignored",
-					e);
+			log.error("exception closing connection, this is logged and ignored", e);
 		}
 	}
 
 	/**
-	 * Close the session that is connected to the particular iRODS server with
-	 * the given account. Note that if there are other threads that refer to
-	 * this {@code IRODSFileSystem}, that Thread must close their own
-	 * connection. Connections are stored in a {@code ThreadLocal} which
-	 * means a Thread's connections to iRODS are only visible from that Thread.
+	 * Close the session that is connected to the particular iRODS server with the
+	 * given account. Note that if there are other threads that refer to this
+	 * {@code IRODSFileSystem}, that Thread must close their own connection.
+	 * Connections are stored in a {@code ThreadLocal} which means a Thread's
+	 * connections to iRODS are only visible from that Thread.
 	 *
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public void close(final IRODSAccount irodsAccount) throws JargonException {
 		irodsSession.closeSession(irodsAccount);
 	}
 
 	/**
-	 * Close the session that is connected to the particular iRODS server with
-	 * the given account. Note that if there are other threads that refer to
-	 * this {@code IRODSFileSystem}, that Thread must close their own
-	 * connection. Connections are stored in a {@code ThreadLocal} which
-	 * means a Thread's connections to iRODS are only visible from that Thread.
+	 * Close the session that is connected to the particular iRODS server with the
+	 * given account. Note that if there are other threads that refer to this
+	 * {@code IRODSFileSystem}, that Thread must close their own connection.
+	 * Connections are stored in a {@code ThreadLocal} which means a Thread's
+	 * connections to iRODS are only visible from that Thread.
 	 * <p>
 	 * Note that this method wraps the close in a try/catch block, so that any
 	 * exception on close is logged and eaten. This is useful in code for neater
@@ -195,27 +192,25 @@ public final class IRODSFileSystem {
 	 * {@code close(IRODSAccount)} method.
 	 *
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public void closeAndEatExceptions(final IRODSAccount irodsAccount) {
 		try {
 			irodsSession.closeSession(irodsAccount);
 		} catch (Exception e) {
-			log.error(
-					"exception closing connection, this is logged and ignored",
-					e);
+			log.error("exception closing connection, this is logged and ignored", e);
 		}
 	}
 
 	/**
-	 * Method returns the {@code Map} of underlying
-	 * {@code IRODSCommands} objects. These objects represent the
-	 * connections to iRODS by account for the current Thread. This method is
-	 * provided to allow display of these connections in diagnostics or for
-	 * other uses, but it is highly recommended that these IRODSCommands are not
-	 * used for any other purpose.
+	 * Method returns the {@code Map} of underlying {@code IRODSCommands} objects.
+	 * These objects represent the connections to iRODS by account for the current
+	 * Thread. This method is provided to allow display of these connections in
+	 * diagnostics or for other uses, but it is highly recommended that these
+	 * IRODSCommands are not used for any other purpose.
 	 *
-	 * @return {@link AbstractIRODSMidLevelProtocol} that represent
-	 *         protocol-level connection to iRODS (above the socket level)
+	 * @return {@link AbstractIRODSMidLevelProtocol} that represent protocol-level
+	 *         connection to iRODS (above the socket level)
 	 */
 	public Map<String, AbstractIRODSMidLevelProtocol> getConnectionMap() {
 		return irodsSession.getIRODSCommandsMap();
@@ -233,20 +228,20 @@ public final class IRODSFileSystem {
 	}
 
 	/**
-	 * Get the {@code IRODSProtocolManager} that is the source of
-	 * connections to iRODS
+	 * Get the {@code IRODSProtocolManager} that is the source of connections to
+	 * iRODS
 	 *
-	 * @return {@link IRODSProtocolManager} that can produce connections to
-	 *         iRODS upon request, and handles the disposal of connections after
-	 *         they are finished
+	 * @return {@link IRODSProtocolManager} that can produce connections to iRODS
+	 *         upon request, and handles the disposal of connections after they are
+	 *         finished
 	 */
 	public IRODSProtocolManager getIrodsProtocolManager() {
 		return irodsProtocolManager;
 	}
 
 	/**
-	 * Get the {@code JargonProperties} as configured in the
-	 * {@code IRODSSession}. This is here for convenience.
+	 * Get the {@code JargonProperties} as configured in the {@code IRODSSession}.
+	 * This is here for convenience.
 	 *
 	 * @return {@link JargonProperties} that control various configurations.
 	 */

@@ -19,8 +19,8 @@ public class ChecksumValue {
 	 */
 	private String checksumTransmissionFormat = "";
 	/**
-	 * Stringified representation of the checksum digest in the format expected
-	 * by the packing instruction
+	 * Stringified representation of the checksum digest in the format expected by
+	 * the packing instruction
 	 */
 	private String checksumStringValue = "";
 
@@ -76,8 +76,7 @@ public class ChecksumValue {
 	 * @param checksumTransmissionFormat
 	 *            the checksumTransmissionFormat to set
 	 */
-	public void setChecksumTransmissionFormat(
-			final String checksumTransmissionFormat) {
+	public void setChecksumTransmissionFormat(final String checksumTransmissionFormat) {
 		this.checksumTransmissionFormat = checksumTransmissionFormat;
 	}
 
@@ -117,17 +116,9 @@ public class ChecksumValue {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((checksumEncoding == null) ? 0 : checksumEncoding.hashCode());
-		result = prime
-				* result
-				+ ((checksumStringValue == null) ? 0 : checksumStringValue
-						.hashCode());
-		result = prime
-				* result
-				+ ((checksumTransmissionFormat == null) ? 0
-						: checksumTransmissionFormat.hashCode());
+		result = prime * result + ((checksumEncoding == null) ? 0 : checksumEncoding.hashCode());
+		result = prime * result + ((checksumStringValue == null) ? 0 : checksumStringValue.hashCode());
+		result = prime * result + ((checksumTransmissionFormat == null) ? 0 : checksumTransmissionFormat.hashCode());
 		return result;
 	}
 
@@ -162,8 +153,7 @@ public class ChecksumValue {
 			if (other.checksumTransmissionFormat != null) {
 				return false;
 			}
-		} else if (!checksumTransmissionFormat
-				.equals(other.checksumTransmissionFormat)) {
+		} else if (!checksumTransmissionFormat.equals(other.checksumTransmissionFormat)) {
 			return false;
 		}
 		return true;

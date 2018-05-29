@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Special variant of the {@link IRODSProtocolMangaer} that caches a temporary
+ * Special variant of the {@link IRODSProtocolManager} that caches a temporary
  * password and only returns that one connection. This effectively shares that
  * single connection.
  *
@@ -29,15 +29,14 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	private GenericObjectPool objectPool = null;
 
-	private final Logger log = LoggerFactory
-			.getLogger(TempPasswordCachingProtocolManager.class);
+	private final Logger log = LoggerFactory.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
-	 * Create a protocol manager that will cache a single temporary connection
-	 * in a pool for reuse. This is because temp passwords are one-time only.
-	 * This allows client applications to (somewhat) transparently simulate the
-	 * ability to get a connection on-demand. This is used in idrop-lite, for
-	 * example.
+	 * 
+	 * Create a protocol manager that will cache a single temporary connection in a
+	 * pool for reuse. This is because temp passwords are one-time only. This allows
+	 * client applications to (somewhat) transparently simulate the ability to get a
+	 * connection on-demand. This is used in idrop-lite, for example.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the underlying cached account
@@ -47,11 +46,11 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 *            {@link IRODSProtocolManager} that gets the actual connected
 	 *            account that is subsequently cached
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount,
-			final IRODSSession irodsSession,
-			final IRODSProtocolManager baseProtocolManager)
-					throws JargonException {
+	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount, final IRODSSession irodsSession,
+			final IRODSProtocolManager baseProtocolManager) throws JargonException {
+
 		super();
 
 		if (irodsAccount == null) {
@@ -82,13 +81,10 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 * org.irods.jargon.core.connection.PipelineConfiguration)
 	 */
 	@Override
-	public IRODSMidLevelProtocol getIRODSProtocol(
-			final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
-			final IRODSSession irodsSession) throws JargonException {
+	public IRODSMidLevelProtocol getIRODSProtocol(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession) throws JargonException {
 		try {
-			IRODSMidLevelProtocol command = (IRODSMidLevelProtocol) objectPool
-					.borrowObject();
+			IRODSMidLevelProtocol command = (IRODSMidLevelProtocol) objectPool.borrowObject();
 
 			command.setIrodsProtocolManager(this);
 			return command;
@@ -97,12 +93,6 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.AbstractIRODSProtocolManager#destroy()
-	 */
 	@Override
 	public void destroy() throws JargonException {
 		log.info("destroy");
@@ -115,25 +105,17 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.AbstractIRODSProtocolManager#initialize
-	 * ()
-	 */
 	@Override
 	public void initialize() throws JargonException {
 		log.info("initialize()");
 
 		if (irodsAccount == null) {
-			throw new JargonRuntimeException(
-					"null irodsAccount, initialize cannot be called");
+			throw new JargonRuntimeException("null irodsAccount, initialize cannot be called");
 		}
 
 		log.info("creating factory for conns");
-		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(
-				irodsAccount, irodsSession, baseProtocolManager);
+		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(irodsAccount,
+				irodsSession, baseProtocolManager);
 		log.info("factory created, setting up config and creating pool");
 		GenericObjectPool.Config config = new Config();
 		config.maxActive = 1;
@@ -145,9 +127,6 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	}
 
-	/**
-	 * @return the irodsAccount
-	 */
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
@@ -160,9 +139,9 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
 	 */
 	@Override
-	public void returnIRODSProtocol(
-			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-					throws JargonException {
+	public void returnIRODSProtocol(final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			throws JargonException {
+
 		try {
 			objectPool.returnObject(abstractIRODSMidLevelProtocol);
 		} catch (Exception e) {

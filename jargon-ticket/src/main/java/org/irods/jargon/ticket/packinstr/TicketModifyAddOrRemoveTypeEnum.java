@@ -5,8 +5,8 @@ import java.util.List;
 
 public enum TicketModifyAddOrRemoveTypeEnum {
 
-	TICKET_MODIFY_USER("user"), TICKET_MODIFY_GROUP("group"), TICKET_MODIFY_HOST(
-			"host"), TICKET_MODIFY_UNKNOWN("unknown");
+	TICKET_MODIFY_USER("user"), TICKET_MODIFY_GROUP("group"), TICKET_MODIFY_HOST("host"), TICKET_MODIFY_UNKNOWN(
+			"unknown");
 
 	private String textValue;
 
@@ -28,11 +28,9 @@ public enum TicketModifyAddOrRemoveTypeEnum {
 		return types;
 	}
 
-	public static TicketModifyAddOrRemoveTypeEnum findTypeByString(
-			final String type) {
+	public static TicketModifyAddOrRemoveTypeEnum findTypeByString(final String type) {
 		TicketModifyAddOrRemoveTypeEnum ticketModifyAddOrRemoveTypeEnum = null;
-		for (TicketModifyAddOrRemoveTypeEnum modifyType : TicketModifyAddOrRemoveTypeEnum
-				.values()) {
+		for (TicketModifyAddOrRemoveTypeEnum modifyType : TicketModifyAddOrRemoveTypeEnum.values()) {
 			if (modifyType.getTextValue().equals(type)) {
 				ticketModifyAddOrRemoveTypeEnum = modifyType;
 				break;

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.userprofile;
 
@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Exception in the validation of the {@code UserProfile}
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfileValidationException extends JargonException {
 
@@ -27,8 +27,7 @@ public class UserProfileValidationException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public UserProfileValidationException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public UserProfileValidationException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
@@ -37,8 +36,8 @@ public class UserProfileValidationException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public UserProfileValidationException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public UserProfileValidationException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -46,8 +45,7 @@ public class UserProfileValidationException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public UserProfileValidationException(final String message,
-			final Throwable cause) {
+	public UserProfileValidationException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -62,8 +60,7 @@ public class UserProfileValidationException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public UserProfileValidationException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public UserProfileValidationException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 

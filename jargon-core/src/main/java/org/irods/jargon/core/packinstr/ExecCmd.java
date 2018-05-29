@@ -156,6 +156,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            additional information about the request functionality. This is
 	 *            used in the -P and -p equivalent modes, and otherwise is set to
 	 *            {@code NONE}
+	 * @return {@link ExecCmd}
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
@@ -190,6 +191,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            additional information about the request functionality. This is
 	 *            used in the -P and -p equivalent modes, and otherwise is set to
 	 *            {@code NONE}
+	 * @return {@link ExecCmd}
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
@@ -225,6 +227,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            additional information about the request functionality. This is
 	 *            used in the -P and -p equivalent modes, and otherwise is set to
 	 *            {@code NONE}
+	 * @return {@link ExecCmd}
 	 * @throws JargonException
 	 *             for iRODS error
 	 */

@@ -24,17 +24,17 @@ class RuleParsingUtils {
 
 	/**
 	 * Given a rule input parameter value which has already been separated from
-	 * other input parameters by the , or % delimiter, separate into parameter
-	 * name and parameter value. This essentially splits on the first '=' sign. <br/>
-	 * This routine will trim the param names and strip leading $ in the value
-	 * that typically mark interactive variables
+	 * other input parameters by the , or % delimiter, separate into parameter name
+	 * and parameter value. This essentially splits on the first '=' sign. <br/>
+	 * This routine will trim the param names and strip leading $ in the value that
+	 * typically mark interactive variables
 	 *
 	 * @param parameter
-	 *            {@code String} which should reflect an individual rule parameter in *parmName=parmValue format
+	 *            {@code String} which should reflect an individual rule parameter
+	 *            in *parmName=parmValue format
 	 * @return {@link RuleInputParameter}
 	 */
-	static RuleInputParameter parseInputParameterForNameAndValue(
-			final String parameter) {
+	static RuleInputParameter parseInputParameterForNameAndValue(final String parameter) {
 
 		log.info("parseInputParametersFromParameterLineOfRule()");
 		if (parameter == null || parameter.isEmpty()) {
@@ -48,8 +48,7 @@ class RuleParsingUtils {
 			if (parameter.toUpperCase().indexOf("NULL") > -1) {
 				return null;
 			} else {
-				throw new IllegalArgumentException(
-						"missing equal sign in given input parameter");
+				throw new IllegalArgumentException("missing equal sign in given input parameter");
 			}
 		}
 

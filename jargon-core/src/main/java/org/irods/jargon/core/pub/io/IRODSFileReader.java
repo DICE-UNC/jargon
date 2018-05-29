@@ -26,19 +26,19 @@ public class IRODSFileReader extends Reader {
 	private final String connectionEncoding;
 
 	/**
-	 * iRODS-specific implementation of the {@code java.io.FileReader}.
-	 * Notably this class will do character conversions to the given encoding
-	 * from the binary stream data.
+	 * iRODS-specific implementation of the {@code java.io.FileReader}. Notably this
+	 * class will do character conversions to the given encoding from the binary
+	 * stream data.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the source of the stream
 	 * @param irodsFileFactory
-	 *            {@link IRODSFileFactory} that can be used to create various
-	 *            Jargon implementations of {@code java.io.*} classes.
+	 *            {@link IRODSFileFactory} that can be used to create various Jargon
+	 *            implementations of {@code java.io.*} classes.
 	 * @throws IOException
+	 *             for any i/o error
 	 */
-	public IRODSFileReader(final IRODSFile irodsFile,
-			final IRODSFileFactory irodsFileFactory) throws IOException {
+	public IRODSFileReader(final IRODSFile irodsFile, final IRODSFileFactory irodsFileFactory) throws IOException {
 		super();
 
 		if (irodsFile == null) {
@@ -50,22 +50,18 @@ public class IRODSFileReader extends Reader {
 		}
 
 		try {
-			irodsFileInputStream = irodsFileFactory
-					.instanceIRODSFileInputStream(irodsFile);
+			irodsFileInputStream = irodsFileFactory.instanceIRODSFileInputStream(irodsFile);
 		} catch (JargonException e) {
-			throw new IOException("unable to open IRODSFileInputStream for:"
-					+ irodsFile.getAbsolutePath());
+			throw new IOException("unable to open IRODSFileInputStream for:" + irodsFile.getAbsolutePath());
 		}
 
-		connectionEncoding = irodsFileInputStream.getFileIOOperations()
-				.getIRODSSession()
-				.buildPipelineConfigurationBasedOnJargonProperties()
-				.getDefaultEncoding();
+		connectionEncoding = irodsFileInputStream.getFileIOOperations().getIRODSSession()
+				.buildPipelineConfigurationBasedOnJargonProperties().getDefaultEncoding();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Reader#close()
 	 */
 	@Override
@@ -76,12 +72,11 @@ public class IRODSFileReader extends Reader {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Reader#read(char[], int, int)
 	 */
 	@Override
-	public int read(final char[] cbuf, final int off, final int len)
-			throws IOException {
+	public int read(final char[] cbuf, final int off, final int len) throws IOException {
 
 		byte[] b = new byte[cbuf.length];
 		int lenFromIrods = irodsFileInputStream.read(b, 0, len);
@@ -93,8 +88,7 @@ public class IRODSFileReader extends Reader {
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(b, 0, lenFromIrods);
 
-		final InputStreamReader isr = new InputStreamReader(bais,
-				connectionEncoding);
+		final InputStreamReader isr = new InputStreamReader(bais, connectionEncoding);
 
 		int dataRead = isr.read(cbuf, off, len);
 		log.debug("after decoding returning length {}", dataRead);

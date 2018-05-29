@@ -23,8 +23,7 @@ public final class ConnectionConstants {
 	public static final int SYS_CLI_TO_SVR_COLL_STAT_REPLY = 99999997;
 
 	/**
-	 * number of deletes that will be done in IRODS before sending a status
-	 * message
+	 * number of deletes that will be done in IRODS before sending a status message
 	 */
 	public static final int SYS_CLI_TO_SVR_COLL_STAT_SIZE = 10;
 
@@ -41,14 +40,14 @@ public final class ConnectionConstants {
 	// 1024;
 
 	/**
-	 * Maximum number of restart attempts before failing in large file restart
-	 * TODO: add to jargon props
+	 * Maximum number of restart attempts before failing in large file restart TODO:
+	 * add to jargon props
 	 */
 	public static final int MAX_FILE_RESTART_ATTEMPTS = 4;
 
 	/**
-	 * Maximum threads to open for a parallel transfer. More than this usually
-	 * won't help, might even be slower.
+	 * Maximum threads to open for a parallel transfer. More than this usually won't
+	 * help, might even be slower.
 	 */
 	public static final int MAX_THREAD_NUMBER = 16;
 

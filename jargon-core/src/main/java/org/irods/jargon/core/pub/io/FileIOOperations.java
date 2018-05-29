@@ -78,13 +78,18 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * to that point are stored into {@code b} and the number of bytes read before
 	 * the exception occurred is returned. Subclasses are encouraged to provide a
 	 * more efficient implementation of this method.
-	 * 
+	 *
 	 * @param fd
+	 *            {@code int} with the file descriptor
 	 * @param buffer
+	 *            {@code byte[]} buffer that will contain the read data
 	 * @param offset
+	 *            {@code int} with the offset into the buffer
 	 * @param length
+	 *            {@code int} with the length to write into the buffer
 	 * @return {@code int} with the amount of data read
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	int fileRead(int fd, byte buffer[], int offset, int length) throws JargonException;
 
@@ -99,16 +104,18 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 *            {@code int} that specifies the postion to compute the offset from
 	 * @return {@code long} with the new offset.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public long seek(int fd, long seek, SeekWhenceType whence) throws JargonException;
 
 	/**
 	 * Convenience method to compute a checksum on a given iRODS file
-	 * 
+	 *
 	 * @param irodsFileAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a file
 	 * @return {@link ChecksumValue} with the resulting checksum
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public ChecksumValue computeChecksumOnIrodsFile(final String irodsFileAbsolutePath) throws JargonException;
 }

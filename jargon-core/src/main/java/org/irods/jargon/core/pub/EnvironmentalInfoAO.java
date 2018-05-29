@@ -17,6 +17,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @return {@link IRODSServerProperties} containing information such as boot
 	 *         time, version
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer() throws JargonException;
 
@@ -26,6 +27,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @return {@code long} with the time since epoch that is the current server
 	 *         time
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	long getIRODSServerCurrentTime() throws JargonException;
 
@@ -42,6 +44,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *             if the {@code listCommands.sh} script is not in the iRODS remote
 	 *             exec bin directory
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<RemoteCommandInformation> listAvailableRemoteCommands() throws DataNotFoundException, JargonException;
 
@@ -54,6 +57,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List<String>} with the names of the available microservices.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> listAvailableMicroservices() throws JargonException;
 
@@ -68,6 +72,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return {@code boolean} that will be {@code true} if I can run specific query
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	boolean isAbleToRunSpecificQuery() throws JargonException;
 

@@ -18,22 +18,23 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
-DataObjectAuditAO {
+public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements DataObjectAuditAO {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(DataObjectAuditAOImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(DataObjectAuditAOImpl.class);
 	public static final char COMMA = ',';
 
 	/**
 	 * Default constructor as invoked by {@link IRODSAccessObjectFactory}
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected DataObjectAuditAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected DataObjectAuditAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
@@ -42,19 +43,15 @@ DataObjectAuditAO {
 	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAuditAO#getAuditedActionForDataObject
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String,
-	 * java.lang.String)
+	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public AuditedAction getAuditedActionForDataObject(
-			final IRODSFile irodsFile, final String auditActionCode,
-			final String timeStampInIRODSFormat) throws DataNotFoundException,
-			JargonException {
+	public AuditedAction getAuditedActionForDataObject(final IRODSFile irodsFile, final String auditActionCode,
+			final String timeStampInIRODSFormat) throws DataNotFoundException, JargonException {
 
 		log.info("getAuditedActionForDataObject()");
 
-		return super.getAuditedActionForFile(irodsFile, auditActionCode,
-				timeStampInIRODSFormat);
+		return super.getAuditedActionForFile(irodsFile, auditActionCode, timeStampInIRODSFormat);
 
 	}
 
@@ -66,14 +63,11 @@ DataObjectAuditAO {
 	 * .jargon.core.pub.io.IRODSFile, int)
 	 */
 	@Override
-	public List<AuditedAction> findAllAuditRecordsForDataObject(
-			final IRODSFile irodsFile, final int partialStart,
-			final int numberOfResultsDesired) throws FileNotFoundException,
-			JargonException {
+	public List<AuditedAction> findAllAuditRecordsForDataObject(final IRODSFile irodsFile, final int partialStart,
+			final int numberOfResultsDesired) throws FileNotFoundException, JargonException {
 
 		log.info("findAllAuditRecordsForDataObject()");
-		return super.findAllAuditRecordsForFile(irodsFile, partialStart,
-				numberOfResultsDesired);
+		return super.findAllAuditRecordsForFile(irodsFile, partialStart, numberOfResultsDesired);
 
 	}
 

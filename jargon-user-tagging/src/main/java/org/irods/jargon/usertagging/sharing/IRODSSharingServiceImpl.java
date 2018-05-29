@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.sharing;
 
@@ -63,9 +63,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This means that anytiome you create a share, that any ACL manipulation in
  * that share will invite people to see that as a share.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService implements IRODSSharingService {
 
@@ -84,9 +84,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.sharing.IRODSSharingService#removeShare(
+	 *
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#removeShare(
 	 * java.lang.String)
 	 */
 	@Override
@@ -100,9 +99,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		log.info("irodsAbsolutePath:[]", irodsAbsolutePath);
 
 		/*
-		 * Find objStat (will get file not found exception if abs path does not
-		 * exist.
-		 * 
+		 * Find objStat (will get file not found exception if abs path does not exist.
+		 *
 		 * Look for an already existing share, if null, no delete is required
 		 */
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
@@ -135,9 +133,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.sharing.IRODSSharingService#updateShareName
+	 *
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#updateShareName
 	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -157,9 +154,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		log.info("newShareName:{}", newShareName);
 
 		/*
-		 * Find objStat (will get file not found exception if abs path does not
-		 * exist.
-		 * 
+		 * Find objStat (will get file not found exception if abs path does not exist.
+		 *
 		 * Look for an already existing share, if null, no delete is required
 		 */
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
@@ -198,9 +194,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.sharing.IRODSSharingService#createShare(
+	 *
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#createShare(
 	 * org.irods.jargon.usertagging.domain.IRODSSharedFileOrCollection)
 	 */
 	@Override
@@ -246,9 +241,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.sharing.IRODSSharingService#createShare(
+	 *
+	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#createShare(
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -321,7 +315,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#
 	 * findShareByAbsolutePath(java.lang.String)
 	 */
@@ -337,8 +331,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		log.info("irodsAbsolutePath:()", irodsAbsolutePath);
 
 		/*
-		 * Look for the special AVU, if it exists, then build the share with it,
-		 * and the recorded ACLs
+		 * Look for the special AVU, if it exists, then build the share with it, and the
+		 * recorded ACLs
 		 */
 
 		log.info("deciding whether a file or collection...");
@@ -355,7 +349,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 	 * {@code IRODSSharedFileOrCollection} from the AVU and ACL data.
 	 * <p>
 	 * Note that null is returned if no share exists.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 * @param objStat
 	 * @return
@@ -375,8 +369,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		}
 
 		/*
-		 * I have a shared AVU, so build the response. First I need to gather
-		 * the AVUs
+		 * I have a shared AVU, so build the response. First I need to gather the AVUs
 		 */
 
 		MetaDataAndDomainData avuValue = queryResults.get(0);
@@ -447,7 +440,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/**
 	 * Build the query that will look for shared data
-	 * 
+	 *
 	 * @return
 	 * @throws JargonException
 	 */
@@ -456,6 +449,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
 					QueryConditionOperators.EQUAL, UserTaggingConstants.SHARE_AVU_UNIT));
+
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -517,7 +511,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#
 	 * listSharedCollectionsOwnedByAUser(java.lang.String, java.lang.String)
 	 */
@@ -550,8 +544,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		log.info("zone used:{}", myZone);
 
 		/*
-		 * Runs the listSharedCollectionsOwnedByUser specific query, which must
-		 * be loaded on the the iRODS server arguments are userName and userZone
+		 * Runs the listSharedCollectionsOwnedByUser specific query, which must be
+		 * loaded on the the iRODS server arguments are userName and userZone
 		 */
 		List<String> arguments = new ArrayList<>();
 		arguments.add(userName);
@@ -574,7 +568,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#
 	 * listSharedCollectionsSharedWithUser(java.lang.String, java.lang.String)
 	 */
@@ -607,9 +601,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		log.info("zone used:{}", myZone);
 
 		/*
-		 * Runs the listSharedCollectionsSharedWithUser specific query, which
-		 * must be loaded on the the iRODS server arguments are userName and
-		 * userZone
+		 * Runs the listSharedCollectionsSharedWithUser specific query, which must be
+		 * loaded on the the iRODS server arguments are userName and userZone
 		 */
 		List<String> arguments = new ArrayList<>();
 		arguments.add(userName);
@@ -646,12 +639,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		irodsSharedFileOrCollections.add(irodsSharedFileOrCollection);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.usertagging.sharing.IRODSSharingService#
-	 * listUsersForShare (java.lang.String)
-	 */
 	@Override
 	public List<ShareUser> listUsersForShare(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
@@ -670,11 +657,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	}
 
-	/**
-	 * @param specificQueryResultSet
-	 * @param irodsSharedFileOrCollection
-	 * @param row
-	 */
 	private void augmentRowWithCountData(final SpecificQueryResultSet specificQueryResultSet,
 			final IRODSSharedFileOrCollection irodsSharedFileOrCollection, final IRODSQueryResultRow row) {
 		// add count info
@@ -683,11 +665,6 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 		irodsSharedFileOrCollection.setTotalRecords(specificQueryResultSet.getTotalRecords());
 	}
 
-	/**
-	 * @param specificQuery
-	 * @throws JargonException
-	 * @throws DataNotFoundException
-	 */
 	private SpecificQueryResultSet runSpecificQuery(final SpecificQuery specificQuery)
 			throws OperationNotSupportedByThisServerException, JargonException {
 
@@ -728,9 +705,9 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	}
 
-	/**
+	/*
 	 * Cache a determination that sharing is or is not supported
-	 * 
+	 *
 	 * @param isSupported
 	 */
 	private void indicateSharingSupport(final boolean isSupported) {
@@ -752,11 +729,10 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 
 	}
 
-	/**
-	 * Will return {@code true} if I have already checked, and know that the
-	 * sharing specific queries are not set up on iRODS.
+	/*
+	 * Will return {@code true} if I have already checked, and know that the sharing
+	 * specific queries are not set up on iRODS.
 	 * 
-	 * @return
 	 */
 	private boolean isDeterminedThatSharingQueriesNotSupported() {
 		if (getIrodsAccessObjectFactory().isUsingDynamicServerPropertiesCache()) {

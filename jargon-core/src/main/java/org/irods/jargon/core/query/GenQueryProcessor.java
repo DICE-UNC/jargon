@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
  */
 public class GenQueryProcessor {
 	private final AbstractIRODSMidLevelProtocol irodsCommands;
-	private static final Logger log = LoggerFactory
-			.getLogger(GenQueryProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(GenQueryProcessor.class);
 
 	/**
-	 *
+	 * @param irodsCommands
+	 *            {@link AbstractIRODSMidLevelProtocol}
 	 */
 	public GenQueryProcessor(final AbstractIRODSMidLevelProtocol irodsCommands) {
 		if (irodsCommands == null) {
@@ -40,42 +40,43 @@ public class GenQueryProcessor {
 
 	/**
 	 * Take a result set from a previous query and do a paging operation. This
-	 * result set contains information on the original query, and the state of
-	 * the original query (more results, etc).
+	 * result set contains information on the original query, and the state of the
+	 * original query (more results, etc).
 	 *
 	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSGenQuery} to be run
 	 * @param continueIndex
+	 *            {@code int} if this is a continuation of a non-closed result
 	 * @param partialStartIndex
+	 *            {@code int} with an offset
 	 * @param queryCloseBehavior
+	 *            {@link QueryCloseBehavior} describing desired behavior upon
+	 *            completion of this query
 	 * @param zoneName
-	 *            {@code String} ({@code null} or blank if not used)
-	 *            that indicates an optional zone for the query
+	 *            {@code String} ({@code null} or blank if not used) that indicates
+	 *            an optional zone for the query
 	 * @return {@link IRODSQueryResultSet}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSQueryResultSet executeTranslatedIRODSQuery(
-			final TranslatedIRODSGenQuery translatedIRODSQuery,
-			final int continueIndex, final int partialStartIndex,
-			final QueryCloseBehavior queryCloseBehavior, final String zoneName)
-			throws JargonException {
+	public IRODSQueryResultSet executeTranslatedIRODSQuery(final TranslatedIRODSGenQuery translatedIRODSQuery,
+			final int continueIndex, final int partialStartIndex, final QueryCloseBehavior queryCloseBehavior,
+			final String zoneName) throws JargonException {
 
 		if (continueIndex < 0) {
 			throw new JargonException("continue index must be >= 0");
 		}
 
 		if (partialStartIndex < 0) {
-			throw new JargonException(
-					"partial start index cannot be less than zero");
+			throw new JargonException("partial start index cannot be less than zero");
 		}
 
 		GenQueryInp genQueryInp;
 
 		if (partialStartIndex == 0) {
-			genQueryInp = GenQueryInp.instance(translatedIRODSQuery,
-					continueIndex, zoneName);
+			genQueryInp = GenQueryInp.instance(translatedIRODSQuery, continueIndex, zoneName);
 		} else {
-			genQueryInp = GenQueryInp.instanceWithPartialStart(
-					translatedIRODSQuery, partialStartIndex, zoneName);
+			genQueryInp = GenQueryInp.instanceWithPartialStart(translatedIRODSQuery, partialStartIndex, zoneName);
 		}
 
 		Tag response = null;
@@ -84,30 +85,26 @@ public class GenQueryProcessor {
 		try {
 			response = sendGenQueryAndReturnResponse(genQueryInp);
 
-			int continuation = QueryResultProcessingUtils
-					.getContinuationValue(response);
+			int continuation = QueryResultProcessingUtils.getContinuationValue(response);
 
 			log.info("continuation value: {}", continuation);
 
 			// get a list of the column names
 			List<String> columnNames = new ArrayList<String>();
 
-			for (GenQuerySelectField selectField : translatedIRODSQuery
-					.getSelectFields()) {
+			for (GenQuerySelectField selectField : translatedIRODSQuery.getSelectFields()) {
 				columnNames.add(selectField.getSelectFieldColumnName());
 			}
 
 			int totalRecords = response.getTag("totalRowCount").getIntValue();
 			log.info("total records:{}", totalRecords);
 
-			result = QueryResultProcessingUtils.translateResponseIntoResultSet(
-					response, columnNames, continuation, partialStartIndex);
+			result = QueryResultProcessingUtils.translateResponseIntoResultSet(response, columnNames, continuation,
+					partialStartIndex);
 
-			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
-					result, continuation, totalRecords);
+			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery, result, continuation, totalRecords);
 
-			if (resultSet.isHasMoreRecords()
-					&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
+			if (resultSet.isHasMoreRecords() && queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
 				log.info("auto closing result set");
 				closeResults(resultSet);
 			}
@@ -116,8 +113,7 @@ public class GenQueryProcessor {
 		} catch (DataNotFoundException dnf) {
 			log.info("response from IRODS call indicates no rows found");
 			result = new ArrayList<IRODSQueryResultRow>();
-			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery,
-					result, 0, 0);
+			resultSet = IRODSQueryResultSet.instance(translatedIRODSQuery, result, 0, 0);
 			return resultSet;
 		} finally {
 			if (resultSet != null // && resultSet.isHasMoreRecords()
@@ -130,17 +126,17 @@ public class GenQueryProcessor {
 
 	/**
 	 * Send the query
-	 * 
+	 *
 	 * @param genQueryInp
-	 * @return {@link Tag}
+	 *            {@link GenQueryInp} with the packing instruction
+	 * @return {@link Tag} with the return result
 	 * @throws JargonException
-	 * @throws DataNotFoundException
+	 *             for iRODS error
 	 */
-	public Tag sendGenQueryAndReturnResponse(final GenQueryInp genQueryInp)
-			throws JargonException, DataNotFoundException {
+	public Tag sendGenQueryAndReturnResponse(final GenQueryInp genQueryInp) throws JargonException {
 
-		Tag response = irodsCommands.irodsFunction(IRODSConstants.RODS_API_REQ,
-				genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
+		Tag response = irodsCommands.irodsFunction(IRODSConstants.RODS_API_REQ, genQueryInp.getParsedTags(),
+				GenQueryInp.API_NBR);
 
 		return response;
 	}
@@ -149,10 +145,11 @@ public class GenQueryProcessor {
 	 * send the notification to iRODS to close the query result set.
 	 *
 	 * @param irodsQueryResultSet
+	 *            {@link IRODSQueryResultSet} to close
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public void closeResults(final IRODSQueryResultSet irodsQueryResultSet)
-			throws JargonException {
+	public void closeResults(final IRODSQueryResultSet irodsQueryResultSet) throws JargonException {
 
 		log.info("getting more results for query");
 		if (irodsQueryResultSet == null) {
@@ -164,8 +161,7 @@ public class GenQueryProcessor {
 			return;
 		}
 
-		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(
-				irodsQueryResultSet.getTranslatedIRODSQuery(),
+		GenQueryInp genQueryInp = GenQueryInp.instanceForCloseQuery(irodsQueryResultSet.getTranslatedIRODSQuery(),
 				irodsQueryResultSet.getContinuationIndex());
 		sendGenQueryAndReturnResponse(genQueryInp);
 
@@ -173,27 +169,27 @@ public class GenQueryProcessor {
 
 	/**
 	 * translate the given query
-	 * 
+	 *
 	 * @param irodsQuery
-	 * @return {@link TranslatedIRODSGenQuery}
+	 *            {@link AbstractIRODSGenQuery}
+	 * @return {@link TranslatedIRODSGenQuery} translated into runnable form
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws JargonQueryException
+	 *             if the query is malformed
 	 */
-	public TranslatedIRODSGenQuery translateProvidedQuery(
-			final AbstractIRODSGenQuery irodsQuery) throws JargonException,
-			JargonQueryException {
+	public TranslatedIRODSGenQuery translateProvidedQuery(final AbstractIRODSGenQuery irodsQuery)
+			throws JargonException, JargonQueryException {
 		TranslatedIRODSGenQuery translatedIRODSQuery = null;
 
 		if (irodsQuery instanceof IRODSGenQuery) {
 			IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
 					irodsCommands.getIRODSServerProperties());
-			translatedIRODSQuery = irodsQueryTranslator
-					.getTranslatedQuery((IRODSGenQuery) irodsQuery);
+			translatedIRODSQuery = irodsQueryTranslator.getTranslatedQuery((IRODSGenQuery) irodsQuery);
 
 		} else if (irodsQuery instanceof IRODSGenQueryFromBuilder) {
 			try {
-				translatedIRODSQuery = ((IRODSGenQueryFromBuilder) irodsQuery)
-						.convertToTranslatedIRODSGenQuery();
+				translatedIRODSQuery = ((IRODSGenQueryFromBuilder) irodsQuery).convertToTranslatedIRODSGenQuery();
 			} catch (GenQueryBuilderException e) {
 				throw new JargonException("invalid builder query", e);
 			}

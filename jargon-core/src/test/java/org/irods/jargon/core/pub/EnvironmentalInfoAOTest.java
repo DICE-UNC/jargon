@@ -109,6 +109,7 @@ public class EnvironmentalInfoAOTest {
 
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0")) {
 			return;
+
 		}
 
 		ClientHints hints = ((EnvironmentalInfoAOImpl) environmentalInfoAO).retrieveClientHints(true);

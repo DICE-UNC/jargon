@@ -25,18 +25,19 @@ public class FileTreeDiffEntry {
 	private boolean resolved = false;
 
 	/**
-	 * Optional field that can be filled in post tree generation that rolls up
-	 * diffs in children, usually through a tree post-processing phase
+	 * Optional field that can be filled in post tree generation that rolls up diffs
+	 * in children, usually through a tree post-processing phase
 	 */
 	private int countOfDiffsInChildren = 0;
 
 	private final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry;
 
 	/**
-	 * Classify this as a diff (an actual difference was noted), or as a
-	 * non-diff entry that simply describes the tree
+	 * 
+	 * Classify this as a diff (an actual difference was noted), or as a non-diff
+	 * entry that simply describes the tree
 	 *
-	 * @return <code>true</code> if this is an actual diff
+	 * @return {@code true} if this is an actual diff
 	 */
 	public boolean isCountAsDiff() {
 		boolean isDiff = true;
@@ -56,10 +57,10 @@ public class FileTreeDiffEntry {
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            {@code String} with the absolute path to the opposite file,
-	 *            this would, for example, be the parent collection where the
-	 *            file is 'missing' from
-	 * @return
+	 *            {@code String} with the absolute path to the opposite file, this
+	 *            would, for example, be the parent collection where the file is
+	 *            'missing' from
+	 * @return {@link FileTreeDiffEntry}
 	 */
 	public static FileTreeDiffEntry instance(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
@@ -77,15 +78,14 @@ public class FileTreeDiffEntry {
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            {@code String} with the absolute path to the opposite file,
-	 *            this would, for example, be the parent collection where the
-	 *            file is 'missing' from
+	 *            {@code String} with the absolute path to the opposite file, this
+	 *            would, for example, be the parent collection where the file is
+	 *            'missing' from
 	 * @param lengthRhsFile
 	 *            {@code long} with the length of the right hand side file, or 0
 	 * @param timestampRhsFile
-	 *            {@code long} with the timestamp of the right hand side file,
-	 *            or 0
-	 * @return
+	 *            {@code long} with the timestamp of the right hand side file, or 0
+	 * @return {@link FileTreeDiffEntry}
 	 */
 	public static FileTreeDiffEntry instance(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
@@ -103,9 +103,9 @@ public class FileTreeDiffEntry {
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            {@code String} with the absolute path to the opposite file,
-	 *            this would, for example, be the parent collection where the
-	 *            file is 'missing' from
+	 *            {@code String} with the absolute path to the opposite file, this
+	 *            would, for example, be the parent collection where the file is
+	 *            'missing' from
 	 * @param lengthRhsFile
 	 *            {@code long} with the length of the right hand side file, or 0
 	 * @param checksumThisFile
@@ -113,9 +113,8 @@ public class FileTreeDiffEntry {
 	 * @param checksumOppositeFile
 	 *            {@code String} with the checksum of the corresponding file
 	 * @param timestampRhsFile
-	 *            {@code long} with the timestamp of the right hand side file,
-	 *            or 0
-	 * @return
+	 *            {@code long} with the timestamp of the right hand side file, or 0
+	 * @return {@link FileTreeDiffEntry}
 	 */
 	public static FileTreeDiffEntry instanceForFileDiff(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,

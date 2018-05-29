@@ -1,8 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,8 +18,7 @@ public class GetTempPasswordForOtherTest {
 	@Test
 	public final void testGetTagValue() throws Exception {
 		String testUser = "testUser";
-		GetTempPasswordForOther instance = GetTempPasswordForOther
-				.instance(testUser);
+		GetTempPasswordForOther instance = GetTempPasswordForOther.instance(testUser);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<getTempPasswordForOtherInp_PI><targetUser>testUser</targetUser>\n");
@@ -29,19 +27,16 @@ public class GetTempPasswordForOtherTest {
 
 		String tagValue = instance.getParsedTags();
 		Assert.assertNotNull("no tag value returned", tagValue);
-		Assert.assertEquals("did not get expected tags", sb.toString(),
-				tagValue);
+		Assert.assertEquals("did not get expected tags", sb.toString(), tagValue);
 
 	}
 
 	@Test
 	public final void testInstance() {
 		String testUser = "testUser";
-		GetTempPasswordForOther instance = GetTempPasswordForOther
-				.instance(testUser);
+		GetTempPasswordForOther instance = GetTempPasswordForOther.instance(testUser);
 		Assert.assertNotNull("null instance returned", instance);
-		Assert.assertEquals("wrong API number",
-				GetTempPasswordForOther.GET_TEMP_PASSWORD_FOR_OTHER_API_NBR,
+		Assert.assertEquals("wrong API number", GetTempPasswordForOther.GET_TEMP_PASSWORD_FOR_OTHER_API_NBR,
 				instance.getApiNumber());
 	}
 

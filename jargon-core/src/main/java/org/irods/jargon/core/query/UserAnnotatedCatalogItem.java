@@ -13,8 +13,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
-		implements Serializable {
+public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject implements Serializable {
 
 	/**
 	 *
@@ -41,17 +40,17 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 	 * constructor that ignores created, modified dates and data size
 	 * 
 	 * @param metadataDomain
-	 *            {@link MetadataDomain} enum value that describes the iCAT
-	 *            domain the annotation is for
+	 *            {@link MetadataDomain} enum value that describes the iCAT domain
+	 *            the annotation is for
 	 * @param domainUniqueName
-	 *            {@code String} with the unique identifier of the domain.
-	 *            For files and collections this is the iRODS absolute path
+	 *            {@code String} with the unique identifier of the domain. For files
+	 *            and collections this is the iRODS absolute path
 	 * @param userName
-	 *            {@code String} with the user name for which the item is
-	 *            annotated (these annotations are per user)
+	 *            {@code String} with the user name for which the item is annotated
+	 *            (these annotations are per user)
 	 */
-	public UserAnnotatedCatalogItem(final MetadataDomain metadataDomain,
-			final String domainUniqueName, final String userName) {
+	public UserAnnotatedCatalogItem(final MetadataDomain metadataDomain, final String domainUniqueName,
+			final String userName) {
 		super();
 
 		if (metadataDomain == null) {
@@ -78,11 +77,11 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 	 * All fields constructor
 	 * 
 	 * @param metadataDomain
-	 *            {@link MetadataDomain} enum value that describes the iCAT
-	 *            domain the annotation is for
+	 *            {@link MetadataDomain} enum value that describes the iCAT domain
+	 *            the annotation is for
 	 * @param domainUniqueName
-	 *            <code>String</code> with the unique identifier of the domain.
-	 *            For files and collections this is the iRODS absolute path
+	 *            <code>String</code> with the unique identifier of the domain. For
+	 *            files and collections this is the iRODS absolute path
 	 * @param userName
 	 *            <code>String</code> with the user name for which the item is
 	 *            annotated (these annotations are per user)
@@ -93,9 +92,8 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 	 * @param modifiedAt
 	 *            {@link Date} created, can be <code>null</code>
 	 */
-	public UserAnnotatedCatalogItem(MetadataDomain metadataDomain,
-			String domainUniqueName, String userName, long dataSize,
-			Date createdAt, Date modifiedAt) {
+	public UserAnnotatedCatalogItem(MetadataDomain metadataDomain, String domainUniqueName, String userName,
+			long dataSize, Date createdAt, Date modifiedAt) {
 		super();
 
 		if (metadataDomain == null) {

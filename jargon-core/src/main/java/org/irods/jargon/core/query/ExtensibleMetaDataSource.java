@@ -24,7 +24,6 @@ public interface ExtensibleMetaDataSource {
 	 * @throws JargonException
 	 *             an {@code Exception} that wraps any underlying issue
 	 */
-	public ExtensibleMetaDataMapping generateExtensibleMetaDataMapping()
-			throws JargonException;
+	public ExtensibleMetaDataMapping generateExtensibleMetaDataMapping() throws JargonException;
 
 }

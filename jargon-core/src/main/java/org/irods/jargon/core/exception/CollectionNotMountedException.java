@@ -18,18 +18,16 @@ public class CollectionNotMountedException extends JargonException {
 	 */
 	private static final long serialVersionUID = 6576019768482482164L;
 
-	public CollectionNotMountedException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public CollectionNotMountedException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public CollectionNotMountedException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public CollectionNotMountedException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public CollectionNotMountedException(final String message,
-			final Throwable cause) {
+	public CollectionNotMountedException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -37,8 +35,7 @@ public class CollectionNotMountedException extends JargonException {
 		super(message);
 	}
 
-	public CollectionNotMountedException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public CollectionNotMountedException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 

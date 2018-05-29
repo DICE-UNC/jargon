@@ -26,22 +26,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ IRODSFileFactoryImplTest.class, IRODSFileImplTest.class,
-		IRODSFileSystemAOImplTest.class, IRODSFileOutputStreamTest.class,
-		IRODSFileInputStreamTest.class, FileIOOperationsAOImplTest.class,
-		IRODSRandomAccessFileTest.class, IRODSFileWriterTest.class,
-		IRODSFileReaderTest.class,
-		SessionClosingIRODSFIleInputStreamTest.class,
-		SessionClosingIRODSFileOutputStreamTest.class,
-		RemoteExecutionBinaryResultInputStreamTest.class,
-		ByteCountingCallbackInputStreamWrapperTest.class,
+@Suite.SuiteClasses({ IRODSFileFactoryImplTest.class, IRODSFileImplTest.class, IRODSFileSystemAOImplTest.class,
+		IRODSFileOutputStreamTest.class, IRODSFileInputStreamTest.class, FileIOOperationsAOImplTest.class,
+		IRODSRandomAccessFileTest.class, IRODSFileWriterTest.class, IRODSFileReaderTest.class,
+		SessionClosingIRODSFIleInputStreamTest.class, SessionClosingIRODSFileOutputStreamTest.class,
+		RemoteExecutionBinaryResultInputStreamTest.class, ByteCountingCallbackInputStreamWrapperTest.class,
 		FederatedIRODSFileImplTest.class, IRODSFileImplForSoftLinksTest.class,
-		IRODSFIleInputStreamForSoftLinksTest.class,
-		IRODSFileOutputStreamForSoftLinksTest.class,
-		MountedFilesystemIRODSFileImplTest.class,
-		MountedFileSystemIRODSFileInputStreamTest.class,
-		MountedFilesystemIRODSFileOutputStreamTest.class,
-		PackingIrodsOutputStreamTest.class, PackingIrodsInputStreamTest.class })
+		IRODSFIleInputStreamForSoftLinksTest.class, IRODSFileOutputStreamForSoftLinksTest.class,
+		MountedFilesystemIRODSFileImplTest.class, MountedFileSystemIRODSFileInputStreamTest.class,
+		MountedFilesystemIRODSFileOutputStreamTest.class, PackingIrodsOutputStreamTest.class,
+		PackingIrodsInputStreamTest.class })
 public class FileTests {
 
 }

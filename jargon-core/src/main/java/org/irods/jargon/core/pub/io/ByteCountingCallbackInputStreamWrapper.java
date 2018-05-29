@@ -22,22 +22,20 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 	private final InputStream inputStream;
 
 	/**
-	 * Default constructor gives a required listener for status callbacks on
-	 * stream operations
+	 * Default constructor gives a required listener for status callbacks on stream
+	 * operations
 	 *
 	 * @param connectionProgressStatusListener
-	 *            {@link ConnectionProgressStatusListener} that can handle
-	 *            callbacks as the stream is read. This is required.
+	 *            {@link ConnectionProgressStatusListener} that can handle callbacks
+	 *            as the stream is read. This is required.
 	 * @param inputStream
 	 *            {@code InputStream} to be wrapped
 	 */
 	public ByteCountingCallbackInputStreamWrapper(
-			final ConnectionProgressStatusListener connectionProgressStatusListener,
-			final InputStream inputStream) {
+			final ConnectionProgressStatusListener connectionProgressStatusListener, final InputStream inputStream) {
 
 		if (connectionProgressStatusListener == null) {
-			throw new IllegalArgumentException(
-					"null connectionProgressStatusListener");
+			throw new IllegalArgumentException("null connectionProgressStatusListener");
 		}
 
 		if (inputStream == null) {
@@ -56,12 +54,11 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	@Override
-	public int read(final byte[] b, final int off, final int len)
-			throws IOException {
+	public int read(final byte[] b, final int off, final int len) throws IOException {
 
 		int read = inputStream.read(b, off, len);
 
@@ -72,7 +69,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#read(byte[])
 	 */
 	@Override
@@ -90,16 +87,14 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 	 */
 	private void callbackOnRead(final int read) {
 		if (read > 0) {
-			ConnectionProgressStatus status = ConnectionProgressStatus
-					.instanceForReceive(read);
-			connectionProgressStatusListener
-					.connectionProgressStatusCallback(status);
+			ConnectionProgressStatus status = ConnectionProgressStatus.instanceForReceive(read);
+			connectionProgressStatusListener.connectionProgressStatusCallback(status);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#available()
 	 */
 	@Override
@@ -109,7 +104,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#close()
 	 */
 	@Override
@@ -119,7 +114,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#mark(int)
 	 */
 	@Override
@@ -129,7 +124,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#markSupported()
 	 */
 	@Override
@@ -140,7 +135,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#reset()
 	 */
 	@Override
@@ -150,7 +145,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#skip(long)
 	 */
 	@Override

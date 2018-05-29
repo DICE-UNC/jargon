@@ -12,8 +12,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
  * <p>
  * Typically, jargon 'services' are created by a factory themselves, and this
  * allows easier mocking of the objects for testing. One may inject a mock
- * {@code IRODSAccessObjectFactory} and then test services without
- * requiring an actual iRODS server connection.
+ * {@code IRODSAccessObjectFactory} and then test services without requiring an
+ * actual iRODS server connection.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -32,8 +32,7 @@ public abstract class AbstractJargonService {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */
-	public AbstractJargonService(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public AbstractJargonService(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 
 		if (irodsAccessObjectFactory == null) {
@@ -53,8 +52,8 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * get the {@code IRODSAccessObjectFactory} that is the key object for
-	 * creating Jargon services.
+	 * get the {@code IRODSAccessObjectFactory} that is the key object for creating
+	 * Jargon services.
 	 *
 	 * @return {@link IRODSAccessObjectFactory}
 	 */
@@ -63,20 +62,19 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * Set the {@code IRODSAccessObjectFactory} that is the key object for
-	 * creating Jargon services.
+	 * Set the {@code IRODSAccessObjectFactory} that is the key object for creating
+	 * Jargon services.
 	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 */
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
 	/**
-	 * Get the {@code IRODSAccount} that will be used to create objects
-	 * from the {@code IRODSAccessObjectFactory}
+	 * Get the {@code IRODSAccount} that will be used to create objects from the
+	 * {@code IRODSAccessObjectFactory}
 	 *
 	 * @return {@link IRODSAccount}
 	 */
@@ -85,8 +83,8 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * Set the {@code IRODSAccount} that will be used to create objects
-	 * from the {@code IRODSAccessObjectFactory}
+	 * Set the {@code IRODSAccount} that will be used to create objects from the
+	 * {@code IRODSAccessObjectFactory}
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}

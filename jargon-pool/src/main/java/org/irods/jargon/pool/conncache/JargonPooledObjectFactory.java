@@ -17,8 +17,8 @@ public class JargonPooledObjectFactory
 	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
 
 	/**
-	 * Expected injected dependency {@link IRODSSimpleProtocolManager} that will
-	 * be the source of the actual live connection.
+	 * Expected injected dependency {@link IRODSSimpleProtocolManager} that will be
+	 * the source of the actual live connection.
 	 */
 	private IRODSProtocolManager irodsSimpleProtocolManager;
 
@@ -67,14 +67,15 @@ public class JargonPooledObjectFactory
 	}
 
 	@Override
-	public void destroyObject(IRODSAccount key, PooledObject<AbstractIRODSMidLevelProtocol> p) throws Exception {
+	public void destroyObject(final IRODSAccount key, final PooledObject<AbstractIRODSMidLevelProtocol> p)
+			throws Exception {
 		log.info("disconnecting()");
 		p.getObject().shutdown();
 		super.destroyObject(key, p);
 	}
 
 	@Override
-	public boolean validateObject(IRODSAccount key, PooledObject<AbstractIRODSMidLevelProtocol> p) {
+	public boolean validateObject(final IRODSAccount key, final PooledObject<AbstractIRODSMidLevelProtocol> p) {
 
 		return p.getObject().isConnected();
 	}

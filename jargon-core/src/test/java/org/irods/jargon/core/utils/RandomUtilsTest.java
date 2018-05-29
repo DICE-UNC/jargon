@@ -1,7 +1,6 @@
 package org.irods.jargon.core.utils;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 public class RandomUtilsTest {

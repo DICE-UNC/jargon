@@ -9,12 +9,11 @@ package org.irods.jargon.core.query;
  */
 public enum QueryConditionOperators {
 
-	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_LIKE(
-			"not like"), SOUNDS_LIKE("sounds like"), SOUNDS_NOT_LIKE(
-			"sounds not like"), TABLE("table"), NUMERIC_LESS_THAN("n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO(
-			"n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO("n>="), NUMERIC_GREATER_THAN(
-			"n>"), NUMERIC_EQUAL("n="), EQUAL("="), LESS_THAN("<"), GREATER_THAN(
-			">"), IN("in"), BETWEEN("between"), LIKE("like");
+	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_LIKE("not like"), SOUNDS_LIKE(
+			"sounds like"), SOUNDS_NOT_LIKE("sounds not like"), TABLE("table"), NUMERIC_LESS_THAN(
+					"n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO("n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO(
+							"n>="), NUMERIC_GREATER_THAN("n>"), NUMERIC_EQUAL("n="), EQUAL(
+									"="), LESS_THAN("<"), GREATER_THAN(">"), IN("in"), BETWEEN("between"), LIKE("like");
 
 	private String operatorAsString;
 
@@ -26,8 +25,7 @@ public enum QueryConditionOperators {
 		return operatorAsString;
 	}
 
-	public static QueryConditionOperators getOperatorFromEnumStringValue(
-			final String stringValue) {
+	public static QueryConditionOperators getOperatorFromEnumStringValue(final String stringValue) {
 		if (stringValue == null || stringValue.isEmpty()) {
 			throw new IllegalArgumentException("null or empty stringValue");
 		}
@@ -58,12 +56,10 @@ public enum QueryConditionOperators {
 		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN.toString())) {
 			return NUMERIC_LESS_THAN;
 		}
-		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN_OR_EQUAL_TO
-				.toString())) {
+		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN_OR_EQUAL_TO.toString())) {
 			return NUMERIC_LESS_THAN_OR_EQUAL_TO;
 		}
-		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN_OR_EQUAL_TO
-				.toString())) {
+		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN_OR_EQUAL_TO.toString())) {
 			return NUMERIC_GREATER_THAN_OR_EQUAL_TO;
 		}
 		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN.toString())) {
@@ -95,80 +91,4 @@ public enum QueryConditionOperators {
 
 	}
 
-	/**
-	 * Get the query operator from the genQuery freindly string value
-	 * 
-	 * @param stringValue
-	 * @return
-	 */
-	public static QueryConditionOperators getOperatorFromStringValue(
-			final String stringValue) {
-		if (stringValue == null || stringValue.isEmpty()) {
-			throw new IllegalArgumentException("null or empty stringValue");
-		}
-
-		if (stringValue.equalsIgnoreCase(NOT_EQUAL.operatorAsString)) {
-			return NOT_EQUAL;
-		}
-
-		if (stringValue
-				.equalsIgnoreCase(LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
-			return LESS_THAN_OR_EQUAL_TO;
-		}
-
-		if (stringValue
-				.equalsIgnoreCase(GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
-			return GREATER_THAN_OR_EQUAL_TO;
-		}
-		if (stringValue.equalsIgnoreCase(NOT_LIKE.operatorAsString)) {
-			return NOT_LIKE;
-		}
-		if (stringValue.equalsIgnoreCase(SOUNDS_LIKE.operatorAsString)) {
-			return SOUNDS_LIKE;
-		}
-		if (stringValue.equalsIgnoreCase(SOUNDS_NOT_LIKE.operatorAsString)) {
-			return SOUNDS_NOT_LIKE;
-		}
-		if (stringValue.equalsIgnoreCase(TABLE.operatorAsString)) {
-			return TABLE;
-		}
-		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN.operatorAsString)) {
-			return NUMERIC_LESS_THAN;
-		}
-		if (stringValue
-				.equalsIgnoreCase(NUMERIC_LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
-			return NUMERIC_LESS_THAN_OR_EQUAL_TO;
-		}
-		if (stringValue
-				.equalsIgnoreCase(NUMERIC_GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
-			return NUMERIC_GREATER_THAN_OR_EQUAL_TO;
-		}
-		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN.operatorAsString)) {
-			return NUMERIC_GREATER_THAN;
-		}
-		if (stringValue.equalsIgnoreCase(NUMERIC_EQUAL.operatorAsString)) {
-			return NUMERIC_EQUAL;
-		}
-		if (stringValue.equalsIgnoreCase(EQUAL.operatorAsString)) {
-			return EQUAL;
-		}
-		if (stringValue.equalsIgnoreCase(LESS_THAN.operatorAsString)) {
-			return LESS_THAN;
-		}
-		if (stringValue.equalsIgnoreCase(GREATER_THAN.operatorAsString)) {
-			return GREATER_THAN;
-		}
-		if (stringValue.equalsIgnoreCase(IN.operatorAsString)) {
-			return IN;
-		}
-		if (stringValue.equalsIgnoreCase(BETWEEN.operatorAsString)) {
-			return BETWEEN;
-		}
-		if (stringValue.equals(LIKE.operatorAsString)) {
-			return LIKE;
-		}
-
-		return null;
-
-	}
 }

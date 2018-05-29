@@ -5,8 +5,6 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -21,6 +19,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -54,43 +53,35 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 			return;
 		}
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		String testFilePrefix = "FederatedIRODSGenQueryExecutorImplTest";
 		String testFileSuffix = ".txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
-		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
-				+ '/' + collDir, testFilePrefix, testFileSuffix, 100, 5, 10);
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH + '/' + collDir, testFilePrefix,
+				testFileSuffix, 100, 5, 10);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		// make the put subdir
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		IRODSFile putSubdir = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
+		IRODSFile putSubdir = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
 		putSubdir.mkdirs();
 
-		DataTransferOperations dataTransferOperations = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		TransferControlBlock tcb = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		TransferControlBlock tcb = irodsFileSystem.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
-		dataTransferOperations.putOperation(absPath + collDir,
-				targetIrodsCollection, "", null, tcb);
+		dataTransferOperations.putOperation(absPath + collDir, targetIrodsCollection, "", null, tcb);
 
 	}
 
@@ -103,37 +94,27 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 	}
 
 	@Test
-	public final void testExecuteBasicIRODSQueryOnFederatedZoneAndClose()
-			throws Exception {
+	public final void testExecuteBasicIRODSQueryOnFederatedZoneAndClose() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
 
-		String queryString = "select "
-				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName() + " ,"
+		String queryString = "select " + RodsGenQueryEnum.COL_R_RESC_NAME.getName() + " ,"
 				+ RodsGenQueryEnum.COL_R_ZONE_NAME.getName();
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
-				.executeIRODSQueryAndCloseResultInZone(
-						irodsQuery,
-						0,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
+				0, testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
 
 		Assert.assertNotNull(resultSet);
-		Assert.assertTrue("no results in result set, query failed", resultSet
-				.getResults().size() > 0);
+		Assert.assertTrue("no results in result set, query failed", resultSet.getResults().size() > 0);
 	}
 
 	@Test
@@ -143,37 +124,27 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
 
-		String queryString = "select "
-				+ RodsGenQueryEnum.COL_COLL_NAME.getName() + " WHERE "
-				+ RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName() + " = '"
-				+ targetIrodsCollection + "'";
+		String queryString = "select " + RodsGenQueryEnum.COL_COLL_NAME.getName() + " WHERE "
+				+ RodsGenQueryEnum.COL_COLL_PARENT_NAME.getName() + " = '" + targetIrodsCollection + "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = accessObjectFactory.getIRODSGenQueryExecutor(irodsAccount);
 
-		IRODSQueryResultSet resultSet = irodsGenQueryExecutor
-				.executeIRODSQueryInZone(
-						irodsQuery,
-						0,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
+		IRODSQueryResultSet resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(irodsQuery, 0,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
 		irodsGenQueryExecutor.closeResults(resultSet);
 
 		Assert.assertNotNull(resultSet);
-		Assert.assertTrue("no results in result set, query failed", resultSet
-				.getResults().size() > 0);
+		Assert.assertTrue("no results in result set, query failed", resultSet.getResults().size() > 0);
 
 	}
 

@@ -38,8 +38,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 	private static final Logger log = LoggerFactory.getLogger(ZoneAOImpl.class);
 
-	protected ZoneAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected ZoneAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
@@ -51,31 +50,25 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 	@Override
 	public List<Zone> listZones() throws JargonException {
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
+		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(getIRODSSession(),
+				getIRODSAccount());
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSet resultSet;
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_TYPE)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_ZONE_CONNECTION)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_TYPE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_CONNECTION)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_COMMENT)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_ZONE_CREATE_TIME)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_ZONE_MODIFY_TIME)
-									.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME,
-											OrderByType.ASC);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_CREATE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_MODIFY_TIME)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME, OrderByType.ASC);
 
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(50);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(50);
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
 		} catch (JargonQueryException e) {
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in query", e);
@@ -99,8 +92,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 	}
 
-	private Zone buildZoneForRow(final IRODSQueryResultRow row)
-			throws JargonException {
+	private Zone buildZoneForRow(final IRODSQueryResultRow row) throws JargonException {
 		Zone zone;
 		zone = new Zone();
 		zone.setZoneId(row.getColumn(0));
@@ -108,10 +100,8 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 		zone.setZoneType(row.getColumn(2));
 		zone.setZoneConnection(row.getColumn(3));
 		zone.setZoneComment(row.getColumn(4));
-		zone.setZoneCreateTime(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(5)));
-		zone.setZoneModifyTime(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(6)));
+		zone.setZoneCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(5)));
+		zone.setZoneModifyTime(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(6)));
 
 		String[] components = zone.getZoneConnection().split(":");
 		if (components.length == 0) {
@@ -123,14 +113,11 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 			try {
 				zone.setPort(Integer.parseInt(components[1]));
 			} catch (NumberFormatException e) {
-				log.error("unable to parse connection string:{}",
-						zone.getZoneConnection(), e);
-				throw new JargonException(
-						"error parsing zone connection string", e);
+				log.error("unable to parse connection string:{}", zone.getZoneConnection(), e);
+				throw new JargonException("error parsing zone connection string", e);
 			}
 		} else {
-			throw new JargonException(
-					"unable to parse connection for host and port");
+			throw new JargonException("unable to parse connection for host and port");
 		}
 		return zone;
 	}
@@ -141,8 +128,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 	 * @see org.irods.jargon.core.pub.ZoneAO#getZoneByName(java.lang.String)
 	 */
 	@Override
-	public Zone getZoneByName(final String zoneName) throws JargonException,
-	DataNotFoundException {
+	public Zone getZoneByName(final String zoneName) throws JargonException, DataNotFoundException {
 
 		if (zoneName.equals("tempZone")) {
 			Zone tempZone = new Zone();
@@ -150,8 +136,8 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 			return tempZone;
 		}
 
-		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
+		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(getIRODSSession(),
+				getIRODSAccount());
 		StringBuilder zoneQuery = new StringBuilder();
 		char comma = ',';
 
@@ -184,8 +170,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for:" + queryString, e);
 			throw new JargonException("error in query");
@@ -211,22 +196,19 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 	@Override
 	public List<String> listZoneNames() throws JargonException {
 		log.info("listZoneNames()");
-		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
+		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(getIRODSSession(),
+				getIRODSAccount());
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSet resultSet;
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
-			.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME,
-					OrderByType.ASC);
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME, OrderByType.ASC);
 
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(50);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(50);
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
 		} catch (JargonQueryException e) {
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in query", e);

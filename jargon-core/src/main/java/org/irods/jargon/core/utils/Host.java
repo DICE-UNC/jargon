@@ -41,9 +41,9 @@
 package org.irods.jargon.core.utils;
 
 /**
- * <DIV ALIGN=JUSTIFY> The Host class describes important attributes of the
- * current host processor, compiler, and operating system. Attributes include:
- * <P>
+ * <DIV > The Host class describes important attributes of the current host
+ * processor, compiler, and operating system. Attributes include:
+ *
  * <UL>
  * <LI>Byte order
  * <LI>Data type storage sizes
@@ -56,15 +56,15 @@ package org.irods.jargon.core.utils;
  * <P>
  * <B>Attributes</B><BR>
  * <BLOCKQUOTE> <B>Byte order</B><BR>
- * For all data types requiring more than one byte (i.e., {@code sizeof(type)>1)},
- * the processor stores the value as a sequence of bytes. That sequence may place
- * the highest-order bytes first or last:
- * <P>
+ * For all data types requiring more than one byte (i.e.,
+ * {@code sizeof(type)>1)}, the processor stores the value as a sequence of
+ * bytes. That sequence may place the highest-order bytes first or last:
+ *
  * <UL>
  * <LI>Big endian = Most-significant Byte First = MBF
  * <LI>Little endian = Least-significant Byte First = LBF
  * </UL>
- * <P>
+ *
  * Intel processors are LBF, while most other processors are MBF. Java is always
  * MBF, regardless of processor.
  * <P>
@@ -110,66 +110,66 @@ public final class Host extends Object {
 
 	/**
 	 * A language primitive signed or unsigned char.
-	 * <P>
+	 *
 	 */
 	public static final int CHAR = 0;
 
 	/**
 	 * A language primitive signed or unsigned short integer.
-	 * <P>
+	 *
 	 */
 	public static final int SHORT = 1;
 
 	/**
 	 * A language primitive signed or unsigned integer.
-	 * <P>
+	 *
 	 */
 	public static final int INT = 2;
 
 	/**
 	 * A language primitive signed or unsigned long integer.
-	 * <P>
+	 *
 	 */
 	public static final int LONG = 3;
 
 	/**
 	 * A language primitive signed or unsigned long long integer.
-	 * <P>
+	 *
 	 */
 	public static final int LONGLONG = 4;
 
 	/**
 	 * A language primitive float.
-	 * <P>
+	 *
 	 */
 	public static final int FLOAT = 5;
 
 	/**
 	 * A language primitive double.
-	 * <P>
+	 *
 	 */
 	public static final int DOUBLE = 6;
 
 	/**
 	 * A language primitive long double.
-	 * <P>
+	 *
 	 */
 	public static final int LONGDOUBLE = 7;
 
 	/**
 	 * The number of language primitive types.
-	 * <P>
+	 *
 	 */
 	public static final int NUMBER_TYPES = 8;
 
 	/**
-	 * The guaranteed maximum number of bytes ever needed to hold the largest
-	 * data type. This value may used to pre-allocate byte arrays used for read,
-	 * writing, and byte-flipping values of any primitive data type.
+	 * The guaranteed maximum number of bytes ever needed to hold the largest data
+	 * type. This value may used to pre-allocate byte arrays used for read, writing,
+	 * and byte-flipping values of any primitive data type.
 	 * <P>
-	 * The maximum value is intentionally set large in order to accomodate
-	 * current and future architectures.
-	 * <P>
+	 * The maximum value is intentionally set large in order to accomodate current
+	 * and future architectures.
+	 *
 	 */
 	public static final int MAX_TYPE_SIZE = 64;
 
@@ -180,31 +180,32 @@ public final class Host extends Object {
 	 * Holds true if the host byte order is MBF, and false if LBF.
 	 * <P>
 	 * Note: Java is always MBF, regardless of host.
-	 * <P>
+	 *
 	 */
 	private static boolean isMBF = true;
 
 	/**
 	 * Holds a name for each data type.
-	 * <P>
+	 *
+	 * @return {@code String} with the type name
 	 */
-	private static final String typeName[] = { "char", "short", "int", "long",
-		"long long", "float", "double", "long double" };
+	private static final String typeName[] = { "char", "short", "int", "long", "long long", "float", "double",
+			"long double" };
 
 	/**
 	 * Holds the size, in bytes, of each of the language primitive types.
 	 * <P>
 	 * Note: Java type sizes are fixed, regardless of host.
-	 * <P>
+	 *
 	 */
 	private static final byte typeSize[] = { 1, // char
-		2, // short
-		4, // int
-		8, // long
-		8, // long long (doesn't exist in Java)
-		4, // float
-		8, // double
-		8, // long double (doesn't exist in Java)
+			2, // short
+			4, // int
+			8, // long
+			8, // long long (doesn't exist in Java)
+			4, // float
+			8, // double
+			8, // long double (doesn't exist in Java)
 	};
 
 	/**
@@ -212,38 +213,37 @@ public final class Host extends Object {
 	 * types.
 	 * <P>
 	 * Note: Java type significant bits are fixed, regardless of host.
-	 * <P>
+	 *
 	 */
 	private static final short typeBits[] = { 8, // char
-		16, // short
-		32, // int
-		64, // long
-		64, // long long (doesn't exist in Java)
-		32, // float
-		64, // double
-		64, // long double (doesn't exist in Java)
+			16, // short
+			32, // int
+			64, // long
+			64, // long long (doesn't exist in Java)
+			32, // float
+			64, // double
+			64, // long double (doesn't exist in Java)
 	};
 
 	/**
-	 * Holds the alignment boundary, in bytes, imposed by the compiler when
-	 * storing the language primitive types.
+	 * Holds the alignment boundary, in bytes, imposed by the compiler when storing
+	 * the language primitive types.
 	 * <P>
 	 * Note: This data in the C++ version of this code is used to enable pointer
 	 * casting for access to the raw bytes of stored multi-byte values. In Java,
-	 * there are no pointers, and so this feature is not available.
-	 * Additionally, without pointers it is not possible to clearly determine
-	 * alignment characteristics. We therefore default to the type size for all
-	 * values.
-	 * <P>
+	 * there are no pointers, and so this feature is not available. Additionally,
+	 * without pointers it is not possible to clearly determine alignment
+	 * characteristics. We therefore default to the type size for all values.
+	 *
 	 */
 	private static final byte typeCompilerAlignment[] = { 1, // char
-		2, // short
-		4, // int
-		8, // long
-		8, // long long (doesn't exist in Java)
-		4, // float
-		8, // double
-		8, // long double (doesn't exist in Java)
+			2, // short
+			4, // int
+			8, // long
+			8, // long long (doesn't exist in Java)
+			4, // float
+			8, // double
+			8, // long double (doesn't exist in Java)
 	};
 
 	// ----------------------------------------------------------------------
@@ -308,8 +308,7 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Gets the alignment boundary, in bytes, imposed by the compiler for the
-	 * type.
+	 * Gets the alignment boundary, in bytes, imposed by the compiler for the type.
 	 * <P>
 	 *
 	 * @param type
@@ -324,12 +323,11 @@ public final class Host extends Object {
 	// Swapping Methods
 	// ----------------------------------------------------------------------
 	/**
-	 * Reverses the byte order of the first nBytes of the byte array. This
-	 * method can be used to convert a byte array from Most- to
+	 * Reverses the byte order of the first nBytes of the byte array. This method
+	 * can be used to convert a byte array from Most- to
 	 * Least-significant-Byte-First, or vice versa.
 	 * <P>
-	 * The swap is done in-place, reversing the order of bytes in the given
-	 * array.
+	 * The swap is done in-place, reversing the order of bytes in the given array.
 	 * <P>
 	 *
 	 * @param bytes
@@ -389,12 +387,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Reverses the byte order of nBytes of the byte array, starting at the
-	 * given offset. This method can be used to convert a byte array from Most-
-	 * to Least-significant-Byte-First, or vice versa.
+	 * Reverses the byte order of nBytes of the byte array, starting at the given
+	 * offset. This method can be used to convert a byte array from Most- to
+	 * Least-significant-Byte-First, or vice versa.
 	 * <P>
-	 * The swap is done in-place, reversing the order of bytes in the given
-	 * array.
+	 * The swap is done in-place, reversing the order of bytes in the given array.
 	 * <P>
 	 *
 	 * @param bytes
@@ -404,8 +401,7 @@ public final class Host extends Object {
 	 * @param nBytes
 	 *            the number of bytes to swap
 	 */
-	public final static void swap(final byte[] bytes, final int offset,
-			final int nBytes) {
+	public final static void swap(final byte[] bytes, final int offset, final int nBytes) {
 		byte tmp;
 
 		// Use an accelerated path for common swap sizes
@@ -457,13 +453,12 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Reverses the byte order of nBytes of the byte array, doing it nTimes in a
-	 * row for consecutive runs of nBytes. This method can be used to convert a
-	 * byte array containing multiple values, swaping each one from Most- to
+	 * Reverses the byte order of nBytes of the byte array, doing it nTimes in a row
+	 * for consecutive runs of nBytes. This method can be used to convert a byte
+	 * array containing multiple values, swaping each one from Most- to
 	 * Least-significant-Byte-First, or vice versa.
 	 * <P>
-	 * The swap is done in-place, reversing the order of bytes in the given
-	 * array.
+	 * The swap is done in-place, reversing the order of bytes in the given array.
 	 * <P>
 	 *
 	 * @param bytes
@@ -473,8 +468,7 @@ public final class Host extends Object {
 	 * @param nTimes
 	 *            the number of times to do consecutive swaps
 	 */
-	public final static void swapMultiple(final byte[] bytes, final int nBytes,
-			final int nTimes) {
+	public final static void swapMultiple(final byte[] bytes, final int nBytes, final int nTimes) {
 		int offset = 0;
 		for (int i = 0; i < nTimes; i++) {
 			swap(bytes, offset, nBytes);
@@ -483,14 +477,12 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Reverses the byte order of nBytes of the byte array, starting at the
-	 * given offset, and doing it nTimes in a row for consecutive runs of
-	 * nBytes. This method can be used to convert a byte array containing
-	 * multiple values, swaping each one from Most- to
-	 * Least-significant-Byte-First, or vice versa.
+	 * Reverses the byte order of nBytes of the byte array, starting at the given
+	 * offset, and doing it nTimes in a row for consecutive runs of nBytes. This
+	 * method can be used to convert a byte array containing multiple values,
+	 * swaping each one from Most- to Least-significant-Byte-First, or vice versa.
 	 * <P>
-	 * The swap is done in-place, reversing the order of bytes in the given
-	 * array.
+	 * The swap is done in-place, reversing the order of bytes in the given array.
 	 * <P>
 	 *
 	 * @param bytes
@@ -502,8 +494,7 @@ public final class Host extends Object {
 	 * @param nTimes
 	 *            the number of times to do consecutive swaps
 	 */
-	public final static void swapMultiple(final byte[] bytes, int offset,
-			final int nBytes, final int nTimes) {
+	public final static void swapMultiple(final byte[] bytes, int offset, final int nBytes, final int nTimes) {
 		for (int i = 0; i < nTimes; i++) {
 			swap(bytes, offset, nBytes);
 			offset += nBytes;
@@ -519,14 +510,13 @@ public final class Host extends Object {
 	//
 	// Unsigned Byte
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Because Java doesn't support unsigned primitive types, this method
-	 * returns the value in the next larger data type, with the high bits set to
-	 * zeroes.
+	 * Because Java doesn't support unsigned primitive types, this method returns
+	 * the value in the next larger data type, with the high bits set to zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -539,10 +529,10 @@ public final class Host extends Object {
 
 	// Short
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -555,14 +545,13 @@ public final class Host extends Object {
 
 	// Unsigned Short
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Because Java doesn't support unsigned primitive types, this method
-	 * returns the value in the next larger data type, with the high bits set to
-	 * zeroes.
+	 * Because Java doesn't support unsigned primitive types, this method returns
+	 * the value in the next larger data type, with the high bits set to zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -575,10 +564,10 @@ public final class Host extends Object {
 
 	// Int
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -586,20 +575,19 @@ public final class Host extends Object {
 	 * @return the int value
 	 */
 	public final static int castToInt(final byte[] bytes) {
-		return ((bytes[0] & 0x00FF) << 24) | ((bytes[1] & 0x00FF) << 16)
-				| ((bytes[2] & 0x00FF) << 8) | (bytes[3] & 0x00FF);
+		return ((bytes[0] & 0x00FF) << 24) | ((bytes[1] & 0x00FF) << 16) | ((bytes[2] & 0x00FF) << 8)
+				| (bytes[3] & 0x00FF);
 	}
 
 	// Unsigned Int
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Because Java doesn't support unsigned primitive types, this method
-	 * returns the value in the next larger data type, with the high bits set to
-	 * zeroes.
+	 * Because Java doesn't support unsigned primitive types, this method returns
+	 * the value in the next larger data type, with the high bits set to zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -607,18 +595,16 @@ public final class Host extends Object {
 	 * @return the unsigned int value (as a long)
 	 */
 	public final static long castToUnsignedInt(final byte[] bytes) {
-		return (((long) bytes[0] & 0x00FF) << 24)
-				| (((long) bytes[1] & 0x00FF) << 16)
-				| (((long) bytes[2] & 0x00FF) << 8)
-				| ((long) bytes[3] & 0x00FF);
+		return (((long) bytes[0] & 0x00FF) << 24) | (((long) bytes[1] & 0x00FF) << 16)
+				| (((long) bytes[2] & 0x00FF) << 8) | ((long) bytes[3] & 0x00FF);
 	}
 
 	// Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -626,22 +612,18 @@ public final class Host extends Object {
 	 * @return the long value
 	 */
 	public final static long castToLong(final byte[] bytes) {
-		return (((long) bytes[0] & 0x00FF) << 56)
-				| (((long) bytes[1] & 0x00FF) << 48)
-				| (((long) bytes[2] & 0x00FF) << 40)
-				| (((long) bytes[3] & 0x00FF) << 32)
-				| (((long) bytes[4] & 0x00FF) << 24)
-				| (((long) bytes[5] & 0x00FF) << 16)
-				| (((long) bytes[6] & 0x00FF) << 8)
-				| ((long) bytes[7] & 0x00FF);
+		return (((long) bytes[0] & 0x00FF) << 56) | (((long) bytes[1] & 0x00FF) << 48)
+				| (((long) bytes[2] & 0x00FF) << 40) | (((long) bytes[3] & 0x00FF) << 32)
+				| (((long) bytes[4] & 0x00FF) << 24) | (((long) bytes[5] & 0x00FF) << 16)
+				| (((long) bytes[6] & 0x00FF) << 8) | ((long) bytes[7] & 0x00FF);
 	}
 
 	// Unsigned Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -652,25 +634,21 @@ public final class Host extends Object {
 		// Since there is no larger type we can return this
 		// unsigned value in, we must return as a long.
 		// This makes the code here identical to castToLong().
-		return (((long) bytes[0] & 0x00FF) << 56)
-				| (((long) bytes[1] & 0x00FF) << 48)
-				| (((long) bytes[2] & 0x00FF) << 40)
-				| (((long) bytes[3] & 0x00FF) << 32)
-				| (((long) bytes[4] & 0x00FF) << 24)
-				| (((long) bytes[5] & 0x00FF) << 16)
-				| (((long) bytes[6] & 0x00FF) << 8)
-				| ((long) bytes[7] & 0x00FF);
+		return (((long) bytes[0] & 0x00FF) << 56) | (((long) bytes[1] & 0x00FF) << 48)
+				| (((long) bytes[2] & 0x00FF) << 40) | (((long) bytes[3] & 0x00FF) << 32)
+				| (((long) bytes[4] & 0x00FF) << 24) | (((long) bytes[5] & 0x00FF) << 16)
+				| (((long) bytes[6] & 0x00FF) << 8) | ((long) bytes[7] & 0x00FF);
 	}
 
 	// Long Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -678,25 +656,21 @@ public final class Host extends Object {
 	 * @return the long long value
 	 */
 	public final static long castToLongLong(final byte[] bytes) {
-		return (((long) bytes[0] & 0x00FF) << 56)
-				| (((long) bytes[1] & 0x00FF) << 48)
-				| (((long) bytes[2] & 0x00FF) << 40)
-				| (((long) bytes[3] & 0x00FF) << 32)
-				| (((long) bytes[4] & 0x00FF) << 24)
-				| (((long) bytes[5] & 0x00FF) << 16)
-				| (((long) bytes[6] & 0x00FF) << 8)
-				| ((long) bytes[7] & 0x00FF);
+		return (((long) bytes[0] & 0x00FF) << 56) | (((long) bytes[1] & 0x00FF) << 48)
+				| (((long) bytes[2] & 0x00FF) << 40) | (((long) bytes[3] & 0x00FF) << 32)
+				| (((long) bytes[4] & 0x00FF) << 24) | (((long) bytes[5] & 0x00FF) << 16)
+				| (((long) bytes[6] & 0x00FF) << 8) | ((long) bytes[7] & 0x00FF);
 	}
 
 	// Unsigned Long Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -707,22 +681,18 @@ public final class Host extends Object {
 		// Since there is no larger type we can return this
 		// unsigned value in, we must return as a long.
 		// This makes the code here identical to castToLong().
-		return (((long) bytes[0] & 0x00FF) << 56)
-				| (((long) bytes[1] & 0x00FF) << 48)
-				| (((long) bytes[2] & 0x00FF) << 40)
-				| (((long) bytes[3] & 0x00FF) << 32)
-				| (((long) bytes[4] & 0x00FF) << 24)
-				| (((long) bytes[5] & 0x00FF) << 16)
-				| (((long) bytes[6] & 0x00FF) << 8)
-				| ((long) bytes[7] & 0x00FF);
+		return (((long) bytes[0] & 0x00FF) << 56) | (((long) bytes[1] & 0x00FF) << 48)
+				| (((long) bytes[2] & 0x00FF) << 40) | (((long) bytes[3] & 0x00FF) << 32)
+				| (((long) bytes[4] & 0x00FF) << 24) | (((long) bytes[5] & 0x00FF) << 16)
+				| (((long) bytes[6] & 0x00FF) << 8) | ((long) bytes[7] & 0x00FF);
 	}
 
 	// Float
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -730,17 +700,17 @@ public final class Host extends Object {
 	 * @return the float value
 	 */
 	public final static float castToFloat(final byte[] bytes) {
-		int i = ((bytes[0] & 0x00FF) << 24) | ((bytes[1] & 0x00FF) << 16)
-				| ((bytes[2] & 0x00FF) << 8) | (bytes[3] & 0x00FF);
+		int i = ((bytes[0] & 0x00FF) << 24) | ((bytes[1] & 0x00FF) << 16) | ((bytes[2] & 0x00FF) << 8)
+				| (bytes[3] & 0x00FF);
 		return Float.intBitsToFloat(i);
 	}
 
 	// Double
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -748,26 +718,22 @@ public final class Host extends Object {
 	 * @return the double value
 	 */
 	public final static double castToDouble(final byte[] bytes) {
-		long l = (((long) bytes[0] & 0x00FF) << 56)
-				| (((long) bytes[1] & 0x00FF) << 48)
-				| (((long) bytes[2] & 0x00FF) << 40)
-				| (((long) bytes[3] & 0x00FF) << 32)
-				| (((long) bytes[4] & 0x00FF) << 24)
-				| (((long) bytes[5] & 0x00FF) << 16)
-				| (((long) bytes[6] & 0x00FF) << 8)
-				| ((long) bytes[7] & 0x00FF);
+		long l = (((long) bytes[0] & 0x00FF) << 56) | (((long) bytes[1] & 0x00FF) << 48)
+				| (((long) bytes[2] & 0x00FF) << 40) | (((long) bytes[3] & 0x00FF) << 32)
+				| (((long) bytes[4] & 0x00FF) << 24) | (((long) bytes[5] & 0x00FF) << 16)
+				| (((long) bytes[6] & 0x00FF) << 8) | ((long) bytes[7] & 0x00FF);
 		return Double.longBitsToDouble(l);
 	}
 
 	// Long Double
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Note: Since Java does not support long double types, this method is
-	 * identical to the double version.
+	 * Note: Since Java does not support long double types, this method is identical
+	 * to the double version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -775,14 +741,10 @@ public final class Host extends Object {
 	 * @return the long double value
 	 */
 	public final static double castToLongDouble(final byte[] bytes) {
-		long l = (((long) bytes[0] & 0x00FF) << 56)
-				| (((long) bytes[1] & 0x00FF) << 48)
-				| (((long) bytes[2] & 0x00FF) << 40)
-				| (((long) bytes[3] & 0x00FF) << 32)
-				| (((long) bytes[4] & 0x00FF) << 24)
-				| (((long) bytes[5] & 0x00FF) << 16)
-				| (((long) bytes[6] & 0x00FF) << 8)
-				| ((long) bytes[7] & 0x00FF);
+		long l = (((long) bytes[0] & 0x00FF) << 56) | (((long) bytes[1] & 0x00FF) << 48)
+				| (((long) bytes[2] & 0x00FF) << 40) | (((long) bytes[3] & 0x00FF) << 32)
+				| (((long) bytes[4] & 0x00FF) << 24) | (((long) bytes[5] & 0x00FF) << 16)
+				| (((long) bytes[6] & 0x00FF) << 8) | ((long) bytes[7] & 0x00FF);
 		return Double.longBitsToDouble(l);
 	}
 
@@ -791,14 +753,13 @@ public final class Host extends Object {
 	//
 	// Byte
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Because Java doesn't support unsigned primitive types, this method
-	 * returns the value in the next larger data type, with the high bits set to
-	 * zeroes.
+	 * Because Java doesn't support unsigned primitive types, this method returns
+	 * the value in the next larger data type, with the high bits set to zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -813,10 +774,10 @@ public final class Host extends Object {
 
 	// Short
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -831,14 +792,13 @@ public final class Host extends Object {
 
 	// Unsigned Short
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Because Java doesn't support unsigned primitive types, this method
-	 * returns the value in the next larger data type, with the high bits set to
-	 * zeroes.
+	 * Because Java doesn't support unsigned primitive types, this method returns
+	 * the value in the next larger data type, with the high bits set to zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -847,18 +807,16 @@ public final class Host extends Object {
 	 *            starting point in byte array
 	 * @return the unsigned short value (as an int)
 	 */
-	public final static int castToUnsignedShort(final byte[] bytes,
-			final int offset) {
-		return ((bytes[offset + 0] & 0x00FF) << 8)
-				| (bytes[offset + 1] & 0x00FF);
+	public final static int castToUnsignedShort(final byte[] bytes, final int offset) {
+		return ((bytes[offset + 0] & 0x00FF) << 8) | (bytes[offset + 1] & 0x00FF);
 	}
 
 	// Int
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -868,22 +826,19 @@ public final class Host extends Object {
 	 * @return the int value
 	 */
 	public final static int castToInt(final byte[] bytes, final int offset) {
-		return ((bytes[offset + 0] & 0x00FF) << 24)
-				| ((bytes[offset + 1] & 0x00FF) << 16)
-				| ((bytes[offset + 2] & 0x00FF) << 8)
-				| (bytes[offset + 3] & 0x00FF);
+		return ((bytes[offset + 0] & 0x00FF) << 24) | ((bytes[offset + 1] & 0x00FF) << 16)
+				| ((bytes[offset + 2] & 0x00FF) << 8) | (bytes[offset + 3] & 0x00FF);
 	}
 
 	// Unsigned Int
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Because Java doesn't support unsigned primitive types, this method
-	 * returns the value in the next larger data type, with the high bits set to
-	 * zeroes.
+	 * Because Java doesn't support unsigned primitive types, this method returns
+	 * the value in the next larger data type, with the high bits set to zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -892,20 +847,17 @@ public final class Host extends Object {
 	 *            starting point in byte array
 	 * @return the unsigned int value (as a long)
 	 */
-	public final static long castToUnsignedInt(final byte[] bytes,
-			final int offset) {
-		return (((long) bytes[offset + 0] & 0x00FF) << 24)
-				| (((long) bytes[offset + 1] & 0x00FF) << 16)
-				| (((long) bytes[offset + 2] & 0x00FF) << 8)
-				| ((long) bytes[offset + 3] & 0x00FF);
+	public final static long castToUnsignedInt(final byte[] bytes, final int offset) {
+		return (((long) bytes[offset + 0] & 0x00FF) << 24) | (((long) bytes[offset + 1] & 0x00FF) << 16)
+				| (((long) bytes[offset + 2] & 0x00FF) << 8) | ((long) bytes[offset + 3] & 0x00FF);
 	}
 
 	// Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -915,22 +867,18 @@ public final class Host extends Object {
 	 * @return the long value
 	 */
 	public final static long castToLong(final byte[] bytes, final int offset) {
-		return (((long) bytes[offset + 0] & 0x00FF) << 56)
-				| (((long) bytes[offset + 1] & 0x00FF) << 48)
-				| (((long) bytes[offset + 2] & 0x00FF) << 40)
-				| (((long) bytes[offset + 3] & 0x00FF) << 32)
-				| (((long) bytes[offset + 4] & 0x00FF) << 24)
-				| (((long) bytes[offset + 5] & 0x00FF) << 16)
-				| (((long) bytes[offset + 6] & 0x00FF) << 8)
-				| ((long) bytes[offset + 7] & 0x00FF);
+		return (((long) bytes[offset + 0] & 0x00FF) << 56) | (((long) bytes[offset + 1] & 0x00FF) << 48)
+				| (((long) bytes[offset + 2] & 0x00FF) << 40) | (((long) bytes[offset + 3] & 0x00FF) << 32)
+				| (((long) bytes[offset + 4] & 0x00FF) << 24) | (((long) bytes[offset + 5] & 0x00FF) << 16)
+				| (((long) bytes[offset + 6] & 0x00FF) << 8) | ((long) bytes[offset + 7] & 0x00FF);
 	}
 
 	// Unsigned Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -939,30 +887,25 @@ public final class Host extends Object {
 	 *            starting point in byte array
 	 * @return the unsigned long value
 	 */
-	public final static long castToUnsignedLong(final byte[] bytes,
-			final int offset) {
+	public final static long castToUnsignedLong(final byte[] bytes, final int offset) {
 		// Since there is no larger type we can return this
 		// unsigned value in, we must return as a long.
 		// This makes the code here identical to castToLong().
-		return (((long) bytes[offset + 0] & 0x00FF) << 56)
-				| (((long) bytes[offset + 1] & 0x00FF) << 48)
-				| (((long) bytes[offset + 2] & 0x00FF) << 40)
-				| (((long) bytes[offset + 3] & 0x00FF) << 32)
-				| (((long) bytes[offset + 4] & 0x00FF) << 24)
-				| (((long) bytes[offset + 5] & 0x00FF) << 16)
-				| (((long) bytes[offset + 6] & 0x00FF) << 8)
-				| ((long) bytes[offset + 7] & 0x00FF);
+		return (((long) bytes[offset + 0] & 0x00FF) << 56) | (((long) bytes[offset + 1] & 0x00FF) << 48)
+				| (((long) bytes[offset + 2] & 0x00FF) << 40) | (((long) bytes[offset + 3] & 0x00FF) << 32)
+				| (((long) bytes[offset + 4] & 0x00FF) << 24) | (((long) bytes[offset + 5] & 0x00FF) << 16)
+				| (((long) bytes[offset + 6] & 0x00FF) << 8) | ((long) bytes[offset + 7] & 0x00FF);
 	}
 
 	// Long Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -972,25 +915,21 @@ public final class Host extends Object {
 	 * @return the long long value
 	 */
 	public final static long castToLongLong(final byte[] bytes, final int offset) {
-		return (((long) bytes[offset + 0] & 0x00FF) << 56)
-				| (((long) bytes[offset + 1] & 0x00FF) << 48)
-				| (((long) bytes[offset + 2] & 0x00FF) << 40)
-				| (((long) bytes[offset + 3] & 0x00FF) << 32)
-				| (((long) bytes[offset + 4] & 0x00FF) << 24)
-				| (((long) bytes[offset + 5] & 0x00FF) << 16)
-				| (((long) bytes[offset + 6] & 0x00FF) << 8)
-				| ((long) bytes[offset + 7] & 0x00FF);
+		return (((long) bytes[offset + 0] & 0x00FF) << 56) | (((long) bytes[offset + 1] & 0x00FF) << 48)
+				| (((long) bytes[offset + 2] & 0x00FF) << 40) | (((long) bytes[offset + 3] & 0x00FF) << 32)
+				| (((long) bytes[offset + 4] & 0x00FF) << 24) | (((long) bytes[offset + 5] & 0x00FF) << 16)
+				| (((long) bytes[offset + 6] & 0x00FF) << 8) | ((long) bytes[offset + 7] & 0x00FF);
 	}
 
 	// Unsigned Long Long
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -999,27 +938,22 @@ public final class Host extends Object {
 	 *            starting point in byte array
 	 * @return the unsigned long long value
 	 */
-	public final static long castToUnsignedLongLong(final byte[] bytes,
-			final int offset) {
+	public final static long castToUnsignedLongLong(final byte[] bytes, final int offset) {
 		// Since there is no larger type we can return this
 		// unsigned value in, we must return as a long.
 		// This makes the code here identical to castToLong().
-		return (((long) bytes[offset + 0] & 0x00FF) << 56)
-				| (((long) bytes[offset + 1] & 0x00FF) << 48)
-				| (((long) bytes[offset + 2] & 0x00FF) << 40)
-				| (((long) bytes[offset + 3] & 0x00FF) << 32)
-				| (((long) bytes[offset + 4] & 0x00FF) << 24)
-				| (((long) bytes[offset + 5] & 0x00FF) << 16)
-				| (((long) bytes[offset + 6] & 0x00FF) << 8)
-				| ((long) bytes[offset + 7] & 0x00FF);
+		return (((long) bytes[offset + 0] & 0x00FF) << 56) | (((long) bytes[offset + 1] & 0x00FF) << 48)
+				| (((long) bytes[offset + 2] & 0x00FF) << 40) | (((long) bytes[offset + 3] & 0x00FF) << 32)
+				| (((long) bytes[offset + 4] & 0x00FF) << 24) | (((long) bytes[offset + 5] & 0x00FF) << 16)
+				| (((long) bytes[offset + 6] & 0x00FF) << 8) | ((long) bytes[offset + 7] & 0x00FF);
 	}
 
 	// Float
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1029,19 +963,17 @@ public final class Host extends Object {
 	 * @return the float value
 	 */
 	public final static float castToFloat(final byte[] bytes, final int offset) {
-		int i = ((bytes[offset + 0] & 0x00FF) << 24)
-				| ((bytes[offset + 1] & 0x00FF) << 16)
-				| ((bytes[offset + 2] & 0x00FF) << 8)
-				| (bytes[offset + 3] & 0x00FF);
+		int i = ((bytes[offset + 0] & 0x00FF) << 24) | ((bytes[offset + 1] & 0x00FF) << 16)
+				| ((bytes[offset + 2] & 0x00FF) << 8) | (bytes[offset + 3] & 0x00FF);
 		return Float.intBitsToFloat(i);
 	}
 
 	// Double
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1051,26 +983,22 @@ public final class Host extends Object {
 	 * @return the double value
 	 */
 	public final static double castToDouble(final byte[] bytes, final int offset) {
-		long l = (((long) bytes[offset + 0] & 0x00FF) << 56)
-				| (((long) bytes[offset + 1] & 0x00FF) << 48)
-				| (((long) bytes[offset + 2] & 0x00FF) << 40)
-				| (((long) bytes[offset + 3] & 0x00FF) << 32)
-				| (((long) bytes[offset + 4] & 0x00FF) << 24)
-				| (((long) bytes[offset + 5] & 0x00FF) << 16)
-				| (((long) bytes[offset + 6] & 0x00FF) << 8)
-				| ((long) bytes[offset + 7] & 0x00FF);
+		long l = (((long) bytes[offset + 0] & 0x00FF) << 56) | (((long) bytes[offset + 1] & 0x00FF) << 48)
+				| (((long) bytes[offset + 2] & 0x00FF) << 40) | (((long) bytes[offset + 3] & 0x00FF) << 32)
+				| (((long) bytes[offset + 4] & 0x00FF) << 24) | (((long) bytes[offset + 5] & 0x00FF) << 16)
+				| (((long) bytes[offset + 6] & 0x00FF) << 8) | ((long) bytes[offset + 7] & 0x00FF);
 		return Double.longBitsToDouble(l);
 	}
 
 	// Long Double
 	/**
-	 * Casts bytes from the given byte array into a value of the type and
-	 * returns it. The bytes in the array need not be aligned appropriately for
-	 * the type. The array is assumed to contain a legal value for the type with
-	 * sizeof(type) bytes in the Java byte order.
+	 * Casts bytes from the given byte array into a value of the type and returns
+	 * it. The bytes in the array need not be aligned appropriately for the type.
+	 * The array is assumed to contain a legal value for the type with sizeof(type)
+	 * bytes in the Java byte order.
 	 * <P>
-	 * Note: Since Java does not support long double types, this method is
-	 * identical to the double version.
+	 * Note: Since Java does not support long double types, this method is identical
+	 * to the double version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1079,16 +1007,11 @@ public final class Host extends Object {
 	 *            starting point in byte array
 	 * @return the long double value
 	 */
-	public final static double castToLongDouble(final byte[] bytes,
-			final int offset) {
-		long l = (((long) bytes[offset + 0] & 0x00FF) << 56)
-				| (((long) bytes[offset + 1] & 0x00FF) << 48)
-				| (((long) bytes[offset + 2] & 0x00FF) << 40)
-				| (((long) bytes[offset + 3] & 0x00FF) << 32)
-				| (((long) bytes[offset + 4] & 0x00FF) << 24)
-				| (((long) bytes[offset + 5] & 0x00FF) << 16)
-				| (((long) bytes[offset + 6] & 0x00FF) << 8)
-				| ((long) bytes[offset + 7] & 0x00FF);
+	public final static double castToLongDouble(final byte[] bytes, final int offset) {
+		long l = (((long) bytes[offset + 0] & 0x00FF) << 56) | (((long) bytes[offset + 1] & 0x00FF) << 48)
+				| (((long) bytes[offset + 2] & 0x00FF) << 40) | (((long) bytes[offset + 3] & 0x00FF) << 32)
+				| (((long) bytes[offset + 4] & 0x00FF) << 24) | (((long) bytes[offset + 5] & 0x00FF) << 16)
+				| (((long) bytes[offset + 6] & 0x00FF) << 8) | ((long) bytes[offset + 7] & 0x00FF);
 		return Double.longBitsToDouble(l);
 	}
 
@@ -1102,8 +1025,8 @@ public final class Host extends Object {
 
 	// Short
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1118,8 +1041,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1133,8 +1056,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1149,8 +1072,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1166,8 +1089,8 @@ public final class Host extends Object {
 
 	// Unsigned Short
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1175,15 +1098,14 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedShort(final byte value,
-			final byte[] bytes) {
+	public final static void copyUnsignedShort(final byte value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = value;
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1191,15 +1113,14 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedShort(final short value,
-			final byte[] bytes) {
+	public final static void copyUnsignedShort(final short value, final byte[] bytes) {
 		bytes[0] = (byte) (value >>> 8); // zero extend
 		bytes[1] = (byte) (value);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1207,16 +1128,15 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedShort(final int value,
-			final byte[] bytes) {
+	public final static void copyUnsignedShort(final int value, final byte[] bytes) {
 		// Identical to copyUnsignedShort(short,byte[])
 		bytes[0] = (byte) (value >>> 8); // zero extend
 		bytes[1] = (byte) (value);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1224,8 +1144,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedShort(final long value,
-			final byte[] bytes) {
+	public final static void copyUnsignedShort(final long value, final byte[] bytes) {
 		// Identical to copyUnsignedShort(short,byte[])
 		bytes[0] = (byte) (value >>> 8); // zero extend
 		bytes[1] = (byte) (value);
@@ -1233,8 +1152,8 @@ public final class Host extends Object {
 
 	// Int
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1251,8 +1170,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1269,8 +1188,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1286,8 +1205,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1305,8 +1224,8 @@ public final class Host extends Object {
 
 	// Unsigned Int
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1314,8 +1233,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedInt(final byte value,
-			final byte[] bytes) {
+	public final static void copyUnsignedInt(final byte value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1323,8 +1241,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1332,8 +1250,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedInt(final short value,
-			final byte[] bytes) {
+	public final static void copyUnsignedInt(final short value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = (byte) (value >>> 8); // zero extend
@@ -1341,8 +1258,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1358,8 +1275,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1367,8 +1284,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedInt(final long value,
-			final byte[] bytes) {
+	public final static void copyUnsignedInt(final long value, final byte[] bytes) {
 		// Identical to copyUnsignedInt(int,byte[])
 		bytes[0] = (byte) (value >>> 24); // zero extend
 		bytes[1] = (byte) (value >>> 16); // zero extend
@@ -1378,8 +1294,8 @@ public final class Host extends Object {
 
 	// Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1400,8 +1316,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1422,8 +1338,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1444,8 +1360,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1466,8 +1382,8 @@ public final class Host extends Object {
 
 	// Unsigned Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1475,8 +1391,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLong(final byte value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLong(final byte value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1488,8 +1403,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1497,8 +1412,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLong(final short value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLong(final short value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1510,8 +1424,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1519,8 +1433,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLong(final int value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLong(final int value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1532,8 +1445,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1541,8 +1454,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLong(final long value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLong(final long value, final byte[] bytes) {
 		bytes[0] = (byte) (value >>> 56); // zero extend
 		bytes[1] = (byte) (value >>> 48); // zero extend
 		bytes[2] = (byte) (value >>> 40); // zero extend
@@ -1555,11 +1467,11 @@ public final class Host extends Object {
 
 	// Long Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1580,11 +1492,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1605,11 +1517,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1630,11 +1542,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1655,11 +1567,11 @@ public final class Host extends Object {
 
 	// Unsigned Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1667,8 +1579,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLongLong(final byte value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLongLong(final byte value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1680,11 +1591,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1692,8 +1603,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLongLong(final short value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLongLong(final short value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1705,11 +1615,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1717,8 +1627,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLongLong(final int value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLongLong(final int value, final byte[] bytes) {
 		bytes[0] = 0; // zero extend
 		bytes[1] = 0; // zero extend
 		bytes[2] = 0; // zero extend
@@ -1730,11 +1639,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -1742,8 +1651,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyUnsignedLongLong(final long value,
-			final byte[] bytes) {
+	public final static void copyUnsignedLongLong(final long value, final byte[] bytes) {
 		bytes[0] = (byte) (value >>> 56); // zero extend
 		bytes[1] = (byte) (value >>> 48); // zero extend
 		bytes[2] = (byte) (value >>> 40); // zero extend
@@ -1756,8 +1664,8 @@ public final class Host extends Object {
 
 	// Float
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1774,8 +1682,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1793,8 +1701,8 @@ public final class Host extends Object {
 
 	// Double
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1816,11 +1724,11 @@ public final class Host extends Object {
 
 	// Long Double
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long double types, this method is
-	 * identical to the double version.
+	 * Note: Since Java does not support long double types, this method is identical
+	 * to the double version.
 	 * <P>
 	 *
 	 * @param value
@@ -1828,8 +1736,7 @@ public final class Host extends Object {
 	 * @param bytes
 	 *            byte array to receive value
 	 */
-	public final static void copyLongDouble(final double value,
-			final byte[] bytes) {
+	public final static void copyLongDouble(final double value, final byte[] bytes) {
 		long v = Double.doubleToLongBits(value);
 		bytes[0] = (byte) (v >> 56);
 		bytes[1] = (byte) (v >> 48);
@@ -1846,8 +1753,8 @@ public final class Host extends Object {
 	//
 	// Short
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1857,16 +1764,15 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyShort(final byte value, final byte[] bytes,
-			final int offset) {
+	public final static void copyShort(final byte value, final byte[] bytes, final int offset) {
 		short s = value; // sign extend
 		bytes[offset + 0] = (byte) (s >> 8);
 		bytes[offset + 1] = (byte) (s);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1876,15 +1782,14 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyShort(final short value, final byte[] bytes,
-			final int offset) {
+	public final static void copyShort(final short value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >> 8);
 		bytes[offset + 1] = (byte) (value);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1894,16 +1799,15 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyShort(final int value, final byte[] bytes,
-			final int offset) {
+	public final static void copyShort(final int value, final byte[] bytes, final int offset) {
 		// Identical to copyShort(short,byte[])
 		bytes[offset + 0] = (byte) (value >> 8);
 		bytes[offset + 1] = (byte) (value);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1913,8 +1817,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyShort(final long value, final byte[] bytes,
-			final int offset) {
+	public final static void copyShort(final long value, final byte[] bytes, final int offset) {
 		// Identical to copyShort(short,byte[])
 		bytes[offset + 0] = (byte) (value >> 8);
 		bytes[offset + 1] = (byte) (value);
@@ -1922,8 +1825,8 @@ public final class Host extends Object {
 
 	// Unsigned Short
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1933,15 +1836,14 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedShort(final byte value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedShort(final byte value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = value;
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1951,15 +1853,14 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedShort(final short value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedShort(final short value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >>> 8); // zero extend
 		bytes[offset + 1] = (byte) (value);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1969,16 +1870,15 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedShort(final int value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedShort(final int value, final byte[] bytes, final int offset) {
 		// Identical to copyUnsignedShort(short,byte[])
 		bytes[offset + 0] = (byte) (value >>> 8); // zero extend
 		bytes[offset + 1] = (byte) (value);
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -1988,8 +1888,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedShort(final long value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedShort(final long value, final byte[] bytes, final int offset) {
 		// Identical to copyUnsignedShort(short,byte[])
 		bytes[offset + 0] = (byte) (value >>> 8); // zero extend
 		bytes[offset + 1] = (byte) (value);
@@ -1997,8 +1896,8 @@ public final class Host extends Object {
 
 	// Int
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2008,8 +1907,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyInt(final byte value, final byte[] bytes,
-			final int offset) {
+	public final static void copyInt(final byte value, final byte[] bytes, final int offset) {
 		int i = value; // sign extend
 		bytes[offset + 0] = (byte) (i >> 24);
 		bytes[offset + 1] = (byte) (i >> 16);
@@ -2018,8 +1916,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2029,8 +1927,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyInt(final short value, final byte[] bytes,
-			final int offset) {
+	public final static void copyInt(final short value, final byte[] bytes, final int offset) {
 		int i = value; // sign extend
 		bytes[offset + 0] = (byte) (i >> 24);
 		bytes[offset + 1] = (byte) (i >> 16);
@@ -2039,8 +1936,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2050,8 +1947,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyInt(final int value, final byte[] bytes,
-			final int offset) {
+	public final static void copyInt(final int value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >> 24);
 		bytes[offset + 1] = (byte) (value >> 16);
 		bytes[offset + 2] = (byte) (value >> 8);
@@ -2059,8 +1955,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2070,8 +1966,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyInt(final long value, final byte[] bytes,
-			final int offset) {
+	public final static void copyInt(final long value, final byte[] bytes, final int offset) {
 		// Identical to copyInt(int,byte[])
 		bytes[offset + 0] = (byte) (value >> 24);
 		bytes[offset + 1] = (byte) (value >> 16);
@@ -2081,8 +1976,8 @@ public final class Host extends Object {
 
 	// Unsigned Int
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2092,8 +1987,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedInt(final byte value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedInt(final byte value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2101,8 +1995,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2112,8 +2006,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedInt(final short value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedInt(final short value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = (byte) (value >>> 8); // zero extend
@@ -2121,8 +2014,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2132,8 +2025,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedInt(final int value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedInt(final int value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >>> 24); // zero extend
 		bytes[offset + 1] = (byte) (value >>> 16); // zero extend
 		bytes[offset + 2] = (byte) (value >>> 8); // zero extend
@@ -2141,8 +2033,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2152,8 +2044,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedInt(final long value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedInt(final long value, final byte[] bytes, final int offset) {
 		// Identical to copyUnsignedInt(int,byte[])
 		bytes[offset + 0] = (byte) (value >>> 24); // zero extend
 		bytes[offset + 1] = (byte) (value >>> 16); // zero extend
@@ -2163,8 +2054,8 @@ public final class Host extends Object {
 
 	// Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2174,8 +2065,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLong(final byte value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLong(final byte value, final byte[] bytes, final int offset) {
 		long lng = value; // sign extend
 		bytes[offset + 0] = (byte) (lng >> 56);
 		bytes[offset + 1] = (byte) (lng >> 48);
@@ -2188,8 +2078,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2199,8 +2089,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLong(final short value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLong(final short value, final byte[] bytes, final int offset) {
 		long lng = value; // sign extend
 		bytes[offset + 0] = (byte) (lng >> 56);
 		bytes[offset + 1] = (byte) (lng >> 48);
@@ -2213,8 +2102,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2224,8 +2113,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLong(final int value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLong(final int value, final byte[] bytes, final int offset) {
 		long lng = value; // sign extend
 		bytes[offset + 0] = (byte) (lng >> 56);
 		bytes[offset + 1] = (byte) (lng >> 48);
@@ -2238,8 +2126,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2249,8 +2137,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLong(final long value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLong(final long value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >> 56);
 		bytes[offset + 1] = (byte) (value >> 48);
 		bytes[offset + 2] = (byte) (value >> 40);
@@ -2263,8 +2150,8 @@ public final class Host extends Object {
 
 	// Unsigned Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2274,8 +2161,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLong(final byte value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLong(final byte value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2287,8 +2173,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2298,8 +2184,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLong(final short value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLong(final short value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2311,8 +2196,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2322,8 +2207,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLong(final int value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLong(final int value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2335,8 +2219,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2346,8 +2230,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLong(final long value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLong(final long value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >>> 56); // zero extend
 		bytes[offset + 1] = (byte) (value >>> 48); // zero extend
 		bytes[offset + 2] = (byte) (value >>> 40); // zero extend
@@ -2360,11 +2243,11 @@ public final class Host extends Object {
 
 	// Long Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2374,8 +2257,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLongLong(final byte value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLongLong(final byte value, final byte[] bytes, final int offset) {
 		long lng = value; // sign extend
 		bytes[offset + 0] = (byte) (lng >> 56);
 		bytes[offset + 1] = (byte) (lng >> 48);
@@ -2388,11 +2270,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2402,8 +2284,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLongLong(final short value,
-			final byte[] bytes, final int offset) {
+	public final static void copyLongLong(final short value, final byte[] bytes, final int offset) {
 		long lng = value; // sign extend
 		bytes[offset + 0] = (byte) (lng >> 56);
 		bytes[offset + 1] = (byte) (lng >> 48);
@@ -2416,11 +2297,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2430,8 +2311,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLongLong(final int value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLongLong(final int value, final byte[] bytes, final int offset) {
 		long lng = value; // sign extend
 		bytes[offset + 0] = (byte) (lng >> 56);
 		bytes[offset + 1] = (byte) (lng >> 48);
@@ -2444,11 +2324,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2458,8 +2338,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLongLong(final long value, final byte[] bytes,
-			final int offset) {
+	public final static void copyLongLong(final long value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >> 56);
 		bytes[offset + 1] = (byte) (value >> 48);
 		bytes[offset + 2] = (byte) (value >> 40);
@@ -2472,11 +2351,11 @@ public final class Host extends Object {
 
 	// Unsigned Long
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2486,8 +2365,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLongLong(final byte value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLongLong(final byte value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2499,11 +2377,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2513,8 +2391,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLongLong(final short value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLongLong(final short value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2526,11 +2403,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2540,8 +2417,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLongLong(final int value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLongLong(final int value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = 0; // zero extend
 		bytes[offset + 1] = 0; // zero extend
 		bytes[offset + 2] = 0; // zero extend
@@ -2553,11 +2429,11 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long long types, this method is
-	 * identical to the long version.
+	 * Note: Since Java does not support long long types, this method is identical
+	 * to the long version.
 	 * <P>
 	 *
 	 * @param value
@@ -2567,8 +2443,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyUnsignedLongLong(final long value,
-			final byte[] bytes, final int offset) {
+	public final static void copyUnsignedLongLong(final long value, final byte[] bytes, final int offset) {
 		bytes[offset + 0] = (byte) (value >>> 56); // zero extend
 		bytes[offset + 1] = (byte) (value >>> 48); // zero extend
 		bytes[offset + 2] = (byte) (value >>> 40); // zero extend
@@ -2581,8 +2456,8 @@ public final class Host extends Object {
 
 	// Float
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2592,8 +2467,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyFloat(final float value, final byte[] bytes,
-			final int offset) {
+	public final static void copyFloat(final float value, final byte[] bytes, final int offset) {
 		int v = Float.floatToIntBits(value);
 		bytes[offset + 0] = (byte) (v >> 24);
 		bytes[offset + 1] = (byte) (v >> 16);
@@ -2602,8 +2476,8 @@ public final class Host extends Object {
 	}
 
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2613,8 +2487,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyFloat(final double value, final byte[] bytes,
-			final int offset) {
+	public final static void copyFloat(final double value, final byte[] bytes, final int offset) {
 		int v = Float.floatToIntBits((float) value);
 		bytes[offset + 0] = (byte) (v >> 24);
 		bytes[offset + 1] = (byte) (v >> 16);
@@ -2624,8 +2497,8 @@ public final class Host extends Object {
 
 	// Double
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
 	 *
 	 * @param value
@@ -2635,8 +2508,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyDouble(final double value, final byte[] bytes,
-			final int offset) {
+	public final static void copyDouble(final double value, final byte[] bytes, final int offset) {
 		long v = Double.doubleToLongBits(value);
 		bytes[offset + 0] = (byte) (v >> 56);
 		bytes[offset + 1] = (byte) (v >> 48);
@@ -2650,11 +2522,11 @@ public final class Host extends Object {
 
 	// Long Double
 	/**
-	 * Copies the given value of the type into the given byte array. The array
-	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
+	 * Copies the given value of the type into the given byte array. The array is
+	 * assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * Note: Since Java does not support long double types, this method is
-	 * identical to the double version.
+	 * Note: Since Java does not support long double types, this method is identical
+	 * to the double version.
 	 * <P>
 	 *
 	 * @param value
@@ -2664,8 +2536,7 @@ public final class Host extends Object {
 	 * @param offset
 	 *            starting point in array
 	 */
-	public final static void copyLongDouble(final double value,
-			final byte[] bytes, final int offset) {
+	public final static void copyLongDouble(final double value, final byte[] bytes, final int offset) {
 		long v = Double.doubleToLongBits(value);
 		bytes[offset + 0] = (byte) (v >> 56);
 		bytes[offset + 1] = (byte) (v >> 48);
@@ -2682,7 +2553,7 @@ public final class Host extends Object {
 	// ----------------------------------------------------------------------
 	/**
 	 * Prints to System.out the attributes of the current host.
-	 * <P>
+	 *
 	 */
 	public final static void print() {
 		System.out.println("Host attributes:");

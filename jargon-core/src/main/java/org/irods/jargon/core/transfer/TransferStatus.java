@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.transfer;
 
-import org.irods.jargon.core.exception.JargonException;
-
 /**
  * Immutable object represents the status of a file transfer (get or put)
  * operation. This can be used for progress reporting.
@@ -20,8 +18,8 @@ public class TransferStatus {
 
 	/***
 	 * A transfer state represents tthe status of individual files. There is an
-	 * OVERALL_ status that indicates the beginning of an entire transfer, which
-	 * is either a file, or a collection of files recursively.
+	 * OVERALL_ status that indicates the beginning of an entire transfer, which is
+	 * either a file, or a collection of files recursively.
 	 *
 	 * @author Mike Conway - DICE (www.irods.org)
 	 */
@@ -44,14 +42,13 @@ public class TransferStatus {
 
 	/**
 	 * Skipped files during restart are counted in total files, so this number
-	 * reflects the number of files skipped in the total. Subtract this number
-	 * for the total transferred so far to get the actual files transferred in
-	 * this transfer attempt.
+	 * reflects the number of files skipped in the total. Subtract this number for
+	 * the total transferred so far to get the actual files transferred in this
+	 * transfer attempt.
 	 * <p>
 	 * This is done so that any progress bar for a restarted transfer hides the
-	 * skipping process and just appears to proceed normally, while apps that
-	 * have more sophisticated accounting can do the delta to get a breakout
-	 * number
+	 * skipping process and just appears to proceed normally, while apps that have
+	 * more sophisticated accounting can do the delta to get a breakout number
 	 *
 	 */
 	private final int totalFilesSkippedSoFar;
@@ -70,43 +67,39 @@ public class TransferStatus {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} absolute path to the target file
 	 * @param targetResource
-	 *            {@code String} with an optional resource, set to blank if
-	 *            unused.
+	 *            {@code String} with an optional resource, set to blank if unused.
 	 * @param totalSize
 	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            {@code long} with the total transferred so far, which is
-	 *            some fraction of the total size
+	 *            {@code long} with the total transferred so far, which is some
+	 *            fraction of the total size
 	 * @param totalFilesTransferredSoFar
-	 *            {@code int} with the total files transferred, including this status callback
+	 *            {@code int} with the total files transferred, including this
+	 *            status callback
 	 * @param totalFilesSkippedSoFar
-	 *            {@code int} with the total files skipped if this is a
-	 *            restart, including this status callback
+	 *            {@code int} with the total files skipped if this is a restart,
+	 *            including this status callback
 	 * @param totalFilesToTransfer
-	 *            {@code int} with the total files involved in this
-	 *            operation
+	 *            {@code int} with the total files involved in this operation
 	 * @param transferState
-	 *            {@code TransferState} indicating whether the transfer is
-	 *            ongoing or has completed
+	 *            {@code TransferState} indicating whether the transfer is ongoing
+	 *            or has completed
 	 * @param transferHost
 	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
 	 *            {@code String} with the zone name for the transfer
+	 * @return {@link TransferStatus}
+	 *
 	 */
-	public static TransferStatus instance(final TransferType transferType,
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
-			final long totalSize, final long bytesTransfered,
-			final int totalFilesTransferredSoFar,
-			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
-			final TransferState transferState, final String transferHost,
-			final String transferZone) throws JargonException {
+	public static TransferStatus instance(final TransferType transferType, final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResource, final long totalSize,
+			final long bytesTransfered, final int totalFilesTransferredSoFar, final int totalFilesSkippedSoFar,
+			final int totalFilesToTransfer, final TransferState transferState, final String transferHost,
+			final String transferZone) {
 
-		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
-				targetFileAbsolutePath, targetResource, totalSize,
-				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesSkippedSoFar, totalFilesToTransfer, transferState,
-				null, false, transferHost, transferZone);
+		return new TransferStatus(transferType, null, sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
+				totalSize, bytesTransfered, totalFilesTransferredSoFar, totalFilesSkippedSoFar, totalFilesToTransfer,
+				transferState, null, false, transferHost, transferZone);
 
 	}
 
@@ -120,70 +113,60 @@ public class TransferStatus {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} absolute path to the target file
 	 * @param targetResource
-	 *            {@code String} with an optional resource, set to blank if
-	 *            unused.
+	 *            {@code String} with an optional resource, set to blank if unused.
 	 * @param totalSize
 	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            {@code long} with the total transferred so far, which is
-	 *            some fraction of the total size
+	 *            {@code long} with the total transferred so far, which is some
+	 *            fraction of the total size
 	 * @param totalFilesTransferredSoFar
-	 *            {@code int} with the total files transferred, including this status callback
+	 *            {@code int} with the total files transferred, including this
+	 *            status callback
 	 * @param totalFilesSkippedSoFar
-	 *            {@code int} with the total files skipped in restarting,
-	 *            including this status callback
+	 *            {@code int} with the total files skipped in restarting, including
+	 *            this status callback
 	 * @param totalFilesToTransfer
-	 *            {@code int} with the total files involved in this
-	 *            operation
+	 *            {@code int} with the total files involved in this operation
 	 * @param transferState
-	 *            {@code TransferState} indicating whether the transfer is
-	 *            ongoing or has completed
+	 *            {@code TransferState} indicating whether the transfer is ongoing
+	 *            or has completed
 	 * @param transferHost
 	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
 	 *            {@code String} with the zone name for the transfer
 	 * @return {@link TransferStatus}
-	 * @throws JargonException
 	 */
-	public static TransferStatus instanceForSynch(
-			final TransferType transferType,
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
-			final long totalSize, final long bytesTransfered,
-			final int totalFilesTransferredSoFar,
-			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
-			final TransferState transferState, final String transferHost,
-			final String transferZone) throws JargonException {
+	public static TransferStatus instanceForSynch(final TransferType transferType, final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResource, final long totalSize,
+			final long bytesTransfered, final int totalFilesTransferredSoFar, final int totalFilesSkippedSoFar,
+			final int totalFilesToTransfer, final TransferState transferState, final String transferHost,
+			final String transferZone) {
 
-		return new TransferStatus(transferType, TransferType.SYNCH,
-				sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
-				totalSize, bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesSkippedSoFar, totalFilesToTransfer, transferState,
-				null, false, transferHost, transferZone);
+		return new TransferStatus(transferType, TransferType.SYNCH, sourceFileAbsolutePath, targetFileAbsolutePath,
+				targetResource, totalSize, bytesTransfered, totalFilesTransferredSoFar, totalFilesSkippedSoFar,
+				totalFilesToTransfer, transferState, null, false, transferHost, transferZone);
 
 	}
 
 	/**
-	 * Create an immutable transfer status object for a partial transfer of a
-	 * file. This status object represents partial progress within a file.
+	 * Create an immutable transfer status object for a partial transfer of a file.
+	 * This status object represents partial progress within a file.
 	 *
 	 * @param transferType
 	 *            {@code TransferType} that indicates the type of transfer
 	 * @param totalSize
 	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            {@code long} with the total transferred so far, which is
-	 *            some fraction of the total size
+	 *            {@code long} with the total transferred so far, which is some
+	 *            fraction of the total size
 	 * @return {@link TransferStatus}
 	 *
 	 */
-	public static TransferStatus instanceForIntraFileStatus(
-			final TransferType transferType, final long totalSize,
-			final long bytesTransfered) throws JargonException {
+	public static TransferStatus instanceForIntraFileStatus(final TransferType transferType, final long totalSize,
+			final long bytesTransfered) {
 
-		return new TransferStatus(transferType, null, "", "", "", totalSize,
-				bytesTransfered, 0, 0, 0, TransferState.IN_PROGRESS_START_FILE,
-				null, true, "", "");
+		return new TransferStatus(transferType, null, "", "", "", totalSize, bytesTransfered, 0, 0, 0,
+				TransferState.IN_PROGRESS_START_FILE, null, true, "", "");
 	}
 
 	/**
@@ -194,49 +177,42 @@ public class TransferStatus {
 	 * @param sourceFileAbsolutePath
 	 *            {@code String} absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            {@code String} absolute path to the target file, set to
-	 *            blank if unused
+	 *            {@code String} absolute path to the target file, set to blank if
+	 *            unused
 	 * @param targetResource
-	 *            {@code String} with an optional resource, set to blank if
-	 *            unused.
+	 *            {@code String} with an optional resource, set to blank if unused.
 	 * @param totalSize
 	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            {@code long} with the total transferred so far, which is
-	 *            some fraction of the total size
+	 *            {@code long} with the total transferred so far, which is some
+	 *            fraction of the total size
 	 * @param totalFilesTransferredSoFar
-	 *            {@code int} with the total files transferred, including this status callback
+	 *            {@code int} with the total files transferred, including this
+	 *            status callback
 	 * @param totalFilesSkippedSoFar
-	 *            {@code int} with the total files skipped in restarting,
-	 *            including this status callback
+	 *            {@code int} with the total files skipped in restarting, including
+	 *            this status callback
 	 * @param totalFilesToTransfer
-	 *            {@code int} with the total files involved in this
-	 *            operation
+	 *            {@code int} with the total files involved in this operation
 	 * @param exception
-	 *            {@code TransferState} indicating whether the transfer is
-	 *            ongoing or has completed
+	 *            {@code TransferState} indicating whether the transfer is ongoing
+	 *            or has completed
 	 * @param transferHost
 	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
 	 *            {@code String} with the zone name for the transfer
+	 * @return {@link TransferStatus}
 	 */
 
-	public static TransferStatus instanceForException(
-			final TransferType transferType,
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
-			final long totalSize, final long bytesTransfered,
-			final int totalFilesTransferredSoFar,
-			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
-			final Exception exception, final String transferHost,
-			final String transferZone) throws JargonException {
+	public static TransferStatus instanceForException(final TransferType transferType,
+			final String sourceFileAbsolutePath, final String targetFileAbsolutePath, final String targetResource,
+			final long totalSize, final long bytesTransfered, final int totalFilesTransferredSoFar,
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer, final Exception exception,
+			final String transferHost, final String transferZone) {
 
-		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
-				targetFileAbsolutePath, targetResource, totalSize,
-				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesSkippedSoFar, totalFilesToTransfer,
-				TransferState.FAILURE, exception, false, transferHost,
-				transferZone);
+		return new TransferStatus(transferType, null, sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
+				totalSize, bytesTransfered, totalFilesTransferredSoFar, totalFilesSkippedSoFar, totalFilesToTransfer,
+				TransferState.FAILURE, exception, false, transferHost, transferZone);
 
 	}
 
@@ -245,38 +221,44 @@ public class TransferStatus {
 	 * synchronization process
 	 *
 	 * @param transferType
+	 *            {@link TransferType} that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
+	 *            {@code String} absolute path to the source file
 	 * @param targetFileAbsolutePath
+	 *            {@code String} absolute path to the target file, set to blank if
+	 *            unused
 	 * @param targetResource
+	 *            {@code String} with an optional resource, set to blank if unused.
 	 * @param totalSize
+	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
+	 *            {@code long} with the total transferred so far, which is some
+	 *            fraction of the total size
 	 * @param totalFilesTransferredSoFar
+	 *            {@code int} with the total files transferred, including this
+	 *            status callback
 	 * @param totalFilesSkippedSoFar
+	 *            {@code int} with the total files skipped in restarting, including
+	 *            this status callback
 	 * @param totalFilesToTransfer
+	 *            {@code int} with the total files involved in this operation
 	 * @param exception
+	 *            {@link Exception} that may have been encountered in the transfer
 	 * @param transferHost
 	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
 	 *            {@code String} with the zone name for the transfer
 	 * @return {@link TransferStatus}
-	 * @throws JargonException
 	 */
-	public static TransferStatus instanceForExceptionForSynch(
-			final TransferType transferType,
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
-			final long totalSize, final long bytesTransfered,
-			final int totalFilesTransferredSoFar,
-			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
-			final Exception exception, final String transferHost,
-			final String transferZone) throws JargonException {
+	public static TransferStatus instanceForExceptionForSynch(final TransferType transferType,
+			final String sourceFileAbsolutePath, final String targetFileAbsolutePath, final String targetResource,
+			final long totalSize, final long bytesTransfered, final int totalFilesTransferredSoFar,
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer, final Exception exception,
+			final String transferHost, final String transferZone) {
 
-		return new TransferStatus(transferType, TransferType.SYNCH,
-				sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
-				totalSize, bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesSkippedSoFar, totalFilesToTransfer,
-				TransferState.FAILURE, exception, false, transferHost,
-				transferZone);
+		return new TransferStatus(transferType, TransferType.SYNCH, sourceFileAbsolutePath, targetFileAbsolutePath,
+				targetResource, totalSize, bytesTransfered, totalFilesTransferredSoFar, totalFilesSkippedSoFar,
+				totalFilesToTransfer, TransferState.FAILURE, exception, false, transferHost, transferZone);
 
 	}
 
@@ -321,85 +303,57 @@ public class TransferStatus {
 		return sb.toString();
 	}
 
-	/**
-	 * Private constructor, use the static instance methods.
-	 *
-	 * @param transferType
-	 * @param transferEnclosingType
-	 * @param sourceFileAbsolutePath
-	 * @param targetFileAbsolutePath
-	 * @param targetResource
-	 * @param totalSize
-	 * @param bytesTransferred
-	 * @param totalFilesTransferredSoFar
-	 * @param totalFilesSkippedSoFar
-	 * @param totalFilesToTransfer
-	 * @param transferState
-	 * @param transferException
-	 * @param intraFileStatusReport
-	 * @throws JargonException
-	 */
-	private TransferStatus(final TransferType transferType,
-			final TransferType transferEnclosingType,
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String targetResource,
-			final long totalSize, final long bytesTransferred,
-			final int totalFilesTransferredSoFar,
-			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
-			final TransferState transferState,
-			final Exception transferException,
-			final boolean intraFileStatusReport, final String transferHost,
-			final String transferZone) throws JargonException {
+	private TransferStatus(final TransferType transferType, final TransferType transferEnclosingType,
+			final String sourceFileAbsolutePath, final String targetFileAbsolutePath, final String targetResource,
+			final long totalSize, final long bytesTransferred, final int totalFilesTransferredSoFar,
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer, final TransferState transferState,
+			final Exception transferException, final boolean intraFileStatusReport, final String transferHost,
+			final String transferZone) {
 
 		if (totalSize < 0) {
-			throw new JargonException("totalSize less than zero");
+			throw new IllegalArgumentException("totalSize less than zero");
 		}
 
 		if (bytesTransferred < 0) {
-			throw new JargonException("bytesTransferred is less than zero");
+			throw new IllegalArgumentException("bytesTransferred is less than zero");
 		}
 
 		if (!intraFileStatusReport) {
 
 			if (totalFilesTransferredSoFar < 0) {
-				throw new JargonException(
-						"totalFilesTransferredSoFar is less than zero");
+				throw new IllegalArgumentException("totalFilesTransferredSoFar is less than zero");
 			}
 
 			if (totalFilesToTransfer < 0) {
-				throw new JargonException(
-						"totalFilesToTransfer is less than zero");
+				throw new IllegalArgumentException("totalFilesToTransfer is less than zero");
 			}
 
 			if (transferType == null) {
-				throw new JargonException("null transfer type");
+				throw new IllegalArgumentException("null transfer type");
 			}
 
-			if (sourceFileAbsolutePath == null
-					|| sourceFileAbsolutePath.isEmpty()) {
-				throw new JargonException(
-						"null or empty sourceFileAbsolutePath");
+			if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
+				throw new IllegalArgumentException("null or empty sourceFileAbsolutePath");
 			}
 
 			if (targetFileAbsolutePath == null) {
-				throw new JargonException("null  targetFileAbsolutePath");
+				throw new IllegalArgumentException("null  targetFileAbsolutePath");
 			}
 
 			if (targetResource == null) {
-				throw new JargonException(
-						"null targetResource, set to blank if unused");
+				throw new IllegalArgumentException("null targetResource, set to blank if unused");
 			}
 
 			if (transferState == null) {
-				throw new JargonException("null transferState");
+				throw new IllegalArgumentException("null transferState");
 			}
 
 			if (transferHost == null || transferHost.isEmpty()) {
-				throw new JargonException("null transferHost");
+				throw new IllegalArgumentException("null transferHost");
 			}
 
 			if (transferZone == null || transferZone.isEmpty()) {
-				throw new JargonException("null transferZone");
+				throw new IllegalArgumentException("null transferZone");
 			}
 		}
 

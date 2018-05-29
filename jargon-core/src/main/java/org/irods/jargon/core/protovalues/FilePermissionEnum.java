@@ -10,11 +10,10 @@ import java.util.List;
  */
 public enum FilePermissionEnum {
 
-	NONE(-1), NULL(1000), EXECUTE(1010), READ_ANNOTATION(1020), READ_SYSTEM_METADATA(
-			1030), READ_METADATA(1040), READ(1050), WRITE_ANNOTATION(1060), CREATE_METADATA(
-			1070), MODIFY_METADATA(1080), DELETE_METADATA(1090), ADMINISTER_OBJECT(
-			1100), CREATE_OBJECT(1110), WRITE(1120), DELETE_OBJECT(1130), CREATE_TOKEN(
-			1140), DELETE_TOKEN(1150), CURATE(1160), OWN(1200), ;
+	NONE(-1), NULL(1000), EXECUTE(1010), READ_ANNOTATION(1020), READ_SYSTEM_METADATA(1030), READ_METADATA(1040), READ(
+			1050), WRITE_ANNOTATION(1060), CREATE_METADATA(1070), MODIFY_METADATA(1080), DELETE_METADATA(
+					1090), ADMINISTER_OBJECT(1100), CREATE_OBJECT(1110), WRITE(1120), DELETE_OBJECT(
+							1130), CREATE_TOKEN(1140), DELETE_TOKEN(1150), CURATE(1160), OWN(1200),;
 
 	private int permissionNumericValue;
 
@@ -63,14 +62,13 @@ public enum FilePermissionEnum {
 		case 1200:
 			return OWN;
 		default:
-			throw new IllegalArgumentException("No permission type for value: "
-					+ i);
+			throw new IllegalArgumentException("No permission type for value: " + i);
 		}
 	}
 
 	/**
-	 * Handy method to get all enum values as a list, good for building select
-	 * boxes and the like
+	 * Handy method to get all enum values as a list, good for building select boxes
+	 * and the like
 	 *
 	 * @return {@code List<FilePermissionEnum>}
 	 */
@@ -85,8 +83,8 @@ public enum FilePermissionEnum {
 	}
 
 	/**
-	 * @return the permissionNumericValue {@code int} with the iRODS
-	 *         protocol value for the permission
+	 * @return the permissionNumericValue {@code int} with the iRODS protocol value
+	 *         for the permission
 	 */
 	public int getPermissionNumericValue() {
 		return permissionNumericValue;
@@ -94,8 +92,8 @@ public enum FilePermissionEnum {
 
 	/**
 	 * @param permissionNumericValue
-	 *            {@code int} with the permissionNumericValue that is the
-	 *            iRODS protocol representation
+	 *            {@code int} with the permissionNumericValue that is the iRODS
+	 *            protocol representation
 	 */
 	public void setPermissionNumericValue(final int permissionNumericValue) {
 		this.permissionNumericValue = permissionNumericValue;

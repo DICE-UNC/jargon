@@ -2,11 +2,10 @@ package org.irods.jargon.core.pub.io;
 
 import java.io.InputStream;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -26,8 +25,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 	public void testReadByteArray() throws Exception {
 		int expectedLen = 100;
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
-		ConnectionProgressStatusListener listener = Mockito
-				.mock(ConnectionProgressStatusListener.class);
+		ConnectionProgressStatusListener listener = Mockito.mock(ConnectionProgressStatusListener.class);
 		@SuppressWarnings("resource")
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
@@ -35,34 +33,29 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		Mockito.when(dummyInputStream.read(readBuffer)).thenReturn(expectedLen);
 
 		int actualRead = byteCountingCallbackInputStream.read(readBuffer);
-		Assert.assertEquals("did not get expected length back", expectedLen,
-				actualRead);
-		Mockito.verify(listener).connectionProgressStatusCallback(
-				Matchers.isA(ConnectionProgressStatus.class));
+		Assert.assertEquals("did not get expected length back", expectedLen, actualRead);
+		Mockito.verify(listener).connectionProgressStatusCallback(Matchers.isA(ConnectionProgressStatus.class));
 	}
 
 	@Test
 	public void testReadByteAvailable() throws Exception {
 		int expectedLen = 100;
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
-		ConnectionProgressStatusListener listener = Mockito
-				.mock(ConnectionProgressStatusListener.class);
+		ConnectionProgressStatusListener listener = Mockito.mock(ConnectionProgressStatusListener.class);
 		@SuppressWarnings("resource")
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
 		Mockito.when(dummyInputStream.available()).thenReturn(expectedLen);
 
 		int actualRead = byteCountingCallbackInputStream.available();
-		Assert.assertEquals("did not get expected available back", expectedLen,
-				actualRead);
+		Assert.assertEquals("did not get expected available back", expectedLen, actualRead);
 
 	}
 
 	@Test
 	public void testClose() throws Exception {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
-		ConnectionProgressStatusListener listener = Mockito
-				.mock(ConnectionProgressStatusListener.class);
+		ConnectionProgressStatusListener listener = Mockito.mock(ConnectionProgressStatusListener.class);
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
 
@@ -75,29 +68,23 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 	public void testReadByteArrayIntInt() throws Exception {
 		int expectedLen = 100;
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
-		ConnectionProgressStatusListener listener = Mockito
-				.mock(ConnectionProgressStatusListener.class);
+		ConnectionProgressStatusListener listener = Mockito.mock(ConnectionProgressStatusListener.class);
 		@SuppressWarnings("resource")
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
 		byte[] readBuffer = new byte[100];
-		Mockito.when(dummyInputStream.read(readBuffer, 0, expectedLen))
-				.thenReturn(expectedLen);
+		Mockito.when(dummyInputStream.read(readBuffer, 0, expectedLen)).thenReturn(expectedLen);
 
-		int actualRead = byteCountingCallbackInputStream.read(readBuffer, 0,
-				expectedLen);
-		Assert.assertEquals("did not get expected length back", expectedLen,
-				actualRead);
-		Mockito.verify(listener).connectionProgressStatusCallback(
-				Matchers.isA(ConnectionProgressStatus.class));
+		int actualRead = byteCountingCallbackInputStream.read(readBuffer, 0, expectedLen);
+		Assert.assertEquals("did not get expected length back", expectedLen, actualRead);
+		Mockito.verify(listener).connectionProgressStatusCallback(Matchers.isA(ConnectionProgressStatus.class));
 	}
 
 	@SuppressWarnings("resource")
 	@Test
 	public void testByteCountingCallbackInputStreamWrapper() {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
-		ConnectionProgressStatusListener listener = Mockito
-				.mock(ConnectionProgressStatusListener.class);
+		ConnectionProgressStatusListener listener = Mockito.mock(ConnectionProgressStatusListener.class);
 		new ByteCountingCallbackInputStreamWrapper(listener, dummyInputStream);
 		Assert.assertTrue(true);
 	}
@@ -114,8 +101,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testByteCountingCallbackInputStreamWrapperNullStream() {
 		InputStream dummyInputStream = null;
-		ConnectionProgressStatusListener listener = Mockito
-				.mock(ConnectionProgressStatusListener.class);
+		ConnectionProgressStatusListener listener = Mockito.mock(ConnectionProgressStatusListener.class);
 		new ByteCountingCallbackInputStreamWrapper(listener, dummyInputStream);
 	}
 

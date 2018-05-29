@@ -26,8 +26,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class DefaultIntraFileProgressCallbackListener implements
-		ConnectionProgressStatusListener {
+public class DefaultIntraFileProgressCallbackListener implements ConnectionProgressStatusListener {
 
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private final TransferType transferType;
@@ -48,11 +47,10 @@ public class DefaultIntraFileProgressCallbackListener implements
 	 * @param transferType
 	 *            {@link TransferType} enum value
 	 * @param totalBytesToTransfer
-	 *            {@code long} with the total size of the file under
-	 *            transfer
+	 *            {@code long} with the total size of the file under transfer
 	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} with information about the
-	 *            current transfer
+	 *            {@link TransferControlBlock} with information about the current
+	 *            transfer
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener} that will recieve the
 	 *            aggregated callbacks from this listener.
@@ -61,16 +59,12 @@ public class DefaultIntraFileProgressCallbackListener implements
 	 *            inta-file callback behavior
 	 * @return {@link ConnectionProgressStatusListener}
 	 */
-	public static ConnectionProgressStatusListener instanceSettingTransferOptions(
-			final TransferType transferType,
-			final long totalBytesToTransfer,
-			final TransferControlBlock transferControlBlock,
+	public static ConnectionProgressStatusListener instanceSettingTransferOptions(final TransferType transferType,
+			final long totalBytesToTransfer, final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferOptions transferOptions) {
-		return new DefaultIntraFileProgressCallbackListener(transferType,
-				totalBytesToTransfer, transferControlBlock,
-				transferStatusCallbackListener, BYTE_COUNT_MESSAGE_THRESHOLD,
-				transferOptions);
+		return new DefaultIntraFileProgressCallbackListener(transferType, totalBytesToTransfer, transferControlBlock,
+				transferStatusCallbackListener, BYTE_COUNT_MESSAGE_THRESHOLD, transferOptions);
 	}
 
 	/**
@@ -80,64 +74,33 @@ public class DefaultIntraFileProgressCallbackListener implements
 	 * @param transferType
 	 *            {@link TransferType} enum value
 	 * @param totalBytesToTransfer
-	 *            {@code long} with the total size of the file under
-	 *            transfer
+	 *            {@code long} with the total size of the file under transfer
 	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} with information about the
-	 *            current transfer
+	 *            {@link TransferControlBlock} with information about the current
+	 *            transfer
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener} that will recieve the
 	 *            aggregated callbacks from this listener.
 	 * @return {@link ConnectionProgressStatusListener}
 	 */
-	public static ConnectionProgressStatusListener instance(
-			final TransferType transferType, final long totalBytesToTransfer,
-			final TransferControlBlock transferControlBlock,
+	public static ConnectionProgressStatusListener instance(final TransferType transferType,
+			final long totalBytesToTransfer, final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener) {
-		return new DefaultIntraFileProgressCallbackListener(transferType,
-				totalBytesToTransfer, transferControlBlock,
-				transferStatusCallbackListener, BYTE_COUNT_MESSAGE_THRESHOLD,
-				null);
+		return new DefaultIntraFileProgressCallbackListener(transferType, totalBytesToTransfer, transferControlBlock,
+				transferStatusCallbackListener, BYTE_COUNT_MESSAGE_THRESHOLD, null);
 	}
 
-	/**
-	 * Static initializer method to create an immutable call-back listener,
-	 * specifiy a skip interval that can be used to control the frequency that
-	 * this object will use to report up the callback chain.
-	 *
-	 * @param transferType
-	 * @param totalBytesToTransfer
-	 * @param transferControlBlock
-	 * @param transferStatusCallbackListener
-	 * @return {@link ConnectionProgressStatusListener}
-	 * @deprecated use variants that set transfer options going forward
-	 */
-	@Deprecated
-	public static ConnectionProgressStatusListener instanceSettingInterval(
-			final TransferType transferType,
-			final long totalBytesToTransfer,
+	private DefaultIntraFileProgressCallbackListener(final TransferType transferType, final long totalBytesToTransfer,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final int interval) {
-		return new DefaultIntraFileProgressCallbackListener(transferType,
-				totalBytesToTransfer, transferControlBlock,
-				transferStatusCallbackListener, interval, null);
-	}
-
-	private DefaultIntraFileProgressCallbackListener(
-			final TransferType transferType,
-			final long totalBytesToTransfer,
-			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final int interval, final TransferOptions transferOptions) {
+			final TransferStatusCallbackListener transferStatusCallbackListener, final int interval,
+			final TransferOptions transferOptions) {
 
 		if (transferControlBlock == null) {
 			throw new IllegalArgumentException("transferControlBlock is null");
 		}
 
 		if (transferStatusCallbackListener == null) {
-			throw new IllegalArgumentException(
-					"transferStatusCallbackListener is null");
+			throw new IllegalArgumentException("transferStatusCallbackListener is null");
 		}
 
 		if (transferType == null) {
@@ -151,10 +114,8 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 		if (transferOptions == null) {
 			this.transferOptions = new TransferOptions();
-			this.transferOptions
-					.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
-			this.transferOptions
-					.setIntraFileStatusCallbacksTotalBytesInterval(BYTE_COUNT_BYTE_THRESHOLD);
+			this.transferOptions.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
+			this.transferOptions.setIntraFileStatusCallbacksTotalBytesInterval(BYTE_COUNT_BYTE_THRESHOLD);
 		} else {
 			this.transferOptions = transferOptions;
 		}
@@ -162,14 +123,13 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * connectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
 	 */
 	@Override
-	public synchronized void connectionProgressStatusCallback(
-			final ConnectionProgressStatus connectionProgressStatus) {
+	public synchronized void connectionProgressStatusCallback(final ConnectionProgressStatus connectionProgressStatus) {
 
 		// are there bytes to count?
 		if (connectionProgressStatus.getCallbackType() == CallbackType.SEND_PROGRESS
@@ -182,31 +142,26 @@ public class DefaultIntraFileProgressCallbackListener implements
 		}
 	}
 
-	private void accumulateAndSend(
-			final ConnectionProgressStatus connectionProgressStatus) {
+	private void accumulateAndSend(final ConnectionProgressStatus connectionProgressStatus) {
 		countOfMessagesSinceLastSend++;
 		countOfBytesSinceLastSend += connectionProgressStatus.getByteCount();
 		totalBytesTransferred += connectionProgressStatus.getByteCount();
 
 		/*
-		 * at this point transfer options guaranteed to not be null, it should
-		 * be set in the constructor
+		 * at this point transfer options guaranteed to not be null, it should be set in
+		 * the constructor
 		 */
 
-		if (countOfMessagesSinceLastSend > transferOptions
-				.getIntraFileStatusCallbacksNumberCallsInterval()
-				|| countOfBytesSinceLastSend > transferOptions
-						.getIntraFileStatusCallbacksTotalBytesInterval()) {
+		if (countOfMessagesSinceLastSend > transferOptions.getIntraFileStatusCallbacksNumberCallsInterval()
+				|| countOfBytesSinceLastSend > transferOptions.getIntraFileStatusCallbacksTotalBytesInterval()) {
 			try {
-				TransferStatus transferStatus = TransferStatus
-						.instanceForIntraFileStatus(transferType,
-								totalBytesToTransfer, totalBytesTransferred);
+				TransferStatus transferStatus = TransferStatus.instanceForIntraFileStatus(transferType,
+						totalBytesToTransfer, totalBytesTransferred);
 				transferStatusCallbackListener.statusCallback(transferStatus);
 				countOfMessagesSinceLastSend = 0;
 				countOfBytesSinceLastSend = 0;
 			} catch (JargonException e) {
-				throw new JargonRuntimeException(
-						"error sending status callback", e);
+				throw new JargonRuntimeException("error sending status callback", e);
 			}
 		}
 	}
@@ -220,7 +175,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -257,18 +212,16 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * finalConnectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
 	 */
 	@Override
-	public void finalConnectionProgressStatusCallback(
-			final ConnectionProgressStatus connectionProgressStatus) {
+	public void finalConnectionProgressStatusCallback(final ConnectionProgressStatus connectionProgressStatus) {
 		try {
-			TransferStatus transferStatus = TransferStatus
-					.instanceForIntraFileStatus(transferType,
-							totalBytesToTransfer, totalBytesToTransfer);
+			TransferStatus transferStatus = TransferStatus.instanceForIntraFileStatus(transferType,
+					totalBytesToTransfer, totalBytesToTransfer);
 			transferStatusCallbackListener.statusCallback(transferStatus);
 		} catch (JargonException e) {
 			throw new JargonRuntimeException("error sending status callback", e);

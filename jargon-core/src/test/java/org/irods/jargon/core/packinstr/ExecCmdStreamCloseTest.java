@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 public class ExecCmdStreamCloseTest {
@@ -10,8 +9,8 @@ public class ExecCmdStreamCloseTest {
 	public void testInstance() throws Exception {
 		ExecCmdStreamClose execCmd = ExecCmdStreamClose.instance(1);
 		Assert.assertNotNull("null intance returned", execCmd);
-		Assert.assertEquals("did not correctly set api number",
-				ExecCmdStreamClose.STREAM_CLOSE_API_NBR, execCmd.getApiNumber());
+		Assert.assertEquals("did not correctly set api number", ExecCmdStreamClose.STREAM_CLOSE_API_NBR,
+				execCmd.getApiNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -32,8 +31,7 @@ public class ExecCmdStreamCloseTest {
 
 		String expectedXML = sb.toString();
 
-		Assert.assertEquals("did not get expected XML from PI", expectedXML,
-				actualXML);
+		Assert.assertEquals("did not get expected XML from PI", expectedXML, actualXML);
 
 	}
 

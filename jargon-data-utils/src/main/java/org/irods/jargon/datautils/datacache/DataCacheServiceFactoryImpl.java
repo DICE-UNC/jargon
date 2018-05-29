@@ -8,7 +8,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
 /**
  * Factory for creating {@code DataCacheService} components.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
@@ -25,12 +25,6 @@ public class DataCacheServiceFactoryImpl implements DataCacheServiceFactory {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.datautils.image.ImageServiceFactory#
-	 * instanceThumbnailService (org.irods.jargon.core.connection.IRODSAccount)
-	 */
 	@Override
 	public DataCacheService instanceDataCacheService(final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {

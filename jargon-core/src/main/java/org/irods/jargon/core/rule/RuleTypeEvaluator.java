@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Tool to look at the contents of a rule and guess the language
- * 
+ *
  * @author conwaymc
  *
  */
@@ -39,11 +39,13 @@ public class RuleTypeEvaluator {
 
 	/**
 	 * Guess at the type of a rule based on looking at the text
-	 * 
+	 *
 	 * @param ruleText
 	 *            <code>String</code> with the text of the rule
 	 * @return {@link IrodsRuleInvocationTypeEnum} with the guessed type of the
 	 *         rule, or an exception will be thrown if it cannot be determined
+	 * @throws UnknownRuleTypeException
+	 *             for rule type not supported
 	 */
 	public IrodsRuleInvocationTypeEnum guessRuleLanguageType(final String ruleText) throws UnknownRuleTypeException {
 		if (ruleText == null || ruleText.isEmpty()) {
@@ -78,7 +80,7 @@ public class RuleTypeEvaluator {
 
 	/**
 	 * Guess a rule type based on the file extenstion
-	 * 
+	 *
 	 * @param fileName
 	 *            <code>String</code> with a file name or even a path
 	 * @return {@link IrodsRuleInvocationTypeEnum} which can return
@@ -107,7 +109,7 @@ public class RuleTypeEvaluator {
 
 	/**
 	 * Look for a rule engine type hint annotation
-	 * 
+	 *
 	 * @param ruleText
 	 *            <code>String</code> with the rule text
 	 * @return {@link IrodsRuleInvocationTypeEnum} which can return

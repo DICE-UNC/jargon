@@ -37,44 +37,36 @@ public class TestMetadataBug1042 {
 	public void test() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
 		String attribute = "testAttribute";
-		IRODSAccount irodsAccount = IRODSAccount.instance(host, port, userName,
-				password, "", zone, "");
+		IRODSAccount irodsAccount = IRODSAccount.instance(host, port, userName, password, "", zone, "");
 
-		irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-				fileName);
+		irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(fileName);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		/*
 		 * 2) if you want to try adding AVU metadata to this file, use below
 		 */
 
 		/*
-		 * uncomment this if you want to add the avu data here or test this
-		 * function
-		 * 
+		 * uncomment this if you want to add the avu data here or test this function
+		 *
 		 * AvuData avuData = AvuData.instance(attribute, value, "");
-		 * 
+		 *
 		 * dataObjectAO.addAVUMetadata(fileName, avuData);
 		 */
 
 		/*
-		 * This uses the raw xml protocol to query the data, let's see what we
-		 * get
+		 * This uses the raw xml protocol to query the data, let's see what we get
 		 */
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
-				attribute));
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, attribute));
 
-		List<MetaDataAndDomainData> metadata = dataObjectAO
-				.findMetadataValuesByMetadataQuery(avuQueryElements);
+		List<MetaDataAndDomainData> metadata = dataObjectAO.findMetadataValuesByMetadataQuery(avuQueryElements);
 
 		for (MetaDataAndDomainData actual : metadata) {
-			System.out.println("attrib:" + actual.getAvuAttribute()
-					+ "\nvalue:" + actual.getAvuValue());
+			System.out.println("attrib:" + actual.getAvuAttribute() + "\nvalue:" + actual.getAvuValue());
 		}
 
 		irodsFileSystem.close();

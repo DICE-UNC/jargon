@@ -6,10 +6,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,18 +26,12 @@ public class IRODSQueryResultRowTest {
 	public void testInstance() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -48,8 +41,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, resultColumns);
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, resultColumns);
 		Assert.assertNotNull("no result row created", resultRow);
 
 	}
@@ -58,18 +50,12 @@ public class IRODSQueryResultRowTest {
 	public void testInstanceNullResultSet() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -92,18 +78,12 @@ public class IRODSQueryResultRowTest {
 	public void testGetByColumnId() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -113,11 +93,10 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, new ArrayList<String>());
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, new ArrayList<String>());
 		String actualColumn = resultRow.getColumn(0);
-		Assert.assertEquals("did not get expected column",
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(), actualColumn);
+		Assert.assertEquals("did not get expected column", RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(),
+				actualColumn);
 
 	}
 
@@ -125,18 +104,12 @@ public class IRODSQueryResultRowTest {
 	public void testGetByColumnIdOutOfRange() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -146,8 +119,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, new ArrayList<String>());
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, new ArrayList<String>());
 		resultRow.getColumn(99);
 
 	}
@@ -156,18 +128,12 @@ public class IRODSQueryResultRowTest {
 	public void testGetByColumnName() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -177,12 +143,10 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, resultColumns);
-		String actualColumn = resultRow
-				.getColumn(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
-		Assert.assertEquals("did not get expected column",
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(), actualColumn);
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, resultColumns);
+		String actualColumn = resultRow.getColumn(RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName());
+		Assert.assertEquals("did not get expected column", RodsGenQueryEnum.COL_AUDIT_ACTION_ID.getName(),
+				actualColumn);
 
 	}
 
@@ -190,18 +154,12 @@ public class IRODSQueryResultRowTest {
 	public void testGetByColumnNullName() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
 
@@ -210,8 +168,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, new ArrayList<String>());
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, new ArrayList<String>());
 		resultRow.getColumn(null);
 
 	}
@@ -220,18 +177,12 @@ public class IRODSQueryResultRowTest {
 	public void testGetByColumnBlankName() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -241,8 +192,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, new ArrayList<String>());
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, new ArrayList<String>());
 		resultRow.getColumn("");
 
 	}
@@ -251,18 +201,12 @@ public class IRODSQueryResultRowTest {
 	public void testGetByColumnBogusName() throws Exception {
 
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_COMMENT,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
-		selectFields.add(GenQuerySelectField.instance(
-				RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_COMMENT,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
+		selectFields.add(GenQuerySelectField.instance(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+				GenQuerySelectField.SelectFieldTypes.FIELD, GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD));
 
 		TranslatedIRODSGenQuery query = mock(TranslatedIRODSGenQuery.class);
 		when(query.getSelectFields()).thenReturn(selectFields);
@@ -272,8 +216,7 @@ public class IRODSQueryResultRowTest {
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_COMMENT.getName());
 		resultColumns.add(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME.getName());
 
-		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(
-				resultColumns, new ArrayList<String>());
+		IRODSQueryResultRow resultRow = IRODSQueryResultRow.instance(resultColumns, new ArrayList<String>());
 		resultRow.getColumn("bogus");
 
 	}

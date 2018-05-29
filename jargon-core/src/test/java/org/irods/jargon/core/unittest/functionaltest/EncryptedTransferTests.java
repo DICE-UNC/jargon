@@ -195,7 +195,7 @@ public class EncryptedTransferTests {
 
 	/**
 	 * Test for https://github.com/DICE-UNC/jargon/issues/228
-	 * 
+	 *
 	 * @throws JargonException
 	 * @throws TestConfigurationException
 	 * @throws IRODSTestAssertionException

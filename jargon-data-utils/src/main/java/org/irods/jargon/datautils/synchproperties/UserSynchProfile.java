@@ -11,14 +11,14 @@ import java.util.Map;
 public class UserSynchProfile {
 
 	/**
-	 * iRODS user name for this profile. This will be stored in the relevant
-	 * iRODS server
+	 * iRODS user name for this profile. This will be stored in the relevant iRODS
+	 * server
 	 */
 	private String userName = "";
 
 	/**
-	 * Map (by device name assigned by user) of devices on this iRODS server
-	 * that are synched
+	 * Map (by device name assigned by user) of devices on this iRODS server that
+	 * are synched
 	 */
 	private Map<String, UserSynchDeviceProfile> userSynchDevices;
 
@@ -34,8 +34,7 @@ public class UserSynchProfile {
 		return userSynchDevices;
 	}
 
-	public void setUserSynchDevices(
-			final Map<String, UserSynchDeviceProfile> userSynchDevices) {
+	public void setUserSynchDevices(final Map<String, UserSynchDeviceProfile> userSynchDevices) {
 		this.userSynchDevices = userSynchDevices;
 	}
 

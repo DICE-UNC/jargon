@@ -1,8 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,9 +19,7 @@ public class GetTempPasswordInTest {
 	public void testInstance() throws Exception {
 		GetTempPasswordIn instance = GetTempPasswordIn.instance();
 		Assert.assertNotNull("null instance returned", instance);
-		Assert.assertEquals("wrong API number",
-				GetTempPasswordIn.GET_TEMP_PASSWORD_API_NBR,
-				instance.getApiNumber());
+		Assert.assertEquals("wrong API number", GetTempPasswordIn.GET_TEMP_PASSWORD_API_NBR, instance.getApiNumber());
 	}
 
 }

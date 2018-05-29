@@ -13,6 +13,7 @@ public interface ZoneAO extends IRODSAccessObject {
 	 *
 	 * @return List of {@link Zone}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<Zone> listZones() throws JargonException;
 
@@ -21,6 +22,7 @@ public interface ZoneAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List<String>}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> listZoneNames() throws JargonException;
 
@@ -29,13 +31,13 @@ public interface ZoneAO extends IRODSAccessObject {
 	 *
 	 * @param zoneName
 	 *            {@code String} with the unique name of the iRODS zone
-	 * @return {@link Zone} domain object. Note that a
-	 *         {@code DataNotFoundException} will result if the zone is not
-	 *         in iRODS.
+	 * @return {@link Zone} domain object. Note that a {@code DataNotFoundException}
+	 *         will result if the zone is not in iRODS.
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
+	 *             for missing zone
 	 */
-	Zone getZoneByName(String zoneName) throws JargonException,
-			DataNotFoundException;
+	Zone getZoneByName(String zoneName) throws JargonException, DataNotFoundException;
 
 }

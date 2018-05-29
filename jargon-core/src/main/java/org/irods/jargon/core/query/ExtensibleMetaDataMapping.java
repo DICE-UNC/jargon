@@ -20,36 +20,31 @@ import org.slf4j.LoggerFactory;
  */
 public final class ExtensibleMetaDataMapping {
 
-	private static Logger log = LoggerFactory
-			.getLogger(ExtensibleMetaDataMapping.class);
+	private static Logger log = LoggerFactory.getLogger(ExtensibleMetaDataMapping.class);
 
 	// Map will be wrapped immutable at construction time
 	private Map<String, String> extensibleMappings = new HashMap<String, String>();
 
 	/**
-	 * Create an object to hold a mapping of extensible metadata columns and
-	 * values. Note that this method will override the stored mappings from a
-	 * previous construction, therefore, the access methods are synchronized.
+	 * Create an object to hold a mapping of extensible metadata columns and values.
+	 * Note that this method will override the stored mappings from a previous
+	 * construction, therefore, the access methods are synchronized.
 	 *
 	 * @param extensibleMappings
 	 *            {@code Map<String,String>} containing
 	 * @return {@link ExtensibleMetaDataMapping}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public synchronized static ExtensibleMetaDataMapping instance(
-			final Map<String, String> extensibleMappings)
+	public synchronized static ExtensibleMetaDataMapping instance(final Map<String, String> extensibleMappings)
 			throws JargonException {
 
 		log.debug("cacheing and returning fresh extensibleMetaDataMapping");
-		Map<String, String> copiedExtensibleMappings = new HashMap<String, String>(
-				extensibleMappings);
-		return new ExtensibleMetaDataMapping(
-				Collections.unmodifiableMap(copiedExtensibleMappings));
+		Map<String, String> copiedExtensibleMappings = new HashMap<String, String>(extensibleMappings);
+		return new ExtensibleMetaDataMapping(Collections.unmodifiableMap(copiedExtensibleMappings));
 	}
 
-	private ExtensibleMetaDataMapping(
-			final Map<String, String> extensibleMappings)
-			throws JargonException {
+	private ExtensibleMetaDataMapping(final Map<String, String> extensibleMappings) throws JargonException {
 		if (extensibleMappings == null || extensibleMappings.size() == 0) {
 			throw new JargonException("null or empty extensible mappings");
 		}
@@ -57,16 +52,17 @@ public final class ExtensibleMetaDataMapping {
 	}
 
 	/**
-	 * Given a column name (which maps to the ext_col_names_t structure in the
-	 * IRODS extendediCat.h), return the numeric value which should be sent in
-	 * an IRODS query.
+	 * Given a column name (which maps to the ext_col_names_t structure in the IRODS
+	 * extendediCat.h), return the numeric value which should be sent in an IRODS
+	 * query.
 	 *
 	 * Note that method can return {@code null}
 	 *
 	 * @param columnName
-	 *            {@code String} containing the column name of the extensible metadata
-	 * @return {@code String} containing the corresponding index, or
-	 *         {@code null} if no match is found.
+	 *            {@code String} containing the column name of the extensible
+	 *            metadata
+	 * @return {@code String} containing the corresponding index, or {@code null} if
+	 *         no match is found.
 	 */
 	public String getIndexFromColumnName(final String columnName) {
 		String index = extensibleMappings.get(columnName);
@@ -79,8 +75,8 @@ public final class ExtensibleMetaDataMapping {
 	 * Note that method can return {@code null}
 	 *
 	 * @param index
-	 *            {@code String} containing the value of the extensible
-	 *            metadata numeric index.
+	 *            {@code String} containing the value of the extensible metadata
+	 *            numeric index.
 	 * @return {@code String} with the extensible metaata column name, or
 	 *         {@code null} if not found.
 	 */

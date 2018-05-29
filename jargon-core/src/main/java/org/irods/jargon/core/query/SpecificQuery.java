@@ -28,19 +28,18 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * Create an instance of a specific (SQL) query with no arguments
 	 *
 	 * @param queryString
-	 *            {@code String} with either the exact SQL as registered by
-	 *            an admin, or an alias as registered by an admin
+	 *            {@code String} with either the exact SQL as registered by an
+	 *            admin, or an alias as registered by an admin
 	 * @param continuationValue
-	 *            {@code int} with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query
+	 *            {@code int} with the continuation value from a previous page of
+	 *            results, or the value 0 if this is an initial query
 	 * @param zoneHint
-	 *            {@code String} (optional, blank if not needed) zone hint
-	 *            for cross-zone invocation
-	 * @return {@code SpecificQuery} instance that can be run against the
-	 *         iRODS catalog
+	 *            {@code String} (optional, blank if not needed) zone hint for
+	 *            cross-zone invocation
+	 * @return {@code SpecificQuery} instance that can be run against the iRODS
+	 *         catalog
 	 */
-	public static SpecificQuery instanceWithNoArguments(
-			final String queryString, final int continuationValue,
+	public static SpecificQuery instanceWithNoArguments(final String queryString, final int continuationValue,
 			final String zoneHint) {
 		return new SpecificQuery(queryString, null, continuationValue, zoneHint);
 
@@ -50,21 +49,20 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * Create an instance of a specific (SQL) query including one argument
 	 *
 	 * @param queryString
-	 *            {@code String} with either the exact SQL as registered by
-	 *            an admin, or an alias as registered by an admin
+	 *            {@code String} with either the exact SQL as registered by an
+	 *            admin, or an alias as registered by an admin
 	 * @param argument
 	 *            {@code String<String>} with a single argument
 	 * @param continuationValue
-	 *            {@code int} with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query
+	 *            {@code int} with the continuation value from a previous page of
+	 *            results, or the value 0 if this is an initial query
 	 * @param zoneHint
-	 *            {@code String} (optional, blank if not needed) zone hint
-	 *            for cross-zone invocation
-	 * @return {@code SpecificQuery} instance that can be run against the
-	 *         iRODS catalog
+	 *            {@code String} (optional, blank if not needed) zone hint for
+	 *            cross-zone invocation
+	 * @return {@code SpecificQuery} instance that can be run against the iRODS
+	 *         catalog
 	 */
-	public static SpecificQuery instanceWithOneArgument(
-			final String queryString, final String argument,
+	public static SpecificQuery instanceWithOneArgument(final String queryString, final String argument,
 			final int continuationValue, final String zoneHint) {
 
 		List<String> args = new ArrayList<String>(1);
@@ -76,27 +74,24 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * Create an instance of a specific (SQL) query including arguments
 	 *
 	 * @param queryString
-	 *            {@code String} with either the exact SQL as registered by
-	 *            an admin, or an alias as registered by an admin
+	 *            {@code String} with either the exact SQL as registered by an
+	 *            admin, or an alias as registered by an admin
 	 * @param arguments
-	 *            {@code List<String>} with a maximum of 10 arguments to be
-	 *            bound to variables defined in the specific query registered by
-	 *            an administrator. This may be set to {@code null} if not
-	 *            used
+	 *            {@code List<String>} with a maximum of 10 arguments to be bound to
+	 *            variables defined in the specific query registered by an
+	 *            administrator. This may be set to {@code null} if not used
 	 * @param continuationValue
-	 *            {@code int} with the continuation value from a previous
-	 *            page of results, or the value 0 if this is an initial query
+	 *            {@code int} with the continuation value from a previous page of
+	 *            results, or the value 0 if this is an initial query
 	 * @param zoneHint
-	 *            {@code String} (optional, blank if not needed) zone hint
-	 *            for cross-zone invocation
-	 * @return {@code SpecificQuery} instance that can be run against the
-	 *         iRODS catalog
+	 *            {@code String} (optional, blank if not needed) zone hint for
+	 *            cross-zone invocation
+	 * @return {@code SpecificQuery} instance that can be run against the iRODS
+	 *         catalog
 	 */
-	public static SpecificQuery instanceArguments(final String queryString,
-			final List<String> arguments, final int continuationValue,
-			final String zoneHint) {
-		return new SpecificQuery(queryString, arguments, continuationValue,
-				zoneHint);
+	public static SpecificQuery instanceArguments(final String queryString, final List<String> arguments,
+			final int continuationValue, final String zoneHint) {
+		return new SpecificQuery(queryString, arguments, continuationValue, zoneHint);
 	}
 
 	/**
@@ -106,11 +101,10 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * @param arguments
 	 * @param continuationValue
 	 * @param zoneHint
-	 *            {@code String} (optional, blank if not needed) zone hint
-	 *            for cross-zone invocation
+	 *            {@code String} (optional, blank if not needed) zone hint for
+	 *            cross-zone invocation
 	 */
-	private SpecificQuery(final String queryString,
-			final List<String> arguments, final int continuationValue,
+	private SpecificQuery(final String queryString, final List<String> arguments, final int continuationValue,
 			final String zoneHint) {
 		super(queryString, arguments, continuationValue);
 		if (zoneHint == null) {

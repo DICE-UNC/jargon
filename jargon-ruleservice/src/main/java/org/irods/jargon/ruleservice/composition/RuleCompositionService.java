@@ -15,9 +15,9 @@ import org.irods.jargon.core.rule.RuleInvocationConfiguration;
  * <p>
  * Note that this service class refines and extends the jargon-core
  * {@code RuleProcessingAO} services, which represents basic rule execution.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface RuleCompositionService {
 
@@ -64,7 +64,7 @@ public interface RuleCompositionService {
 	 * Given a {@code String} that represents an iRODS rule as would be executable
 	 * by the iRODS irule command, parse that rule into the rule body, as well as
 	 * input and output parameters.
-	 * 
+	 *
 	 * @param inputRuleAsString
 	 *            {@code String} with a valid iRODS rule
 	 * @return {@link Rule} that represents that parsed rule string.
@@ -74,7 +74,7 @@ public interface RuleCompositionService {
 
 	/**
 	 * Load a rule from iRODS
-	 * 
+	 *
 	 * @param absolutePathToRuleFile
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
@@ -91,7 +91,7 @@ public interface RuleCompositionService {
 	/**
 	 * Given a rule in primative string values, store as a rule in the given iRODS
 	 * file. This will handle overwrites.
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
@@ -112,7 +112,7 @@ public interface RuleCompositionService {
 
 	/**
 	 * Given a rule in {@link Rule} format, serialize and store in iRODS
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
@@ -126,7 +126,7 @@ public interface RuleCompositionService {
 	/**
 	 * Given the name of an input parameter (with the leading * included), delete it
 	 * from the rule input parameter list and store back in iRODS.
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
@@ -145,7 +145,7 @@ public interface RuleCompositionService {
 	/**
 	 * Given the name of an output parameter (with the leading * included), delete
 	 * it from the rule output parameter list and store back in iRODS.
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
@@ -163,7 +163,7 @@ public interface RuleCompositionService {
 
 	/**
 	 * Given a rule in primative string values, execute the rule in iRODS.
-	 * 
+	 *
 	 * @param ruleBody
 	 *            {@code String} with a valid iRODS rule body (without the input or
 	 *            output sections)
@@ -183,7 +183,7 @@ public interface RuleCompositionService {
 	/**
 	 * Given a rule in primative string values, execute the rule in iRODS,
 	 * specifying rule type and language information.
-	 * 
+	 *
 	 * @param ruleBody
 	 *            {@code String} with a valid iRODS rule body (without the input or
 	 *            output sections)
@@ -206,7 +206,7 @@ public interface RuleCompositionService {
 
 	/**
 	 * Add the given input parameter to the iRODS rule.
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file to
 	 *            which the parameter will be added
@@ -226,7 +226,7 @@ public interface RuleCompositionService {
 
 	/**
 	 * Add the given output parameter to the iRODS rule.
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file to
 	 *            which the parameter will be added

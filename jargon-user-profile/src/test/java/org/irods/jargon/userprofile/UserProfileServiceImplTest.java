@@ -76,7 +76,7 @@ public class UserProfileServiceImplTest {
 
 	/**
 	 * Test ability to add and remove profile repeatedly
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -139,7 +139,7 @@ public class UserProfileServiceImplTest {
 
 	/**
 	 * Add a profile twice
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DuplicateDataException.class)
@@ -254,6 +254,7 @@ public class UserProfileServiceImplTest {
 		List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
 
 		query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
 				UserProfileService.AVU_UNIT_NAMESPACE));
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
@@ -329,7 +330,7 @@ public class UserProfileServiceImplTest {
 
 	/**
 	 * Test general operation when a subdir is not defined for the profile info
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -518,7 +519,7 @@ public class UserProfileServiceImplTest {
 
 	/**
 	 * Update a profile on a non-existent user
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonRuntimeException.class)
@@ -542,7 +543,7 @@ public class UserProfileServiceImplTest {
 
 	/**
 	 * Update a profile on an existing user who has no profile
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

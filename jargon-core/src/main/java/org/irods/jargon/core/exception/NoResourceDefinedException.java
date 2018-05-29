@@ -14,18 +14,16 @@ public class NoResourceDefinedException extends ResourceHierarchyException {
 
 	private static final long serialVersionUID = 7273836835708379860L;
 
-	public NoResourceDefinedException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public NoResourceDefinedException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public NoResourceDefinedException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public NoResourceDefinedException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public NoResourceDefinedException(final String message,
-			final Throwable cause) {
+	public NoResourceDefinedException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -33,8 +31,7 @@ public class NoResourceDefinedException extends ResourceHierarchyException {
 		super(message);
 	}
 
-	public NoResourceDefinedException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public NoResourceDefinedException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 

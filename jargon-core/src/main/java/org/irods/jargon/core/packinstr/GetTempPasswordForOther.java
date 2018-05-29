@@ -19,8 +19,8 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	 * Instance method creates a request to generate a temporary password.
 	 *
 	 * @param targetUserName
-	 *            {@code String} (required) with the user name for which a
-	 *            temporary password will be generated.
+	 *            {@code String} (required) with the user name for which a temporary
+	 *            password will be generated.
 	 * @return {@code GetTempPasswordIn} instance
 	 */
 	public static GetTempPasswordForOther instance(final String targetUserName) {
@@ -31,14 +31,13 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	 * Private constructor
 	 *
 	 * @param targetUserName
-	 *            {@code String} (required) with the user name for which a
-	 *            temporary password will be generated.
+	 *            {@code String} (required) with the user name for which a temporary
+	 *            password will be generated.
 	 */
 	private GetTempPasswordForOther(final String targetUserName) {
 		super();
 		if (targetUserName == null || targetUserName.isEmpty()) {
-			throw new IllegalArgumentException(
-					"targetUserName is null or empty");
+			throw new IllegalArgumentException("targetUserName is null or empty");
 		}
 		this.targetUserName = targetUserName;
 		setApiNumber(GET_TEMP_PASSWORD_FOR_OTHER_API_NBR);
@@ -54,16 +53,15 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 		final Tag message = new Tag(PI_TAG,
-				new Tag[] { new Tag("targetUser", targetUserName.trim()),
-				new Tag("unused") });
+				new Tag[] { new Tag("targetUser", targetUserName.trim()), new Tag("unused") });
 		return message;
 	}
 
 	/**
 	 * Get the user name for whom the temporary password will be generated.
 	 *
-	 * @return {@code String} with the user name for which the temporary
-	 *         password will be issued.
+	 * @return {@code String} with the user name for which the temporary password
+	 *         will be issued.
 	 */
 	public String getTargetUserName() {
 		return targetUserName;

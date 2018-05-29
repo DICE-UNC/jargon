@@ -9,8 +9,8 @@ package org.irods.jargon.datautils.datacache;
 public class CacheServiceConfiguration {
 
 	/**
-	 * Clean up old cache files during each request (might create a slight
-	 * response delay for large caches.
+	 * Clean up old cache files during each request (might create a slight response
+	 * delay for large caches.
 	 */
 	private boolean doCleanupDuringRequests = true;
 
@@ -34,8 +34,8 @@ public class CacheServiceConfiguration {
 
 	/**
 	 * Directory path for cache files. If caching in home directory, this is a
-	 * relative path under home. If cacheInHomeDir is {@code false}, then
-	 * path is an absolute path to the desired cache dir.
+	 * relative path under home. If cacheInHomeDir is {@code false}, then path is an
+	 * absolute path to the desired cache dir.
 	 */
 	private String cacheDirPath = "cacheServiceTempDir";
 

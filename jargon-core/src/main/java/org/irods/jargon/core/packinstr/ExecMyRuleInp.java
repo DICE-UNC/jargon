@@ -69,6 +69,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} giving the zone the rule should execute on.
 	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final ExecMyRuleInp instanceWithRemoteAttributes(final IRODSRule irodsRule, final String host,
 			final int port, final String zone) throws JargonException {
@@ -82,6 +83,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final ExecMyRuleInp instance(final IRODSRule irodsRule) throws JargonException {
 		return new ExecMyRuleInp(irodsRule, "", 0, "");
@@ -89,7 +91,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Default constructor with all final fields initialized
-	 * 
+	 *
 	 * @param irodsRule
 	 *            {@link IRODSRule} describing the user-submitted rule
 	 * @param host
@@ -132,7 +134,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

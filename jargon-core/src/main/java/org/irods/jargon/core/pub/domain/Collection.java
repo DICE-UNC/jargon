@@ -68,20 +68,10 @@ public class Collection extends IRODSDomainObject {
 		this.collectionId = collectionId;
 	}
 
-	/**
-	 * This will be the full absolute path to the collection. It may be a special
-	 * collection path, such as a soft link
-	 */
 	public String getCollectionName() {
 		return collectionName;
 	}
 
-	/**
-	 * This will be the full absolute path to the collection. It may be a special
-	 * collection path, such as a soft link
-	 *
-	 * @param collectionName
-	 */
 	public void setCollectionName(final String collectionName) {
 		this.collectionName = collectionName;
 	}
@@ -99,11 +89,6 @@ public class Collection extends IRODSDomainObject {
 		return collectionName.substring(lastSlash + 1);
 	}
 
-	/**
-	 * This will be the absolute path to the parent collection of this collection
-	 *
-	 * @return {@code String}
-	 */
 	public String getCollectionParentName() {
 		return collectionParentName;
 	}
@@ -118,11 +103,6 @@ public class Collection extends IRODSDomainObject {
 		return getCollectionName();
 	}
 
-	/**
-	 * This will be the absolute path to the parent collection of this collection
-	 *
-	 * @param collectionParentName
-	 */
 	public void setCollectionParentName(final String collectionParentName) {
 		this.collectionParentName = collectionParentName;
 	}
@@ -265,17 +245,10 @@ public class Collection extends IRODSDomainObject {
 		this.objectPath = objectPath;
 	}
 
-	/**
-	 * @return the specColType
-	 */
 	public SpecColType getSpecColType() {
 		return specColType;
 	}
 
-	/**
-	 * @param specColType
-	 *            the specColType to set
-	 */
 	public void setSpecColType(final SpecColType specColType) {
 		this.specColType = specColType;
 	}

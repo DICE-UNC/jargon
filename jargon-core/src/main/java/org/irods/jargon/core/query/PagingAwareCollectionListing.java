@@ -28,8 +28,8 @@ public class PagingAwareCollectionListing {
 	private PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor = new PagingAwareCollectionListingDescriptor();
 
 	/**
-	 * List from the query, will contain a set of collections and data objects
-	 * with a paging status reflected in this object.
+	 * List from the query, will contain a set of collections and data objects with
+	 * a paging status reflected in this object.
 	 */
 
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<>();

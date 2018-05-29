@@ -3,8 +3,6 @@ package org.irods.jargon.core.unittest.functionaltest;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -16,6 +14,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,39 +36,33 @@ public class IRODSTenThousandCollectionsTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// make the parent subdir
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		parentDir.mkdirs();
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),
-				targetIrodsCollection, true);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionInherit(irodsAccount.getZone(), targetIrodsCollection, true);
 
 		/**
 		 * UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
 		 * .getUserAO(irodsAccount);
 		 *
-		 * String userName; User user = new User(); for (int i = 0; i <
-		 * usersCount; i++) { userName = funcTestUserPrefix + i;
-		 * user.setName(userName); user.setUserType(UserTypeEnum.RODS_USER); try
-		 * { userAO.addUser(user); } catch (Exception e) {
+		 * String userName; User user = new User(); for (int i = 0; i < usersCount; i++)
+		 * { userName = funcTestUserPrefix + i; user.setName(userName);
+		 * user.setUserType(UserTypeEnum.RODS_USER); try { userAO.addUser(user); } catch
+		 * (Exception e) {
 		 *
 		 * } collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
 		 * targetIrodsCollection, userName, true); }
@@ -79,9 +72,8 @@ public class IRODSTenThousandCollectionsTest {
 
 		IRODSFile subColl;
 		for (int i = 0; i < 10000; i++) {
-			subColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-					.instanceIRODSFile(targetIrodsCollection,
-							testFilePrefix + i);
+			subColl = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection,
+					testFilePrefix + i);
 			subColl.mkdirs();
 		}
 
@@ -102,18 +94,14 @@ public class IRODSTenThousandCollectionsTest {
 
 	@Test
 	// TODO: expand this to cover paging and validate cursor data
-	public void testListFilesAndCollectionsUnderPathWithPaging()
-			throws Exception {
+	public void testListFilesAndCollectionsUnderPathWithPaging() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);

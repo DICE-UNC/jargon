@@ -19,8 +19,8 @@ public final class IRODSUriUserInfo {
 	private static final Set<Byte> USER_INFO_ALLOWED_CHARS;
 
 	static {
-		final byte[] allowedMarks = new byte[] { '-', '_', '!', '~', '*', '\'',
-				'(', ')', ';', '&', '=', '+', '$', ',' };
+		final byte[] allowedMarks = new byte[] { '-', '_', '!', '~', '*', '\'', '(', ')', ';', '&', '=', '+', '$',
+				',' };
 
 		final HashSet<Byte> chars = new HashSet<Byte>();
 		for (byte c = '0'; c <= '9'; c++) {
@@ -39,8 +39,8 @@ public final class IRODSUriUserInfo {
 	}
 
 	/**
-	 * Creates an instance that can be used to for user authentication in a
-	 * local or remote zone.
+	 * Creates an instance that can be used to for user authentication in a local or
+	 * remote zone.
 	 *
 	 * @param user
 	 *            the username
@@ -50,14 +50,13 @@ public final class IRODSUriUserInfo {
 	 *            the password used to authenticate the user
 	 * @return It returns an instance.
 	 */
-	public static IRODSUriUserInfo instance(final String user,
-			final String zone, final String password) {
+	public static IRODSUriUserInfo instance(final String user, final String zone, final String password) {
 		return new IRODSUriUserInfo(user, zone, password);
 	}
 
 	/**
-	 * Creates an instance that can be used to for user authentication in the
-	 * local zone.
+	 * Creates an instance that can be used to for user authentication in the local
+	 * zone.
 	 *
 	 * @param user
 	 *            the username
@@ -65,8 +64,7 @@ public final class IRODSUriUserInfo {
 	 *            the password used to authenticate the user
 	 * @return It returns an instance.
 	 */
-	public static IRODSUriUserInfo localInstance(final String user,
-			final String password) {
+	public static IRODSUriUserInfo localInstance(final String user, final String password) {
 		return new IRODSUriUserInfo(user, null, password);
 	}
 
@@ -80,21 +78,19 @@ public final class IRODSUriUserInfo {
 	 *            the authentication zone
 	 * @return It returns an instance.
 	 */
-	public static IRODSUriUserInfo unauthenticatedInstance(final String user,
-			final String zone) {
+	public static IRODSUriUserInfo unauthenticatedInstance(final String user, final String zone) {
 		return new IRODSUriUserInfo(user, zone, null);
 	}
 
 	/**
-	 * Creates an instance that doesn't contain authentication information for
-	 * the local zone.
+	 * Creates an instance that doesn't contain authentication information for the
+	 * local zone.
 	 *
 	 * @param user
 	 *            the username
 	 * @return It returns an instance.
 	 */
-	public static IRODSUriUserInfo unauthenticatedLocalInstance(
-			final String user) {
+	public static IRODSUriUserInfo unauthenticatedLocalInstance(final String user) {
 		return new IRODSUriUserInfo(user, null, null);
 	}
 
@@ -103,8 +99,8 @@ public final class IRODSUriUserInfo {
 	 *
 	 * @param encodedStr
 	 *            The serialized user info portion of an irods URI
-	 * @return It returns an instance or {@code null} if infoStr is
-	 *         {@code null} or empty.
+	 * @return It returns an instance or {@code null} if infoStr is {@code null} or
+	 *         empty.
 	 */
 	static IRODSUriUserInfo fromString(final String encodedStr) {
 		if (encodedStr == null || encodedStr.isEmpty()) {
@@ -136,8 +132,7 @@ public final class IRODSUriUserInfo {
 			encodedPassword = encodedStr.substring(pIdx + 1);
 		}
 
-		return new IRODSUriUserInfo(decode(encodedUser), decode(encodedZone),
-				decode(encodedPassword));
+		return new IRODSUriUserInfo(decode(encodedUser), decode(encodedZone), decode(encodedPassword));
 	}
 
 	private static String emptyAsNull(final String value) {
@@ -182,8 +177,7 @@ public final class IRODSUriUserInfo {
 	private final String zone;
 	private final String password;
 
-	private IRODSUriUserInfo(final String user, final String zone,
-			final String password) {
+	private IRODSUriUserInfo(final String user, final String zone, final String password) {
 		if (user == null || user.isEmpty()) {
 			throw new IllegalArgumentException("must provide a user name");
 		}

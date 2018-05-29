@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service to maintain synchronization properties for client->iRODS data
+ * Service to maintain synchronization properties for client to iRODS data
  * synchronization
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -33,9 +33,9 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * AVU conventions attrib | value | unit
-	 * 
+	 *
 	 * in synch root dir
-	 * 
+	 *
 	 * [user name]:[device] | [lastLocalSynch | lastIrodsSynch | localAbsPath] |
 	 * iRODSSynch:userSynchDir
 	 */
@@ -43,23 +43,26 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 	public static final Logger log = LoggerFactory.getLogger(SynchPropertiesServiceImpl.class);
 
 	/**
-	 * Default (no-values) constructor. The account and {@code IRODSFileSystem}
-	 * need to be initialized va the setter methods.
+	 * 
+	 * Default (no-values) constructor. The account and {@code IRODSFileSystem} need
+	 * to be initialized va the setter methods.
 	 */
 	public SynchPropertiesServiceImpl() {
 		super();
 	}
 
 	/**
-	 * Constructor initializes dependencies. These can also be set after using
-	 * the default constructor.
+	 * 
+	 * Constructor initializes dependencies. These can also be set after using the
+	 * default constructor.
 	 *
 	 * @param irodsAccessObjectFactory
-	 *            {@code IRODSAccessObjectFactory} that can create various
-	 *            access objects to interact with iRODS
+	 *            {@code IRODSAccessObjectFactory} that can create various access
+	 *            objects to interact with iRODS
 	 * @param irodsAccount
-	 *            {@code IRODSAccount} that describes the user and server to
-	 *            connect to
+	 * 
+	 *            {@code IRODSAccount} that describes the user and server to connect
+	 *            to
 	 */
 	public SynchPropertiesServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
@@ -69,10 +72,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropetiesService#
-	 * getUserSynchTargetForUserAndAbsolutePath(java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * getUserSynchTargetForUserAndAbsolutePath(java.lang.String, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public UserSynchTarget getUserSynchTargetForUserAndAbsolutePath(final String userName, final String deviceName,
@@ -106,10 +109,12 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 		try {
 			AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+
 					QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
 			avuQuery.add(avuQueryElement);
 			avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
 					QueryConditionOperators.EQUAL, userDevAttrib);
+
 			avuQuery.add(avuQueryElement);
 			queryResults = collectionAO.findMetadataValuesByMetadataQueryForCollection(avuQuery, irodsAbsolutePath);
 		} catch (JargonQueryException e) {
@@ -137,7 +142,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * getUserSynchTargets(java.lang.String)
 	 */
@@ -163,12 +168,14 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 		try {
 			AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
 					QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
+
 			avuQuery.add(avuQueryElement);
 			StringBuilder sb = new StringBuilder();
 			sb.append(userName);
 			sb.append(":%");
 			avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
 					QueryConditionOperators.LIKE, sb.toString());
+
 			avuQuery.add(avuQueryElement);
 			queryResults = collectionAO.findMetadataValuesByMetadataQuery(avuQuery);
 		} catch (JargonQueryException e) {
@@ -188,14 +195,16 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 	}
 
 	/**
-	 * Parse the synch directory AVU value for component values to build a
-	 * <code>UserSynchTarget</code> description.
+	 * Parse the synch directory AVU value for component values to build a <<<<<<<
+	 * {@code UserSynchTarget} description.
+	 *
 	 * 
 	 * @param metaDataAndDomainData
 	 *            {@link MetaDataAndDomainData} from an AVU query
 	 * @return {@link UserSynchTarget} describing a synch relationship for this
 	 *         directory
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	private UserSynchTarget buildUserSynchTargetFromMetaDataAndDomainData(
 			final MetaDataAndDomainData metaDataAndDomainData) throws JargonException {
@@ -244,7 +253,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * updateTimestampsToCurrent(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -301,10 +310,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
-	 * addSynchDeviceForUserAndIrodsAbsolutePath(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	 * addSynchDeviceForUserAndIrodsAbsolutePath(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void addSynchDeviceForUserAndIrodsAbsolutePath(final String userName, final String deviceName,
@@ -374,7 +383,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * getSynchTimestamps()
 	 */
@@ -391,7 +400,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * synchDeviceExists(java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -420,7 +429,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * removeSynchDevice(java.lang.String)
 	 */

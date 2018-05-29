@@ -16,8 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  *
  */
 
-public final class ExecCmdStreamClose419 extends
-		AbstractIRODSPackingInstruction {
+public final class ExecCmdStreamClose419 extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "fileCloseInp_PI";
 	public static final String FILE_INX = "fileInx";
@@ -30,42 +29,41 @@ public final class ExecCmdStreamClose419 extends
 	 * Create an instance of the packing instruction to close the given stream.
 	 *
 	 * @param fileDescriptor
-	 *            {@code int} with the file descriptor representing the
-	 *            stream to close
+	 *            {@code int} with the file descriptor representing the stream to
+	 *            close
 	 * @param pdmo
-	 *            {@code String} with the post disconnect mx operation to
-	 *            carry out. Blank if not used.
-	 * @return {@code ExecCmdStreamClose} instance.
+	 *            {@code String} with the post disconnect mx operation to carry out.
+	 *            Blank if not used.
+	 * @return {@link ExecCmdStreamClose419} instance.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static ExecCmdStreamClose419 instance(final int fileDescriptor,
-			final String pdmo) throws JargonException {
-		return new ExecCmdStreamClose419(STREAM_CLOSE_API_NBR, fileDescriptor,
-				pdmo);
+	public static ExecCmdStreamClose419 instance(final int fileDescriptor, final String pdmo) throws JargonException {
+		return new ExecCmdStreamClose419(STREAM_CLOSE_API_NBR, fileDescriptor, pdmo);
 	}
 
 	/**
-	 * Constructor for a remote execution service close stream packing
-	 * instruction call.
+	 * Constructor for a remote execution service close stream packing instruction
+	 * call.
 	 *
 	 * @param apiNumber
 	 *            {@code int} with the api number to use with this call.
 	 * @param fileDescriptor
-	 *            {@code int} with the file descriptor representing the
-	 *            stream to close
+	 *            {@code int} with the file descriptor representing the stream to
+	 *            close
 	 * @param pdmo
-	 *            {@code String} with the post disconnect mx operation to
-	 *            carry out. Blank if not used.
+	 *            {@code String} with the post disconnect mx operation to carry out.
+	 *            Blank if not used.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private ExecCmdStreamClose419(final int apiNumber,
-			final int fileDescriptor, final String pdmo) throws JargonException {
+	private ExecCmdStreamClose419(final int apiNumber, final int fileDescriptor, final String pdmo)
+			throws JargonException {
 
 		super();
 
 		if (fileDescriptor < 1) {
-			throw new IllegalArgumentException(
-					"file descriptor is 0 or negative");
+			throw new IllegalArgumentException("file descriptor is 0 or negative");
 		}
 
 		if (pdmo == null) {
@@ -80,7 +78,7 @@ public final class ExecCmdStreamClose419 extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -88,8 +86,7 @@ public final class ExecCmdStreamClose419 extends
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(FILE_INX, fileDescriptor), new Tag(IN_PDMO, pdmo) });
+		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(FILE_INX, fileDescriptor), new Tag(IN_PDMO, pdmo) });
 
 		return message;
 	}

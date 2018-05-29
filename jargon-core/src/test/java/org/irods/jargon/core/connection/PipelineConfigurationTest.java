@@ -1,8 +1,7 @@
 package org.irods.jargon.core.connection;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class PipelineConfigurationTest {
@@ -10,22 +9,16 @@ public class PipelineConfigurationTest {
 	@Test
 	public void testInstance() throws Exception {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
-		jargonProperties
-		.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
+		jargonProperties.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		jargonProperties.setEncryptionKeySize(123);
 		jargonProperties.setEncryptionNumberHashRounds(456);
 		jargonProperties.setEncryptionSaltSize(789);
 
-		PipelineConfiguration actual = PipelineConfiguration
-				.instance(jargonProperties);
-		Assert.assertEquals(jargonProperties.getEncryptionAlgorithmEnum(),
-				actual.getEncryptionAlgorithmEnum());
-		Assert.assertEquals(jargonProperties.getEncryptionKeySize(),
-				actual.getEncryptionKeySize());
-		Assert.assertEquals(jargonProperties.getEncryptionNumberHashRounds(),
-				actual.getEncryptionNumberHashRounds());
-		Assert.assertEquals(jargonProperties.getEncryptionSaltSize(),
-				actual.getEncryptionSaltSize());
+		PipelineConfiguration actual = PipelineConfiguration.instance(jargonProperties);
+		Assert.assertEquals(jargonProperties.getEncryptionAlgorithmEnum(), actual.getEncryptionAlgorithmEnum());
+		Assert.assertEquals(jargonProperties.getEncryptionKeySize(), actual.getEncryptionKeySize());
+		Assert.assertEquals(jargonProperties.getEncryptionNumberHashRounds(), actual.getEncryptionNumberHashRounds());
+		Assert.assertEquals(jargonProperties.getEncryptionSaltSize(), actual.getEncryptionSaltSize());
 
 	}
 

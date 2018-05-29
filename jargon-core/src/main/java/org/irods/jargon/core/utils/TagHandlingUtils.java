@@ -21,17 +21,17 @@ public class TagHandlingUtils {
 	}
 
 	/**
-	 * Given a {@code Tag}, extract the key value pairs into a
-	 * {@code Map} for ease of parsing
+	 * Given a {@code Tag}, extract the key value pairs into a {@code Map} for ease
+	 * of parsing
 	 *
 	 * @param keyValPairPi
 	 *            {@link Tag} that is the KeyValuePair_PI head tag
-	 * @return {@code Map<String, String>} with the key value pairs
-	 *         translated from packing instruction format
+	 * @return {@code Map<String, String>} with the key value pairs translated from
+	 *         packing instruction format
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static Map<String, String> translateKeyValuePairTagIntoMap(
-			final Tag keyValPairPi) throws JargonException {
+	public static Map<String, String> translateKeyValuePairTagIntoMap(final Tag keyValPairPi) throws JargonException {
 
 		if (keyValPairPi == null) {
 			throw new IllegalArgumentException("null keyValPairPi");
@@ -48,8 +48,7 @@ public class TagHandlingUtils {
 		Tag[] tagArray = keyValPairPi.getTags();
 
 		for (int i = 1; i < kvpLength + 1; i++) {
-			kvps.put(tagArray[i].getStringValue(),
-					tagArray[i + kvpLength].getStringValue());
+			kvps.put(tagArray[i].getStringValue(), tagArray[i + kvpLength].getStringValue());
 		}
 
 		return kvps;

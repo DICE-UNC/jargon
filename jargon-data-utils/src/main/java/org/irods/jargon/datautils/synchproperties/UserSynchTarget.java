@@ -37,14 +37,14 @@ public class UserSynchTarget {
 	private String localSynchRootAbsolutePath = "";
 
 	/**
-	 * Time stamp from the local clock with the last synchronization point, or 0
-	 * if no synch has been done
+	 * Time stamp from the local clock with the last synchronization point, or 0 if
+	 * no synch has been done
 	 */
 	private long lastLocalSynchTimestamp = 0;
 
 	/**
-	 * Time stamp with the irods clock with the last synchronization point, or 0
-	 * if no synch has been done
+	 * Time stamp with the irods clock with the last synchronization point, or 0 if
+	 * no synch has been done
 	 */
 	private long lastIRODSSynchTimestamp = 0;
 
@@ -87,8 +87,7 @@ public class UserSynchTarget {
 		return irodsSynchRootAbsolutePath;
 	}
 
-	public void setIrodsSynchRootAbsolutePath(
-			final String irodsSynchRootAbsolutePath) {
+	public void setIrodsSynchRootAbsolutePath(final String irodsSynchRootAbsolutePath) {
 		this.irodsSynchRootAbsolutePath = irodsSynchRootAbsolutePath;
 	}
 
@@ -96,8 +95,7 @@ public class UserSynchTarget {
 		return localSynchRootAbsolutePath;
 	}
 
-	public void setLocalSynchRootAbsolutePath(
-			final String localSynchRootAbsolutePath) {
+	public void setLocalSynchRootAbsolutePath(final String localSynchRootAbsolutePath) {
 		this.localSynchRootAbsolutePath = localSynchRootAbsolutePath;
 	}
 

@@ -36,8 +36,8 @@ public final class User extends IRODSDomainObject {
 	}
 
 	/**
-	 * Get the user name in the standard user#zone format. This is the standard
-	 * for displays of user names in iRODS user interfaces.
+	 * Get the user name in the standard user#zone format. This is the standard for
+	 * displays of user names in iRODS user interfaces.
 	 *
 	 * @return {@code String} with the extended zone
 	 */

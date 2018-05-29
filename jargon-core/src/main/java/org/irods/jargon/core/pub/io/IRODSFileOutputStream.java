@@ -34,8 +34,8 @@ public class IRODSFileOutputStream extends OutputStream {
 	private final FileIOOperations fileIOOperations;
 
 	/**
-	 * This is the default open mode see {@link DataObjInp.OpenFlags} for
-	 * details. New signatures allow other open options.
+	 * This is the default open mode see {@link DataObjInp.OpenFlags} for details.
+	 * New signatures allow other open options.
 	 */
 	private OpenFlags openFlags = OpenFlags.WRITE;
 
@@ -48,30 +48,31 @@ public class IRODSFileOutputStream extends OutputStream {
 	}
 
 	/**
-	 * Creates a {@code FileOuputStream} by opening a connection to an
-	 * actual file, the file named by the path name {@code name} in the
-	 * file system.
+	 * Creates a {@code FileOuputStream} by opening a connection to an actual file,
+	 * the file named by the path name {@code name} in the file system.
 	 * <p>
 	 * First, the security is checked to verify the file can be written.
 	 * <p>
-	 * If the named file does not exist, is a directory rather than a regular
-	 * file, or for some other reason cannot be opened for reading then a
+	 * If the named file does not exist, is a directory rather than a regular file,
+	 * or for some other reason cannot be opened for reading then a
 	 * {@code FileNotFoundException} is thrown.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that underlies the stream
+	 * @param fileIOOperations
+	 *            {@link FileIOOperations} that handles the iRODS protoco
+	 * @param openFlags
+	 *            {@link OpenFlags} for the stream
 	 * @exception NoResourceDefinedException
-	 *                if no storage resource is defined, and iRODS has not
-	 *                default resource rule
+	 *                if no storage resource is defined, and iRODS has not default
+	 *                resource rule
 	 * @exception FileNotFoundException
 	 *                when file is not found in iRODS
 	 * @exception JargonException
 	 *                when other iRODS errors occur
 	 */
-	protected IRODSFileOutputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
-			throws NoResourceDefinedException, FileNotFoundException,
-			JargonException {
+	protected IRODSFileOutputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations,
+			final OpenFlags openFlags) throws NoResourceDefinedException, FileNotFoundException, JargonException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -109,8 +110,7 @@ public class IRODSFileOutputStream extends OutputStream {
 		irodsFile.setOpenFlags(openFlags);
 
 		if (exists) {
-			if (openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
-					|| openFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
+			if (openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS || openFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
 				log.error("file exists, open flags indicate failure intended");
 				throw new JargonException(
 						"Attempt to open a file that exists is an error based on the desired openFlags");
@@ -130,8 +130,7 @@ public class IRODSFileOutputStream extends OutputStream {
 		/**
 		 * Am I seeking to the end of the file?
 		 */
-		if (openFlags == OpenFlags.READ_WRITE
-				|| openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
+		if (openFlags == OpenFlags.READ_WRITE || openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
 			log.info("seeking to end of file based on open flags...");
 			fileIOOperations.seek(fileDescriptor, 0L, SeekWhenceType.SEEK_END);
 		}
@@ -149,8 +148,7 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * @param file
 	 * @throws JargonRuntimeException
 	 */
-	private void checkFileParameter(final IRODSFile file)
-			throws JargonRuntimeException {
+	private void checkFileParameter(final IRODSFile file) throws JargonRuntimeException {
 		if (file == null) {
 			String msg = "file is null";
 			log.error(msg);
@@ -160,7 +158,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileOutputStream#close()
 	 */
 	@Override
@@ -172,14 +170,11 @@ public class IRODSFileOutputStream extends OutputStream {
 			 * If checksum compute is true, add an iRODS checksum
 			 */
 
-			if (this.getFileIOOperations().getJargonProperties()
-					.isComputeAndVerifyChecksumAfterTransfer()
-					|| this.getFileIOOperations().getJargonProperties()
-							.isComputeChecksumAfterTransfer()) {
+			if (getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
+					|| getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
 				log.info("computing checksum per jargon properties settings");
 
-				this.getFileIOOperations().computeChecksumOnIrodsFile(
-						this.irodsFile.getAbsolutePath());
+				getFileIOOperations().computeChecksumOnIrodsFile(irodsFile.getAbsolutePath());
 
 			}
 
@@ -193,19 +188,17 @@ public class IRODSFileOutputStream extends OutputStream {
 	private void checkIfOpen() throws IOException {
 		if (irodsFile.getFileDescriptor() == -1) {
 			log.debug("this file is not open, will throw an IOException");
-			throw new IOException("operation attempted on unopened file:"
-					+ irodsFile.getAbsolutePath());
+			throw new IOException("operation attempted on unopened file:" + irodsFile.getAbsolutePath());
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileOutputStream#write(byte[], int, int)
 	 */
 	@Override
-	public void write(final byte[] b, final int off, final int len)
-			throws IOException {
+	public void write(final byte[] b, final int off, final int len) throws IOException {
 
 		if (b == null || b.length == 0) {
 			log.warn("nothing to write, ignore");
@@ -216,16 +209,14 @@ public class IRODSFileOutputStream extends OutputStream {
 		try {
 			fileIOOperations.write(getFileDescriptor(), b, off, len);
 		} catch (JargonException e) {
-			log.error(
-					"rethrowing JargonException as IO exception for write operation",
-					e);
+			log.error("rethrowing JargonException as IO exception for write operation", e);
 			throw new IOException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileOutputStream#write(byte[])
 	 */
 	@Override

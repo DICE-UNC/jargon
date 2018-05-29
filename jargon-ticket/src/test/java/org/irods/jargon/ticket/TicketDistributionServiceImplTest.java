@@ -46,7 +46,7 @@ public class TicketDistributionServiceImplTest {
 
 	/**
 	 * Get a ticket distribution for a valid ticket and context
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -90,7 +90,7 @@ public class TicketDistributionServiceImplTest {
 	/**
 	 * Get a ticket distribution for a valid ticket and context where the ticket
 	 * abspath has embedded spaces. Make sure URL Encodes correctly
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -133,7 +133,7 @@ public class TicketDistributionServiceImplTest {
 
 	/**
 	 * Get a ticket distribution for a valid ticket and context
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -172,11 +172,10 @@ public class TicketDistributionServiceImplTest {
 
 	}
 
-	/**
+	/*
 	 * Get a ticket distribution for a valid ticket and context where I don't have a
-	 * mid-tier host, so no URL generated
+	 * mid-tier host, so no URL generated <<<<<<< HEAD
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public final void testGetTicketDistributionForTicketNoHostInContext() throws Exception {
@@ -202,9 +201,9 @@ public class TicketDistributionServiceImplTest {
 
 	}
 
-	/**
+	/*
 	 * Get a ticket distribution for a ticket that appears not to be initialized
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -225,11 +224,9 @@ public class TicketDistributionServiceImplTest {
 
 	}
 
-	/**
+	/*
 	 * Get a ticket distribution for a ticket that appears not to be initialized
 	 * with an irods path
-	 * 
-	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testGetTicketDistributionForTicketThatsMissingIRODSPath() throws Exception {

@@ -1,8 +1,7 @@
 package org.irods.jargon.core.query;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

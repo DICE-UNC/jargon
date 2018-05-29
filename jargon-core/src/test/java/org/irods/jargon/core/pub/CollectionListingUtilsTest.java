@@ -2,8 +2,6 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
@@ -11,6 +9,7 @@ import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,8 +30,7 @@ public class CollectionListingUtilsTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		jargonOriginalProperties = settableJargonProperties;
@@ -46,27 +44,22 @@ public class CollectionListingUtilsTest {
 	@Before
 	public void before() throws Exception {
 		// be sure that normal parallel stuff is set up
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				jargonOriginalProperties);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonOriginalProperties);
 	}
 
 	@Test
-	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHome()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHome() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionListingUtils listingUtils = new CollectionListingUtils(
-				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/";
-		ObjStat objStat = listingUtils
-				.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
+		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
 		Assert.assertNotNull(objStat);
 		Assert.assertTrue(objStat.isStandInGeneratedObjStat());
 		Assert.assertEquals(path, objStat.getAbsolutePath());
@@ -74,22 +67,18 @@ public class CollectionListingUtilsTest {
 	}
 
 	@Test
-	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneNameValid()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneNameValid() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionListingUtils listingUtils = new CollectionListingUtils(
-				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/" + irodsAccount.getZone();
-		ObjStat objStat = listingUtils
-				.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
+		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
 		Assert.assertNotNull(objStat);
 		Assert.assertTrue(objStat.isStandInGeneratedObjStat());
 		Assert.assertEquals(path, objStat.getAbsolutePath());
@@ -97,22 +86,18 @@ public class CollectionListingUtilsTest {
 	}
 
 	@Test
-	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneAndHome()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneAndHome() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionListingUtils listingUtils = new CollectionListingUtils(
-				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/" + irodsAccount.getZone() + "/home";
-		ObjStat objStat = listingUtils
-				.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
+		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
 		Assert.assertNotNull(objStat);
 		Assert.assertTrue(objStat.isStandInGeneratedObjStat());
 		Assert.assertEquals(path, objStat.getAbsolutePath());
@@ -120,22 +105,18 @@ public class CollectionListingUtilsTest {
 	}
 
 	@Test(expected = FileNotFoundException.class)
-	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneNameInvalid()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneNameInvalid() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		CollectionListingUtils listingUtils = new CollectionListingUtils(
-				irodsAccount, irodsFileSystem.getIRODSAccessObjectFactory());
+		CollectionListingUtils listingUtils = new CollectionListingUtils(irodsAccount,
+				irodsFileSystem.getIRODSAccessObjectFactory());
 
 		String path = "/" + irodsAccount.getZone() + "imnotazonebub";
-		ObjStat objStat = listingUtils
-				.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
+		ObjStat objStat = listingUtils.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(path);
 		Assert.assertNotNull(objStat);
 		Assert.assertTrue(objStat.isStandInGeneratedObjStat());
 		Assert.assertEquals(path, objStat.getAbsolutePath());

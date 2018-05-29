@@ -71,6 +71,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
+
 	protected CollectionAndDataObjectListAndSearchAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
@@ -78,21 +79,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			specificQueryAO = getIRODSAccessObjectFactory().getSpecificQueryAO(getIRODSAccount());
 
 		} catch (final SpecificQueryException sqe) {
+
 			log.warn("specific query is not supported on this server");
 			specificQueryAO = null;
 		}
 		this.collectionListingUtils = new CollectionListingUtils(irodsAccount, this.getIRODSAccessObjectFactory());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
-	 * getCollectionAndDataObjectListingEntryAtGivenAbsolutePath (java.lang.String)
-	 * 
-	 * 
-	 * softlink
-	 */
 	@Override
 	public CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(
 			final String absolutePath) throws FileNotFoundException, JargonException {
@@ -179,7 +172,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing
 	 * (java.lang.String)
@@ -210,6 +203,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		try {
 			objStat = retrieveObjectStatForPath(absolutePathToParent);
 		} catch (final FileNotFoundException fnf) {
+
 			log.info(
 					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			entries = collectionListingUtils
@@ -218,6 +212,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			descriptor.setCollectionsComplete(true);
 			descriptor.setCount(entries.size());
+
 			return pagingAwareCollectionListing;
 		}
 
@@ -264,6 +259,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			descriptor.setDataObjectsComplete(queriedEntries.get(queriedEntries.size() - 1).isLastResult());
 			descriptor.setDataObjectsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
 			descriptor.setDataObjectsTotalRecords(queriedEntries.get(0).getTotalRecords());
+
 			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
 		}
 
@@ -272,14 +268,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
-	 * listDataObjectsAndCollectionsUnderPath(java.lang.String)
-	 * 
-	 * softlink
-	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
 			final String absolutePathToParent) throws FileNotFoundException, JargonException {
@@ -297,6 +285,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		try {
 			objStat = retrieveObjectStatForPath(absolutePathToParent);
 		} catch (final FileNotFoundException fnf) {
+
 			log.info(
 					"didn't find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			return collectionListingUtils.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
@@ -343,10 +332,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
-	 * 
+	 *
 	 * softlink
 	 */
 	@Override
@@ -367,6 +356,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		try {
 			objStat = retrieveObjectStatForPath(absolutePathToParent);
 		} catch (final FileNotFoundException fnf) {
+
 			log.info(
 					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			return collectionListingUtils.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
@@ -386,7 +376,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countDataObjectsAndCollectionsUnderPath(java.lang.String)
 	 */
@@ -409,6 +399,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		final String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
@@ -426,7 +417,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countDataObjectsUnderPath(java.lang.String)
 	 */
@@ -448,6 +439,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		final String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
@@ -467,6 +459,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (objStat == null) {
 			throw new IllegalArgumentException("objStat is null");
+
 		}
 
 		log.info("countDataObjectsUnder: {}", objStat);
@@ -493,7 +486,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * totalDataObjectSizesUnderPath(java.lang.String)
 	 */
@@ -520,6 +513,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		final String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
@@ -561,6 +555,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (objStat == null) {
 			throw new IllegalArgumentException("objStat is null");
+
 		}
 
 		log.info("countDataObjectsAndCollectionsUnder: {}", objStat);
@@ -570,7 +565,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsBasedOnName(java.lang.String)
 	 */
@@ -585,7 +580,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsBasedOnName(java.lang.String, int)
 	 */
@@ -604,6 +599,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("searchCollectionsBasedOnName:{}", searchTerm);
 
 		final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(getIRODSSession(),
+
 				getIRODSAccount());
 
 		final IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -617,6 +613,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, partialStartIndex);
 		} catch (final JargonQueryException e) {
+
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
 		} catch (final GenQueryBuilderException e) {
@@ -626,6 +623,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		final List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 		for (final IRODSQueryResultRow row : resultSet.getResults()) {
+
 			entries.add(CollectionAOHelper.buildCollectionListEntryFromResultSetRowForCollectionQuery(row,
 					resultSet.getTotalRecords()));
 		}
@@ -636,10 +634,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listCollectionsUnderPath(java.lang.String, int)
-	 * 
+	 *
 	 * softlink
 	 */
 	@Override
@@ -684,6 +682,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (objStat == null) {
 			throw new IllegalArgumentException("objStat is null");
+
 		}
 
 		/*
@@ -696,7 +695,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listCollectionsUnderPathWithPermissions(java.lang.String, int)
 	 */
@@ -742,6 +741,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		final SpecificQueryResultSet specificQueryResultSet = specificQueryAO.executeSpecificQueryUsingAlias(
 				specificQuery, getJargonProperties().getMaxFilesAndDirsQueryMax(), offset);
+
 		log.info("got result set:{}", specificQueryResultSet);
 
 		return buildCollectionListingWithAccessInfoFromResultSet(specificQueryResultSet, objStat);
@@ -777,6 +777,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				try {
 					return listCollectionsUnderPathWithPermissionsViaSpecQuery(objStat, partialStartIndex);
 				} catch (final JargonException je) {
+
 					log.error("error executing spec query will do the genQuery fallback");
 				} catch (final JargonQueryException e) {
 					log.error("query exception error executing spec query will do the genQuery fallback");
@@ -827,6 +828,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		try {
 			IRODSFileSystemAOHelper.buildQueryListAllDirsWithUserAccessInfo(effectiveAbsolutePath, builder);
 		} catch (final GenQueryBuilderException e) {
+
 			log.error("query builder exception", e);
 			throw new JargonException("error building query", e);
 		}
@@ -908,6 +910,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			lastPath = currentPath;
 			lastReplNumber = currentReplNumber;
 			userFilePermissions = new ArrayList<>();
+
 			CollectionAOHelper.buildUserFilePermissionForDataObject(userFilePermissions, row, effectiveAbsolutePath,
 					getIRODSAccount().getZone());
 
@@ -981,6 +984,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 						.buildCollectionListEntryFromResultSetRowForCollectionQuery(row, resultSet.getTotalRecords());
 				lastPath = collectionAndDataObjectListingEntry.getPathOrName();
 				userFilePermissions = new ArrayList<>();
+
 				CollectionAOHelper.buildUserFilePermissionForCollection(userFilePermissions, row,
 						effectiveAbsolutePath);
 			}
@@ -1012,7 +1016,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPath(java.lang.String, int)
 	 */
@@ -1061,7 +1065,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPathWithPermissions(java.lang.String, int)
 	 */
@@ -1106,6 +1110,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * query
 		 */
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		log.info("checking to see if I can list via specific query");
@@ -1123,6 +1128,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				try {
 					return listDataObjectsUnderPathWithPermissionsViaSpecQuery(objStat, partialStartIndex);
 				} catch (final JargonException je) {
+
 					log.error("error executing spec query will do the genQuery fallback");
 					// TODO: signal to spec query ao to bypass? do this in
 					// specQueryAO?
@@ -1141,6 +1147,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	/**
 	 * Given the objStat, list the data objects under the path and the associated
 	 * file permissions
+	 * 
 	 * 
 	 * @param absolutePathToParent
 	 *            {@code String} with the original absolute path as requested. This
@@ -1170,6 +1177,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSFileSystemAOHelper.buildQueryListAllDataObjectsWithUserAccessInfo(effectiveAbsolutePath, builder);
 		final IRODSQueryResultSet resultSet = collectionListingUtils
 				.queryForPathAndReturnResultSet(effectiveAbsolutePath, builder, partialStartIndex, objStat);
+
 		log.debug("got result set:{}", resultSet);
 
 		return buildDataObjectListingWithAccessInfoFromResultSet(resultSet, objStat);
@@ -1186,6 +1194,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * query
 		 */
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		final List<String> arguments = new ArrayList<>(3);
@@ -1198,6 +1207,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		final SpecificQueryResultSet specificQueryResultSet = specificQueryAO.executeSpecificQueryUsingAlias(
 				specificQuery, getJargonProperties().getMaxFilesAndDirsQueryMax(), offset);
+
 		log.info("got result set:{}", specificQueryResultSet);
 
 		return buildDataObjectListingWithAccessInfoFromResultSet(specificQueryResultSet, objStat);
@@ -1205,7 +1215,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchDataObjectsBasedOnName(java.lang.String)
 	 */
@@ -1218,7 +1228,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchDataObjectsBasedOnName(java.lang.String, int)
 	 */
@@ -1237,6 +1247,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("searchDataObjectsBasedOnName:{}", searchTerm);
 
 		final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(getIRODSSession(),
+
 				getIRODSAccount());
 
 		IRODSQueryResultSet resultSet;
@@ -1254,6 +1265,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPaging(irodsQuery, partialStartIndex);
 		} catch (final JargonQueryException e) {
+
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
 		} catch (final GenQueryBuilderException e) {
@@ -1284,7 +1296,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsAndDataObjectsBasedOnName(java.lang.String)
 	 */
@@ -1308,7 +1320,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * getFullObjectForType(java.lang.String)
 	 */
@@ -1324,6 +1336,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		final ObjStat objStat = retrieveObjectStatForPath(objectAbsolutePath);
 
 		final String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		/*
@@ -1354,6 +1367,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		if (objStat.isSomeTypeOfCollection()) {
 			final CollectionAO collectionAO = new CollectionAOImpl(getIRODSSession(), getIRODSAccount());
+
 			returnObject = collectionAO.findGivenObjStat(objStat);
 		} else {
 
@@ -1372,6 +1386,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	private Object buildDataObjectFromICAT(final ObjStat objStat) throws JargonException, DataNotFoundException {
 		Object returnObject;
 		final DataObjectAO dataObjectAO = new DataObjectAOImpl(getIRODSSession(), getIRODSAccount());
+
 		returnObject = dataObjectAO.findGivenObjStat(objStat);
 		return returnObject;
 	}
@@ -1383,6 +1398,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		dataObject.setCollectionName(objStat.getCollectionPath());
 		dataObject.setCreatedAt(objStat.getCreatedAt());
 		dataObject.setDataName(MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(objStat.getAbsolutePath()));
+
 		dataObject.setDataOwnerName(objStat.getOwnerName());
 		dataObject.setDataOwnerZone(objStat.getOwnerZone());
 		dataObject.setDataPath(objStat.getObjectPath());
@@ -1396,7 +1412,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPathAndDataObjectName(java.lang.String,
 	 * java.lang.String)
@@ -1422,7 +1438,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPathWithHeuristicPathGuessing(java.lang.String)
 	 */
@@ -1436,6 +1452,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(this.getIRODSAccount(),
 				this.getIRODSAccessObjectFactory());
+
 		ObjStat objStat = null;
 		try {
 			objStat = retrieveObjectStatForPath(irodsAbsolutePath);
@@ -1454,7 +1471,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPath(java.lang.String)
 	 */

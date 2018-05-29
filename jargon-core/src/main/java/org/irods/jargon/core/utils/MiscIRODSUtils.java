@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -17,6 +18,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.PathTooLongException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
@@ -51,7 +53,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Escape kvp chars for passwords that make iRODS angry, used in PAM login
-	 * 
+	 *
 	 * @param password
 	 *            {@link String} with desired password
 	 * @return {@link String} with the properly escaped password
@@ -83,7 +85,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given a user name and zone, build the trash home dir
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the user name
 	 * @param zoneName
@@ -111,7 +113,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Build the path to the trash orphan collection in the given zone
-	 * 
+	 *
 	 * @param zoneName
 	 *            zoneName <code>String</code> with the zone name
 	 * @return {@link String} with orphan path
@@ -131,7 +133,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given a zone, build the trash home dir
-	 * 
+	 *
 	 * @param zoneName
 	 *            <code>String</code> with the zone name
 	 * @return <code>String</code> with the trash path
@@ -154,7 +156,9 @@ public class MiscIRODSUtils {
 	 * iRODS account is not propagated to the wrong zone.
 	 *
 	 * @param irodsAbsolutePath
+	 *            {@code String} with iRODS path
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @return {@code String} with the proper resource name
 	 */
 	public static String getDefaultIRODSResourceFromAccountIfFileInZone(final String irodsAbsolutePath,
@@ -244,10 +248,11 @@ public class MiscIRODSUtils {
 
 	/**
 	 * determine if the path is in the current zone
-	 * 
+	 *
 	 * @param irodsAccount
-	 * @param inZone
+	 *            {@link IRODSAccount}
 	 * @param pathComponents
+	 *            {@code List<String}} with the parts of the path
 	 * @return {@code boolean} if this path is in the current zone
 	 */
 	private static boolean isFirstPartOfPathInZone(final IRODSAccount irodsAccount, final List<String> pathComponents) {
@@ -334,37 +339,27 @@ public class MiscIRODSUtils {
 	 *            {@link InputStream} to be converted to a string using the given
 	 *            encoding
 	 * @return {@link String} with the stream contents
-	 * @throws Exception
 	 */
 
-	public static String convertStreamToString(final InputStream inputStream) throws Exception {
-		return convertStreamToString(inputStream, "UTF-8");
-	}
-
-	/**
-	 * Handy method to take the given input stream and make it a String
-	 *
-	 * @param inputStream
-	 *            {@link InputStream} to convert to a string
-	 * @param encoding
-	 *            {@link String} with the encoding
-	 * @return {@link String} decoded from the stream
-	 * @throws Exception
-	 */
-
-	public static String convertStreamToString(final InputStream inputStream, final String encoding) throws Exception {
+	public static String convertStreamToString(final InputStream inputStream) {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
-		Reader in = new InputStreamReader(inputStream, encoding);
-		int read;
-		do {
-			read = in.read(buffer, 0, buffer.length);
-			if (read > 0) {
-				out.append(buffer, 0, read);
-			}
-		} while (read >= 0);
-		String result = out.toString();
-		return result;
+		Reader in;
+		try {
+			in = new InputStreamReader(inputStream, "UTF-8");
+			int read;
+			do {
+				read = in.read(buffer, 0, buffer.length);
+				if (read > 0) {
+					out.append(buffer, 0, read);
+				}
+			} while (read >= 0);
+			String result = out.toString();
+			return result;
+		} catch (IOException e) {
+			throw new JargonRuntimeException("error converting to string", e);
+		}
+
 	}
 
 	/**
@@ -425,12 +420,14 @@ public class MiscIRODSUtils {
 	 * Get a displayable byte value from a long value
 	 *
 	 * @param bytes
+	 *            {@code long} with length
 	 * @return {@code String} with a human readable version of the byte count
 	 */
 	public static String humanReadableByteCount(final long bytes) {
 		int unit = 1024;
-		if (bytes < unit)
+		if (bytes < unit) {
 			return bytes + " B";
+		}
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		char pre = ("kMGTPE").charAt(exp - 1);
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
@@ -442,6 +439,8 @@ public class MiscIRODSUtils {
 	 * @param input
 	 *            {@code String} with the value to be converted to an MD5 Hash
 	 * @return {@code String} which is the MD5 has of the string.
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
 	public static String computeMD5HashOfAStringValue(final String input) throws JargonException {
@@ -518,6 +517,8 @@ public class MiscIRODSUtils {
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
+	 * @param irodsUserName
+	 *            {@code String}
 	 * @return {@code String} with a computed home directory path
 	 */
 	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(final IRODSAccount irodsAccount,
@@ -562,6 +563,8 @@ public class MiscIRODSUtils {
 	/**
 	 * Utility method to get the last part of the given absolute path
 	 *
+	 * @param collectionPath
+	 *            {@code String} to pull last path component from
 	 * @return {@code String} with the last component of the absolute path
 	 */
 
@@ -584,7 +587,9 @@ public class MiscIRODSUtils {
 	 * See if jargon supports the given status
 	 *
 	 * @param objStat
+	 *            {@link ObjStat}
 	 * @throws JargonException
+	 *             for iRODS error - indicates collection type is not supported
 	 */
 	public static void evaluateSpecCollSupport(final ObjStat objStat) throws JargonException {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
@@ -709,9 +714,12 @@ public class MiscIRODSUtils {
 	 * creating lists in interfaces and for other purposes
 	 *
 	 * @param enumClass
-	 *            java {@code enum}
+	 *            generic type for class
+	 * @param <T>
+	 *            the type of class
 	 * @return {@code List<String>} of enum values
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(final Class<T> enumClass)
 			throws JargonException {
@@ -921,6 +929,7 @@ public class MiscIRODSUtils {
 	 *            {@code String} with the path for which the prefix is trimmed
 	 * @return {@code String} with the prefix removed
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final String subtractPrefixFromGivenPath(final String prefix, final String path)
 			throws JargonException {

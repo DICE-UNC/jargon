@@ -126,7 +126,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements BulkFile
 		log.info("bundle type:{}", bundleType);
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp.instanceForCreateBundle(
 				absolutePathToBundleFileToBeCreatedOnIrods, absolutePathToIrodsCollectionToBeBundled,
-				resourceNameWhereBundleWillBeStored, bundleType);
+				resourceNameWhereBundleWillBeStored);
 
 		getIRODSProtocol().irodsFunction(structFileExtAndRegInp);
 
@@ -207,7 +207,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements BulkFile
 
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp.instanceForCreateBundleWithForceOption(
 				absolutePathToBundleFileToBeCreatedOnIrods, absolutePathToIrodsCollectionToBeBundled,
-				resourceNameWhereBundleWillBeStored, bundleType);
+				resourceNameWhereBundleWillBeStored);
 
 		getIRODSProtocol().irodsFunction(structFileExtAndRegInp);
 
@@ -264,17 +264,6 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements BulkFile
 				absolutePathToIrodsCollectionToHoldExtractedFiles, resourceNameWhereBundleWillBeExtracted, true, false);
 	}
 
-	/**
-	 * Internal method with params for various options to be delegated to by
-	 * specific extract methods in api
-	 *
-	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 * @param resourceNameWhereBundleWillBeExtracted
-	 * @param force
-	 * @param bulkOperation
-	 * @throws JargonException
-	 */
 	protected void extractABundleIntoAnIrodsCollection(final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted, final boolean force, final boolean bulkOperation)

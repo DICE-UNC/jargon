@@ -10,29 +10,25 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testInstance() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "zone",
-				"password");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "zone", "password");
 		Assert.assertEquals("user.zone:password", info.toString());
 	}
 
 	@Test
 	public void testLocalInstance() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.localInstance("user",
-				"password");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.localInstance("user", "password");
 		Assert.assertEquals("user:password", info.toString());
 	}
 
 	@Test
 	public void testUnauthenticatedInstance() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.unauthenticatedInstance(
-				"user", "zone");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.unauthenticatedInstance("user", "zone");
 		Assert.assertEquals("user.zone", info.toString());
 	}
 
 	@Test
 	public void testUnauthenticatedLocalInstance() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo
-				.unauthenticatedLocalInstance("user");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.unauthenticatedLocalInstance("user");
 		Assert.assertEquals("user", info.toString());
 	}
 
@@ -43,15 +39,13 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testInstanceWithBlankZone() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "",
-				"password");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "", "password");
 		Assert.assertEquals(null, info.getZone());
 	}
 
 	@Test
 	public void testInstanceWithBlankPassword() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "zone",
-				"");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "zone", "");
 		Assert.assertEquals(null, info.getPassword());
 	}
 
@@ -70,8 +64,7 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testFromStringUserAndPassword() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo
-				.fromString("user:password");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString("user:password");
 		Assert.assertEquals("user", info.getUserName());
 		Assert.assertEquals(null, info.getZone());
 		Assert.assertEquals("password", info.getPassword());
@@ -87,8 +80,7 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testFromStringUserZoneAndPassword() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo
-				.fromString("user.zone:password");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString("user.zone:password");
 		Assert.assertEquals("user", info.getUserName());
 		Assert.assertEquals("zone", info.getZone());
 		Assert.assertEquals("password", info.getPassword());
@@ -96,8 +88,7 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testFromStringWithEscape() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo
-				.fromString("%00user.zone%3c:pass%c4%80word");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString("%00user.zone%3c:pass%c4%80word");
 		Assert.assertEquals("\u0000user", info.getUserName());
 		Assert.assertEquals("zone<", info.getZone());
 		Assert.assertEquals("pass\u0100word", info.getPassword());
@@ -105,8 +96,7 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testToStringIntoNoEscaping() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("0123456789",
-				"abcdefghijklmnopqrstuvwxyz",
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("0123456789", "abcdefghijklmnopqrstuvwxyz",
 				"ABCDEFGHIJKLMNOPQRSTUVWXYZ-_!~*'();&=+$,");
 		final String expected = "0123456789.abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ-_!~*'();&=+$,";
 		Assert.assertEquals(expected, info.toString());
@@ -114,30 +104,25 @@ public final class IRODSUriUserInfoTest {
 
 	@Test
 	public void testToStringIntoEscaping() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance(".user",
-				"zone:", "pass@\u0080word");
-		Assert.assertEquals("%2Euser.zone%3A:pass%40%C2%80word",
-				info.toString());
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance(".user", "zone:", "pass@\u0080word");
+		Assert.assertEquals("%2Euser.zone%3A:pass%40%C2%80word", info.toString());
 	}
 
 	@Test
 	public void testToStringIntoUserOnly() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", null,
-				null);
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", null, null);
 		Assert.assertEquals("user", info.toString());
 	}
 
 	@Test
 	public void testToStringIntoUserAndZone() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "zone",
-				null);
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", "zone", null);
 		Assert.assertEquals("user.zone", info.toString());
 	}
 
 	@Test
 	public void testToStringIntoUserAndPassword() {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", null,
-				"password");
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance("user", null, "password");
 		Assert.assertEquals("user:password", info.toString());
 	}
 

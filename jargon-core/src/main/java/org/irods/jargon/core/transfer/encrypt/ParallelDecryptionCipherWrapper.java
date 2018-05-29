@@ -15,44 +15,42 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public abstract class ParallelDecryptionCipherWrapper extends
-ParallelCipherWrapper {
+public abstract class ParallelDecryptionCipherWrapper extends ParallelCipherWrapper {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ParallelDecryptionCipherWrapper.class);
+	public static final Logger log = LoggerFactory.getLogger(ParallelDecryptionCipherWrapper.class);
 
-	ParallelDecryptionCipherWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	ParallelDecryptionCipherWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}
 
 	/**
-	 * Decrypt the given data, called by the client of this wrapper, this will
-	 * call the
+	 * Decrypt the given data, called by the client of this wrapper, this will call
+	 * the
 	 *
 	 * @param input
 	 *            {@link EncryptionBuffer}
 	 * @return {@code byte[]} of plaintext data
 	 * @throws EncryptionException
+	 *             {@link EncryptionException}
 	 */
-	public byte[] decrypt(final EncryptionBuffer input)
-			throws EncryptionException {
+	public byte[] decrypt(final EncryptionBuffer input) throws EncryptionException {
 		log.info("decrypt()");
 
 		return doDecrypt(input);
 	}
 
 	/**
-	 * Decrypt given a complete buffer from iRODS. This can involve parsing out
-	 * the buffer for encryption values such as initialization vectors,
-	 * dependent on the underlying algorithm.
+	 * Decrypt given a complete buffer from iRODS. This can involve parsing out the
+	 * buffer for encryption values such as initialization vectors, dependent on the
+	 * underlying algorithm.
 	 *
 	 * @param fullBuffer
-	 *            {@code byte[]} with the full buffer form iRODS, including
-	 *            any encryption related payload
+	 *            {@code byte[]} with the full buffer form iRODS, including any
+	 *            encryption related payload
 	 * @return {@code byte[]} with decrypted data
 	 * @throws EncryptionException
+	 *             {@link EncryptionException}
 	 */
 	public byte[] decrypt(final byte[] fullBuffer) throws EncryptionException {
 		log.info("decrypt");
@@ -69,8 +67,8 @@ ParallelCipherWrapper {
 	 *            {@code byte[]} of plaintext data
 	 * @return {@link EncryptionBuffer}
 	 * @throws EncryptionException
+	 *             {@link EncryptionException}
 	 */
-	protected abstract byte[] doDecrypt(EncryptionBuffer input)
-			throws EncryptionException;
+	protected abstract byte[] doDecrypt(EncryptionBuffer input) throws EncryptionException;
 
 }

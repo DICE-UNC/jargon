@@ -37,11 +37,10 @@ public class UserFilePermission {
 	 * @param userType
 	 *            {@link UserTypeEnum} value for user
 	 * @param userZone
-	 *            {@code String} with an optional zone name, set to blank
-	 *            if not used
+	 *            {@code String} with an optional zone name, set to blank if not
+	 *            used
 	 */
-	public UserFilePermission(final String userName, final String userId,
-			final FilePermissionEnum filePermissionEnum,
+	public UserFilePermission(final String userName, final String userId, final FilePermissionEnum filePermissionEnum,
 			final UserTypeEnum userType, final String userZone) {
 
 		if (userName == null || userName.isEmpty()) {
@@ -114,8 +113,8 @@ public class UserFilePermission {
 	}
 
 	/**
-	 * Get the user name in the standard user#zone format. This is the standard
-	 * for displays of user names in iRODS user interfaces.
+	 * Get the user name in the standard user#zone format. This is the standard for
+	 * displays of user names in iRODS user interfaces.
 	 *
 	 * @return {@code String} with the extended zone
 	 */
@@ -149,8 +148,8 @@ public class UserFilePermission {
 	/**
 	 * Get the file permission for this user
 	 *
-	 * @return {@link FilePermissionEnum} value with the current permission for
-	 *         the user
+	 * @return {@link FilePermissionEnum} value with the current permission for the
+	 *         user
 	 */
 	public FilePermissionEnum getFilePermissionEnum() {
 		return filePermissionEnum;
@@ -162,8 +161,7 @@ public class UserFilePermission {
 	 * @param filePermissionEnum
 	 *            {@link FilePermissionEnum} value
 	 */
-	public void setFilePermissionEnum(
-			final FilePermissionEnum filePermissionEnum) {
+	public void setFilePermissionEnum(final FilePermissionEnum filePermissionEnum) {
 		this.filePermissionEnum = filePermissionEnum;
 	}
 

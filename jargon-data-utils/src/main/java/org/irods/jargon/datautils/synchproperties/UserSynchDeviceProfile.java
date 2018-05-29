@@ -22,8 +22,8 @@ public class UserSynchDeviceProfile {
 	private String deviceName = "";
 
 	/**
-	 * A map (by iRODS absolute path to the root collection of the synch) of
-	 * synch folders on iRODS.
+	 * A map (by iRODS absolute path to the root collection of the synch) of synch
+	 * folders on iRODS.
 	 */
 	private Map<String, UserSynchTarget> userSynchTargets;
 
@@ -47,8 +47,7 @@ public class UserSynchDeviceProfile {
 		return userSynchTargets;
 	}
 
-	public void setUserSynchTargets(
-			final Map<String, UserSynchTarget> userSynchTargets) {
+	public void setUserSynchTargets(final Map<String, UserSynchTarget> userSynchTargets) {
 		this.userSynchTargets = userSynchTargets;
 	}
 

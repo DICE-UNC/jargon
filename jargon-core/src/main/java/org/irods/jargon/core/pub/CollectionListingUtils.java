@@ -75,6 +75,7 @@ class CollectionListingUtils {
 	 *         the children under the parent. These children may be simulated per
 	 *         the given rules
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHomeByLookingForPublicAndHome(
 			final String absolutePathToParent) throws FileNotFoundException, JargonException {
@@ -149,9 +150,12 @@ class CollectionListingUtils {
 	 * in the hierarchy were strict ACLs would otherwise preclude
 	 * 
 	 * @param irodsAbsolutePath
-	 * @return
+	 *            {@code String} with the iRODS path
+	 * @return {@link ObjStat}
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	ObjStat handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
@@ -344,10 +348,6 @@ class CollectionListingUtils {
 
 	}
 
-	/**
-	 * @param data
-	 *            .getCollectionAndDataObjectListingEntries()
-	 */
 	private CollectionAndDataObjectListingEntry createStandInForHomeDir(final String path) {
 		log.info("under a zone, put out home as an entry");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
@@ -369,11 +369,6 @@ class CollectionListingUtils {
 		return entry;
 	}
 
-	/**
-	 * Create a collection and listing entry for the home dir
-	 * 
-	 * @return
-	 */
 	private CollectionAndDataObjectListingEntry createStandInForPublicDir(final ObjStat objStat) {
 		log.info("under root, put out home as an entry");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
@@ -425,9 +420,12 @@ class CollectionListingUtils {
 	 *            {@link ObjStat} from iRODS that details the nature of the
 	 *            collection
 	 * @param partialStartIndex
-	 * @return
+	 *            {@code int} with an offset
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 * 
 	 * 
 	 */
@@ -667,15 +665,6 @@ class CollectionListingUtils {
 		return resultSet;
 	}
 
-	/**
-	 * For a collection based on a row from a collection query, evaluate against the
-	 * provided objStat and decide whether to modify the resulting listing entry to
-	 * reflect special collection status
-	 * 
-	 * @param objStat
-	 * @param effectiveAbsolutePath
-	 * @param collectionAndDataObjectListingEntry
-	 */
 	private void adjustEntryFromRowInCaseOfSpecialCollection(final ObjStat objStat, final String effectiveAbsolutePath,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry) {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
@@ -705,9 +694,12 @@ class CollectionListingUtils {
 	 * {@code ObjStat}
 	 *
 	 * @param objStat
+	 *            {@link ObjStat} describing the collection
 	 * @param partialStartIndex
-	 * @return
+	 *            {@code int} wiht an offset
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(final ObjStat objStat,
 			final int partialStartIndex) throws JargonException {
@@ -925,7 +917,9 @@ class CollectionListingUtils {
 	 *            {@link ObjStat}
 	 * @return <code>int</code> with the total collections under a given path
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	int countCollectionsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException {
 
@@ -1021,8 +1015,11 @@ class CollectionListingUtils {
 
 	/**
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	CollectionListingUtils(IRODSAccount irodsAccount, IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
@@ -1050,6 +1047,7 @@ class CollectionListingUtils {
 	 * @throws FileNotFoundException
 	 *             if the file does not exist
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
 

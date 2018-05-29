@@ -20,38 +20,38 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
-		RemoteExecutionOfCommandsAO {
+public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements RemoteExecutionOfCommandsAO {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(RemoteExecutionOfCommandsAOImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(RemoteExecutionOfCommandsAOImpl.class);
 
 	/**
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected RemoteExecutionOfCommandsAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected RemoteExecutionOfCommandsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
-	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgs
-	 * (java.lang.String, java.lang.String)
+	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgs (java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public InputStream executeARemoteCommandAndGetStreamGivingCommandNameAndArgs(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand) throws JargonException {
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand)
+			throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
-		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(getIRODSProtocol(), commandToExecuteWithoutArguments,
-						argumentsToPassWithCommand, "");
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(getIRODSProtocol(),
+				commandToExecuteWithoutArguments, argumentsToPassWithCommand, "");
 
 		if (isAbleToStreamLargeResults()) {
 			return remoteExecuteService.executeAndStream();
@@ -62,21 +62,19 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgsAndHost
 	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public InputStream executeARemoteCommandAndGetStreamGivingCommandNameAndArgsAndHost(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand, final String executionHost)
-			throws JargonException {
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
+			final String executionHost) throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
-		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(getIRODSProtocol(), commandToExecuteWithoutArguments,
-						argumentsToPassWithCommand, executionHost);
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(getIRODSProtocol(),
+				commandToExecuteWithoutArguments, argumentsToPassWithCommand, executionHost);
 
 		if (isAbleToStreamLargeResults()) {
 			return remoteExecuteService.executeAndStream();
@@ -87,24 +85,20 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript
 	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public InputStream executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-			throws JargonException {
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
+			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn) throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
-		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instanceWhenUsingAbsPathToSetCommandArg(getIRODSProtocol(),
-						commandToExecuteWithoutArguments,
-						argumentsToPassWithCommand, "",
-						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instanceWhenUsingAbsPathToSetCommandArg(
+				getIRODSProtocol(), commandToExecuteWithoutArguments, argumentsToPassWithCommand, "",
+				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
 
 		if (isAbleToStreamLargeResults()) {
 			return remoteExecuteService.executeAndStream();
@@ -115,24 +109,20 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost
 	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public InputStream executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-			throws JargonException {
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
+			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn) throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instanceWhenUsingAbsPathToFindExecutionHost(
-						getIRODSProtocol(), commandToExecuteWithoutArguments,
-						argumentsToPassWithCommand, "",
-						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
+				.instanceWhenUsingAbsPathToFindExecutionHost(getIRODSProtocol(), commandToExecuteWithoutArguments,
+						argumentsToPassWithCommand, "", absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
 
 		if (isAbleToStreamLargeResults()) {
 			return remoteExecuteService.executeAndStream();
@@ -146,11 +136,11 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 	 *
 	 * @return {@code boolean}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected boolean isAbleToStreamLargeResults() throws JargonException {
 
-		if (getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
+		if (getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 			return true;
 		} else {
 			return false;

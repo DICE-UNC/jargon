@@ -29,8 +29,7 @@ public class IRODSTestSetupUtilities {
 	private Properties testingProperties;
 	private IRODSFileSystem irodsFileSystem;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(IRODSTestSetupUtilities.class);
+	public static final Logger log = LoggerFactory.getLogger(IRODSTestSetupUtilities.class);
 
 	public IRODSTestSetupUtilities() throws TestConfigurationException {
 		testingPropertiesHelper = new TestingPropertiesHelper();
@@ -43,24 +42,22 @@ public class IRODSTestSetupUtilities {
 	}
 
 	/**
-	 * Remove the scratch directory from irods based on the testing.properties
-	 * file
+	 * Remove the scratch directory from irods based on the testing.properties file
 	 *
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	@Overheaded
 	// [#1628] intermittent -528036 errors on delete of collections
 	public void clearIrodsScratchDirectory() throws TestConfigurationException {
 
 		try {
-			IRODSAccount irodsAccount = testingPropertiesHelper
-					.buildIRODSAccountFromTestProperties(testingProperties);
+			IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 			String targetIrodsCollection = testingPropertiesHelper
-					.buildIRODSCollectionAbsolutePathFromTestProperties(
-							testingProperties, "");
-			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(targetIrodsCollection);
+					.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, "");
+			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(targetIrodsCollection);
 
 			try {
 				testScratchFile.delete();
@@ -75,8 +72,7 @@ public class IRODSTestSetupUtilities {
 						e);
 				return;
 			} else {
-				throw new TestConfigurationException(
-						"error clearing irods scratch dir", e);
+				throw new TestConfigurationException("error clearing irods scratch dir", e);
 			}
 		} catch (Exception e) {
 			throw new TestConfigurationException("error clearing scratch dir", e);
@@ -92,25 +88,22 @@ public class IRODSTestSetupUtilities {
 	 * testing.properties file
 	 *
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
 	public void initializeIrodsScratchDirectory() throws TestConfigurationException {
 		clearIrodsScratchDirectory();
 
 		try {
-			IRODSAccount irodsAccount = testingPropertiesHelper
-					.buildIRODSAccountFromTestProperties(testingProperties);
+			IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-			String targetIrodsCollection = testingPropertiesHelper
-					.buildIRODSCollectionAbsolutePathFromTestProperties(
-							testingProperties, testingProperties
-							.getProperty(IRODS_SCRATCH_DIR_KEY));
-			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(targetIrodsCollection);
+			String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+					testingProperties, testingProperties.getProperty(IRODS_SCRATCH_DIR_KEY));
+			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(targetIrodsCollection);
 
 			testScratchFile.mkdirs();
 		} catch (Exception e) {
-			throw new TestConfigurationException("error clearing irods scratch dir",
-					e);
+			throw new TestConfigurationException("error clearing irods scratch dir", e);
 		} finally {
 			if (irodsFileSystem != null) {
 				irodsFileSystem.closeAndEatExceptions();
@@ -119,38 +112,33 @@ public class IRODSTestSetupUtilities {
 	}
 
 	/**
-	 * Create a directory under scratch with the given name, which is typically
-	 * a name assigned per Junit test class
+	 * Create a directory under scratch with the given name, which is typically a
+	 * name assigned per Junit test class
 	 *
 	 * @param testingDirectory
-	 *            {@code String} with a directory to go underneath scratch,
-	 *            do not supply leading '/'
+	 *            {@code String} with a directory to go underneath scratch, do not
+	 *            supply leading '/'
 	 * @throws TestConfigurationException
+	 *             {@link TestConfigurationException}
 	 */
-	public void initializeDirectoryForTest(final String testingDirectory)
-			throws TestConfigurationException {
+	public void initializeDirectoryForTest(final String testingDirectory) throws TestConfigurationException {
 		StringBuilder scratchDir = new StringBuilder();
-		scratchDir.append(testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, ""));
+		scratchDir.append(
+				testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, ""));
 		scratchDir.append('/');
 		scratchDir.append(testingDirectory);
 
 		try {
-			IRODSAccount irodsAccount = testingPropertiesHelper
-					.buildIRODSAccountFromTestProperties(testingProperties);
+			IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-			testingPropertiesHelper
-			.buildIRODSCollectionAbsolutePathFromTestProperties(
-					testingProperties, testingProperties
-					.getProperty(IRODS_SCRATCH_DIR_KEY));
-			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(scratchDir.toString());
+			testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
+					testingProperties.getProperty(IRODS_SCRATCH_DIR_KEY));
+			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(scratchDir.toString());
 
 			testScratchFile.mkdirs();
 		} catch (Exception e) {
-			throw new TestConfigurationException("error clearing irods scratch dir",
-					e);
+			throw new TestConfigurationException("error clearing irods scratch dir", e);
 		} finally {
 			if (irodsFileSystem != null) {
 				irodsFileSystem.closeAndEatExceptions();

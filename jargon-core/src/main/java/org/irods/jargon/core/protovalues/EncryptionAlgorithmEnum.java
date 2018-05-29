@@ -7,16 +7,15 @@ package org.irods.jargon.core.protovalues;
  */
 public enum EncryptionAlgorithmEnum {
 
-	AES_256_CBC("AES-256-CBC", "AES/CBC/PKCS5Padding", "PBKDF2WithHmacSha1",
-			256);
+	AES_256_CBC("AES-256-CBC", "AES/CBC/PKCS5Padding", "PBKDF2WithHmacSha1", 256);
 
 	private String textValue;
 	private String cypherKey;
 	private String keyGenType;
 	private int keySize;
 
-	EncryptionAlgorithmEnum(final String textValue, final String cypherKey,
-			final String keyGenType, final int keySize) {
+	EncryptionAlgorithmEnum(final String textValue, final String cypherKey, final String keyGenType,
+			final int keySize) {
 		this.textValue = textValue;
 		this.cypherKey = cypherKey;
 		this.keyGenType = keyGenType;
@@ -31,12 +30,12 @@ public enum EncryptionAlgorithmEnum {
 	 * Given a text value resolve the encoding
 	 *
 	 * @param userType
+	 *            {@code String}
 	 * @return {@link EncryptionAlgorithmEnum}
 	 */
 	public static EncryptionAlgorithmEnum findTypeByString(final String userType) {
 		EncryptionAlgorithmEnum checksumEncodingValue = null;
-		for (EncryptionAlgorithmEnum checksumEnumValue : EncryptionAlgorithmEnum
-				.values()) {
+		for (EncryptionAlgorithmEnum checksumEnumValue : EncryptionAlgorithmEnum.values()) {
 			if (checksumEnumValue.getTextValue().equals(userType)) {
 				checksumEncodingValue = checksumEnumValue;
 				break;

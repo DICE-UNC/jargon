@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -31,6 +29,7 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -55,47 +54,38 @@ public class IRODSThousandFilesTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// put in the thousand files
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		localAbsPath = absPath + collDir;
 
-		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
-				+ "/" + collDir, testFilePrefix, testFileSuffix, 1000, 20, 500);
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH + "/" + collDir, testFilePrefix,
+				testFileSuffix, 1000, 20, 500);
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		// make the put subdir
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		parentDir.mkdirs();
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),
-				targetIrodsCollection, true);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionInherit(irodsAccount.getZone(), targetIrodsCollection, true);
+		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		String userName;
 		User user = new User();
@@ -108,8 +98,7 @@ public class IRODSThousandFilesTest {
 			} catch (Exception e) {
 
 			}
-			collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
-					targetIrodsCollection, userName, true);
+			collectionAO.setAccessPermissionRead(irodsAccount.getZone(), targetIrodsCollection, userName, true);
 		}
 
 		File sourceFile = new File(absPath + collDir);
@@ -140,34 +129,25 @@ public class IRODSThousandFilesTest {
 		String avu1Value = "avu1value";
 		String avu2Attrib = "avu2";
 
-		IRODSAccount account = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFile irodsFile = irodsFileSystem
-				.getIRODSFileFactory(account)
-				.instanceIRODSFile(
-						testingPropertiesHelper
-								.buildIRODSCollectionAbsolutePathFromTestProperties(
-										testingProperties,
-										IRODS_TEST_SUBDIR_PATH + '/' + collDir));
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(account).instanceIRODSFile(
+				testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + '/' + collDir));
 
 		// get a list of files underneath the top-level directory, and add some
 		// avu's to each one
 
 		String[] fileList = irodsFile.list();
 		IRODSFile subFile = null;
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(account);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(account);
 
 		for (String element : fileList) {
 			subFile = irodsFileSystem.getIRODSFileFactory(account)
-					.instanceIRODSFile(
-							irodsFile.getAbsolutePath() + '/' + element);
+					.instanceIRODSFile(irodsFile.getAbsolutePath() + '/' + element);
 
-			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(),
-					AvuData.instance(avu1Attrib, avu1Value, ""));
-			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(),
-					AvuData.instance(avu2Attrib, avu1Value, ""));
+			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(), AvuData.instance(avu1Attrib, avu1Value, ""));
+			dataObjectAO.addAVUMetadata(subFile.getAbsolutePath(), AvuData.instance(avu2Attrib, avu1Value, ""));
 
 		}
 
@@ -177,39 +157,30 @@ public class IRODSThousandFilesTest {
 	@Test
 	public void testSearchForAvuFiles() throws Exception {
 		String avu1Attrib = "avu1";
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
-				avu1Attrib));
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, avu1Attrib));
 
-		List<MetaDataAndDomainData> metadataElements = dataObjectAO
-				.findMetadataValuesByMetadataQuery(avuQueryElements);
+		List<MetaDataAndDomainData> metadataElements = dataObjectAO.findMetadataValuesByMetadataQuery(avuQueryElements);
 
 		Assert.assertFalse("did not get results", metadataElements.isEmpty());
 	}
 
 	@Test
-	public void testListFilesAndCollectionsUnderPathWithAccessInfoViaGenQuery()
-			throws Exception {
+	public void testListFilesAndCollectionsUnderPathWithAccessInfoViaGenQuery() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/coll");
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/coll");
 
-		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
@@ -217,33 +188,29 @@ public class IRODSThousandFilesTest {
 		Assert.assertFalse(entries.isEmpty());
 
 		/*
-		 * First batch is 1000 * count entries, since the last entry is not the
-		 * 'last' record, it should be dropped for the next batch. Therefore,
-		 * the result should be 1000/count - 1 entries
+		 * First batch is 1000 * count entries, since the last entry is not the 'last'
+		 * record, it should be dropped for the next batch. Therefore, the result should
+		 * be 1000/count - 1 entries
 		 */
 
-		int recordLimit = irodsFileSystem.getJargonProperties()
-				.getMaxFilesAndDirsQueryMax();
+		int recordLimit = irodsFileSystem.getJargonProperties().getMaxFilesAndDirsQueryMax();
 		int expectedCount = recordLimit / usersCount - 1;
 
 		// should have 1000 in this batch
-		Assert.assertEquals("did not get back the  rows I requested",
-				expectedCount, entries.size());
+		Assert.assertEquals("did not get back the  rows I requested", expectedCount, entries.size());
 
 		// bounce thru entries, each has count permissions + 1 for the user that
 		// created the collection
 
 		for (CollectionAndDataObjectListingEntry entry : entries) {
-			Assert.assertEquals(
-					"did not have the expected number of permissions",
-					usersCount + 1, entry.getUserFilePermission().size());
+			Assert.assertEquals("did not have the expected number of permissions", usersCount + 1,
+					entry.getUserFilePermission().size());
 		}
 
 		/*
 		 * get the collection name of the last entry provided
 		 */
-		String lastPathFromInputData = entries.get(entries.size() - 1)
-				.getFormattedAbsolutePath();
+		String lastPathFromInputData = entries.get(entries.size() - 1).getFormattedAbsolutePath();
 
 		System.out.println("last path:" + lastPathFromInputData);
 
@@ -251,8 +218,7 @@ public class IRODSThousandFilesTest {
 
 		// file name like thousandFileTest141.txt
 
-		String nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		String nbrPart = fileName.substring(testFilePrefix.length(), fileName.indexOf('.'));
 		System.out.println("nbrPart");
 		int nextNbr = Integer.parseInt(nbrPart) + 1;
 
@@ -260,112 +226,91 @@ public class IRODSThousandFilesTest {
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
 		// first entry should be for the expected next file
-		CollectionAndDataObjectListingEntry firstEntryOfSecondQuery = entries
-				.get(0);
-		Assert.assertEquals(
-				"did not get the expected first record form the second page of entries",
-				expectedNextPath, firstEntryOfSecondQuery.getPathOrName());
+		CollectionAndDataObjectListingEntry firstEntryOfSecondQuery = entries.get(0);
+		Assert.assertEquals("did not get the expected first record form the second page of entries", expectedNextPath,
+				firstEntryOfSecondQuery.getPathOrName());
 
-		CollectionAndDataObjectListingEntry lastEntryOfSecondQuery = entries
-				.get(entries.size() - 1);
+		CollectionAndDataObjectListingEntry lastEntryOfSecondQuery = entries.get(entries.size() - 1);
 
 		expectedNextPath = testFilePrefix + 186 + testFileSuffix;
 
-		Assert.assertEquals(
-				"did not get the expected last record form the second page of entries",
-				expectedNextPath, lastEntryOfSecondQuery.getPathOrName());
+		Assert.assertEquals("did not get the expected last record form the second page of entries", expectedNextPath,
+				lastEntryOfSecondQuery.getPathOrName());
 
-		Assert.assertFalse("should not be last record",
-				lastEntryOfSecondQuery.isLastResult());
+		Assert.assertFalse("should not be last record", lastEntryOfSecondQuery.isLastResult());
 
 		fileName = entries.get(entries.size() - 1).getPathOrName();
 
 		// file name like thousandFileTest141.txt
 
-		nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		nbrPart = fileName.substring(testFilePrefix.length(), fileName.indexOf('.'));
 		nextNbr = Integer.parseInt(nbrPart) + 1;
 
 		expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
-		CollectionAndDataObjectListingEntry firstEntryOfThirdQuery = entries
-				.get(0);
+		CollectionAndDataObjectListingEntry firstEntryOfThirdQuery = entries.get(0);
 
-		Assert.assertEquals(
-				"did not get the expected first record form the third page of entries",
-				expectedNextPath, firstEntryOfThirdQuery.getPathOrName());
+		Assert.assertEquals("did not get the expected first record form the third page of entries", expectedNextPath,
+				firstEntryOfThirdQuery.getPathOrName());
 
 		// should be one more page of results
 
-		CollectionAndDataObjectListingEntry lastEntryOfThirdQuery = entries
-				.get(entries.size() - 1);
+		CollectionAndDataObjectListingEntry lastEntryOfThirdQuery = entries.get(entries.size() - 1);
 
-		Assert.assertFalse("should be a fouth page of results",
-				lastEntryOfThirdQuery.isLastResult());
+		Assert.assertFalse("should be a fouth page of results", lastEntryOfThirdQuery.isLastResult());
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
 		// last should be 274, query again
-		CollectionAndDataObjectListingEntry lastEntryOfFourthQuery = entries
-				.get(entries.size() - 1);
+		CollectionAndDataObjectListingEntry lastEntryOfFourthQuery = entries.get(entries.size() - 1);
 
-		Assert.assertFalse("should be a fifth page of results",
-				lastEntryOfFourthQuery.isLastResult());
+		Assert.assertFalse("should be a fifth page of results", lastEntryOfFourthQuery.isLastResult());
 
 		fileName = lastEntryOfFourthQuery.getPathOrName();
 
-		nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		nbrPart = fileName.substring(testFilePrefix.length(), fileName.indexOf('.'));
 		nextNbr = Integer.parseInt(nbrPart) + 1;
 
 		expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
-		CollectionAndDataObjectListingEntry firstEntryOfFifthQuery = entries
-				.get(0);
+		CollectionAndDataObjectListingEntry firstEntryOfFifthQuery = entries.get(0);
 
-		Assert.assertEquals(
-				"did not get the expected first record form the third page of entries",
-				expectedNextPath, firstEntryOfFifthQuery.getPathOrName());
+		Assert.assertEquals("did not get the expected first record form the third page of entries", expectedNextPath,
+				firstEntryOfFifthQuery.getPathOrName());
 
 		// now just page through till last page
 
 		while (true) {
-			entries = actual.listDataObjectsUnderPathWithPermissions(
-					targetIrodsCollection, entries.get(entries.size() - 1)
-							.getCount());
-			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries
-					.get(entries.size() - 1);
+			entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+					entries.get(entries.size() - 1).getCount());
+			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries.get(entries.size() - 1);
 			if (lastEntryOfLoopedQuery.isLastResult() == true) {
 				break;
 			}
@@ -380,23 +325,18 @@ public class IRODSThousandFilesTest {
 	}
 
 	@Test
-	public void testListFilesAndCollectionsUnderPathWithAccessInfoViaSpecificQuery()
-			throws Exception {
+	public void testListFilesAndCollectionsUnderPathWithAccessInfoViaSpecificQuery() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/coll");
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/coll");
 
-		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
@@ -404,33 +344,29 @@ public class IRODSThousandFilesTest {
 		Assert.assertFalse(entries.isEmpty());
 
 		/*
-		 * First batch is 1000 * count entries, since the last entry is not the
-		 * 'last' record, it should be dropped for the next batch. Therefore,
-		 * the result should be 1000/count - 1 entries
+		 * First batch is 1000 * count entries, since the last entry is not the 'last'
+		 * record, it should be dropped for the next batch. Therefore, the result should
+		 * be 1000/count - 1 entries
 		 */
 
-		int recordLimit = irodsFileSystem.getJargonProperties()
-				.getMaxFilesAndDirsQueryMax();
+		int recordLimit = irodsFileSystem.getJargonProperties().getMaxFilesAndDirsQueryMax();
 		int expectedCount = recordLimit / usersCount - 1;
 
 		// should have 1000 in this batch
-		Assert.assertEquals("did not get back the  rows I requested",
-				expectedCount, entries.size());
+		Assert.assertEquals("did not get back the  rows I requested", expectedCount, entries.size());
 
 		// bounce thru entries, each has count permissions + 1 for the user that
 		// created the collection
 
 		for (CollectionAndDataObjectListingEntry entry : entries) {
-			Assert.assertEquals(
-					"did not have the expected number of permissions",
-					usersCount + 1, entry.getUserFilePermission().size());
+			Assert.assertEquals("did not have the expected number of permissions", usersCount + 1,
+					entry.getUserFilePermission().size());
 		}
 
 		/*
 		 * get the collection name of the last entry provided
 		 */
-		String lastPathFromInputData = entries.get(entries.size() - 1)
-				.getFormattedAbsolutePath();
+		String lastPathFromInputData = entries.get(entries.size() - 1).getFormattedAbsolutePath();
 
 		System.out.println("last path:" + lastPathFromInputData);
 
@@ -438,8 +374,7 @@ public class IRODSThousandFilesTest {
 
 		// file name like thousandFileTest141.txt
 
-		String nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		String nbrPart = fileName.substring(testFilePrefix.length(), fileName.indexOf('.'));
 		System.out.println("nbrPart");
 		int nextNbr = Integer.parseInt(nbrPart) + 1;
 
@@ -447,112 +382,91 @@ public class IRODSThousandFilesTest {
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
 		// first entry should be for the expected next file
-		CollectionAndDataObjectListingEntry firstEntryOfSecondQuery = entries
-				.get(0);
-		Assert.assertEquals(
-				"did not get the expected first record form the second page of entries",
-				expectedNextPath, firstEntryOfSecondQuery.getPathOrName());
+		CollectionAndDataObjectListingEntry firstEntryOfSecondQuery = entries.get(0);
+		Assert.assertEquals("did not get the expected first record form the second page of entries", expectedNextPath,
+				firstEntryOfSecondQuery.getPathOrName());
 
-		CollectionAndDataObjectListingEntry lastEntryOfSecondQuery = entries
-				.get(entries.size() - 1);
+		CollectionAndDataObjectListingEntry lastEntryOfSecondQuery = entries.get(entries.size() - 1);
 
 		expectedNextPath = testFilePrefix + 186 + testFileSuffix;
 
-		Assert.assertEquals(
-				"did not get the expected last record form the second page of entries",
-				expectedNextPath, lastEntryOfSecondQuery.getPathOrName());
+		Assert.assertEquals("did not get the expected last record form the second page of entries", expectedNextPath,
+				lastEntryOfSecondQuery.getPathOrName());
 
-		Assert.assertFalse("should not be last record",
-				lastEntryOfSecondQuery.isLastResult());
+		Assert.assertFalse("should not be last record", lastEntryOfSecondQuery.isLastResult());
 
 		fileName = entries.get(entries.size() - 1).getPathOrName();
 
 		// file name like thousandFileTest141.txt
 
-		nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		nbrPart = fileName.substring(testFilePrefix.length(), fileName.indexOf('.'));
 		nextNbr = Integer.parseInt(nbrPart) + 1;
 
 		expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
-		CollectionAndDataObjectListingEntry firstEntryOfThirdQuery = entries
-				.get(0);
+		CollectionAndDataObjectListingEntry firstEntryOfThirdQuery = entries.get(0);
 
-		Assert.assertEquals(
-				"did not get the expected first record form the third page of entries",
-				expectedNextPath, firstEntryOfThirdQuery.getPathOrName());
+		Assert.assertEquals("did not get the expected first record form the third page of entries", expectedNextPath,
+				firstEntryOfThirdQuery.getPathOrName());
 
 		// should be one more page of results
 
-		CollectionAndDataObjectListingEntry lastEntryOfThirdQuery = entries
-				.get(entries.size() - 1);
+		CollectionAndDataObjectListingEntry lastEntryOfThirdQuery = entries.get(entries.size() - 1);
 
-		Assert.assertFalse("should be a fouth page of results",
-				lastEntryOfThirdQuery.isLastResult());
+		Assert.assertFalse("should be a fouth page of results", lastEntryOfThirdQuery.isLastResult());
 
 		// now query again
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
 		// last should be 274, query again
-		CollectionAndDataObjectListingEntry lastEntryOfFourthQuery = entries
-				.get(entries.size() - 1);
+		CollectionAndDataObjectListingEntry lastEntryOfFourthQuery = entries.get(entries.size() - 1);
 
-		Assert.assertFalse("should be a fifth page of results",
-				lastEntryOfFourthQuery.isLastResult());
+		Assert.assertFalse("should be a fifth page of results", lastEntryOfFourthQuery.isLastResult());
 
 		fileName = lastEntryOfFourthQuery.getPathOrName();
 
-		nbrPart = fileName.substring(testFilePrefix.length(),
-				fileName.indexOf('.'));
+		nbrPart = fileName.substring(testFilePrefix.length(), fileName.indexOf('.'));
 		nextNbr = Integer.parseInt(nbrPart) + 1;
 
 		expectedNextPath = testFilePrefix + nextNbr + testFileSuffix;
 
-		entries = actual.listDataObjectsUnderPathWithPermissions(
-				targetIrodsCollection, entries.get(entries.size() - 1)
-						.getCount());
+		entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+				entries.get(entries.size() - 1).getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 
-		CollectionAndDataObjectListingEntry firstEntryOfFifthQuery = entries
-				.get(0);
+		CollectionAndDataObjectListingEntry firstEntryOfFifthQuery = entries.get(0);
 
-		Assert.assertEquals(
-				"did not get the expected first record form the third page of entries",
-				expectedNextPath, firstEntryOfFifthQuery.getPathOrName());
+		Assert.assertEquals("did not get the expected first record form the third page of entries", expectedNextPath,
+				firstEntryOfFifthQuery.getPathOrName());
 
 		// now just page through till last page
 
 		while (true) {
-			entries = actual.listDataObjectsUnderPathWithPermissions(
-					targetIrodsCollection, entries.get(entries.size() - 1)
-							.getCount());
-			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries
-					.get(entries.size() - 1);
+			entries = actual.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+					entries.get(entries.size() - 1).getCount());
+			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries.get(entries.size() - 1);
 			if (lastEntryOfLoopedQuery.isLastResult() == true) {
 				break;
 			}
@@ -570,54 +484,43 @@ public class IRODSThousandFilesTest {
 	 * As a practical matter, this test is only run if the test runs on the same
 	 * machine as the iRODS physical file system.
 	 *
-	 * The prop test.option.exercise.filesystem.mount.local must be true in
-	 * testing properties, as configured in your settings.xml file
+	 * The prop test.option.exercise.filesystem.mount.local must be true in testing
+	 * properties, as configured in your settings.xml file
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testListFilesAndCollectionsUnderMountedFilePath()
-			throws Exception {
+	public void testListFilesAndCollectionsUnderMountedFilePath() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
 			return;
 		}
 
-		if (!testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+		if (!testingPropertiesHelper.isTestFileSystemMountLocal(testingProperties)) {
 			return;
 		}
 
 		String testIrodsMountPoint = "testListFilesAndCollectionsUnderMountedFilePath";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ testIrodsMountPoint);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testIrodsMountPoint);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(localAbsPath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionAO
-				.createMountedFileSystemCollection(localAbsPath,
-						targetIrodsCollection,
-						irodsAccount.getDefaultStorageResource());
-
-		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);

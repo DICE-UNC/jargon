@@ -43,6 +43,8 @@ public interface IRODSAccessObject {
 	 * associated with the connection.
 	 *
 	 * @return {@link IRODSServerProperties}
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSServerProperties getIRODSServerProperties() throws JargonException;
 
@@ -58,6 +60,7 @@ public interface IRODSAccessObject {
 	 *
 	 * @return {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException;
 
@@ -67,6 +70,7 @@ public interface IRODSAccessObject {
 	 *
 	 * @return {@link IRODSFileFactory}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSFileFactory getIRODSFileFactory() throws JargonException;
 
@@ -79,6 +83,7 @@ public interface IRODSAccessObject {
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException;
 
@@ -89,6 +94,7 @@ public interface IRODSAccessObject {
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	TransferOptions buildTransferOptionsBasedOnJargonProperties() throws JargonException;
 
@@ -99,6 +105,7 @@ public interface IRODSAccessObject {
 	 *            {@code int} with the operation complete status to send
 	 * @return {@link Tag} with any response (could be null)
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	Tag operationComplete(int status) throws JargonException;
 
@@ -113,25 +120,27 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Convenience method closes all sessions associated with the current Thread.
-	 * 
+	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void closeSession() throws JargonException;
 
 	/**
 	 * Convenience method closes all sessions associated with the current Thread,
 	 * intercepts and logs/ignores any exceptions that occur in the close operation.
-	 * 
+	 *
 	 */
 	void closeSessionAndEatExceptions();
 
 	/**
 	 * Convenience method closes any session associated with the given
 	 * {@code IRODSAccount} in the current thread.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} associated with the connection
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void closeSession(IRODSAccount irodsAccount) throws JargonException;
 
@@ -139,7 +148,7 @@ public interface IRODSAccessObject {
 	 * Convenience method closes any session associated with the given
 	 * {@code IRODSAccount} in the current thread. Logs and ignores any exception in
 	 * the close operation.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} associated with the connection
 	 */

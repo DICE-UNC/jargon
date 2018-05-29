@@ -3,18 +3,16 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.query.AbstractAliasedQuery;
 import org.irods.jargon.core.query.SimpleQuery;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SimpleQueryInpTest {
 
 	@Test
 	public void testGetTagValue() throws Exception {
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query",
-				"myargs", 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query", "myargs", 0);
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		String tagVal = simpleQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
@@ -28,8 +26,7 @@ public class SimpleQueryInpTest {
 		sb.append("<maxBufSize>1024</maxBufSize>\n");
 		sb.append("</simpleQueryInp_PI>\n");
 
-		Assert.assertEquals("did not get expected tag value", sb.toString(),
-				tagVal);
+		Assert.assertEquals("did not get expected tag value", sb.toString(), tagVal);
 	}
 
 	@Test
@@ -54,18 +51,15 @@ public class SimpleQueryInpTest {
 		sb.append("<maxBufSize>1024</maxBufSize>\n");
 		sb.append("</simpleQueryInp_PI>\n");
 
-		Assert.assertEquals("did not get expected tag value", sb.toString(),
-				tagVal);
+		Assert.assertEquals("did not get expected tag value", sb.toString(), tagVal);
 	}
 
 	@Test
 	public void testInstance() {
-		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query",
-				"", 0);
+		AbstractAliasedQuery sq = SimpleQuery.instanceWithOneArgument("query", "", 0);
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(sq);
 		Assert.assertNotNull("null simpleQueryInp returned", simpleQueryInp);
-		Assert.assertEquals("did not correctly set api number",
-				SimpleQueryInp.SIMPLE_QUERY_API_NBR,
+		Assert.assertEquals("did not correctly set api number", SimpleQueryInp.SIMPLE_QUERY_API_NBR,
 				simpleQueryInp.getApiNumber());
 	}
 

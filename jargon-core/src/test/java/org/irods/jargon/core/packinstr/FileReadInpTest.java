@@ -1,7 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 public class FileReadInpTest {
@@ -11,8 +10,7 @@ public class FileReadInpTest {
 		long length = 100L;
 		FileReadInp fileReadInp = FileReadInp.instanceForReadStream(fd, length);
 		Assert.assertNotNull("null fileReadInp", fileReadInp);
-		Assert.assertEquals("wrong API num", FileReadInp.FILE_READ_API_NBR,
-				fileReadInp.getApiNumber());
+		Assert.assertEquals("wrong API num", FileReadInp.FILE_READ_API_NBR, fileReadInp.getApiNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -48,8 +46,7 @@ public class FileReadInpTest {
 		long length = 100L;
 		FileReadInp fileReadInp = FileReadInp.instanceForReadStream(fd, length);
 
-		Assert.assertEquals("did not get expected xml", expected,
-				fileReadInp.getParsedTags());
+		Assert.assertEquals("did not get expected xml", expected, fileReadInp.getParsedTags());
 	}
 
 }

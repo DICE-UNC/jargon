@@ -1290,7 +1290,7 @@ public class DataTransferOperationsImplTest {
 
 	/**
 	 * test of potential error putting to the home dir of a user #262
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

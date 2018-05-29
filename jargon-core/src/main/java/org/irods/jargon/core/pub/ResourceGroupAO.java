@@ -14,11 +14,12 @@ import org.irods.jargon.core.exception.JargonException;
 public interface ResourceGroupAO {
 
 	/**
-	 * Convenience method to obtain a list of resource group names in the
-	 * current zone
+	 * Convenience method to obtain a list of resource group names in the current
+	 * zone
 	 *
 	 * @return {@code List<String>} of resoruce group names
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> listResourceGroupNames() throws JargonException;
 

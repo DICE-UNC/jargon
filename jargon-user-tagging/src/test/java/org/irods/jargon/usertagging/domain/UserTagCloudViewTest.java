@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,15 +29,13 @@ public class UserTagCloudViewTest {
 		TreeMap<IRODSTagValue, TagCloudEntry> tagCloudEntries = new TreeMap<IRODSTagValue, TagCloudEntry>();
 		tagCloudEntries.put(irodsTagValue, tagCloudEntry);
 
-		UserTagCloudView view = UserTagCloudView.instance("user",
-				tagCloudEntries);
+		UserTagCloudView view = UserTagCloudView.instance("user", tagCloudEntries);
 		Assert.assertEquals("user", view.getUserName());
 		Assert.assertEquals(1, tagCloudEntries.keySet().size());
 	}
 
 	@Test
-	public void testInstanceFromListOfTwoTagsWithAFileAndCollectionEach()
-			throws Exception {
+	public void testInstanceFromListOfTwoTagsWithAFileAndCollectionEach() throws Exception {
 		IRODSTagValue irodsTagValue = new IRODSTagValue("tag1", "user");
 		TagCloudEntry entryFile1 = new TagCloudEntry(irodsTagValue, 1, 0);
 
@@ -57,11 +54,9 @@ public class UserTagCloudViewTest {
 		collTags.add(entryCollection1);
 		collTags.add(entryCollection2);
 
-		UserTagCloudView userTagCloudView = UserTagCloudView.instance("user",
-				fileTags, collTags);
+		UserTagCloudView userTagCloudView = UserTagCloudView.instance("user", fileTags, collTags);
 		Assert.assertEquals("user", userTagCloudView.getUserName());
-		Assert.assertEquals(2, userTagCloudView.getTagCloudEntries().keySet()
-				.size());
+		Assert.assertEquals(2, userTagCloudView.getTagCloudEntries().keySet().size());
 
 	}
 
@@ -83,15 +78,12 @@ public class UserTagCloudViewTest {
 
 		List<TagCloudEntry> collTags = new ArrayList<TagCloudEntry>();
 
-		UserTagCloudView userTagCloudView = UserTagCloudView.instance("user",
-				fileTags, collTags);
+		UserTagCloudView userTagCloudView = UserTagCloudView.instance("user", fileTags, collTags);
 		Assert.assertEquals("user", userTagCloudView.getUserName());
-		Assert.assertEquals(3, userTagCloudView.getTagCloudEntries().keySet()
-				.size());
+		Assert.assertEquals(3, userTagCloudView.getTagCloudEntries().keySet().size());
 
 		// test sorting by getting 3 tags in turn
-		Set<IRODSTagValue> actualEntries = userTagCloudView
-				.getTagCloudEntries().keySet();
+		Set<IRODSTagValue> actualEntries = userTagCloudView.getTagCloudEntries().keySet();
 
 		Iterator<IRODSTagValue> testIter = actualEntries.iterator();
 		IRODSTagValue actual1 = testIter.next();

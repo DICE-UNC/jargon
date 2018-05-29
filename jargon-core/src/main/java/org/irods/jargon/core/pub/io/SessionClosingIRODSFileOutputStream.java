@@ -8,11 +8,11 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
- * This is a special version of a {@code IRODSFileOutputStream} that adds
- * the capability to close the underlying {@code IRODSSession} when the
- * stream is closed. This is used in situations where a stream is created and
- * returned from a method, and the caller is not aware of the need to close the
- * iRODS connection.
+ * This is a special version of a {@code IRODSFileOutputStream} that adds the
+ * capability to close the underlying {@code IRODSSession} when the stream is
+ * closed. This is used in situations where a stream is created and returned
+ * from a method, and the caller is not aware of the need to close the iRODS
+ * connection.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -33,8 +33,7 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 * @throws JargonException
 	 *             for other iRODS errors
 	 */
-	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations)
+	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations)
 			throws FileNotFoundException, JargonException {
 		super(irodsFile, fileIOOperations, DataObjInp.OpenFlags.WRITE);
 	}
@@ -56,26 +55,23 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 * @throws JargonException
 	 *             for other iRODS errors
 	 */
-	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
-			throws FileNotFoundException, JargonException {
+	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations,
+			final OpenFlags openFlags) throws FileNotFoundException, JargonException {
 		super(irodsFile, fileIOOperations, openFlags);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileInputStream#close()
 	 */
 	@Override
 	public void close() throws IOException {
 		super.close();
 		try {
-			getFileIOOperations().getIRODSSession().closeSession(
-					getFileIOOperations().getIRODSAccount());
+			getFileIOOperations().getIRODSSession().closeSession(getFileIOOperations().getIRODSAccount());
 		} catch (JargonException e) {
-			throw new IOException(
-					"error in close session returned as IOException for method contracts");
+			throw new IOException("error in close session returned as IOException for method contracts");
 		}
 	}
 }

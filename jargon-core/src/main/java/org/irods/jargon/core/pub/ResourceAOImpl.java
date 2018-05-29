@@ -62,13 +62,13 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		super(irodsSession, irodsAccount);
 		getIRODSAccessObjectFactory().getZoneAO(getIRODSAccount());
 		resourceAOHelper = new ResourceAOHelper(getIRODSAccount(), getIRODSAccessObjectFactory());
-		zoneAO = this.getIRODSAccessObjectFactory().getZoneAO(irodsAccount);
+		zoneAO = getIRODSAccessObjectFactory().getZoneAO(irodsAccount);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#addResource(org.irods.jargon.core
 	 * .pub.domain.Resource)
 	 */
@@ -89,23 +89,23 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		/*
 		 * arg0 mkresc
-		 * 
+		 *
 		 * generalAdminInp->arg1, "resource"
-		 * 
+		 *
 		 * std::string resc_name( _generalAdminInp->arg2 );
-		 * 
+		 *
 		 * std::string resc_type( _generalAdminInp->arg3 );
-		 * 
+		 *
 		 * std::string resc_host_path(_generalAdminInp->arg4 );
-		 * 
+		 *
 		 * for host path can be blank, otherwise in / separate the location:/vault/path
 		 * pair
-		 * 
+		 *
 		 * std::string resc_ctx(_generalAdminInp->arg5 );
-		 * 
-		 * 
+		 *
+		 *
 		 * examples
-		 * 
+		 *
 		 * "iadmin mkresc rrResc random",
 		 */
 
@@ -119,13 +119,13 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#modifyResource(org.irods.jargon.core
 	 * .pub.domain.Resource)
 	 */
 	@Override
-	public void modifyResource(final Resource resource, String what) throws JargonException {
+	public void modifyResource(final Resource resource, final String what) throws JargonException {
 		log.info("modifyResource()");
 		if (resource == null) {
 			throw new IllegalArgumentException("null resource");
@@ -140,23 +140,23 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		/*
 		 * arg0 modify
-		 * 
+		 *
 		 * generalAdminInp->arg1, "resource"
-		 * 
+		 *
 		 * std::string resc_name( _generalAdminInp->arg2 );
-		 * 
+		 *
 		 * std::string resc_type( _generalAdminInp->arg3 );
-		 * 
+		 *
 		 * std::string resc_host_path(_generalAdminInp->arg4 );
-		 * 
+		 *
 		 * for host path can be blank, otherwise in / separate the location:/vault/path
 		 * pair
-		 * 
+		 *
 		 * std::string resc_ctx(_generalAdminInp->arg5 );
-		 * 
-		 * 
+		 *
+		 *
 		 * examples
-		 * 
+		 *
 		 * "iadmin mkresc rrResc random",
 		 */
 
@@ -170,11 +170,11 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#deleteResource(java.lang.String)
 	 */
 	@Override
-	public void deleteResource(final String resourceName) throws Exception {
+	public void deleteResource(final String resourceName) throws JargonException {
 		log.info("deleteResource()");
 		if (resourceName == null || resourceName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourceName");
@@ -195,7 +195,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#addChildToResource(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -244,7 +244,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#removeChildFromResource(java.lang
 	 * .String, java.lang.String)
 	 */
@@ -279,7 +279,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#findByName(java.lang.String)
 	 */
 	@Override
@@ -293,7 +293,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		IRODSGenQueryBuilder builder;
 		try {
-			if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+			if (getIRODSServerProperties().isSupportsComposableResoures()) {
 				builder = resourceAOHelper.buildResourceSelectsComposable();
 			} else {
 				builder = resourceAOHelper.buildResourceSelectsClassic();
@@ -343,7 +343,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		IRODSQueryResultRow row = resultSet.getFirstResult();
 		Resource resource;
-		if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+		if (getIRODSServerProperties().isSupportsComposableResoures()) {
 			resource = buildResourceFromResultSetRowComposable(row);
 		} else {
 			resource = buildResourceFromResultSetRowClassic(row);
@@ -351,7 +351,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		if (!resource.getParentId().isEmpty()) {
 			log.info("have a parent resc id, find the parent resc");
-			Resource parent = this.findById(resource.getParentId());
+			Resource parent = findById(resource.getParentId());
 			resource.setParentResource(parent);
 			resource.setParentName(parent.getName());
 		}
@@ -370,7 +370,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		IRODSGenQueryBuilder builder;
 		try {
-			if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+			if (getIRODSServerProperties().isSupportsComposableResoures()) {
 				builder = resourceAOHelper.buildResourceSelectsComposable();
 			} else {
 				builder = resourceAOHelper.buildResourceSelectsClassic();
@@ -421,7 +421,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		IRODSQueryResultRow row = resultSet.getFirstResult();
 		Resource resource;
-		if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+		if (getIRODSServerProperties().isSupportsComposableResoures()) {
 			resource = buildResourceFromResultSetRowComposable(row);
 		} else {
 			resource = buildResourceFromResultSetRowClassic(row);
@@ -430,7 +430,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		if (!resource.getParentId().isEmpty()) {
 			log.info("have a parent resc id, find the parent resc");
-			Resource parent = this.findById(resource.getParentId());
+			Resource parent = findById(resource.getParentId());
 			resource.setParentResource(parent);
 			resource.setParentName(parent.getName());
 
@@ -441,7 +441,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#findAll()
 	 */
 	@Override
@@ -456,7 +456,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		IRODSQueryResultSet resultSet = null;
 		try {
-			if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+			if (getIRODSServerProperties().isSupportsComposableResoures()) {
 				builder = resourceAOHelper.buildResourceSelectsComposable();
 			} else {
 				builder = resourceAOHelper.buildResourceSelectsClassic();
@@ -475,7 +475,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException("error in query", e);
 		}
 
-		if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+		if (getIRODSServerProperties().isSupportsComposableResoures()) {
 			return buildResourceListFromResultSetComposable(resultSet);
 		} else {
 			return buildResourceListFromResultSetClassic(resultSet);
@@ -488,8 +488,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * that represent the results
 	 *
 	 * @param resultSet
-	 * @return
+	 *            {@link IRODSQueryResultSet}
+	 * @return {@code List} of {@link Resource}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private List<Resource> buildResourceListFromResultSetComposable(final IRODSQueryResultSet resultSet)
 			throws JargonException {
@@ -500,7 +502,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			rowResc = buildResourceFromResultSetRowComposable(row);
 			if (!rowResc.getParentId().isEmpty()) {
 				log.info("have a parent resc id, find the parent resc");
-				Resource parent = this.findById(rowResc.getParentId());
+				Resource parent = findById(rowResc.getParentId());
 				rowResc.setParentResource(parent);
 				rowResc.setParentName(parent.getName());
 
@@ -519,6 +521,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 *            {@link IRODSQueryResultSetInterface} with a gen query result
 	 * @return {@code List} of {@link Resource}, which will be empty if no results
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private List<Resource> buildResourceListFromResultSetClassic(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
@@ -540,6 +543,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 *            row represents resource data
 	 * @return {@link Resource} domain object
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private Resource buildResourceFromResultSetRowClassic(final IRODSQueryResultRow row) throws JargonException {
 		Resource resource = new Resource();
@@ -656,7 +660,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		IRODSQueryResultSet resultSet = null;
 
 		try {
-			if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+			if (getIRODSServerProperties().isSupportsComposableResoures()) {
 				builder = resourceAOHelper.buildResourceSelectsComposable();
 			} else {
 				builder = resourceAOHelper.buildResourceSelectsClassic();
@@ -678,7 +682,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException("error in query", e);
 		}
 
-		if (this.getIRODSServerProperties().isSupportsComposableResoures()) {
+		if (getIRODSServerProperties().isSupportsComposableResoures()) {
 			return buildResourceListFromResultSetComposable(resultSet);
 		} else {
 			return buildResourceListFromResultSetClassic(resultSet);
@@ -687,7 +691,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#getFirstResourceForIRODSFile(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
 	 */
@@ -731,7 +735,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#listResourceNames()
 	 */
 	@Override
@@ -775,7 +779,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadata(java.lang.String)
 	 */
 	@Override
@@ -810,13 +814,16 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	}
 
 	/**
-	 * FIXME: implement, add to interface Given a set of metadata query parameters,
-	 * return a list of Resources that match the metadata query
+	 *
+	 * find the resources that match the given query
 	 *
 	 * @param avuQueryElements
+	 *            {@code List} of {@link AVUQueryElement} with the query
 	 * @return List of {@link Resource}
 	 * @throws JargonQueryException
+	 *             for query error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public List<Resource> findDomainByMetadataQuery(final List<AVUQueryElement> avuQueryElements)
 			throws JargonQueryException, JargonException {
@@ -825,7 +832,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
 	 */
@@ -916,7 +923,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	private void buildConditionPart(final AVUQueryElement queryElement, final IRODSGenQueryBuilder builder) {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
-					QueryConditionOperators.getOperatorFromStringValue(queryElement
+					QueryConditionOperators.getOperatorFromEnumStringValue(queryElement
 
 							.getOperator().getOperatorAsString()),
 					queryElement.getValue());
@@ -924,7 +931,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE,
 					QueryConditionOperators
-							.getOperatorFromStringValue(queryElement.getOperator().getOperatorAsString()),
+							.getOperatorFromEnumStringValue(queryElement.getOperator().getOperatorAsString()),
 
 					queryElement.getValue());
 
@@ -932,7 +939,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS,
 					QueryConditionOperators
-							.getOperatorFromStringValue(queryElement.getOperator().getOperatorAsString()),
+							.getOperatorFromEnumStringValue(queryElement.getOperator().getOperatorAsString()),
 
 					queryElement.getValue());
 
@@ -942,7 +949,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -988,7 +995,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#setAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -1032,7 +1039,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceAO#deleteAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */

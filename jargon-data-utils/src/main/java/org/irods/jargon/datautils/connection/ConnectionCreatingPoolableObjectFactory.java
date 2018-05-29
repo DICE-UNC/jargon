@@ -35,10 +35,14 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 	/**
 	 * Constructor will build a connection source based on the given
 	 * {@code cachedIRODSAccount} and return an open connection on demand.
-	 * 
+	 *
 	 * @param cachedIRODSAccount
 	 *            {@link IRODSAccount} that will describe the source of the
 	 *            connection to iRODS
+	 * @param irodsSession
+	 *            {@link IRODSSession}
+	 * @param irodsProtocolManager
+	 *            {@link IRODSProtocolManager}
 	 */
 	public ConnectionCreatingPoolableObjectFactory(final IRODSAccount cachedIRODSAccount,
 			final IRODSSession irodsSession, final IRODSProtocolManager irodsProtocolManager) {
@@ -60,25 +64,11 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.apache.commons.pool.PoolableObjectFactory#activateObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public void activateObject(final Object objectToActivate) throws Exception {
 		log.info("activateObject:{}", objectToActivate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.apache.commons.pool.PoolableObjectFactory#destroyObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public void destroyObject(final Object objectToDestroy) throws Exception {
 		log.info("destroyObject:{}", objectToDestroy);
@@ -102,26 +92,12 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 		return irodsProtocolManager.getIRODSProtocol(cachedIRODSAccount, pipelineConfiguration, irodsSession);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.apache.commons.pool.PoolableObjectFactory#passivateObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public void passivateObject(final Object arg0) throws Exception {
 		log.info("passivateObject()");
 		// nothing done here
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.apache.commons.pool.PoolableObjectFactory#validateObject(java.lang
-	 * .Object)
-	 */
 	@Override
 	public boolean validateObject(final Object arg0) {
 		return true;

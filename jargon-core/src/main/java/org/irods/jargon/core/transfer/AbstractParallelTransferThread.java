@@ -32,8 +32,7 @@ public class AbstractParallelTransferThread {
 	 */
 	private final int threadNumber;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractParallelTransferThread.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractParallelTransferThread.class);
 
 	protected AbstractParallelTransferThread(final int threadNumber) {
 		super();
@@ -47,8 +46,7 @@ public class AbstractParallelTransferThread {
 			read = in.read(b);
 		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, e);
-			throw new JargonException(
-					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+			throw new JargonException(IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 		if (read != 4) {
 			log.error("unexpected length read when reading int");
@@ -67,13 +65,11 @@ public class AbstractParallelTransferThread {
 			read = in.read(b);
 		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER);
-			throw new JargonException(
-					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+			throw new JargonException(IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 		if (read != 8) {
 			log.error("did not read 8 bytes for long");
-			throw new JargonException(
-					"unable to read all the bytes for an expected long value");
+			throw new JargonException("unable to read all the bytes for an expected long value");
 		}
 
 		return Host.castToLong(b);
@@ -136,8 +132,8 @@ public class AbstractParallelTransferThread {
 	 * Any exception that occurs in this transfer thread is saved so that the
 	 * parallel transfer process can access it and handle any errors.
 	 *
-	 * @return {@code Exception} that occured in this thread, or
-	 *         {@code null} if no error occurred.
+	 * @return {@code Exception} that occured in this thread, or {@code null} if no
+	 *         error occurred.
 	 */
 	public Exception getExceptionInTransfer() {
 		return exceptionInTransfer;

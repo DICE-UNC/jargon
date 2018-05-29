@@ -66,7 +66,7 @@ public class ClientServerNegotiationPolicy {
 	/**
 	 * Handy method (this is a bit awkward and needs to be refactored) to find the
 	 * ssl negotiation policy as an enum value from a given string
-	 * 
+	 *
 	 * @param policyString
 	 *            {@link String} with the string name of the SSL negotiation policy
 	 * @return {@link SslNegotiationPolicy}

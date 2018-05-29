@@ -38,9 +38,11 @@ public class PropertyUtils {
 	/**
 	 * Verify the given property exists and return as an {@code int}
 	 *
+	 * @param properties
+	 *            {@link Properties} to verify
 	 * @param propKey
 	 *            {@link String} with the key to retrieve
-	 * 
+	 *
 	 * @return <code>int</code> with the property as an int
 	 */
 	public static int verifyPropExistsAndGetAsInt(final Properties properties, final String propKey) {

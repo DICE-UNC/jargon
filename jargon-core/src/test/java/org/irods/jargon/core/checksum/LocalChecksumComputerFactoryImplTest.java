@@ -1,8 +1,7 @@
 package org.irods.jargon.core.checksum;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LocalChecksumComputerFactoryImplTest {

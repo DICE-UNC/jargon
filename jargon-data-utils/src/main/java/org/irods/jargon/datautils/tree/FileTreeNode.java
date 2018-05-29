@@ -17,8 +17,7 @@ public class FileTreeNode extends DefaultMutableTreeNode {
 	 * Default constructor takes a user object.
 	 *
 	 * @param userObject
-	 *            {@code Object} that represents the user data to store in
-	 *            the node
+	 *            {@code Object} that represents the user data to store in the node
 	 */
 	public FileTreeNode(final Object userObject) {
 		super(userObject);

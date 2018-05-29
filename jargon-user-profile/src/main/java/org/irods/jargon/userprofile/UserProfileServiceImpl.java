@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.userprofile;
 
@@ -34,8 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manage the storage and retrieval of {@code UserProfile} information in
- * iRODS.
+ * Manage the storage and retrieval of {@code UserProfile} information in iRODS.
  * <p>
  * This implementation uses a convention of a .profile file in the user home dir
  * with the values attached as AVU's, and a .protected file in the user home dir
@@ -43,15 +42,13 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This scheme is necessary as AVU's are publicly query-able. Having some data
  * in AVU's will help in that they are more easily queried.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class UserProfileServiceImpl extends AbstractJargonService implements
-		UserProfileService {
+public class UserProfileServiceImpl extends AbstractJargonService implements UserProfileService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(UserProfileServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(UserProfileServiceImpl.class);
 
 	private UserProfileServiceConfiguration userProfileServiceConfiguration = new UserProfileServiceConfiguration();
 	private final DataObjectAO dataObjectAO;
@@ -59,34 +56,29 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	/**
 	 * Constructs a user profile service with references to objects necessary to
 	 * construct jargon access objects and i/o objects
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public UserProfileServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public UserProfileServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 		try {
-			dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(getIrodsAccount());
+			dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(getIrodsAccount());
 		} catch (JargonException e) {
 			log.error("cannot create dataObjectAO", e);
-			throw new JargonRuntimeException(
-					"error creating DataObjectAO reference", e);
+			throw new JargonRuntimeException("error creating DataObjectAO reference", e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.userprofile.UserProfileService#updateUserProfile(org
+	 *
+	 * @see org.irods.jargon.userprofile.UserProfileService#updateUserProfile(org
 	 * .irods.jargon.userprofile.UserProfile)
 	 */
 	@Override
-	public void updateUserProfile(final UserProfile userProfile)
-			throws JargonException {
+	public void updateUserProfile(final UserProfile userProfile) throws JargonException {
 
 		log.info("updateUserProfile()");
 		if (userProfile == null) {
@@ -104,14 +96,12 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.userprofile.UserProfileService#retrieveUserProfile(java
+	 *
+	 * @see org.irods.jargon.userprofile.UserProfileService#retrieveUserProfile(java
 	 * .lang.String)
 	 */
 	@Override
-	public UserProfile retrieveUserProfile(final String userName)
-			throws DataNotFoundException, JargonException {
+	public UserProfile retrieveUserProfile(final String userName) throws DataNotFoundException, JargonException {
 
 		log.info("retrieveUserProfile()");
 
@@ -130,8 +120,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		IRODSFile publicProfileFile = retrieveUserPublicProfileFile(userName);
 
 		if (!publicProfileFile.exists()) {
-			log.warn("no public profile found at:{}",
-					publicProfileFile.getAbsolutePath());
+			log.warn("no public profile found at:{}", publicProfileFile.getAbsolutePath());
 			throw new DataNotFoundException("no public profile found");
 		}
 
@@ -140,8 +129,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
 
 		try {
-			query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-					QueryConditionOperators.EQUAL,
+			query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
 					UserProfileService.AVU_UNIT_NAMESPACE));
 		} catch (JargonQueryException e) {
 			log.error("error building AVU query", e);
@@ -149,109 +138,83 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		}
 
 		List<MetaDataAndDomainData> metadataValues = dataObjectAO
-				.findMetadataValuesForDataObject(publicProfileFile
-						.getAbsolutePath());
+				.findMetadataValuesForDataObject(publicProfileFile.getAbsolutePath());
 
 		for (MetaDataAndDomainData metadata : metadataValues) {
 			log.info("metadata value:{}", metadata);
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.DESCRIPTION)) {
-				userProfile.getUserProfilePublicFields().setDescription(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.DESCRIPTION)) {
+				userProfile.getUserProfilePublicFields().setDescription(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.NICK_NAME)) {
-				userProfile.getUserProfilePublicFields().setNickName(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.NICK_NAME)) {
+				userProfile.getUserProfilePublicFields().setNickName(metadata.getAvuValue());
 				continue;
 			}
 
 			if (metadata.getAvuAttribute().equals(UserProfileConstants.CN)) {
-				userProfile.getUserProfilePublicFields().setCn(
-						metadata.getAvuValue());
+				userProfile.getUserProfilePublicFields().setCn(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.GIVEN_NAME)) {
-				userProfile.getUserProfilePublicFields().setGivenName(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.GIVEN_NAME)) {
+				userProfile.getUserProfilePublicFields().setGivenName(metadata.getAvuValue());
 				continue;
 			}
 
 			if (metadata.getAvuAttribute().equals(UserProfileConstants.SN)) {
-				userProfile.getUserProfilePublicFields().setSn(
-						metadata.getAvuValue());
+				userProfile.getUserProfilePublicFields().setSn(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.POSTAL_CODE)) {
-				userProfile.getUserProfilePublicFields().setPostalCode(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.POSTAL_CODE)) {
+				userProfile.getUserProfilePublicFields().setPostalCode(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.POSTAL_ADDRESS)) {
-				userProfile.getUserProfilePublicFields().setPostalAddress(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.POSTAL_ADDRESS)) {
+				userProfile.getUserProfilePublicFields().setPostalAddress(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.POST_OFFICE_BOX)) {
-				userProfile.getUserProfilePublicFields().setPostOfficeBox(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.POST_OFFICE_BOX)) {
+				userProfile.getUserProfilePublicFields().setPostOfficeBox(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.LOCALITY_NAME)) {
-				userProfile.getUserProfilePublicFields().setLocalityName(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.LOCALITY_NAME)) {
+				userProfile.getUserProfilePublicFields().setLocalityName(metadata.getAvuValue());
 				continue;
 			}
 
 			if (metadata.getAvuAttribute().equals(UserProfileConstants.STREET)) {
-				userProfile.getUserProfilePublicFields().setStreet(
-						metadata.getAvuValue());
+				userProfile.getUserProfilePublicFields().setStreet(metadata.getAvuValue());
 				continue;
 			}
 
 			if (metadata.getAvuAttribute().equals(UserProfileConstants.STATE)) {
-				userProfile.getUserProfilePublicFields().setSt(
-						metadata.getAvuValue());
+				userProfile.getUserProfilePublicFields().setSt(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.JPEG_PHOTO)) {
-				userProfile.getUserProfilePublicFields().setJpegPhoto(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.JPEG_PHOTO)) {
+				userProfile.getUserProfilePublicFields().setJpegPhoto(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.LABELED_URL)) {
-				userProfile.getUserProfilePublicFields().setLabeledURL(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.LABELED_URL)) {
+				userProfile.getUserProfilePublicFields().setLabeledURL(metadata.getAvuValue());
 				continue;
 			}
 
-			if (metadata.getAvuAttribute().equals(
-					UserProfileConstants.TELEPHONE_NUMBER)) {
-				userProfile.getUserProfilePublicFields().setTelephoneNumber(
-						metadata.getAvuValue());
+			if (metadata.getAvuAttribute().equals(UserProfileConstants.TELEPHONE_NUMBER)) {
+				userProfile.getUserProfilePublicFields().setTelephoneNumber(metadata.getAvuValue());
 				continue;
 			}
 
 			if (metadata.getAvuAttribute().equals(UserProfileConstants.TITLE)) {
-				userProfile.getUserProfilePublicFields().setTitle(
-						metadata.getAvuValue());
+				userProfile.getUserProfilePublicFields().setTitle(metadata.getAvuValue());
 				continue;
 			}
 
@@ -261,8 +224,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			}
 
 			/*
-			 * right now, quietly log and ignore property that is not
-			 * anticipated
+			 * right now, quietly log and ignore property that is not anticipated
 			 */
 			log.warn("property not recognized: {}", metadata);
 
@@ -271,30 +233,22 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		log.info("look for protected profile file info...");
 		String userHomeDir = getUserProfileDir(userName);
 
-		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						userHomeDir,
-						userProfileServiceConfiguration
-								.getProtectedProfileFileName());
+		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(userHomeDir, userProfileServiceConfiguration.getProtectedProfileFileName());
 
 		// tolerate no protected profile info
 		if (!protectedProfileFile.exists()) {
-			log.warn(
-					"no protected profile info, ignore and return public info:{}",
-					userProfile);
+			log.warn("no protected profile info, ignore and return public info:{}", userProfile);
 			return userProfile;
 		}
 
-		InputStream userProfileInputStream = new BufferedInputStream(
-				getIrodsAccessObjectFactory().getIRODSFileFactory(
-						getIrodsAccount()).instanceIRODSFileInputStream(
-						protectedProfileFile));
+		InputStream userProfileInputStream = new BufferedInputStream(getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFileInputStream(protectedProfileFile));
 		Properties protectedProperties = new Properties();
 		try {
 			protectedProperties.load(userProfileInputStream);
 		} catch (IOException e) {
-			log.error("error loading protected properties from stream:{}",
-					userProfileInputStream, e);
+			log.error("error loading protected properties from stream:{}", userProfileInputStream, e);
 			throw new JargonException("error loading protected properties", e);
 		} finally {
 			try {
@@ -304,9 +258,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		}
 
 		if (protectedProperties.get(UserProfileConstants.EMAIL) != null) {
-			userProfile.getUserProfileProtectedFields().setMail(
-					(String) protectedProperties
-							.get(UserProfileConstants.EMAIL));
+			userProfile.getUserProfileProtectedFields()
+					.setMail((String) protectedProperties.get(UserProfileConstants.EMAIL));
 		}
 
 		log.info("completed user profile:{}", userProfile);
@@ -316,14 +269,12 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.userprofile.UserProfileService#removeProfileInformation
+	 *
+	 * @see org.irods.jargon.userprofile.UserProfileService#removeProfileInformation
 	 * (java.lang.String)
 	 */
 	@Override
-	public void removeProfileInformation(final String irodsUserName)
-			throws JargonException {
+	public void removeProfileInformation(final String irodsUserName) throws JargonException {
 		log.info("removeProfileInformation()");
 
 		if (irodsUserName == null || irodsUserName.isEmpty()) {
@@ -336,23 +287,16 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("user home dir:{}", userHomeDir);
 
-		IRODSFile userProfileFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						userHomeDir,
-						userProfileServiceConfiguration
-								.getPublicProfileFileName());
+		IRODSFile userProfileFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(userHomeDir, userProfileServiceConfiguration.getPublicProfileFileName());
 
 		// delete the actual public profile file and associated AVU's
 		deletePublicProfile(irodsUserName, userProfileFile);
 
-		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						userHomeDir,
-						userProfileServiceConfiguration
-								.getProtectedProfileFileName());
+		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(userHomeDir, userProfileServiceConfiguration.getProtectedProfileFileName());
 
-		log.info("deleting the protected profile file:{}",
-				protectedProfileFile.getAbsolutePath());
+		log.info("deleting the protected profile file:{}", protectedProfileFile.getAbsolutePath());
 
 		protectedProfileFile.deleteWithForceOption();
 		log.info("delete completed");
@@ -365,32 +309,24 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	private void deletePublicProfile(final String irodsUserName,
-			final IRODSFile userProfileFile) throws JargonException,
-			DataNotFoundException {
+	private void deletePublicProfile(final String irodsUserName, final IRODSFile userProfileFile)
+			throws JargonException, DataNotFoundException {
 		if (!userProfileFile.exists()) {
-			log.info(
-					"user profile file does not exist, just ignore and proceed:{}",
-					irodsUserName);
+			log.info("user profile file does not exist, just ignore and proceed:{}", irodsUserName);
 		} else {
-			log.info("delete all avu's associated with profile",
-					userProfileFile.getAbsolutePath());
+			log.info("delete all avu's associated with profile", userProfileFile.getAbsolutePath());
 			List<AVUQueryElement> queryList = new ArrayList<AVUQueryElement>();
 			try {
-				queryList.add(AVUQueryElement.instanceForValueQuery(
-						AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+				queryList.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
+
 						AVU_UNIT_NAMESPACE));
-				List<MetaDataAndDomainData> metadataList = dataObjectAO
-						.findMetadataValuesByMetadataQuery(queryList);
+				List<MetaDataAndDomainData> metadataList = dataObjectAO.findMetadataValuesByMetadataQuery(queryList);
 				AvuData avuData;
 
 				for (MetaDataAndDomainData metadataAndDomainData : metadataList) {
-					avuData = AvuData.instance(
-							metadataAndDomainData.getAvuAttribute(),
-							metadataAndDomainData.getAvuValue(),
-							metadataAndDomainData.getAvuUnit());
-					dataObjectAO.deleteAVUMetadata(
-							userProfileFile.getAbsolutePath(), avuData);
+					avuData = AvuData.instance(metadataAndDomainData.getAvuAttribute(),
+							metadataAndDomainData.getAvuValue(), metadataAndDomainData.getAvuUnit());
+					dataObjectAO.deleteAVUMetadata(userProfileFile.getAbsolutePath(), avuData);
 				}
 
 				log.info("avus were deleted..now delete the public profile file");
@@ -405,22 +341,18 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.userprofile.UserProfileService#addProfileForUser(java
+	 *
+	 * @see org.irods.jargon.userprofile.UserProfileService#addProfileForUser(java
 	 * .lang.String, org.irods.jargon.userprofile.UserProfile)
 	 */
 	@Override
-	public void addProfileForUser(final String irodsUserName,
-			final UserProfile userProfile)
-			throws UserProfileValidationException, DuplicateDataException,
-			JargonException {
+	public void addProfileForUser(final String irodsUserName, final UserProfile userProfile)
+			throws UserProfileValidationException, DuplicateDataException, JargonException {
 
 		log.info("addProfileForUser()");
 		boolean userGroupForProfilePresent = false;
 		if (userProfileServiceConfiguration.getProtectedProfileReadWriteGroup() == null
-				|| userProfileServiceConfiguration
-						.getProtectedProfileReadWriteGroup().isEmpty()) {
+				|| userProfileServiceConfiguration.getProtectedProfileReadWriteGroup().isEmpty()) {
 			log.info("no permissions set for protected profile group in user profile service config");
 		} else if (!isProtectedReadGroupConfigured()) {
 			log.info("no permissions set for protected profile group in user profile service config");
@@ -443,15 +375,11 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		String userHomeDir = getUserProfileDir(irodsUserName);
 		log.info("looking for profile in userHomeDir:{}", userHomeDir);
 
-		IRODSFile userProfileFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						userHomeDir,
-						userProfileServiceConfiguration
-								.getPublicProfileFileName());
+		IRODSFile userProfileFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(userHomeDir, userProfileServiceConfiguration.getPublicProfileFileName());
 
 		if (userProfileFile.exists()) {
-			log.error("cannot add, user profile already exists for user:{}",
-					irodsUserName);
+			log.error("cannot add, user profile already exists for user:{}", irodsUserName);
 			throw new DuplicateDataException("user profile already exists");
 		}
 
@@ -467,17 +395,13 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			if (userGroupForProfilePresent) {
 				log.info("permissions  well be set for protected profile group in user profile service config");
 
-				if (userProfileServiceConfiguration
-						.isProtectedProfileGroupHasWriteAccessToPublic()) {
+				if (userProfileServiceConfiguration.isProtectedProfileGroupHasWriteAccessToPublic()) {
 					log.info("adding WRITE acl to public profile");
-					dataObjectAO.setAccessPermissionWrite(irodsAccount
-							.getZone(), userProfileFile.getAbsolutePath(),
-							userProfileServiceConfiguration
-									.getProtectedProfileReadWriteGroup());
+					dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(), userProfileFile.getAbsolutePath(),
+							userProfileServiceConfiguration.getProtectedProfileReadWriteGroup());
 					log.info("adding public read access");
-					dataObjectAO.setAccessPermissionRead(
-							irodsAccount.getZone(),
-							userProfileFile.getAbsolutePath(), "public");
+					dataObjectAO.setAccessPermissionRead(irodsAccount.getZone(), userProfileFile.getAbsolutePath(),
+							"public");
 				}
 			}
 
@@ -488,21 +412,14 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("creating the protected profile file");
 
-		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						userHomeDir,
-						userProfileServiceConfiguration
-								.getProtectedProfileFileName());
+		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(userHomeDir, userProfileServiceConfiguration.getProtectedProfileFileName());
 
-		log.info("creating the protected profile file:{}",
-				protectedProfileFile.getAbsolutePath());
+		log.info("creating the protected profile file:{}", protectedProfileFile.getAbsolutePath());
 
 		if (protectedProfileFile.exists()) {
-			log.error(
-					"cannot add, protected user profile already exists for user:{}",
-					irodsUserName);
-			throw new DuplicateDataException(
-					"protected user profile already exists");
+			log.error("cannot add, protected user profile already exists for user:{}", irodsUserName);
+			throw new DuplicateDataException("protected user profile already exists");
 		}
 
 		log.info("creating the protected profile");
@@ -510,10 +427,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		try {
 			protectedProfileFile.createNewFile();
 		} catch (IOException e) {
-			log.error("unable to create protected user profile file:{}",
-					userProfileFile);
-			throw new JargonException(
-					"error creating protected user profile file", e);
+			log.error("unable to create protected user profile file:{}", userProfileFile);
+			throw new JargonException("error creating protected user profile file", e);
 		}
 
 		// if a user or group is specified as having read/write access to the
@@ -521,78 +436,63 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		if (userGroupForProfilePresent) {
 			log.info("adding WRITE acl to protected profile");
-			dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(),
-					protectedProfileFile.getAbsolutePath(),
-					userProfileServiceConfiguration
-							.getProtectedProfileReadWriteGroup());
+			dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(), protectedProfileFile.getAbsolutePath(),
+					userProfileServiceConfiguration.getProtectedProfileReadWriteGroup());
 		}
 
 		// provision the public profile with the given profile information by
 		// hanging AVU off of the file
 
-		UserProfilePublicFields userProfilePublicFields = userProfile
-				.getUserProfilePublicFields();
+		UserProfilePublicFields userProfilePublicFields = userProfile.getUserProfilePublicFields();
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.ZONE, userProfile.getZone());
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.ZONE, userProfile.getZone());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.USER_NAME, userProfile.getUserName());
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.USER_NAME,
+				userProfile.getUserName());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.DESCRIPTION,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.DESCRIPTION,
 				userProfilePublicFields.getDescription());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.NICK_NAME,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.NICK_NAME,
 				userProfilePublicFields.getNickName());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.CN, userProfilePublicFields.getCn());
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.CN,
+				userProfilePublicFields.getCn());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.GIVEN_NAME,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.GIVEN_NAME,
 				userProfilePublicFields.getGivenName());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.SN, userProfilePublicFields.getSn());
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.SN,
+				userProfilePublicFields.getSn());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.POSTAL_CODE,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.POSTAL_CODE,
 				userProfilePublicFields.getPostalCode());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.POSTAL_ADDRESS,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.POSTAL_ADDRESS,
 				userProfilePublicFields.getPostalAddress());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.POST_OFFICE_BOX,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.POST_OFFICE_BOX,
 				userProfilePublicFields.getPostOfficeBox());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.LOCALITY_NAME,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.LOCALITY_NAME,
 				userProfilePublicFields.getLocalityName());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.STREET,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.STREET,
 				userProfilePublicFields.getStreet());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.JPEG_PHOTO,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.JPEG_PHOTO,
 				userProfilePublicFields.getJpegPhoto());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.LABELED_URL,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.LABELED_URL,
 				userProfilePublicFields.getLabeledURL());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.STATE, userProfilePublicFields.getSt());
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.STATE,
+				userProfilePublicFields.getSt());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.TITLE, userProfilePublicFields.getTitle());
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.TITLE,
+				userProfilePublicFields.getTitle());
 
-		addAVUIfDataPresent(userProfileFile.getAbsolutePath(),
-				UserProfileConstants.TELEPHONE_NUMBER,
+		addAVUIfDataPresent(userProfileFile.getAbsolutePath(), UserProfileConstants.TELEPHONE_NUMBER,
 				userProfilePublicFields.getTelephoneNumber());
 
 		// provision the protected profile information, first make into a
@@ -600,53 +500,44 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		Properties protectedProperties = new Properties();
 		if (!userProfile.getUserProfileProtectedFields().getMail().isEmpty()) {
-			protectedProperties.put(UserProfileConstants.EMAIL, userProfile
-					.getUserProfileProtectedFields().getMail());
+			protectedProperties.put(UserProfileConstants.EMAIL, userProfile.getUserProfileProtectedFields().getMail());
 
 		}
 
-		log.info("protected properties before serialization:{}",
-				protectedProperties);
+		log.info("protected properties before serialization:{}", protectedProperties);
 
-		OutputStream protectedPropertiesOutputStream = new BufferedOutputStream(
-				getIrodsAccessObjectFactory().getIRODSFileFactory(
-						getIrodsAccount()).instanceIRODSFileOutputStream(
-						protectedProfileFile));
+		OutputStream protectedPropertiesOutputStream = new BufferedOutputStream(getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFileOutputStream(protectedProfileFile));
 
 		log.info("output stream created, store to properties file");
 
 		try {
-			protectedProperties.store(protectedPropertiesOutputStream,
-					"saved protected properties");
+			protectedProperties.store(protectedPropertiesOutputStream, "saved protected properties");
 			protectedPropertiesOutputStream.close();
 			log.info("properties stored and stream closed");
 		} catch (IOException e) {
 			log.error("io exeption storing properties file", e);
-			throw new JargonException(
-					"error serializing protected properties to output stream",
-					e);
+			throw new JargonException("error serializing protected properties to output stream", e);
 		}
 
 	}
 
 	/**
-	 * Add the AVU data based on the provided parameters. Note that if the value
-	 * of the AVU is blank, it won't be added. Only set fields are preserved
-	 * 
+	 * Add the AVU data based on the provided parameters. Note that if the value of
+	 * the AVU is blank, it won't be added. Only set fields are preserved
+	 *
 	 * @param irodsDataObjectAbsolutePath
 	 * @param proposedAttribute
 	 * @param proposedValue
 	 * @throws JargonException
 	 */
-	private void addAVUIfDataPresent(final String irodsDataObjectAbsolutePath,
-			final String proposedAttribute, final String proposedValue)
-			throws JargonException {
+	private void addAVUIfDataPresent(final String irodsDataObjectAbsolutePath, final String proposedAttribute,
+			final String proposedValue) throws JargonException {
 
 		log.info("addAVUIfDataPresent()");
 
 		if (proposedAttribute == null || proposedAttribute.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty proposedAttribute");
+			throw new IllegalArgumentException("null or empty proposedAttribute");
 		}
 
 		if (proposedValue == null) {
@@ -661,14 +552,13 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		// valid data if I got here, add the AVU
 
 		AvuData avuData;
-		avuData = AvuData.instance(proposedAttribute, proposedValue,
-				AVU_UNIT_NAMESPACE);
+		avuData = AvuData.instance(proposedAttribute, proposedValue, AVU_UNIT_NAMESPACE);
 		dataObjectAO.addAVUMetadata(irodsDataObjectAbsolutePath, avuData);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.userprofile.UserProfileService#
 	 * getUserProfileServiceConfiguration()
 	 */
@@ -679,7 +569,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.userprofile.UserProfileService#
 	 * setUserProfileServiceConfiguration
 	 * (org.irods.jargon.userprofile.UserProfileServiceConfiguration)
@@ -692,9 +582,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.userprofile.UserProfileService#getUserProfileDir(java
+	 *
+	 * @see org.irods.jargon.userprofile.UserProfileService#getUserProfileDir(java
 	 * .lang.String)
 	 */
 	@Override
@@ -702,9 +591,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		String userHomeDir = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						getIrodsAccount(), userName);
+		String userHomeDir = MiscIRODSUtils.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(getIrodsAccount(),
+				userName);
 
 		log.info("user home dir:{}", userHomeDir);
 
@@ -721,7 +609,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.userprofile.UserProfileService#
 	 * isProtectedReadGroupConfigured()
 	 */
@@ -730,17 +618,13 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		log.info("isProtectedReadGroupConfigured()");
 
 		if (userProfileServiceConfiguration.getProtectedProfileReadWriteGroup() == null
-				|| userProfileServiceConfiguration
-						.getProtectedProfileReadWriteGroup().isEmpty()) {
+				|| userProfileServiceConfiguration.getProtectedProfileReadWriteGroup().isEmpty()) {
 			log.info("no group specified");
 			return false;
 		}
 
-		UserGroupAO userGroupAO = getIrodsAccessObjectFactory().getUserGroupAO(
-				getIrodsAccount());
-		UserGroup group = userGroupAO
-				.findByName(userProfileServiceConfiguration
-						.getProtectedProfileReadWriteGroup());
+		UserGroupAO userGroupAO = getIrodsAccessObjectFactory().getUserGroupAO(getIrodsAccount());
+		UserGroup group = userGroupAO.findByName(userProfileServiceConfiguration.getProtectedProfileReadWriteGroup());
 
 		if (group == null) {
 			log.info("user group not found");
@@ -752,20 +636,18 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 	}
 
 	/**
-	 * Get the file that corresponds to the expected public profile. Note that
-	 * this method does not evaluate whether the file actually exists
-	 * 
+	 * Get the file that corresponds to the expected public profile. Note that this
+	 * method does not evaluate whether the file actually exists
+	 *
 	 * @param userName
 	 * @return
 	 * @throws JargonException
 	 */
-	private IRODSFile retrieveUserPublicProfileFile(final String userName)
-			throws JargonException {
+	private IRODSFile retrieveUserPublicProfileFile(final String userName) throws JargonException {
 
 		String userHomeDir = getUserProfileDir(userName);
 
-		return getIrodsAccessObjectFactory().getIRODSFileFactory(
-				getIrodsAccount()).instanceIRODSFile(userHomeDir,
+		return getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(userHomeDir,
 				userProfileServiceConfiguration.getPublicProfileFileName());
 	}
 

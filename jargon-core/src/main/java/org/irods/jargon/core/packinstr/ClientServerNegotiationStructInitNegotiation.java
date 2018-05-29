@@ -101,7 +101,7 @@ public class ClientServerNegotiationStructInitNegotiation extends AbstractIRODSP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

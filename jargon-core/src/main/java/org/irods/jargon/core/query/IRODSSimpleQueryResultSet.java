@@ -19,28 +19,23 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	private final List<String> columnNames;
 
 	/**
-	 * Static instance method will create an initialized instance of the result
-	 * set.
+	 * Static instance method will create an initialized instance of the result set.
 	 *
 	 * @param simpleQuery
-	 *            {@link org.irods.jargon.core.query.SimpleQuery} that created
-	 *            this result set.
+	 *            {@link org.irods.jargon.core.query.SimpleQuery} that created this
+	 *            result set.
 	 * @param results
-	 *            {@code List<List<String>>} with the results in row/column
-	 *            format.
+	 *            {@code List<List<String>>} with the results in row/column format.
 	 * @param columnNames
 	 *            {@code List<String>} with the headers for each column.
 	 * @param hasMoreRecords
-	 *            {@code boolean} that indicates whether there are more
-	 *            records to retrieve.
+	 *            {@code boolean} that indicates whether there are more records to
+	 *            retrieve.
 	 * @return {@link IRODSSimpleQueryResultSet}
 	 */
-	public static IRODSSimpleQueryResultSet instance(
-			final AbstractAliasedQuery simpleQuery,
-			final List<IRODSQueryResultRow> results,
-			final List<String> columnNames, final boolean hasMoreRecords) {
-		return new IRODSSimpleQueryResultSet(simpleQuery, results, columnNames,
-				hasMoreRecords);
+	public static IRODSSimpleQueryResultSet instance(final AbstractAliasedQuery simpleQuery,
+			final List<IRODSQueryResultRow> results, final List<String> columnNames, final boolean hasMoreRecords) {
+		return new IRODSSimpleQueryResultSet(simpleQuery, results, columnNames, hasMoreRecords);
 	}
 
 	/**
@@ -51,8 +46,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param columnNames
 	 * @param hasMoreRecords
 	 */
-	private IRODSSimpleQueryResultSet(final AbstractAliasedQuery simpleQuery,
-			final List<IRODSQueryResultRow> results,
+	private IRODSSimpleQueryResultSet(final AbstractAliasedQuery simpleQuery, final List<IRODSQueryResultRow> results,
 			final List<String> columnNames, final boolean hasMoreRecords) {
 		super(results, columnNames, hasMoreRecords, 0);
 
@@ -74,7 +68,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#
 	 * getNumberOfResultColumns()
 	 */
@@ -85,9 +79,8 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
+	 *
+	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
 	 */
 	@Override
 	public List<String> getColumnNames() {

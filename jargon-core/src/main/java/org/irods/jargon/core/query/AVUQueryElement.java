@@ -32,33 +32,30 @@ public class AVUQueryElement {
 	private List<Object> valuesTable;
 
 	/**
-	 * Create an instance of an {@code AVUQueryElement} that represents a
-	 * component of a larger AVU query, specifiying the part (attrib, value, or
-	 * unit), the operator, and the value to test agains
+	 * Create an instance of an {@code AVUQueryElement} that represents a component
+	 * of a larger AVU query, specifiying the part (attrib, value, or unit), the
+	 * operator, and the value to test agains
 	 *
 	 * @param avuQueryPart
-	 *            {@link AVUQueryPart} discriminating between an attribute,
-	 *            value, or unit
+	 *            {@link AVUQueryPart} discriminating between an attribute, value,
+	 *            or unit
 	 * @param operator
-	 *            {@link AVUQueryOperatorEnum} that represents the operator in
-	 *            the query condition
+	 *            {@link AVUQueryOperatorEnum} that represents the operator in the
+	 *            query condition
 	 * @param value
-	 *            {@code String} representing the actual value to test
-	 *            against the operator for the given part of the query.
+	 *            {@code String} representing the actual value to test against the
+	 *            operator for the given part of the query.
 	 * @return {@link AVUQueryElement}
 	 * @throws JargonQueryException
+	 *             for query error
 	 */
-	public static AVUQueryElement instanceForValueQuery(
-			final AVUQueryPart avuQueryPart,
-			final QueryConditionOperators operator, final String value)
-			throws JargonQueryException {
+	public static AVUQueryElement instanceForValueQuery(final AVUQueryPart avuQueryPart,
+			final QueryConditionOperators operator, final String value) throws JargonQueryException {
 		return new AVUQueryElement(avuQueryPart, operator, value, null, null);
 	}
 
-	public AVUQueryElement(final AVUQueryPart avuQueryPart,
-			final QueryConditionOperators operator, final String value,
-			final String valueEndOfRange, final List<Object> valuesTable)
-			throws JargonQueryException {
+	public AVUQueryElement(final AVUQueryPart avuQueryPart, final QueryConditionOperators operator, final String value,
+			final String valueEndOfRange, final List<Object> valuesTable) throws JargonQueryException {
 
 		if (avuQueryPart == null) {
 			throw new JargonQueryException("avuQueryPart is null");
@@ -110,13 +107,10 @@ public class AVUQueryElement {
 			builder.append("value=").append(value).append(", ");
 		}
 		if (valueEndOfRange != null) {
-			builder.append("valueEndOfRange=").append(valueEndOfRange)
-					.append(", ");
+			builder.append("valueEndOfRange=").append(valueEndOfRange).append(", ");
 		}
 		if (valuesTable != null) {
-			builder.append("valuesTable=")
-					.append(valuesTable.subList(0,
-							Math.min(valuesTable.size(), maxLen)));
+			builder.append("valuesTable=").append(valuesTable.subList(0, Math.min(valuesTable.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();
@@ -154,9 +148,8 @@ public class AVUQueryElement {
 
 		AVUQueryElement otherObj = (AVUQueryElement) other;
 
-		return (avuQueryPart.equals(otherObj.avuQueryPart)
-				&& operator.equals(otherObj.operator) && value
-					.equals(otherObj.value));
+		return (avuQueryPart.equals(otherObj.avuQueryPart) && operator.equals(otherObj.operator)
+				&& value.equals(otherObj.value));
 
 	}
 

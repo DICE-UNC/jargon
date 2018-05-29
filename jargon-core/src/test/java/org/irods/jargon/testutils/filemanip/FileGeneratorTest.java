@@ -19,27 +19,21 @@ public class FileGeneratorTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@Test
-	public void testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath()
-			throws Exception {
+	public void testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath() throws Exception {
 
 		String collName = "testGenerateManyFilesAndCollectionsInParentCollectionByAbsolutePath";
 		String targetLocalFile = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ "/" + collName);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + collName);
 
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						targetLocalFile, "coll", 2, 4, 2, "testFile", ".txt",
-						20000, 9000, 1, 2);
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(targetLocalFile, "coll", 2, 4, 2,
+				"testFile", ".txt", 20000, 9000, 1, 2);
 
 	}
 

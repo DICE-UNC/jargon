@@ -64,6 +64,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * @return {@code MetaDataAndDomainData} representing an AVU for the given
 	 *         domain
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static MetaDataAndDomainData instance(final MetadataDomain metadataDomain, final String domainObjectId,
 			final String domainObjectUniqueName, final int avuId, final String avuAttribute, final String avuValue,
@@ -101,6 +102,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * @return {@code MetaDataAndDomainData} representing an AVU for the given
 	 *         domain
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static MetaDataAndDomainData instance(final MetadataDomain metadataDomain, final String domainObjectId,
 			final String domainObjectUniqueName, final long size, final Date createdAt, final Date modifiedAt,
@@ -164,21 +166,6 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 		return builder.toString();
 	}
 
-	/**
-	 * Note that createdAt and modifiedAt can be null
-	 *
-	 * @param metadataDomain
-	 * @param domainObjectId
-	 * @param domainObjectUniqueName
-	 * @param size
-	 * @param createdAt
-	 * @param modifiedAt
-	 * @param avuId
-	 * @param avuAttribute
-	 * @param avuValue
-	 * @param avuUnit
-	 * @throws JargonException
-	 */
 	private MetaDataAndDomainData(final MetadataDomain metadataDomain, final String domainObjectId,
 			final String domainObjectUniqueName, final long size, final Date createdAt, final Date modifiedAt,
 			final int avuId, final String avuAttribute, final String avuValue, final String avuUnit)
@@ -263,8 +250,8 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	@Override
 	public MetaDataAndDomainData clone() throws CloneNotSupportedException {
 		try {
-			return new MetaDataAndDomainData(this.metadataDomain, this.domainObjectId, this.domainObjectUniqueName,
-					size, createdAt, createdAt, avuId, avuAttribute, avuValue, avuUnit);
+			return new MetaDataAndDomainData(metadataDomain, domainObjectId, domainObjectUniqueName, size, createdAt,
+					createdAt, avuId, avuAttribute, avuValue, avuUnit);
 		} catch (JargonException e) {
 			throw new JargonRuntimeException("exception during clone()", e);
 		}

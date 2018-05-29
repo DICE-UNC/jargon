@@ -25,7 +25,9 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * parameter counts and column names.
 	 *
 	 * @param alias
+	 *            {@code String} with the alias for the query
 	 * @param sql
+	 *            {@code String} with the SQL
 	 */
 	public SpecificQueryDefinition(final String alias, final String sql) {
 
@@ -67,8 +69,8 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * Gets the count of arguments, this is set when this data is retrieved from
 	 * iRODS by query
 	 *
-	 * @return the argumentCount {@code int} with the count of arguments in
-	 *         the sql query
+	 * @return the argumentCount {@code int} with the count of arguments in the sql
+	 *         query
 	 */
 	public int getArgumentCount() {
 		return argumentCount;
@@ -76,7 +78,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 
 	/**
 	 * @param argumentCount
-	 *            the argumentCount to set
+	 *            {@code int} the argumentCount to set
 	 */
 	public void setArgumentCount(final int argumentCount) {
 		this.argumentCount = argumentCount;
@@ -86,8 +88,8 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * Gets the column names by parsing the SQL query. Note that this is only
 	 * available when querying the object from iRODS.
 	 *
-	 * @return the columnNames {@code List<String>} with the parsed column
-	 *         names from the query
+	 * @return the columnNames {@code List<String>} with the parsed column names
+	 *         from the query
 	 */
 	public List<String> getColumnNames() {
 		return columnNames;
@@ -95,14 +97,14 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 
 	/**
 	 * @param columnNames
-	 *            the columnNames to set
+	 *            {@code List} of {@code String} the columnNames to set
 	 */
 	public void setColumnNames(final List<String> columnNames) {
 		this.columnNames = columnNames;
 	}
 
 	/**
-	 * @return the alias
+	 * @return {@code String} with the alias
 	 */
 	public String getAlias() {
 		return alias;
@@ -110,14 +112,14 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 
 	/**
 	 * @param alias
-	 *            the alias to set
+	 *            {@code String} the alias to set
 	 */
 	public void setAlias(final String alias) {
 		this.alias = alias;
 	}
 
 	/**
-	 * @return the sql
+	 * @return {@code String} with the sql
 	 */
 	public String getSql() {
 		return sql;
@@ -125,7 +127,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 
 	/**
 	 * @param sql
-	 *            the sql to set
+	 *            {@code String} with the sql to set
 	 */
 	public void setSql(final String sql) {
 		this.sql = sql;

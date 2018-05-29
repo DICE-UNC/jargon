@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.domain;
 
@@ -17,12 +17,11 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * share.
  * <p>
  * All fields are final and immutable.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
-public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem
-		implements Serializable {
+public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem implements Serializable {
 
 	private static final long serialVersionUID = 3413211086947009069L;
 
@@ -66,37 +65,31 @@ public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem
 	}
 
 	/**
-	 * A shared folder or collection. Describes the user and object that is
-	 * being starred, and providing a description.
-	 * 
+	 * A shared folder or collection. Describes the user and object that is being
+	 * starred, and providing a description.
+	 *
 	 * @param metadataDomain
-	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
-	 *            that identifies the domain object type that is tagged (e.g.
-	 *            DataObject, Collection)
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value that
+	 *            identifies the domain object type that is tagged (e.g. DataObject,
+	 *            Collection)
 	 * @param domainUniqueName
-	 *            {@code String} with the unque name for the tagged data
-	 *            object (e.g. iRODS absolute path for a data object or
-	 *            collection).
+	 *            {@code String} with the unque name for the tagged data object
+	 *            (e.g. iRODS absolute path for a data object or collection).
 	 * @param shareName
 	 *            {@code String} with an alias, or name for the share
 	 * @param shareOwner
-	 *            {@code String} with the user name who owns the shared
-	 *            file or collection
+	 *            {@code String} with the user name who owns the shared file or
+	 *            collection
 	 * @param shareOwnerZone
-	 *            {@code String} with zone for the user name who owns the
-	 *            shared file or collection. May be set blank to denote current
-	 *            zone
-	 * @param shareUser
+	 *            {@code String} with zone for the user name who owns the shared
+	 *            file or collection. May be set blank to denote current zone
+	 * @param shareUsers
 	 *            {@link ShareUser} with the user names and permissions
-	 * @param shareOwner
-	 *            {@code String} with the owner of the share, in name#zone
-	 *            format
-	 * 
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	public IRODSSharedFileOrCollection(final MetadataDomain metadataDomain,
-			final String domainUniqueName, final String shareName,
-			final String shareOwner, final String shareOwnerZone,
+	public IRODSSharedFileOrCollection(final MetadataDomain metadataDomain, final String domainUniqueName,
+			final String shareName, final String shareOwner, final String shareOwnerZone,
 			final List<ShareUser> shareUsers) throws JargonException {
 
 		super(metadataDomain, domainUniqueName, shareOwner);

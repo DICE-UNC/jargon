@@ -316,7 +316,7 @@ public class IRODSAccount implements Serializable {
 	 *            {@link String} the IRODS zone of the user
 	 * @param defaultStorageResource
 	 *            {@link String} default storage resource
-	 * 
+	 *
 	 */
 	public IRODSAccount(final String host, final int port, final String userName, final String password,
 			final String homeDirectory, final String userZone, final String defaultStorageResource) {
@@ -364,7 +364,7 @@ public class IRODSAccount implements Serializable {
 	 *            {@link ClientServerNegotiationPolicy} object describing overrides
 	 *            from the default policy, may be set to <code>null
 	 *            </code> to accept defaults from Jargon properties.
-	 * 
+	 *
 	 */
 	private IRODSAccount(final String host, final int port, final String userName, final String password,
 			final String homeDirectory, final String userZone, final String defaultStorageResource,
@@ -483,7 +483,7 @@ public class IRODSAccount implements Serializable {
 	 * Returns a string representation of this file system object. The string is
 	 * formated according to the iRODS URI model. Note: the user password will not
 	 * be included in the URI.
-	 * 
+	 *
 	 * @return {@link String}
 	 */
 	@Override

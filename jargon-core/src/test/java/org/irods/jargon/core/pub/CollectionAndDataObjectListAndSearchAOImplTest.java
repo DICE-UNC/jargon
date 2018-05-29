@@ -238,6 +238,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().getDataObjectsOffset());
 		Assert.assertTrue(
 				pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().isDataObjectsComplete());
+
 		Assert.assertEquals(count, pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().size());
 	}
 
@@ -416,6 +417,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().getDataObjectsOffset());
 		Assert.assertTrue(
 				pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().isDataObjectsComplete());
+
 		Assert.assertEquals(count, pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().size());
 
 	}

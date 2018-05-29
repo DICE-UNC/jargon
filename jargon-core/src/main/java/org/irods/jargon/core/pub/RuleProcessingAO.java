@@ -15,7 +15,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	/**
 	 * Type of rule invocation, primarily involving special handlng of iRODS old
 	 * style rules. For other rule languages DEFAULT is the usual setting.
-	 * 
+	 *
 	 * @author conwaymc
 	 *
 	 */
@@ -49,6 +49,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @param irodsRuleAsString
 	 *            {@code String} containing an iRODS rule as would be submitted via
 	 *            irule
+	 * @return {@link IRODSRuleExecResult} with the rule response
 	 * @throws JargonRuleException
 	 *             error in translation of the rule, typically syntax
 	 * @throws JargonException
@@ -63,14 +64,18 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @return {@code int} with a count of the rules purged from the delayed
 	 *         execution queue
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	int purgeAllDelayedExecQueue() throws JargonException;
 
 	/**
+	 * List all the rules in the delay exec queue
 	 *
 	 * @param partialStartIndex
+	 *            {@code int} with 0 or an offset
 	 * @return List of {@code DelayedRuleExecution}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<DelayedRuleExecution> listAllDelayedRuleExecutions(int partialStartIndex) throws JargonException;
 
@@ -97,7 +102,9 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            in the classic rule language, pre iRODS 3.0).
 	 * @return {@link IRODSRuleExecResult}
 	 * @throws DataNotFoundException
+	 *             if rule missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSRuleExecResult executeRuleFromResource(String resourcePath, List<IRODSRuleParameter> irodsRuleInputParameters,
 			RuleProcessingType ruleProcessingType) throws DataNotFoundException, JargonException;
@@ -125,7 +132,9 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            relates to
 	 * @return {@link IRODSRuleExecResult}
 	 * @throws DataNotFoundException
+	 *             if rule missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSRuleExecResult executeRuleFromResource(String resourcePath, List<IRODSRuleParameter> irodsRuleInputParameters,
 			RuleInvocationConfiguration ruleInvocationConfiguration) throws DataNotFoundException, JargonException;
@@ -151,6 +160,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            relates to
 	 * @return {@link IRODSRuleExecResult}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSRuleExecResult executeRuleFromIRODSFile(String ruleFileAbsolutePath,
 			List<IRODSRuleParameter> irodsRuleInputParameters, RuleInvocationConfiguration ruleInvocationConfiguration)
@@ -177,6 +187,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            in the classic rule language, pre iRODS 3.0).
 	 * @return {@link IRODSRuleExecResult}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSRuleExecResult executeRuleFromIRODSFile(String ruleFileAbsolutePath,
 			List<IRODSRuleParameter> irodsRuleInputParameters, RuleProcessingType ruleProcessingType)
@@ -243,14 +254,14 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * rule engine (python, irods) the rule is bound for. In the above method, the
 	 * invocation type defaults to auto and Jargon will try and do some simple
 	 * checks to guess what type of rule is being processed.
-	 * 
+	 *
 	 * @param irodsRuleAsString
 	 *            {@code String} with the rule body, as well as input and output
 	 *            parameters.
 	 * @param inputParameterOverrides
 	 *            {@code List} of {@link IRODSRuleParameter} that overrides the
 	 *            parameters derived from the rule bodies.
-	 * 
+	 *
 	 * @param ruleInvocationConfiguration
 	 *            {@link RuleInvocationConfiguration} that represents the type of
 	 *            rule engine the user wishes this rule to be run on. With multiple
@@ -275,6 +286,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @param queueId
 	 *            {@code int} with an id that relates to a stored rule to be removed
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void purgeRuleFromDelayedExecQueue(int queueId) throws JargonException;
 

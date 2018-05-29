@@ -23,8 +23,7 @@ public abstract class AbstractKeyGenerator {
 	private PipelineConfiguration pipelineConfiguration;
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractKeyGenerator.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractKeyGenerator.class);
 
 	protected PipelineConfiguration getPipelineConfiguration() {
 		return pipelineConfiguration;
@@ -38,8 +37,7 @@ public abstract class AbstractKeyGenerator {
 		return log;
 	}
 
-	public AbstractKeyGenerator(
-			final PipelineConfiguration pipelineConfiguration,
+	public AbstractKeyGenerator(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		this.pipelineConfiguration = pipelineConfiguration;
@@ -47,13 +45,14 @@ public abstract class AbstractKeyGenerator {
 	}
 
 	/**
-	 * Generate an {@link SecretKey} based on the pipeline configuration. Note
-	 * that this method should NOT update the {@code SecretKey} in the
+	 * Generate an {@link SecretKey} based on the pipeline configuration. Note that
+	 * this method should NOT update the {@code SecretKey} in the
 	 * {@code NegotiatedClientServerConfiguration}
 	 *
 	 * @return {@link SecretKey} for the algo and settings in the pipeline and
 	 *         negotiated configuration
 	 * @throws EncryptionException
+	 *             {@link EncryptionException}
 	 */
 	public abstract SecretKey generateKey() throws EncryptionException;
 

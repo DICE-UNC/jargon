@@ -25,8 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractParallelFileTransferStrategy {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractParallelFileTransferStrategy.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractParallelFileTransferStrategy.class);
 
 	public enum TransferType {
 		GET_TRANSFER, PUT_TRANSFER
@@ -57,57 +56,47 @@ public abstract class AbstractParallelFileTransferStrategy {
 	private final JargonProperties jargonProperties;
 
 	/**
-	 * Constructor for a parallel file transfer runner. This runner will create
-	 * the parallel transfer threads and process the transfer.
+	 * Constructor for a parallel file transfer runner. This runner will create the
+	 * parallel transfer threads and process the transfer.
 	 *
 	 * @param host
 	 *            {@code String} with the name of the host for the transfer
 	 * @param port
 	 *            {@code int} with the port for the transfer
 	 * @param numberOfThreads
-	 *            {@code int} with the number of threads to spawn, which is
-	 *            set by iRODS.
-	 * @param password
-	 *            {@code int} with the one-time transfer token set by
+	 *            {@code int} with the number of threads to spawn, which is set by
 	 *            iRODS.
+	 * @param password
+	 *            {@code int} with the one-time transfer token set by iRODS.
 	 * @param localFile
 	 *            {@code File} that will transferrred.
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @param transferLength
-	 *            {@code long} with the total length of the file to
-	 *            transfer
+	 *            {@code long} with the total length of the file to transfer
 	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that controls and keeps track of
-	 *            the transfer operation, required.
+	 *            {@link TransferControlBlock} that controls and keeps track of the
+	 *            transfer operation, required.
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} or {@code null} if
-	 *            not desired. This can receive call-backs on the status of the
-	 *            parallel transfer operation.
+	 *            {@link TransferStatusCallbackListener} or {@code null} if not
+	 *            desired. This can receive call-backs on the status of the parallel
+	 *            transfer operation.
 	 * @param fileRestartInfo
-	 *            {@link FileRestartInfo} or {@code null} if not supporting
-	 *            a restart of this transfer
+	 *            {@link FileRestartInfo} or {@code null} if not supporting a
+	 *            restart of this transfer
 	 * @param negotiatedClientServerConfiguration
-	 *            {@link NegotiatedClientServerConfiguration} represents the
-	 *            result of client server negotiation of any potential
-	 *            encryption.
+	 *            {@link NegotiatedClientServerConfiguration} represents the result
+	 *            of client server negotiation of any potential encryption.
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
-	protected AbstractParallelFileTransferStrategy(
-			final String host,
-			final int port,
-			final int numberOfThreads,
-			final int password,
-			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final long transferLength,
-			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo,
-			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws JargonException {
+	protected AbstractParallelFileTransferStrategy(final String host, final int port, final int numberOfThreads,
+			final int password, final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength, final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener, final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -131,8 +120,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		}
 
 		if (irodsAccessObjectFactory == null) {
-			throw new IllegalArgumentException(
-					"irodsAccessObjectFactory is null");
+			throw new IllegalArgumentException("irodsAccessObjectFactory is null");
 		}
 
 		if (transferControlBlock == null) {
@@ -140,8 +128,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		}
 
 		if (negotiatedClientServerConfiguration == null) {
-			throw new IllegalArgumentException(
-					"null negotiatedClientServerConfiguration");
+			throw new IllegalArgumentException("null negotiatedClientServerConfiguration");
 		}
 
 		this.host = host;
@@ -157,21 +144,19 @@ public abstract class AbstractParallelFileTransferStrategy {
 		 * Make a clone of the jargon props to avoid synchronization
 		 */
 		jargonProperties = new SettableJargonProperties(
-				irodsAccessObjectFactory.getIrodsSession()
-						.getJargonProperties());
+				irodsAccessObjectFactory.getIrodsSession().getJargonProperties());
 		pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;
 
-		parallelSocketTimeoutInSecs = jargonProperties
-				.getIRODSParallelTransferSocketTimeout();
+		parallelSocketTimeoutInSecs = jargonProperties.getIRODSParallelTransferSocketTimeout();
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -334,8 +319,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *
 	 */
 	public AbstractRestartManager getRestartManager() {
-		return getIrodsAccessObjectFactory().getIrodsSession()
-				.getRestartManager();
+		return getIrodsAccessObjectFactory().getIrodsSession().getRestartManager();
 	}
 
 	/**
@@ -357,18 +341,16 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *
 	 * @return {@link ParallelCipherWrapper}
 	 * @throws ClientServerNegotiationException
+	 *             for negotiation error
 	 */
-	ParallelEncryptionCipherWrapper initializeCypherForEncryption()
-			throws ClientServerNegotiationException {
+	ParallelEncryptionCipherWrapper initializeCypherForEncryption() throws ClientServerNegotiationException {
 		log.debug("initializeCypherForEncryption()");
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
 			log.error("should not be trying to encrypt, is not ssl configured");
-			throw new ClientServerNegotiationException(
-					"attempt to encrypt a transfer when SSL not configured");
+			throw new ClientServerNegotiationException("attempt to encrypt a transfer when SSL not configured");
 		}
 
-		return EncryptionWrapperFactory.instanceEncrypt(pipelineConfiguration,
-				negotiatedClientServerConfiguration);
+		return EncryptionWrapperFactory.instanceEncrypt(pipelineConfiguration, negotiatedClientServerConfiguration);
 
 	}
 
@@ -378,18 +360,16 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *
 	 * @return {@link ParallelCipherWrapper}
 	 * @throws ClientServerNegotiationException
+	 *             for negotiation error
 	 */
-	ParallelDecryptionCipherWrapper initializeCypherForDecryption()
-			throws ClientServerNegotiationException {
+	ParallelDecryptionCipherWrapper initializeCypherForDecryption() throws ClientServerNegotiationException {
 		log.debug("initializeCypherForDecryption()");
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
 			log.error("should not be trying to decrypt, is not ssl configured");
-			throw new ClientServerNegotiationException(
-					"attempt to decrypt a transfer when SSL not configured");
+			throw new ClientServerNegotiationException("attempt to decrypt a transfer when SSL not configured");
 		}
 
-		return EncryptionWrapperFactory.instanceDecrypt(pipelineConfiguration,
-				negotiatedClientServerConfiguration);
+		return EncryptionWrapperFactory.instanceDecrypt(pipelineConfiguration, negotiatedClientServerConfiguration);
 
 	}
 

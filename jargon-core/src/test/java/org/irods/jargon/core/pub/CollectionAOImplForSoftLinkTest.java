@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -14,6 +12,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,8 +37,8 @@ public class CollectionAOImplForSoftLinkTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -49,130 +48,103 @@ public class CollectionAOImplForSoftLinkTest {
 	}
 
 	@Test
-	public final void testFindMetadataValuesByMetadataQueryForCollectionSoftLinked()
-			throws Exception {
+	public final void testFindMetadataValuesByMetadataQueryForCollectionSoftLinked() throws Exception {
 		String sourceCollectionName = "testFindMetadataValuesByMetadataQueryForCollectionSoftLinkedSource";
 		String targetCollectionName = "testFindMetadataValuesByMetadataQueryForCollectionSoftLinkedTarget";
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 
 		// initialize the AVU data
 		String expectedAttribName = "testFindMetadataValuesByMetadataQueryForCollectionSoftLinkedAttrib";
 		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryForCollectionSoftLinkedValue";
 		String expectedAttribUnits = "testFindMetadataValuesByMetadataQueryForCollectionSoftLinkedUnit";
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 
 		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		// make sure data is there, ask by source
-		List<MetaDataAndDomainData> result = collectionAO
-				.findMetadataValuesByMetadataQueryForCollection(queryElements,
-						targetIrodsCollection);
+		List<MetaDataAndDomainData> result = collectionAO.findMetadataValuesByMetadataQueryForCollection(queryElements,
+				targetIrodsCollection);
 		Assert.assertFalse("no query result returned", result.isEmpty());
 
 		// delete via the source path
 		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 
 		// query by source and don't find the data
-		result = collectionAO.findMetadataValuesByMetadataQueryForCollection(
-				queryElements, targetIrodsCollection);
+		result = collectionAO.findMetadataValuesByMetadataQueryForCollection(queryElements, targetIrodsCollection);
 		Assert.assertTrue("avu not deleted", result.isEmpty());
 
 	}
 
 	/**
-	 * This method tests out the independence of AVU metadata between a
-	 * canonical path, and a soft linked path and shows that iRODS treats these
-	 * things as different objects
+	 * This method tests out the independence of AVU metadata between a canonical
+	 * path, and a soft linked path and shows that iRODS treats these things as
+	 * different objects
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testFindMetadataValuesByMetadataQueryCompareSourceAndTarget()
-			throws Exception {
+	public final void testFindMetadataValuesByMetadataQueryCompareSourceAndTarget() throws Exception {
 		String sourceCollectionName = "testFindMetadataValuesByMetadataQueryCompareSourceAndTargetSource";
 		String targetCollectionName = "testFindMetadataValuesByMetadataQueryCompareSourceAndTargetTarget";
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 
 		// initialize the AVU data
 		String expectedAttribName = "testFindMetadataValuesByMetadataQueryCompareSourceAndTargetAttrib";
 		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryCompareSourceAndTargetValue";
 		String expectedAttribUnits = " testFindMetadataValuesByMetadataQueryCompareSourceAndTargetUnit";
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 
 		// add to target and source
@@ -181,59 +153,47 @@ public class CollectionAOImplForSoftLinkTest {
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		// make sure data is there, ask by source
-		List<MetaDataAndDomainData> result = collectionAO
-				.findMetadataValuesByMetadataQuery(queryElements);
+		List<MetaDataAndDomainData> result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
 		Assert.assertTrue("no query result returned", result.size() >= 2);
 	}
 
 	/**
-	 * This method tests out the independence of AVU metadata between a
-	 * canonical path, and a soft linked path and shows that iRODS treats these
-	 * things as different objects
+	 * This method tests out the independence of AVU metadata between a canonical
+	 * path, and a soft linked path and shows that iRODS treats these things as
+	 * different objects
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTarget()
-			throws Exception {
+	public final void testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTarget() throws Exception {
 		String sourceCollectionName = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetSource";
 		String targetCollectionName = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetTarget";
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 
 		// initialize the AVU data
 		String expectedAttribName = "testFindDifferingMetadataValuesByMetadataQueryCompareSourceAndTargetAttrib";
@@ -242,13 +202,10 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourcePrefix = "source-";
 		String targetPrefix = "target-";
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		AvuData sourceAvuData = AvuData.instance(sourcePrefix
-				+ expectedAttribName, sourcePrefix + expectedAttribValue,
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		AvuData sourceAvuData = AvuData.instance(sourcePrefix + expectedAttribName, sourcePrefix + expectedAttribValue,
 				sourcePrefix + expectedAttribUnits);
-		AvuData targetAvuData = AvuData.instance(targetPrefix
-				+ expectedAttribName, targetPrefix + expectedAttribValue,
+		AvuData targetAvuData = AvuData.instance(targetPrefix + expectedAttribName, targetPrefix + expectedAttribValue,
 				targetPrefix + expectedAttribUnits);
 
 		collectionAO.deleteAVUMetadata(sourceIrodsCollection, sourceAvuData);
@@ -260,8 +217,7 @@ public class CollectionAOImplForSoftLinkTest {
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> sourceMetadata = collectionAO
@@ -285,22 +241,16 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceCollectionName = "testSetReadForASoftLinkedCollectionSource";
 		String targetCollectionName = "testSetReadForASoftLinkedCollectionTarget";
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		// if (props.isAtLeastIrods410()) {
@@ -308,64 +258,47 @@ public class CollectionAOImplForSoftLinkTest {
 		// }
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 
 		// read on target
-		collectionAO
-				.setAccessPermissionRead(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		collectionAO.setAccessPermissionRead("", targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
-				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
-						targetIrodsCollection);
-		Assert.assertTrue("user cannot read",
-				irodsFileForSecondaryUser.canRead());
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		Assert.assertTrue("user cannot read", irodsFileForSecondaryUser.canRead());
 
-		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(
-				secondaryAccount).instanceIRODSFile(sourceIrodsCollection);
+		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
 
 		// write on source
-		collectionAO
-				.setAccessPermissionWrite(
-						"",
-						sourceIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		collectionAO.setAccessPermissionWrite("", sourceIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		// log in as the secondary user and test access
 
-		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(
-				secondaryAccount).instanceIRODSFile(sourceIrodsCollection);
+		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
@@ -381,22 +314,16 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceCollectionName = "testSetWriteForASoftLinkedCollectionSource";
 		String targetCollectionName = "testSetWriteForASoftLinkedCollectionTarget";
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		// if (props.isConsortiumVersion()) {
@@ -404,64 +331,47 @@ public class CollectionAOImplForSoftLinkTest {
 		// }
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 
 		// write on target
-		collectionAO
-				.setAccessPermissionWrite(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		collectionAO.setAccessPermissionWrite("", targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
-				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
-						targetIrodsCollection);
-		Assert.assertTrue("user cannot read soft linked collection",
-				irodsFileForSecondaryUser.canRead());
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		Assert.assertTrue("user cannot read soft linked collection", irodsFileForSecondaryUser.canRead());
 
-		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(
-				secondaryAccount).instanceIRODSFile(sourceIrodsCollection);
+		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 		// write on source
-		collectionAO
-				.setAccessPermissionWrite(
-						"",
-						sourceIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		collectionAO.setAccessPermissionWrite("", sourceIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		// log in as the secondary user and test read access
 
-		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(
-				secondaryAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
+				.instanceIRODSFile(targetIrodsCollection);
 		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
 
 	}
@@ -472,53 +382,38 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceCollectionName = "testSetInheritForASoftLinkedCollectionSource";
 		String targetCollectionName = "testSetInheritForASoftLinkedCollectionTarget";
 
-		String sourceIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
 
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// do an initial unmount
-		MountedCollectionAO mountedCollectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getMountedCollectionAO(
-						irodsAccount);
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
 
-		mountedCollectionAO.unmountACollection(targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+		mountedCollectionAO.unmountACollection(targetIrodsCollection, irodsAccount.getDefaultStorageResource());
 
 		// set up source collection
-		IRODSFile sourceFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						sourceIrodsCollection);
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
 		sourceFile.mkdirs();
 
 		// create the soft link
-		mountedCollectionAO.createASoftLink(sourceIrodsCollection,
-				targetIrodsCollection);
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
 
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 
-		collectionAO
-				.setAccessPermissionInherit("", targetIrodsCollection, true);
-		Assert.assertTrue(
-				"should return inherit asking via source collection",
-				collectionAO
-						.isCollectionSetForPermissionInheritance(sourceIrodsCollection));
-		Assert.assertTrue(
-				"should return inherit asking via target collection",
-				collectionAO
-						.isCollectionSetForPermissionInheritance(targetIrodsCollection));
+		collectionAO.setAccessPermissionInherit("", targetIrodsCollection, true);
+		Assert.assertTrue("should return inherit asking via source collection",
+				collectionAO.isCollectionSetForPermissionInheritance(sourceIrodsCollection));
+		Assert.assertTrue("should return inherit asking via target collection",
+				collectionAO.isCollectionSetForPermissionInheritance(targetIrodsCollection));
 
 	}
 

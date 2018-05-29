@@ -35,8 +35,8 @@ public class IRODSDomainObject {
 	 * operation. Many operations in Jargon produce a pageable result set, and
 	 * methods are available to requery at an offset or contine paging results.
 	 *
-	 * @return {@code boolean} that will be {@code true} if no more
-	 *         results are available.
+	 * @return {@code boolean} that will be {@code true} if no more results are
+	 *         available.
 	 */
 	public boolean isLastResult() {
 		return lastResult;
@@ -46,8 +46,8 @@ public class IRODSDomainObject {
 	 * Sets whether this is the last result from a query or listing operation
 	 *
 	 * @param lastResult
-	 *            {@code boolean} that indicates that this is the last
-	 *            result for an operation
+	 *            {@code boolean} that indicates that this is the last result for an
+	 *            operation
 	 */
 	public void setLastResult(final boolean lastResult) {
 		this.lastResult = lastResult;
@@ -56,21 +56,21 @@ public class IRODSDomainObject {
 	/**
 	 * Get the sequence number in a set of results for this object.
 	 *
-	 * @return {@code int} with a record sequence number that can be used
-	 *         for setting offsets on subsequent queries.
+	 * @return {@code int} with a record sequence number that can be used for
+	 *         setting offsets on subsequent queries.
 	 */
 	public int getCount() {
 		return count;
 	}
 
 	/**
-	 * Set a sequence number in a list of results for this object. This is used
-	 * to handle paging when results are continued when listing or querying
-	 * iRODS information.
+	 * Set a sequence number in a list of results for this object. This is used to
+	 * handle paging when results are continued when listing or querying iRODS
+	 * information.
 	 *
 	 * @param count
-	 *            {@code int} with a sequence number for this result within
-	 *            a listing.
+	 *            {@code int} with a sequence number for this result within a
+	 *            listing.
 	 */
 	public void setCount(final int count) {
 		this.count = count;
@@ -80,8 +80,8 @@ public class IRODSDomainObject {
 	 * Total number of records for the given query. Note that this is not always
 	 * available, depending on the iCAT database
 	 *
-	 * @return {@code int} with the total number of records that match this
-	 *         query, not always available and otherwise zero
+	 * @return {@code int} with the total number of records that match this query,
+	 *         not always available and otherwise zero
 	 */
 	public int getTotalRecords() {
 		return totalRecords;
@@ -92,8 +92,8 @@ public class IRODSDomainObject {
 	 * available, depending on the iCAT database
 	 *
 	 * @param totalRecords
-	 *            {@code int} with the total number of records that match
-	 *            this query, not always available and otherwise zero
+	 *            {@code int} with the total number of records that match this
+	 *            query, not always available and otherwise zero
 	 */
 	public void setTotalRecords(final int totalRecords) {
 		this.totalRecords = totalRecords;

@@ -31,11 +31,10 @@ public class UserAOHelper {
 	static Logger log = LoggerFactory.getLogger(UserAOHelper.class);
 
 	/**
-	 * Handy method will build the select portion of a gen query that accesses
-	 * user data.
+	 * Handy method will build the select portion of a gen query that accesses user
+	 * data.
 	 *
-	 * @return {@code String} with genquery select statement that obtains
-	 *         user data.
+	 * @return {@code String} with genquery select statement that obtains user data.
 	 */
 	public static String buildUserSelects() {
 		StringBuilder userQuery = new StringBuilder();
@@ -63,44 +62,44 @@ public class UserAOHelper {
 	 * provided builder
 	 *
 	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} to be appended
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
-	public static void addUserSelectsToBuilder(
-			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+	public static void addUserSelectsToBuilder(final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 
 		if (builder == null) {
 			throw new IllegalArgumentException("null builder");
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
 	}
 
 	/**
-	 * Given a query build from the {@code buildUserSelects}, create a user
-	 * for a given result row
+	 * Given a query build from the {@code buildUserSelects}, create a user for a
+	 * given result row
 	 *
 	 * @param row
 	 *            {@link IRODSQueryResultRow}
 	 * @param irodsGenQueryExecutor
-	 *            {@link IRODSGenQueryExecutor} access object to do various
-	 *            queries
+	 *            {@link IRODSGenQueryExecutor} access object to do various queries
 	 * @param retrieveDN
-	 *            {@code boolean} that causes an additional lookup to
-	 *            retrieve the Distinguished Name. {@code false} avoids an
-	 *            additional lookup per user.
+	 *            {@code boolean} that causes an additional lookup to retrieve the
+	 *            Distinguished Name. {@code false} avoids an additional lookup per
+	 *            user.
 	 * @return {@link User} built from that row result
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static User buildUserFromResultSet(final IRODSQueryResultRow row,
-			final IRODSGenQueryExecutor irodsGenQueryExecutor,
-			final boolean retrieveDN) throws JargonException {
+			final IRODSGenQueryExecutor irodsGenQueryExecutor, final boolean retrieveDN) throws JargonException {
 		User user = new User();
 		user.setCount(row.getRecordCount());
 		user.setLastResult(row.isLastResult());
@@ -112,15 +111,12 @@ public class UserAOHelper {
 
 		user.setInfo(row.getColumn(4));
 		user.setComment(row.getColumn(5));
-		user.setCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(6)));
-		user.setModifyTime(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(7)));
+		user.setCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(6)));
+		user.setModifyTime(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(7)));
 
 		// do add'l lookup of DN if requested
 		if (retrieveDN) {
-			String userDn = findUserDnIfExists(user.getId(),
-					irodsGenQueryExecutor);
+			String userDn = findUserDnIfExists(user.getId(), irodsGenQueryExecutor);
 			if (userDn != null) {
 				user.setUserDN(userDn);
 			}
@@ -134,14 +130,16 @@ public class UserAOHelper {
 	 * Locate the user distinguished name, if it exists
 	 *
 	 * @param userId
+	 *            {@link String} with the user id
 	 * @param irodsGenQueryExecutor
-	 * @return {@code String} with the distinguished name for the user, if
-	 *         it exists, otherwise, {@code null} will be returned
+	 *            {@link IRODSGenQueryExecutor}
+	 * @return {@code String} with the distinguished name for the user, if it
+	 *         exists, otherwise, {@code null} will be returned
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static String findUserDnIfExists(final String userId,
-			final IRODSGenQueryExecutor irodsGenQueryExecutor)
-					throws JargonException {
+	public static String findUserDnIfExists(final String userId, final IRODSGenQueryExecutor irodsGenQueryExecutor)
+			throws JargonException {
 		String dn = null;
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -149,15 +147,12 @@ public class UserAOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
-			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID,
-					QueryConditionOperators.EQUAL, userId);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID, QueryConditionOperators.EQUAL, userId);
 
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(1);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException("error in query", e);
 		} catch (JargonQueryException e) {
@@ -185,12 +180,10 @@ public class UserAOHelper {
 	}
 
 	/**
-	 * Given a user name that might be in the format user#zone, get the user
-	 * part
+	 * Given a user name that might be in the format user#zone, get the user part
 	 *
 	 * @param userName
-	 *            {@code String} with the user name, possibly in user#zone
-	 *            format
+	 *            {@code String} with the user name, possibly in user#zone format
 	 * @return {@code String} with only the user name, not the zone
 	 */
 	public static String getUserNameFromUserPoundZone(final String userName) {
@@ -206,12 +199,10 @@ public class UserAOHelper {
 	}
 
 	/**
-	 * Given a user name that might be in the format user#zone, get the zone
-	 * part
+	 * Given a user name that might be in the format user#zone, get the zone part
 	 *
 	 * @param userName
-	 *            {@code String} with the user name, possibly in user#zone
-	 *            format
+	 *            {@code String} with the user name, possibly in user#zone format
 	 * @return {@code String} with only the zone name, not the user
 	 */
 	public static String getZoneFromUserPoundZone(final String userName) {

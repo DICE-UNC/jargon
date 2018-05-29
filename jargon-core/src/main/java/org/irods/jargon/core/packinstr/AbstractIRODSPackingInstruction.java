@@ -188,7 +188,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.packinstr.IRodsPI#getParsedTags()
 	 */
 	@Override
@@ -217,7 +217,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.packinstr.IRodsPI#getApiNumber()
 	 */
 	@Override

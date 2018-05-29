@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Wraps a connection to the iRODS server described by the given IRODSAccount.
  * <p>
- * Jargon services do not directly access the {@code IRODSConnection},
- * rather, they use the {@link IRODSMidLevelProtocol IRODSProtocol} interface.
+ * Jargon services do not directly access the {@code IRODSConnection}, rather,
+ * they use the {@link IRODSMidLevelProtocol IRODSProtocol} interface.
  * <p>
  * The connection is confined to one thread, and as such the various methods do
  * not need to be synchronized. All operations pass through the
  * {@code IRODScommands} object wrapping this connection, and
- * {@code IRODSCommands} does maintain synchronized access to operations
- * that read and write to this connection.
+ * {@code IRODSCommands} does maintain synchronized access to operations that
+ * read and write to this connection.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -31,11 +31,10 @@ import org.slf4j.LoggerFactory;
 class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/**
-	 * Default constructor that gives the account and pipeline setup
-	 * information.
+	 * Default constructor that gives the account and pipeline setup information.
 	 * <p>
-	 * This may be updated a bit later when we implement SSL negotiation for
-	 * iRODS 4+.
+	 * This may be updated a bit later when we implement SSL negotiation for iRODS
+	 * 4+.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
@@ -46,27 +45,23 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 *            {@link irodsProtocolManager} that requested this connection
 	 * @throws JargonException
 	 */
-	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
+	IRODSBasicTCPConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
 
-			final IRODSProtocolManager irodsProtocolManager,
-			final IRODSSession irodsSession) throws JargonException {
-		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
-				irodsSession);
+			final IRODSProtocolManager irodsProtocolManager, final IRODSSession irodsSession) throws JargonException {
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager, irodsSession);
 	}
 
-	static final Logger log = LoggerFactory
-			.getLogger(IRODSBasicTCPConnection.class);
+	static final Logger log = LoggerFactory.getLogger(IRODSBasicTCPConnection.class);
 
 	/**
-	 * Default constructor that gives the account and pipeline setup
-	 * information. This constructor is a special case where you already have a
-	 * Socket opened to iRODS, and you want to wrap that socket with the low
-	 * level iRODS semantics. An example use case is when you need to to PAM
-	 * authentication and wrap an existing iRODS connection with an SSL socket.
+	 * Default constructor that gives the account and pipeline setup information.
+	 * This constructor is a special case where you already have a Socket opened to
+	 * iRODS, and you want to wrap that socket with the low level iRODS semantics.
+	 * An example use case is when you need to to PAM authentication and wrap an
+	 * existing iRODS connection with an SSL socket.
 	 * <p>
-	 * This may be updated a bit later when we implement SSL negotiation for
-	 * iRODS 4+.
+	 * This may be updated a bit later when we implement SSL negotiation for iRODS
+	 * 4+.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
@@ -76,21 +71,18 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * @param irodsProtocolManager
 	 *            {@link irodsProtocolManager} that requested this connection
 	 * @param socket
-	 *            {@link Socket} being wrapped in this connection, this allows
-	 *            an arbitrary connected socket to be wrapped in low level
-	 *            jargon communication semantics.
+	 *            {@link Socket} being wrapped in this connection, this allows an
+	 *            arbitrary connected socket to be wrapped in low level jargon
+	 *            communication semantics.
 	 * @param IRODSession
 	 *            {@link IRODSSession} associated with this connection
 	 * @throws JargonException
 	 */
-	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager,
-			final Socket socket, final IRODSSession irodsSession)
-					throws JargonException {
+	IRODSBasicTCPConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager, final Socket socket, final IRODSSession irodsSession)
+			throws JargonException {
 
-		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
-				socket, irodsSession);
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager, socket, irodsSession);
 
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
 		if (socket instanceof SSLSocket) {
@@ -102,13 +94,11 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.connection.AbstractConnection#connect(org.irods
+	 * @see org.irods.jargon.core.connection.AbstractConnection#connect(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	protected void connect(final IRODSAccount irodsAccount)
-			throws JargonException {
+	protected void connect(final IRODSAccount irodsAccount) throws JargonException {
 		log.debug("connect()");
 
 		if (irodsAccount == null) {
@@ -128,30 +118,23 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 				log.debug("normal iRODS connection");
 				connection = new Socket();
-				connection.setSoTimeout(getPipelineConfiguration()
-						.getIrodsSocketTimeout() * 1000); // time is specified
+				connection.setSoTimeout(getPipelineConfiguration().getIrodsSocketTimeout() * 1000); // time is specified
 				// in seconds
 
 				if (getPipelineConfiguration().getPrimaryTcpSendWindowSize() > 0) {
-					connection.setSendBufferSize(getPipelineConfiguration()
-							.getPrimaryTcpSendWindowSize() * 1024);
+					connection.setSendBufferSize(getPipelineConfiguration().getPrimaryTcpSendWindowSize() * 1024);
 				}
 
 				if (getPipelineConfiguration().getPrimaryTcpReceiveWindowSize() > 0) {
-					connection.setReceiveBufferSize(getPipelineConfiguration()
-							.getPrimaryTcpReceiveWindowSize() * 1024);
+					connection.setReceiveBufferSize(getPipelineConfiguration().getPrimaryTcpReceiveWindowSize() * 1024);
 				}
 
-				connection.setPerformancePreferences(getPipelineConfiguration()
-						.getPrimaryTcpPerformancePrefsConnectionTime(),
-						getPipelineConfiguration()
-						.getPrimaryTcpPerformancePrefsLatency(),
-						getPipelineConfiguration()
-						.getPrimaryTcpPerformancePrefsBandwidth());
-				InetSocketAddress address = new InetSocketAddress(
-						irodsAccount.getHost(), irodsAccount.getPort());
-				connection.setKeepAlive(getPipelineConfiguration()
-						.isPrimaryTcpKeepAlive());
+				connection.setPerformancePreferences(
+						getPipelineConfiguration().getPrimaryTcpPerformancePrefsConnectionTime(),
+						getPipelineConfiguration().getPrimaryTcpPerformancePrefsLatency(),
+						getPipelineConfiguration().getPrimaryTcpPerformancePrefsBandwidth());
+				InetSocketAddress address = new InetSocketAddress(irodsAccount.getHost(), irodsAccount.getPort());
+				connection.setKeepAlive(getPipelineConfiguration().isPrimaryTcpKeepAlive());
 
 				// assume reuse, nodelay
 				connection.setReuseAddress(true);
@@ -163,9 +146,8 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 				break;
 
 			} catch (UnknownHostException e) {
-				log.error(
-						"exception opening socket to:" + irodsAccount.getHost()
-						+ " port:" + irodsAccount.getPort(), e);
+				log.error("exception opening socket to:" + irodsAccount.getHost() + " port:" + irodsAccount.getPort(),
+						e);
 				throw new JargonException(e);
 			} catch (IOException ioe) {
 
@@ -180,10 +162,8 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 				} else {
 
-					log.error(
-							"io exception opening socket to:"
-									+ irodsAccount.getHost() + " port:"
-									+ irodsAccount.getPort(), ioe);
+					log.error("io exception opening socket to:" + irodsAccount.getHost() + " port:"
+							+ irodsAccount.getPort(), ioe);
 					throw new JargonException(ioe);
 				}
 			}
@@ -199,14 +179,12 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	void setUpSocketAndStreamsAfterConnection(final IRODSAccount irodsAccount)
-			throws JargonException {
+	void setUpSocketAndStreamsAfterConnection(final IRODSAccount irodsAccount) throws JargonException {
 		try {
 
 			int socketTimeout = pipelineConfiguration.getIrodsSocketTimeout();
 			if (socketTimeout > 0) {
-				log.debug("setting a connection timeout of:{} seconds",
-						socketTimeout);
+				log.debug("setting a connection timeout of:{} seconds", socketTimeout);
 				connection.setSoTimeout(socketTimeout * 1000);
 			}
 
@@ -218,45 +196,34 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 				irodsInputStream = connection.getInputStream();
 			} else if (pipelineConfiguration.getInternalInputStreamBufferSize() == 0) {
 				log.debug("default buffer on input stream");
-				irodsInputStream = new BufferedInputStream(
-						connection.getInputStream());
+				irodsInputStream = new BufferedInputStream(connection.getInputStream());
 			} else {
 				log.debug("buffer of size:{} on input stream",
-						pipelineConfiguration
-						.getInternalInputStreamBufferSize());
-				irodsInputStream = new BufferedInputStream(
-						connection.getInputStream(),
-						pipelineConfiguration
-						.getInternalInputStreamBufferSize());
+						pipelineConfiguration.getInternalInputStreamBufferSize());
+				irodsInputStream = new BufferedInputStream(connection.getInputStream(),
+						pipelineConfiguration.getInternalInputStreamBufferSize());
 			}
 
 			if (pipelineConfiguration.getInternalOutputStreamBufferSize() <= -1) {
 				log.debug("no buffer on output stream");
 				irodsOutputStream = connection.getOutputStream();
 
-			} else if (pipelineConfiguration
-					.getInternalOutputStreamBufferSize() == 0) {
+			} else if (pipelineConfiguration.getInternalOutputStreamBufferSize() == 0) {
 				log.debug("default buffer on input stream");
-				irodsOutputStream = new BufferedOutputStream(
-						connection.getOutputStream());
+				irodsOutputStream = new BufferedOutputStream(connection.getOutputStream());
 			} else {
 				log.debug("buffer of size:{} on output stream",
-						pipelineConfiguration
-						.getInternalOutputStreamBufferSize());
-				irodsOutputStream = new BufferedOutputStream(
-						connection.getOutputStream(),
-						pipelineConfiguration
-						.getInternalOutputStreamBufferSize());
+						pipelineConfiguration.getInternalOutputStreamBufferSize());
+				irodsOutputStream = new BufferedOutputStream(connection.getOutputStream(),
+						pipelineConfiguration.getInternalOutputStreamBufferSize());
 			}
 
 		} catch (UnknownHostException e) {
-			log.error("exception opening socket to:" + irodsAccount.getHost()
-					+ " port:" + irodsAccount.getPort(), e);
+			log.error("exception opening socket to:" + irodsAccount.getHost() + " port:" + irodsAccount.getPort(), e);
 			throw new JargonException(e);
 		} catch (IOException ioe) {
-			log.error(
-					"io exception opening socket to:" + irodsAccount.getHost()
-					+ " port:" + irodsAccount.getPort(), ioe);
+			log.error("io exception opening socket to:" + irodsAccount.getHost() + " port:" + irodsAccount.getPort(),
+					ioe);
 			throw new JargonException(ioe);
 		}
 	}

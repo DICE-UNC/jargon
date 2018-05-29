@@ -247,6 +247,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		String nodeVal;
 		if (isCollection()) {
 			nodeVal = MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(getPathOrName());
+
 		} else {
 			nodeVal = pathOrName;
 		}

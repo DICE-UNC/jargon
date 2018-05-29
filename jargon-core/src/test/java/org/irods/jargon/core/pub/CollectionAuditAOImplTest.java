@@ -3,8 +3,6 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.AuditedAction;
@@ -14,6 +12,7 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,12 +35,10 @@ public class CollectionAuditAOImplTest {
 		}
 
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -62,82 +59,60 @@ public class CollectionAuditAOImplTest {
 			return;
 		}
 
-		String testFileName = System.currentTimeMillis()
-				+ "testFindAllAuditRecordsForCollection";
+		String testFileName = System.currentTimeMillis() + "testFindAllAuditRecordsForCollection";
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 		destFile.mkdirs();
 
 		// be another user and access this collection
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		CollectionAO collectionAO = accessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
 
 		// force an auditable action
 
-		collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
-				destFile.getAbsolutePath(), secondaryAccount.getUserName(),
-				true);
+		collectionAO.setAccessPermissionRead(irodsAccount.getZone(), destFile.getAbsolutePath(),
+				secondaryAccount.getUserName(), true);
 
 		// get the audit data for this file
 
-		CollectionAuditAO collectionAuditAO = accessObjectFactory
-				.getCollectionAuditAO(irodsAccount);
-		List<AuditedAction> auditData = collectionAuditAO
-				.findAllAuditRecordsForCollection(destFile, 0, 1000);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory.getCollectionAuditAO(irodsAccount);
+		List<AuditedAction> auditData = collectionAuditAO.findAllAuditRecordsForCollection(destFile, 0, 1000);
 		Assert.assertFalse("empty audit data", auditData.isEmpty());
 
 		AuditedAction action = auditData.get(0);
 
-		Assert.assertEquals("did not set data name",
-				destFile.getAbsolutePath(), action.getDomainObjectUniqueName());
-		Assert.assertNotNull("did not set audit enum",
-				action.getAuditActionEnum());
+		Assert.assertEquals("did not set data name", destFile.getAbsolutePath(), action.getDomainObjectUniqueName());
+		Assert.assertNotNull("did not set audit enum", action.getAuditActionEnum());
 
 	}
 
 	@Test(expected = FileNotFoundException.class)
-	public final void testFindAllAuditRecordsForCollectionNotExists()
-			throws Exception {
+	public final void testFindAllAuditRecordsForCollectionNotExists() throws Exception {
 
 		if (!testingPropertiesHelper.isTestAudit(testingProperties)) {
 			throw new FileNotFoundException("expected");
 		}
 
-		String testFileName = System.currentTimeMillis()
-				+ "testFindAllAuditRecordsForCollectionNotExists";
+		String testFileName = System.currentTimeMillis() + "testFindAllAuditRecordsForCollectionNotExists";
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 
-		CollectionAuditAO collectionAuditAO = accessObjectFactory
-				.getCollectionAuditAO(irodsAccount);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory.getCollectionAuditAO(irodsAccount);
 		collectionAuditAO.findAllAuditRecordsForCollection(destFile, 0, 1000);
 
 	}
@@ -149,41 +124,30 @@ public class CollectionAuditAOImplTest {
 			return;
 		}
 
-		String testFileName = System.currentTimeMillis()
-				+ "testFindAuditRecordForCollection";
+		String testFileName = System.currentTimeMillis() + "testFindAuditRecordForCollection";
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 		destFile.mkdirs();
 
 		// get the audit data for this file
 
-		CollectionAuditAO collectionAuditAO = accessObjectFactory
-				.getCollectionAuditAO(irodsAccount);
-		List<AuditedAction> auditData = collectionAuditAO
-				.findAllAuditRecordsForCollection(destFile, 0, 1000);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory.getCollectionAuditAO(irodsAccount);
+		List<AuditedAction> auditData = collectionAuditAO.findAllAuditRecordsForCollection(destFile, 0, 1000);
 		Assert.assertFalse("empty audit data", auditData.isEmpty());
 
 		AuditedAction expected = auditData.get(0);
 
 		// now find that audit record directly and match
 
-		AuditedAction actual = collectionAuditAO.getAuditedActionForCollection(
-				destFile,
-				String.valueOf(expected.getAuditActionEnum().getAuditCode()),
-				expected.getTimeStampInIRODSFormat());
+		AuditedAction actual = collectionAuditAO.getAuditedActionForCollection(destFile,
+				String.valueOf(expected.getAuditActionEnum().getAuditCode()), expected.getTimeStampInIRODSFormat());
 		// really if no data not found exception we're good
 		Assert.assertNotNull("did not get audit object", actual);
 
@@ -196,29 +160,20 @@ public class CollectionAuditAOImplTest {
 			throw new FileNotFoundException("expected");
 		}
 
-		String testFileName = System.currentTimeMillis()
-				+ "testFindAuditRecordForCollection";
+		String testFileName = System.currentTimeMillis() + "testFindAuditRecordForCollection";
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		CollectionAuditAO collectionAuditAO = accessObjectFactory
-				.getCollectionAuditAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		CollectionAuditAO collectionAuditAO = accessObjectFactory.getCollectionAuditAO(irodsAccount);
 
-		collectionAuditAO.getAuditedActionForCollection(destFile, "999999",
-				"99999");
+		collectionAuditAO.getAuditedActionForCollection(destFile, "999999", "99999");
 
 	}
 }

@@ -46,8 +46,8 @@ public class ConnectionTestResult {
 	 * @param configuration
 	 *            the configuration to set
 	 */
-	public void setConfiguration(
-			final ConnectionTesterConfiguration configuration) {
+
+	public void setConfiguration(final ConnectionTesterConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
@@ -103,8 +103,7 @@ public class ConnectionTestResult {
 		}
 		if (testResults != null) {
 			builder.append("testResults=");
-			builder.append(testResults.subList(0,
-					Math.min(testResults.size(), maxLen)));
+			builder.append(testResults.subList(0, Math.min(testResults.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();

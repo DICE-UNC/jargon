@@ -20,9 +20,11 @@ public interface UserRuleService {
 	 * List the user defined rules that exist for the user in their user rules
 	 * catalog in their iRODS home directory for the given server
 	 *
-	 * @return <code>List</code> of {@link UserRuleDefinition}. This will be
-	 *         empty if no rules are found
+	 * 
+	 * @return {@code List} of {@link UserRuleDefinition}. This will be empty if no
+	 *         rules are found
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	List<UserRuleDefinition> listUserRulesInUserHomeDir() throws JargonException;
 

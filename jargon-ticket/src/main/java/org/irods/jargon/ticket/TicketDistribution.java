@@ -7,9 +7,9 @@ import java.net.URL;
  * Represents a ticket and information about accessing the data for the ticket.
  * This adds a computed URL and other information that can be used to make calls
  * to mid-tier services processing tickets, such as the idrop suite.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TicketDistribution {
 
@@ -60,9 +60,8 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * Sets the URL that can be used to access the ticket via a mid-tier
-	 * service.
-	 * 
+	 * Sets the URL that can be used to access the ticket via a mid-tier service.
+	 *
 	 * @param ticketURL
 	 *            the ticketURL to set
 	 */
@@ -71,9 +70,8 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * Return a <ocde>URI</code> in irods:// format that desribes the target
-	 * data
-	 * 
+	 * Return a {@code URI} in irods:// format that describes the target data
+	 *
 	 * @return the irodsAccessURI
 	 */
 	public URI getIrodsAccessURI() {
@@ -89,9 +87,9 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * @return the ticketURLWithLandingPage {@code URL} with parameters
-	 *         that denote that invoking that URL will return an intermediate
-	 *         web page appropriate to the given ticket
+	 * @return the ticketURLWithLandingPage {@code URL} with parameters that denote
+	 *         that invoking that URL will return an intermediate web page
+	 *         appropriate to the given ticket
 	 */
 	public URL getTicketURLWithLandingPage() {
 		return ticketURLWithLandingPage;
@@ -99,9 +97,9 @@ public class TicketDistribution {
 
 	/**
 	 * @param ticketURLWithLandingPage
-	 *            {@code URL} with parameters that denote that invoking
-	 *            that URL will return an intermediate web page appropriate to
-	 *            the given ticket
+	 *            {@code URL} with parameters that denote that invoking that URL
+	 *            will return an intermediate web page appropriate to the given
+	 *            ticket
 	 */
 	public void setTicketURLWithLandingPage(final URL ticketURLWithLandingPage) {
 		this.ticketURLWithLandingPage = ticketURLWithLandingPage;

@@ -21,33 +21,30 @@ import org.slf4j.LoggerFactory;
  */
 public class QueryResultProcessingUtils {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(QueryResultProcessingUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(QueryResultProcessingUtils.class);
 
 	/**
-	 * Given the raw response from iRODS, translate into a list of result rows
-	 * for easier processing.
+	 * Given the raw response from iRODS, translate into a list of result rows for
+	 * easier processing.
 	 *
 	 * @param queryResponse
-	 *            {@code Tag} set with the raw GenQuery response from
-	 *            iRODS.
+	 *            {@code Tag} set with the raw GenQuery response from iRODS.
 	 * @param columnNames
 	 *            {@code List<String>} with the column names
 	 * @param continuation
 	 *            {@code int}
 	 * @param partialStartIndex
-	 *            {@code int} with the offset into the query results for
-	 *            the query generating this response, this is so the record
-	 *            count begins at the point in the overall results where the
-	 *            offset points to.
+	 *            {@code int} with the offset into the query results for the query
+	 *            generating this response, this is so the record count begins at
+	 *            the point in the overall results where the offset points to.
 	 * @return {@code List} of
-	 *         {@link org.irods.jargon.core.query.IRODSQueryResultRow} for each
-	 *         row in the GenQuery result
+	 *         {@link org.irods.jargon.core.query.IRODSQueryResultRow} for each row
+	 *         in the GenQuery result
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static List<IRODSQueryResultRow> translateResponseIntoResultSet(
-			final Tag queryResponse, final List<String> columnNames,
-			final int continuation, final int partialStartIndex)
+	public static List<IRODSQueryResultRow> translateResponseIntoResultSet(final Tag queryResponse,
+			final List<String> columnNames, final int continuation, final int partialStartIndex)
 			throws JargonException {
 
 		if (queryResponse == null) {
@@ -59,8 +56,7 @@ public class QueryResultProcessingUtils {
 		int rows = queryResponse.getTag(GenQueryOut.ROW_CNT).getIntValue();
 		log.info("rows returned from iRODS query: {}", rows);
 
-		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>(
-				rows);
+		List<IRODSQueryResultRow> resultSet = new ArrayList<IRODSQueryResultRow>(rows);
 		List<String> row;
 
 		int recordCount;
@@ -73,20 +69,17 @@ public class QueryResultProcessingUtils {
 		boolean lastRecord = (continuation == 0);
 		log.debug("is this the last record? {}", lastRecord);
 
-		int attributes = queryResponse.getTag(GenQueryOut.ATTRIB_CNT)
-				.getIntValue();
+		int attributes = queryResponse.getTag(GenQueryOut.ATTRIB_CNT).getIntValue();
 
 		for (int i = 0; i < rows; i++) {
 			// new row
 			row = new ArrayList<String>();
 			for (int j = 0; j < attributes; j++) {
 
-				row.add(queryResponse.getTags()[4 + j].getTags()[2 + i]
-						.getStringValue());
+				row.add(queryResponse.getTags()[4 + j].getTags()[2 + i].getStringValue());
 			}
 
-			resultSet.add(IRODSQueryResultRow.instance(row, columnNames,
-					recordCount++, lastRecord));
+			resultSet.add(IRODSQueryResultRow.instance(row, columnNames, recordCount++, lastRecord));
 		}
 
 		return resultSet;
@@ -100,9 +93,9 @@ public class QueryResultProcessingUtils {
 	 *            {@link Tag} from a gen or specific query
 	 * @return {@code int} with the continuation value
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static int getContinuationValue(final Tag response)
-			throws JargonException {
+	public static int getContinuationValue(final Tag response) throws JargonException {
 
 		if (response == null) {
 			throw new IllegalArgumentException("null response");
@@ -112,8 +105,7 @@ public class QueryResultProcessingUtils {
 			return response.getTag(GenQueryOut.CONTINUE_INX).getIntValue();
 
 		} catch (Exception e) {
-			throw new JargonException(
-					"unable to find continuation value in query result");
+			throw new JargonException("unable to find continuation value in query result");
 		}
 	}
 

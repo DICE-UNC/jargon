@@ -27,6 +27,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *            {@code String} with the numeric key for the user group
 	 * @return {@code UserGroup} domain object
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	UserGroup find(final String userGroupId) throws JargonException;
 
@@ -37,6 +38,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *            {@code String} with the name of the user group
 	 * @return {@code UserGroup} domain object
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	UserGroup findByName(final String userGroupName) throws JargonException;
 
@@ -52,6 +54,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @return {@code List<UserGroup>} containing the UserGroups that match the
 	 *         given query
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws JargonQueryException
 	 *             indicates some syntax exception in the provided where clause
 	 */
@@ -65,6 +68,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *            {@code String} with an IRODS user name
 	 * @return {@code List} of {@link UserGroup}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<UserGroup> findUserGroupsForUser(String userName) throws JargonException;
 
@@ -76,6 +80,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws DuplicateDataException
 	 *             if user already exists
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addUserGroup(UserGroup userGroup) throws DuplicateDataException, JargonException;
 
@@ -86,6 +91,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @param userGroup
 	 *            {@link UserGroup} to remove
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void removeUserGroup(UserGroup userGroup) throws JargonException;
 
@@ -97,6 +103,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @return {@code List} of {@link User} with the group membership. This will be
 	 *         an empty {@code List} if the group has no members.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<User> listUserGroupMembers(String userGroupName) throws JargonException;
 
@@ -115,8 +122,11 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws DuplicateDataException
 	 *             if the user is already a group member
 	 * @throws InvalidGroupException
+	 *             for invalid group
 	 * @throws InvalidUserException
+	 *             for invalid user
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addUserToGroup(String userGroupName, String userName, String zoneName)
 			throws InvalidGroupException, InvalidUserException, JargonException;
@@ -134,8 +144,11 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *            {@code String} with the name of the iRODS zone for the user. This
 	 *            is optional and may be set to blank or {@code null} if not needed.
 	 * @throws InvalidUserException
+	 *             for invalid user
 	 * @throws InvalidGroupException
+	 *             for invalid group
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void removeUserFromGroup(String userGroupName, String userName, String zoneName)
 			throws InvalidUserException, InvalidGroupException, JargonException;
@@ -145,6 +158,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List} of {@link UserGroup}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<UserGroup> findAll() throws JargonException;
 
@@ -158,6 +172,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @return {@code boolean} which will be {@code true} if the user is in the
 	 *         given group
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	boolean isUserInGroup(String userName, String groupName) throws JargonException;
 
@@ -169,6 +184,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @param userGroupName
 	 *            {@code String} with the name of the user group to delete.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void removeUserGroup(String userGroupName) throws JargonException;
 
@@ -185,17 +201,19 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add a user group as a user with groupadmin privilages
-	 * 
+	 *
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @throws DuplicateDataException
+	 *             for duplicate user in group
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addUserGroupAsGroupAdmin(final UserGroup userGroup) throws DuplicateDataException, JargonException;
 
 	/**
 	 * Add the given user to the group as a user with groupadmin privilages
-	 * 
+	 *
 	 * @param userGroupName
 	 *            <code>String</code> of the group to which the user will be added
 	 * @param userName
@@ -203,9 +221,13 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @param zoneName
 	 *            <code>String</code> with the zone to which the user will be added
 	 * @throws DuplicateDataException
+	 *             for already existing user
 	 * @throws InvalidGroupException
+	 *             for invalid group
 	 * @throws InvalidUserException
+	 *             for invalid user
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addUserToGroupAsGroupAdmin(String userGroupName, String userName, String zoneName)
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException;

@@ -93,8 +93,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 	/**
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected RuleProcessingAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -107,7 +110,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromResource(java
 	 * .lang.String, java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
-	 * 
+	 *
 	 * @deprecated use method variant that allows specification of the {@link
 	 * RuleInvocationConfiguration}
 	 */
@@ -123,7 +126,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
 
 		return executeRuleFromResource(resourcePath, irodsRuleInputParameters, ruleInvocationConfiguration);
@@ -176,7 +179,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 *
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromIRODSFile(java
 	 * .lang.String, java.util.List)
-	 * 
+	 *
 	 * @deprecated use method variant that allows specification of the {@link
 	 * RuleInvocationConfiguration}
 	 */
@@ -192,7 +195,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
 		return executeRuleFromIRODSFile(ruleFileAbsolutePath, irodsRuleInputParameters, ruleInvocationConfiguration);
 
@@ -270,17 +273,17 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * (non-Javadoc)
 	 *
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String)
-	 * 
+	 *
 	 * TODO: deprecate and add context method
-	 * 
+	 *
 	 */
 	@Override
-	public IRODSRuleExecResult executeRule(String irodsRuleAsString) throws JargonRuleException, JargonException {
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString) throws JargonRuleException, JargonException {
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+				.instanceWithDefaultAutoSettings(getJargonProperties());
 
 		return executeRule(irodsRuleAsString, ruleInvocationConfiguration);
 	}
@@ -301,7 +304,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	}
 
 	@Override
-	public IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
+			final List<IRODSRuleParameter> inputParameterOverrides,
 			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {
 		log.info("executeRule()");
 		if (irodsRuleAsString == null || irodsRuleAsString.isEmpty()) {
@@ -316,15 +320,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
-		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(this.getIRODSAccessObjectFactory(),
-				this.getIRODSAccount());
+		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(getIRODSAccessObjectFactory(), getIRODSAccount());
 		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, inputParameterOverrides,
 				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
 
 		log.debug("decorating the rule with the appropriate rule engine instance");
-		RuleEngineInstanceChooser ruleEngineInstanceChooser = new RuleEngineInstanceChooser(this.getJargonProperties(),
-				this.getIRODSServerProperties());
+		RuleEngineInstanceChooser ruleEngineInstanceChooser = new RuleEngineInstanceChooser(getJargonProperties(),
+				getIRODSServerProperties());
 		ruleEngineInstanceChooser.decorateRuleInvocationConfugurationWithRuleEngineInstance(irodsRule);
 
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
@@ -344,11 +347,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String,
 	 * java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
-	 * 
+	 *
 	 * TODO: deprecate and add rule context invocation
 	 */
 	@Override
-	public IRODSRuleExecResult executeRule(String irodsRuleAsString,
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
 			final List<IRODSRuleParameter> inputParameterOverrides, final RuleProcessingType ruleProcessingType)
 			throws JargonRuleException, JargonException {
 
@@ -584,10 +587,16 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * encountered, then
 	 *
 	 * @param rulesTag
+	 *            {@link Tag} with rule
 	 * @param parametersLength
+	 *            {@code int}
 	 * @param irodsRuleOutputParameters
-	 * @return
+	 *            {@code Map} of {@link IRODSRuleExecResultOutputParameter} with
+	 *            overrides
+	 * @return {@code boolean} if the param is a client action (like a client-side
+	 *         get or put)
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private boolean processIndividualParameters(final Tag rulesTag, final int parametersLength,
 			final Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters) throws JargonException {
@@ -642,7 +651,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	/**
 	 * @return the parameter value of the parameter tag. Other values, like buffer
 	 *         length, can be derived from it, if the type is known.
-	 * @throws JargonException
+	 * @throws JargonExceptionIRODSRuleExecResultOutputParameter
 	 */
 	private Object getParameter(final String type, final Tag parameterTag) throws JargonException {
 		if (type.equals(INT_PI)) {
@@ -656,11 +665,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		}
 	}
 
-	/**
-	 * @param parameterTag
-	 * @return
-	 * @throws JargonException
-	 */
 	private Map<String, IRODSRuleExecResultOutputParameter> extractStringFromExecCmdOut(final Tag parameterTag)
 			throws JargonException {
 
@@ -723,34 +727,17 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		return resultMap;
 	}
 
-	/**
-	 * @param fileSystem
-	 * @param label
-	 * @param type
-	 * @param value
-	 * @param msParam
-	 * @return
-	 * @throws IOException
-	 *
-	 *             retained note on this method... should check intInfo if ==
-	 *             SYS_SVR_TO_CLI_MSI_REQUEST 99999995 /*lib/core/include/rodsDef.h
-	 *             <p>
-	 *             this is the return value for the rcExecMyRule call indicating
-	 *             theserver is requesting the client to client to perform certain
-	 *             task
-	 *             <p>
-	 *             #define SYS_SVR_TO_CLI_MSI_REQUEST 99999995
-	 *             <p>
-	 *             #define SYS_SVR_TO_CLI_COLL_STAT 99999996
-	 *             <p>
-	 *             #define SYS_CLI_TO_SVR_COLL_STAT_REPLY 99999997
-	 *             <p>
-	 *             definition for iRods server to client action request from a
-	 *             microservice. These definitions are put in the "label" field of
-	 *             MsParam
-	 *             <p>
-	 *             #define CL_PUT_ACTION "CL_PUT_ACTION" #define CL_GET_ACTION
-	 *             "CL_GET_ACTION" #define CL_ZONE_OPR_INX "CL_ZONE_OPR_INX"
+	/*
+	 * retained note on this method... should check intInfo if ==
+	 * SYS_SVR_TO_CLI_MSI_REQUEST 99999995 /*lib/core/include/rodsDef.h <p> this is
+	 * the return value for the rcExecMyRule call indicating theserver is requesting
+	 * the client to client to perform certain task <p> #define
+	 * SYS_SVR_TO_CLI_MSI_REQUEST 99999995 <p> #define SYS_SVR_TO_CLI_COLL_STAT
+	 * 99999996 <p> #define SYS_CLI_TO_SVR_COLL_STAT_REPLY 99999997 <p> definition
+	 * for iRods server to client action request from a microservice. These
+	 * definitions are put in the "label" field of MsParam <p> #define CL_PUT_ACTION
+	 * "CL_PUT_ACTION" #define CL_GET_ACTION "CL_GET_ACTION" #define CL_ZONE_OPR_INX
+	 * "CL_ZONE_OPR_INX"
 	 */
 
 	private IRODSRuleExecResultOutputParameter processRuleResponseWithClientSideActionTag(final String label,

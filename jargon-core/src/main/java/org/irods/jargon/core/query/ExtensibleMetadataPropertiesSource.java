@@ -15,14 +15,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org) Creates an
- *         {@code ExtensibleMetaDataMapping} using a
- *         {@code Properties} file that will be on the classpath.
+ *         {@code ExtensibleMetaDataMapping} using a {@code Properties} file
+ *         that will be on the classpath.
  */
-public class ExtensibleMetadataPropertiesSource implements
-ExtensibleMetaDataSource {
+public class ExtensibleMetadataPropertiesSource implements ExtensibleMetaDataSource {
 
-	private static Logger log = LoggerFactory
-			.getLogger(ExtensibleMetadataPropertiesSource.class);
+	private static Logger log = LoggerFactory.getLogger(ExtensibleMetadataPropertiesSource.class);
 
 	private Map<String, String> extensibleMetaDataProperties = null;
 	private String propertiesFileName = "";
@@ -37,22 +35,23 @@ ExtensibleMetaDataSource {
 	 * in the classpath.
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public ExtensibleMetadataPropertiesSource() throws JargonException {
 		this("extended_icat_data.properties");
 	}
 
 	/**
-	 * Constructor takes a specific properties file name that contains the
-	 * desired extensible metadata mappings.
+	 * Constructor takes a specific properties file name that contains the desired
+	 * extensible metadata mappings.
 	 *
 	 * @param propertiesFileName
-	 *            {@code String} containing a valid
-	 *            {@code .properties} file that exists on the classpath.
+	 *            {@code String} containing a valid {@code .properties} file that
+	 *            exists on the classpath.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public ExtensibleMetadataPropertiesSource(final String propertiesFileName)
-			throws JargonException {
+	public ExtensibleMetadataPropertiesSource(final String propertiesFileName) throws JargonException {
 		if (propertiesFileName == null || propertiesFileName.length() == 0) {
 			String msg = "no properties file name defined";
 			log.error(msg);
@@ -104,8 +103,7 @@ ExtensibleMetaDataSource {
 
 		for (Object key : properties.keySet()) {
 			keyString = (String) key;
-			extensibleMetaDataProperties.put(keyString,
-					properties.getProperty((String) key));
+			extensibleMetaDataProperties.put(keyString, properties.getProperty((String) key));
 		}
 	}
 
@@ -116,17 +114,14 @@ ExtensibleMetaDataSource {
 	 * generateExtensibleMetaDataMapping()
 	 */
 	@Override
-	public ExtensibleMetaDataMapping generateExtensibleMetaDataMapping()
-			throws JargonException {
+	public ExtensibleMetaDataMapping generateExtensibleMetaDataMapping() throws JargonException {
 
 		log.debug("cloning the properties and building an ExtensibleMetaDataMapping");
 		if (extensibleMetaDataProperties == null) {
-			throw new JargonException(
-					"the properties I want to use to build the metadata mapping are null");
+			throw new JargonException("the properties I want to use to build the metadata mapping are null");
 		}
 
-		ExtensibleMetaDataMapping mapping = ExtensibleMetaDataMapping
-				.instance(extensibleMetaDataProperties);
+		ExtensibleMetaDataMapping mapping = ExtensibleMetaDataMapping.instance(extensibleMetaDataProperties);
 		return mapping;
 
 	}

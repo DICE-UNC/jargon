@@ -30,10 +30,12 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
  * associated with collection objects (files), as well as performing common
  * query operations. This class also supports various iRODS file operations that
  * are not included in the standard {@code java.io.*} libraries.
- * <p>
+ *
+ *
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
- * <p>
+ *
+ *
  * <h2>Notes</h2> For soft links, AVU metadata always attaches to the given
  * path, which can be a soft link. This is somewhat different than metadata
  * handling for data objects, where the AVU metadata always associates with the
@@ -89,6 +91,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param caseInsensitive
 	 *            {@code boolean} that will cause the AVU query to be
 	 *            case-insensitive
+	 * @param partialStartIndex
+	 *            {@code int} with 0 or an offset
 	 * @return {@code List} of org.irods.jargon.core.pub.domain.Collection} with
 	 *         domain objects that satisfy the query.
 	 * @throws JargonQueryException
@@ -194,6 +198,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws FileNotFoundException
 	 *             when collection object is missing
 	 * @throws DuplicateDataException
@@ -214,7 +219,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * object is added. If the AttName is used only by this one object, the AVU
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
-	 * 
+	 *
 	 * @param absolutePath
 	 *            {@code String} with the absolute path to the target collection
 	 * @param avuData
@@ -413,6 +418,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@code String} with the absolute path of the collection of
 	 *            interest. If this path is left blank, then the query will not add
 	 *            absolute path to the 'where' clause.
+	 * @param partialStartIndex
+	 *            {@code int} with 0 or an offset
 	 * @return {@code List} of {@link MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 *             for query error
@@ -437,6 +444,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @throws FileNotFoundException
 	 *             if the collection absolute path is not found in iRODS
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	int countAllFilesUnderneathTheGivenCollection(final String irodsCollectionAbsolutePath)
 			throws FileNotFoundException, JargonException;
@@ -896,17 +904,19 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Convenience method to add a set of AVU metadata. This operation is tolerant
 	 * of individual duplicate AVUs, and will trap those exceptions and not throw
-	 * them. <br/>
+	 * them.
+	 *
 	 * This method will return a collection of individual success or failure for
 	 * each AVU.
 	 *
 	 * @param absolutePath
 	 *            {@code String} with the absolute path for the collection
 	 * @param avuData
-	 *            {@code List} of {@link org.irods.jargon.core.pub.domain.AvuData}
-	 *            with the AVU values to be added to the collection
+	 *            {@code List} of {@link AvuData} with the AVU values to be added to
+	 *            the collection
 	 * @return {@code List} of {@link BulkAVUOperationResponse}
-	 *
+	 * @throws FileNotFoundException
+	 *             if file is missing
 	 * @throws JargonException
 	 *             if an unexpected exception not anticipated by the bulk AVU
 	 *             process occurs
@@ -917,7 +927,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Convenience method to delete a set of AVU metadata. This operation is
 	 * tolerant of individual non-existent AVUs, and will trap those exceptions and
-	 * not throw them. <br/>
+	 * not throw them.
+	 *
 	 * This method will return a collection of individual success or failure for
 	 * each AVU.
 	 *

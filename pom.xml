@@ -10,6 +10,7 @@
 		<artifactId>jargon-pom</artifactId>
 		<version>4.3.0.0-SNAPSHOT</version>
 	</parent>
+
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://github.com/DICE-UNC/jargon</url>
@@ -202,7 +203,6 @@
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
 		<module>jargon-pool</module>
-		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
 		<module>jargon-ruleservice</module>
 		<module>data-profile</module>

@@ -5,9 +5,9 @@ import org.irods.jargon.core.service.AbstractJargonService;
 
 /**
  * Utility class for validation of {@code UserProfile}
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserProfileValidatorImpl extends AbstractJargonService {
 

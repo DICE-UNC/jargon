@@ -16,8 +16,7 @@ public class AbstractIRODSGenQuery {
 
 	public AbstractIRODSGenQuery(final int numberOfResultsDesired) {
 		if (numberOfResultsDesired <= 0) {
-			throw new IllegalArgumentException(
-					"numberOfResultsDesiredIsNullOrEmpty");
+			throw new IllegalArgumentException("numberOfResultsDesiredIsNullOrEmpty");
 		}
 
 		this.numberOfResultsDesired = numberOfResultsDesired;

@@ -3,9 +3,8 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.query.SpecificQueryResultSet;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -13,8 +12,7 @@ public class SpecificQueryInpTest {
 
 	@Test
 	public void testGetTagValue() throws Exception {
-		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(null,
-				"query", 10, 0, "hint");
+		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(null, "query", 10, 0, "hint");
 		String tagVal = specificQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<specificQueryInp_PI><sql>query</sql>\n");
@@ -28,17 +26,14 @@ public class SpecificQueryInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</specificQueryInp_PI>\n");
 
-		Assert.assertEquals("did not get expected tag value", sb.toString(),
-				tagVal);
+		Assert.assertEquals("did not get expected tag value", sb.toString(), tagVal);
 	}
 
 	@Test
 	public void testGetTagValueAutoClose() throws Exception {
-		SpecificQueryResultSet specificQuery = Mockito
-				.mock(SpecificQueryResultSet.class);
+		SpecificQueryResultSet specificQuery = Mockito.mock(SpecificQueryResultSet.class);
 
-		SpecificQueryInp specificQueryInp = SpecificQueryInp
-				.instanceForClose(specificQuery);
+		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose(specificQuery);
 		String tagVal = specificQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<specificQueryInp_PI><sql>close</sql>\n");
@@ -50,8 +45,7 @@ public class SpecificQueryInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</specificQueryInp_PI>\n");
 
-		Assert.assertEquals("did not get expected tag value", sb.toString(),
-				tagVal);
+		Assert.assertEquals("did not get expected tag value", sb.toString(), tagVal);
 	}
 
 	@Test
@@ -69,8 +63,7 @@ public class SpecificQueryInpTest {
 		args.add("9");
 		args.add("10");
 
-		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(args,
-				"query", 10, 0, "");
+		SpecificQueryInp specificQueryInp = SpecificQueryInp.instance(args, "query", 10, 0, "");
 		String tagVal = specificQueryInp.getParsedTags();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<specificQueryInp_PI><sql>query</sql>\n");
@@ -92,8 +85,7 @@ public class SpecificQueryInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</specificQueryInp_PI>\n");
 
-		Assert.assertEquals("did not get expected tag value", sb.toString(),
-				tagVal);
+		Assert.assertEquals("did not get expected tag value", sb.toString(), tagVal);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

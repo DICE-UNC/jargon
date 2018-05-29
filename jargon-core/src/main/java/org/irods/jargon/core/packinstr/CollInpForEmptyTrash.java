@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -11,7 +11,7 @@ import org.irods.jargon.core.pub.TrashOptions;
 
 /**
  * CollInp packing instruction for removing trash
- * 
+ *
  * @author conwaymc
  *
  */
@@ -67,7 +67,7 @@ public class CollInpForEmptyTrash extends AbstractIRODSPackingInstruction {
 
 		/*
 		 * If in a remote zone a zone kw needs to be supplied
-		 * 
+		 *
 		 */
 
 		if (!zone.isEmpty()) {
@@ -90,7 +90,7 @@ public class CollInpForEmptyTrash extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Constructor with all required values
-	 * 
+	 *
 	 * @param trashOptions
 	 *            {@link TrashOptions} with processing flags and details
 	 * @param collectionName
@@ -100,7 +100,7 @@ public class CollInpForEmptyTrash extends AbstractIRODSPackingInstruction {
 	 *            {@link String} with an optional (blank if not passed) zone for the
 	 *            operation
 	 */
-	public CollInpForEmptyTrash(TrashOptions trashOptions, String collectionName, String zone) {
+	public CollInpForEmptyTrash(final TrashOptions trashOptions, final String collectionName, final String zone) {
 		super();
 		if (trashOptions == null) {
 			throw new IllegalArgumentException("null trashOptions");

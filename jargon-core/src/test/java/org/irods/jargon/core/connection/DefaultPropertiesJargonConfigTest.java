@@ -1,7 +1,6 @@
 package org.irods.jargon.core.connection;
 
 import org.junit.Assert;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 

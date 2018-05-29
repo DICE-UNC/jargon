@@ -1,9 +1,8 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ClientServerNegotiationStructTest {
@@ -17,8 +16,7 @@ public class ClientServerNegotiationStructTest {
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
-		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_DONT_CARE,
-				struct.getSslNegotiationPolicy());
+		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_DONT_CARE, struct.getSslNegotiationPolicy());
 		Assert.assertTrue(struct.wasThisASuccess());
 
 	}
@@ -43,8 +41,7 @@ public class ClientServerNegotiationStructTest {
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
-		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REFUSE,
-				struct.getSslNegotiationPolicy());
+		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REFUSE, struct.getSslNegotiationPolicy());
 
 	}
 
@@ -57,8 +54,7 @@ public class ClientServerNegotiationStructTest {
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
-		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQUIRE,
-				struct.getSslNegotiationPolicy());
+		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQUIRE, struct.getSslNegotiationPolicy());
 
 	}
 

@@ -14,16 +14,14 @@ import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
  */
 public class FileRestartInfoIdentifier {
 
-	public static FileRestartInfoIdentifier instanceFromFileRestartInfo(
-			final FileRestartInfo fileRestartInfo) {
+	public static FileRestartInfoIdentifier instanceFromFileRestartInfo(final FileRestartInfo fileRestartInfo) {
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
 		}
 
 		FileRestartInfoIdentifier identifier = new FileRestartInfoIdentifier();
 		identifier.setAbsolutePath(fileRestartInfo.getIrodsAbsolutePath());
-		identifier.setIrodsAccountIdentifier(fileRestartInfo
-				.getIrodsAccountIdentifier());
+		identifier.setIrodsAccountIdentifier(fileRestartInfo.getIrodsAccountIdentifier());
 		identifier.setRestartType(fileRestartInfo.getRestartType());
 		return identifier;
 	}
@@ -79,15 +77,13 @@ public class FileRestartInfoIdentifier {
 
 		FileRestartInfoIdentifier other = (FileRestartInfoIdentifier) obj;
 		return (absolutePath.equals(other.getAbsolutePath())
-				&& irodsAccountIdentifier.equals(other
-						.getIrodsAccountIdentifier()) && getRestartType() == other
-						.getRestartType());
+				&& irodsAccountIdentifier.equals(other.getIrodsAccountIdentifier())
+				&& getRestartType() == other.getRestartType());
 
 	}
 
 	@Override
 	public int hashCode() {
-		return absolutePath.hashCode() + irodsAccountIdentifier.hashCode()
-				+ restartType.hashCode();
+		return absolutePath.hashCode() + irodsAccountIdentifier.hashCode() + restartType.hashCode();
 	}
 }

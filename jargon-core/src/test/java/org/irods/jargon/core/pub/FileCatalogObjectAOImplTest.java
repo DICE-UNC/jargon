@@ -3,14 +3,13 @@ package org.irods.jargon.core.pub;
 // FIXME: need to incorporate into tests when rerouting is done
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,14 +27,11 @@ public class FileCatalogObjectAOImplTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -45,11 +41,9 @@ public class FileCatalogObjectAOImplTest {
 	}
 
 	@Test
-	public void testGetHostForGetProvidingResourceNameWhenShouldBeSameHost()
-			throws Exception {
+	public void testGetHostForGetProvidingResourceNameWhenShouldBeSameHost() throws Exception {
 
-		String useDistribResources = testingProperties
-				.getProperty("test.option.distributed.resources");
+		String useDistribResources = testingProperties.getProperty("test.option.distributed.resources");
 
 		if (useDistribResources != null && useDistribResources.equals("true")) {
 			// do the test
@@ -57,48 +51,34 @@ public class FileCatalogObjectAOImplTest {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// generate a local scratch file
 		String testFileName = "testGetHostForGetProvidingResourceName.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				1);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
 
 		// put scratch file into irods in the right place on the first resource
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		dto.putOperation(absPath, targetIrodsCollection, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
-				null);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(absPath, targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		String hostInfo = dataObjectAO
-				.getHostForGetOperation(
-						targetIrodsCollection + "/" + testFileName,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		String hostInfo = dataObjectAO.getHostForGetOperation(targetIrodsCollection + "/" + testFileName,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 
-		Assert.assertNull(
-				"null info from lookup of host for get operation expected, indicates no rerouting",
-				hostInfo);
+		Assert.assertNull("null info from lookup of host for get operation expected, indicates no rerouting", hostInfo);
 	}
 
 	@Test
-	public void testGetHostForGetShouldRerouteForDataObjWhenNoRescSpecifiedInGet()
-			throws Exception {
+	public void testGetHostForGetShouldRerouteForDataObjWhenNoRescSpecifiedInGet() throws Exception {
 
-		String useDistribResources = testingProperties
-				.getProperty("test.option.distributed.resources");
+		String useDistribResources = testingProperties.getProperty("test.option.distributed.resources");
 
 		if (useDistribResources != null && useDistribResources.equals("true")) {
 			// do the test
@@ -108,49 +88,34 @@ public class FileCatalogObjectAOImplTest {
 
 		String testFileName = "testGetHostForGetShouldRerouteForDataObjWhenNoRescSpecifiedInGet.txt";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// generate a local scratch file
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				1);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
 
 		// put scratch file into irods in the right place on the first resource
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		dto.putOperation(
-				absPath,
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(absPath, targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY), null, null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		String hostInfo = dataObjectAO.getHostForGetOperation(
-				targetIrodsCollection + "/" + testFileName, "");
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		String hostInfo = dataObjectAO.getHostForGetOperation(targetIrodsCollection + "/" + testFileName, "");
 
-		Assert.assertNotNull("null info from lookup of host for get operation",
-				hostInfo);
-		Assert.assertFalse("should have resolved this to the same host",
-				irodsAccount.getHost().equals(hostInfo));
+		Assert.assertNotNull("null info from lookup of host for get operation", hostInfo);
+		Assert.assertFalse("should have resolved this to the same host", irodsAccount.getHost().equals(hostInfo));
 
 	}
 
 	@Test
-	public void testGetHostForGetCollectionProvidingResourceNameWhenShouldDifferentResource()
-			throws Exception {
+	public void testGetHostForGetCollectionProvidingResourceNameWhenShouldDifferentResource() throws Exception {
 
-		String useDistribResources = testingProperties
-				.getProperty("test.option.distributed.resources");
+		String useDistribResources = testingProperties.getProperty("test.option.distributed.resources");
 
 		if (useDistribResources != null && useDistribResources.equals("true")) {
 			// do the test
@@ -162,47 +127,34 @@ public class FileCatalogObjectAOImplTest {
 		String testFilePrefix = "testGetFile";
 		String testFileSuffix = ".doc";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		String localAbsPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ "/" + testSubdir);
-		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
-				+ "/" + testSubdir, testFilePrefix, testFileSuffix, 20, 10, 20);
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
+		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH + "/" + testSubdir, testFilePrefix,
+				testFileSuffix, 20, 10, 20);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		dto.putOperation(
-				localAbsPath,
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localAbsPath, targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY), null, null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		String hostInfo = dataObjectAO.getHostForGetOperation(
-				targetIrodsCollection + "/" + testSubdir, "");
-		Assert.assertNotNull("null info from lookup of host for get operation",
-				hostInfo);
+		String hostInfo = dataObjectAO.getHostForGetOperation(targetIrodsCollection + "/" + testSubdir, "");
+		Assert.assertNotNull("null info from lookup of host for get operation", hostInfo);
 		Assert.assertFalse("should have resolved this to the same host",
 				FileCatalogObjectAOImpl.USE_THIS_ADDRESS.equals(hostInfo));
 
 	}
 
 	@Test
-	public void testGetHostForPutProvidingResourceNameWhenShouldBeSameHost()
-			throws Exception {
+	public void testGetHostForPutProvidingResourceNameWhenShouldBeSameHost() throws Exception {
 
-		String useDistribResources = testingProperties
-				.getProperty("test.option.distributed.resources");
+		String useDistribResources = testingProperties.getProperty("test.option.distributed.resources");
 
 		if (useDistribResources != null && useDistribResources.equals("true")) {
 			// do the test
@@ -210,36 +162,26 @@ public class FileCatalogObjectAOImplTest {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		// generate a local scratch file
 		String testFileName = "testGetHostForGetProvidingResourceName.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				1);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		dto.putOperation(absPath, targetIrodsCollection, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
-				null);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(absPath, targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		String hostInfo = dataObjectAO.getHostForGetOperation(
-				targetIrodsCollection + "/" + testFileName, "");
+		String hostInfo = dataObjectAO.getHostForGetOperation(targetIrodsCollection + "/" + testFileName, "");
 
-		Assert.assertNull(
-				"null info from lookup of host for get operation expected, indicates no rerouting",
-				hostInfo);
+		Assert.assertNull("null info from lookup of host for get operation expected, indicates no rerouting", hostInfo);
 
 	}
 

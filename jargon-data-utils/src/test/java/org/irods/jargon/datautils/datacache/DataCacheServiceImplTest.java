@@ -2,8 +2,6 @@ package org.irods.jargon.datautils.datacache;
 
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -11,6 +9,7 @@ import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -31,8 +30,7 @@ public class DataCacheServiceImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@After
@@ -41,137 +39,103 @@ public class DataCacheServiceImplTest {
 	}
 
 	@Test(expected = JargonRuntimeException.class)
-	public void testPutInformationIntoCacheMissingIRODSAccount()
-			throws Exception {
+	public void testPutInformationIntoCacheMissingIRODSAccount() throws Exception {
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
-		accountCacheService.setIrodsAccessObjectFactory(Mockito
-				.mock(IRODSAccessObjectFactory.class));
+		accountCacheService.setIrodsAccessObjectFactory(Mockito.mock(IRODSAccessObjectFactory.class));
 		accountCacheService.putSerializedEncryptedObjectIntoCache("obj", "key");
 	}
 
 	@Test(expected = JargonRuntimeException.class)
-	public void testPutInformationIntoCacheMissingIRODSAccessObjectFactory()
-			throws Exception {
+	public void testPutInformationIntoCacheMissingIRODSAccessObjectFactory() throws Exception {
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
-		accountCacheService.setIrodsAccount(testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
+		accountCacheService
+				.setIrodsAccount(testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
 		accountCacheService.putSerializedEncryptedObjectIntoCache("obj", "key");
 	}
 
 	@Test
-	public void testPutStringIntoCacheUsingDefaultsUserHomeDirCache()
-			throws Exception {
+	public void testPutStringIntoCacheUsingDefaultsUserHomeDirCache() throws Exception {
 		String testData = "testDataStringToEncrypt for method testPutStringIntoCacheUsingDefaultsUserHomeDirCache";
 		String testKey = "this is a test key for the encryption";
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
-		String testDir = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY)
-				+ "/" + IRODS_TEST_SUBDIR_PATH;
+		String testDir = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY) + "/"
+				+ IRODS_TEST_SUBDIR_PATH;
 		cacheServiceConfiguration.setCacheDirPath(testDir);
-		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem
-				.getIRODSAccessObjectFactory());
+		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
+		accountCacheService.setCacheServiceConfiguration(cacheServiceConfiguration);
 		accountCacheService
-				.setCacheServiceConfiguration(cacheServiceConfiguration);
-		accountCacheService.setIrodsAccount(testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
+				.setIrodsAccount(testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
 
-		String cacheFilePath = accountCacheService.putStringValueIntoCache(
-				testData, testKey);
-		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
+		String cacheFilePath = accountCacheService.putStringValueIntoCache(testData, testKey);
+		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(cacheFilePath);
 		Assert.assertTrue("cache file not created", cacheFile.exists());
 	}
 
 	@Test
-	public void testPutAndRetrieveStringIntoCacheUsingDefaultsUserHomeDirCache()
-			throws Exception {
+	public void testPutAndRetrieveStringIntoCacheUsingDefaultsUserHomeDirCache() throws Exception {
 		String testData = "testDataStringToEncrypt for method testPutAndRetrieveStringIntoCacheUsingDefaultsUserHomeDirCache";
 		String testKey = "testPutAndRetrieveStringIntoCacheUsingDefaultsUserHomeDirCache";
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 		cacheServiceConfiguration.setLifetimeInDays(90);
 		cacheServiceConfiguration.setDoCleanupDuringRequests(false);
-		String testDir = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY)
-				+ "/" + IRODS_TEST_SUBDIR_PATH;
+		String testDir = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY) + "/"
+				+ IRODS_TEST_SUBDIR_PATH;
 		cacheServiceConfiguration.setCacheDirPath(testDir);
-		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem
-				.getIRODSAccessObjectFactory());
+		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
+		accountCacheService.setCacheServiceConfiguration(cacheServiceConfiguration);
 		accountCacheService
-				.setCacheServiceConfiguration(cacheServiceConfiguration);
-		accountCacheService.setIrodsAccount(testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
+				.setIrodsAccount(testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
 
-		String cacheFilePath = accountCacheService.putStringValueIntoCache(
-				testData, testKey);
-		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
+		String cacheFilePath = accountCacheService.putStringValueIntoCache(testData, testKey);
+		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(cacheFilePath);
 		Assert.assertTrue("cache file not created", cacheFile.exists());
 
-		String retrievedData = accountCacheService
-				.retrieveStringValueFromCache(irodsAccount.getUserName(),
-						testKey);
-		Assert.assertEquals("did not get expected data that was cached",
-				testData, retrievedData);
+		String retrievedData = accountCacheService.retrieveStringValueFromCache(irodsAccount.getUserName(), testKey);
+		Assert.assertEquals("did not get expected data that was cached", testData, retrievedData);
 
 	}
 
 	@Test
-	public void testPutInformationIntoCacheUsingDefaultsUserHomeDirCache()
-			throws Exception {
+	public void testPutInformationIntoCacheUsingDefaultsUserHomeDirCache() throws Exception {
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
-		String testDir = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY)
-				+ "/" + IRODS_TEST_SUBDIR_PATH;
+		String testDir = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY) + "/"
+				+ IRODS_TEST_SUBDIR_PATH;
 		cacheServiceConfiguration.setCacheDirPath(testDir);
-		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem
-				.getIRODSAccessObjectFactory());
+		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
+		accountCacheService.setCacheServiceConfiguration(cacheServiceConfiguration);
 		accountCacheService
-				.setCacheServiceConfiguration(cacheServiceConfiguration);
-		accountCacheService.setIrodsAccount(testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		String cacheFilePath = accountCacheService
-				.putSerializedEncryptedObjectIntoCache(irodsAccount, "key");
-		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
+				.setIrodsAccount(testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String cacheFilePath = accountCacheService.putSerializedEncryptedObjectIntoCache(irodsAccount, "key");
+		IRODSFile cacheFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(cacheFilePath);
 		Assert.assertTrue("cache file not created", cacheFile.exists());
 	}
 
 	@Test
-	public void testPutInformationIntoCacheUsingDefaultsUserHomeDirCacheRoundTrip()
-			throws Exception {
+	public void testPutInformationIntoCacheUsingDefaultsUserHomeDirCacheRoundTrip() throws Exception {
 		String cacheKey = "testPutInformationIntoCacheUsingDefaultsUserHomeDirCacheRoundTrip";
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
-		String testDir = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY)
-				+ "/" + IRODS_TEST_SUBDIR_PATH;
+		String testDir = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY) + "/"
+				+ IRODS_TEST_SUBDIR_PATH;
 		cacheServiceConfiguration.setCacheDirPath(testDir);
 		cacheServiceConfiguration.setDoCleanupDuringRequests(false);
-		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem
-				.getIRODSAccessObjectFactory());
+		accountCacheService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
+		accountCacheService.setCacheServiceConfiguration(cacheServiceConfiguration);
 		accountCacheService
-				.setCacheServiceConfiguration(cacheServiceConfiguration);
-		accountCacheService.setIrodsAccount(testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		accountCacheService.putSerializedEncryptedObjectIntoCache(irodsAccount,
-				cacheKey);
+				.setIrodsAccount(testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		accountCacheService.putSerializedEncryptedObjectIntoCache(irodsAccount, cacheKey);
 
-		Object retrievedObject = accountCacheService.retrieveObjectFromCache(
-				irodsAccount.getUserName(), cacheKey);
+		Object retrievedObject = accountCacheService.retrieveObjectFromCache(irodsAccount.getUserName(), cacheKey);
 		Assert.assertNotNull("no cached object returned");
 		boolean isIRODSAccount = retrievedObject instanceof IRODSAccount;
 		Assert.assertTrue("not an instance of IRODSAccount", isIRODSAccount);

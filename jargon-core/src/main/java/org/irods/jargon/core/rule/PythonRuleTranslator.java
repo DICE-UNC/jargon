@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Rule translator for Python rules
- * 
+ *
  * @author conwaymc
  *
  */
@@ -25,14 +25,14 @@ public class PythonRuleTranslator extends AbstractRuleTranslator {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public PythonRuleTranslator(IRODSServerProperties irodsServerProperties,
-			RuleInvocationConfiguration ruleInvocationConfiguration, JargonProperties jargonProperties) {
+	public PythonRuleTranslator(final IRODSServerProperties irodsServerProperties,
+			final RuleInvocationConfiguration ruleInvocationConfiguration, final JargonProperties jargonProperties) {
 		super(irodsServerProperties, ruleInvocationConfiguration, jargonProperties);
 	}
 
 	@Override
-	public IRODSRule translatePlainTextRuleIntoIrodsRule(String ruleAsPlainText,
-			List<IRODSRuleParameter> overrideInputParameters) throws JargonRuleException, JargonException {
+	public IRODSRule translatePlainTextRuleIntoIrodsRule(final String ruleAsPlainText,
+			final List<IRODSRuleParameter> overrideInputParameters) throws JargonRuleException, JargonException {
 
 		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
 			throw new IllegalArgumentException("null or empty rule text");
@@ -83,7 +83,7 @@ public class PythonRuleTranslator extends AbstractRuleTranslator {
 		}
 
 		return IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters, ruleCharacteristics.getRuleBody(),
-				this.getRuleInvocationConfiguration());
+				getRuleInvocationConfiguration());
 	}
 
 	private RuleCharacteristics processRuleBodyNewFormat(final List<String> tokenLines)

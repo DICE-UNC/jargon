@@ -3,7 +3,6 @@ package org.irods.jargon.datautils.shoppingcart;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,8 +22,7 @@ public class FileShoppingCartTest {
 	public void testHasItemsNoItems() {
 
 		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
-		Assert.assertFalse("cart should have no items",
-				fileShoppingCart.hasItems());
+		Assert.assertFalse("cart should have no items", fileShoppingCart.hasItems());
 	}
 
 	@Test
@@ -34,8 +32,7 @@ public class FileShoppingCartTest {
 		String file = "file";
 		ShoppingCartEntry entry = ShoppingCartEntry.instance(file);
 		fileShoppingCart.addAnItem(entry);
-		Assert.assertTrue("cart should have  items",
-				fileShoppingCart.hasItems());
+		Assert.assertTrue("cart should have  items", fileShoppingCart.hasItems());
 	}
 
 	@Test
@@ -46,8 +43,7 @@ public class FileShoppingCartTest {
 		ShoppingCartEntry entry = ShoppingCartEntry.instance(file);
 		fileShoppingCart.addAnItem(entry);
 		fileShoppingCart.clearCart();
-		Assert.assertFalse("cart should not have items after being cleared",
-				fileShoppingCart.hasItems());
+		Assert.assertFalse("cart should not have items after being cleared", fileShoppingCart.hasItems());
 	}
 
 	@Test
@@ -58,8 +54,7 @@ public class FileShoppingCartTest {
 		ShoppingCartEntry entry = ShoppingCartEntry.instance(file);
 		fileShoppingCart.addAnItem(entry);
 		fileShoppingCart.removeAnItem(file);
-		Assert.assertFalse("cart should not have items after delete",
-				fileShoppingCart.hasItems());
+		Assert.assertFalse("cart should not have items after delete", fileShoppingCart.hasItems());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -113,19 +108,13 @@ public class FileShoppingCartTest {
 		fileShoppingCart.addAnItem(entry);
 		entry = ShoppingCartEntry.instance(file2);
 		fileShoppingCart.addAnItem(entry);
-		String serialized = fileShoppingCart
-				.serializeShoppingCartContentsToStringOneItemPerLine();
-		Assert.assertFalse("null or empty serialized", serialized == null
-				|| serialized.isEmpty());
-		FileShoppingCart actual = FileShoppingCart
-				.instanceFromSerializedStringRepresentation(serialized);
-		Assert.assertEquals("should be 2 files in cart", 2, actual
-				.getShoppingCartFileList().size());
+		String serialized = fileShoppingCart.serializeShoppingCartContentsToStringOneItemPerLine();
+		Assert.assertFalse("null or empty serialized", serialized == null || serialized.isEmpty());
+		FileShoppingCart actual = FileShoppingCart.instanceFromSerializedStringRepresentation(serialized);
+		Assert.assertEquals("should be 2 files in cart", 2, actual.getShoppingCartFileList().size());
 
-		Assert.assertEquals("first file not found", file1, actual
-				.getShoppingCartFileList().get(0));
-		Assert.assertEquals("second file not found", file2, actual
-				.getShoppingCartFileList().get(1));
+		Assert.assertEquals("first file not found", file1, actual.getShoppingCartFileList().get(0));
+		Assert.assertEquals("second file not found", file2, actual.getShoppingCartFileList().get(1));
 
 	}
 
@@ -133,11 +122,9 @@ public class FileShoppingCartTest {
 	public void testSerializeDeserializeEmptyCart() throws Exception {
 
 		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
-		String serialized = fileShoppingCart
-				.serializeShoppingCartContentsToStringOneItemPerLine();
+		String serialized = fileShoppingCart.serializeShoppingCartContentsToStringOneItemPerLine();
 
-		FileShoppingCart actual = FileShoppingCart
-				.instanceFromSerializedStringRepresentation(serialized);
+		FileShoppingCart actual = FileShoppingCart.instanceFromSerializedStringRepresentation(serialized);
 		Assert.assertFalse("should be empty cart", actual.hasItems());
 
 	}

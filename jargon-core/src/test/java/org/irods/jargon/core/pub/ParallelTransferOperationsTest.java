@@ -42,14 +42,12 @@ public class ParallelTransferOperationsTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils.createDirectoryUnderScratch(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		assertionHelper = new AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
@@ -65,8 +63,7 @@ public class ParallelTransferOperationsTest {
 	public void setUp() throws Exception {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
 		settableJargonProperties.setLongTransferRestart(false);
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 
 	}
 
@@ -89,19 +86,13 @@ public class ParallelTransferOperationsTest {
 
 		int nbrTimes = 1;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						testFileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLength);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);
@@ -109,188 +100,144 @@ public class ParallelTransferOperationsTest {
 		jargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		File localSourceFile = new File(localFileName);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 
 		for (int i = 0; i < nbrTimes; i++) {
 			destFile.deleteWithForceOption();
 
-			dataTransferOperationsAO.putOperation(localSourceFile, destFile,
-					null, null);
+			dataTransferOperationsAO.putOperation(localSourceFile, destFile, null, null);
 
-			irodsFileFactory = irodsFileSystem
-					.getIRODSFileFactory(irodsAccount);
+			irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 			destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 
-			File retrievedLocalFile = new File(absPath + "/"
-					+ testRetrievedFileName);
+			File retrievedLocalFile = new File(absPath + "/" + testRetrievedFileName);
 			retrievedLocalFile.delete();
-			dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
-					null, null);
+			dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile, null, null);
 
-			assertionHelper.assertLocalScratchFileLengthEquals(
-					IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
+			assertionHelper.assertLocalScratchFileLengthEquals(IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
 					testFileLength);
 		}
 	}
 
 	/**
-	 * Currently this is a framework for bench testing restarts and involves
-	 * manual manipulation of the iRODS grid. In normal operation it just serves
-	 * as a put test and no restart occurs For Large file transfer restart #77
+	 * Currently this is a framework for bench testing restarts and involves manual
+	 * manipulation of the iRODS grid. In normal operation it just serves as a put
+	 * test and no restart occurs For Large file transfer restart #77
 	 * https://github.com/DICE-UNC/jargon/issues/77
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testParallelFilePutWithRestartNoDefaultManager()
-			throws Exception {
+	public final void testParallelFilePutWithRestartNoDefaultManager() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutWithRestartNoDefaultManager.txt";
 		long testFileLength = ConnectionConstants.MIN_FILE_RESTART_SIZE * 60;
-		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
-				.getJargonProperties();
+		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem.getJargonProperties();
 		props.setMaxParallelThreads(4);
 		props.setLongTransferRestart(true);
 		props.setComputeAndVerifyChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						testFileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLength);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		File localSourceFile = new File(localFileName);
 
-		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
-				null);
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null, null);
 
 		// validate checksum here
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		Assert.assertEquals("did not get equal file lengths",
-				localSourceFile.length(), destFile.length());
+		Assert.assertEquals("did not get equal file lengths", localSourceFile.length(), destFile.length());
 
-		Assert.assertTrue("checksums do not match", dataObjectAO
-				.verifyChecksumBetweenLocalAndIrods(destFile, localSourceFile));
+		Assert.assertTrue("checksums do not match",
+				dataObjectAO.verifyChecksumBetweenLocalAndIrods(destFile, localSourceFile));
 
 	}
 
 	/**
-	 * Currently this is a framework for bench testing restarts and involves
-	 * manual manipulation of the iRODS grid. In normal operation it just serves
-	 * as a put test and no restart occurs For Large file transfer restart #77
+	 * Currently this is a framework for bench testing restarts and involves manual
+	 * manipulation of the iRODS grid. In normal operation it just serves as a put
+	 * test and no restart occurs For Large file transfer restart #77
 	 * https://github.com/DICE-UNC/jargon/issues/77
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testParallelFileGetWithRestartNoDefaultManager()
-			throws Exception {
+	public final void testParallelFileGetWithRestartNoDefaultManager() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFileGetWithRestartNoDefaultManager.txt";
 		String testRetrievedFileName = "testParallelFileGetWithRestartNoDefaultManagerRetreived.txt";
 
 		long testFileLength = ConnectionConstants.MIN_FILE_RESTART_SIZE * 120;
-		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
-				.getJargonProperties();
+		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem.getJargonProperties();
 		props.setMaxParallelThreads(4);
 		props.setLongTransferRestart(true);
 		props.setComputeAndVerifyChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						testFileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLength);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		File localSourceFile = new File(localFileName);
 
 		File localDestFile = new File(absPath + "/" + testRetrievedFileName);
 
-		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
-				null);
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null, null);
 
-		dataTransferOperationsAO.getOperation(destFile, localDestFile, null,
-				null);
+		dataTransferOperationsAO.getOperation(destFile, localDestFile, null, null);
 
 		// validate checksum here
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		Assert.assertEquals("did not get equal file lengths",
-				localDestFile.length(), destFile.length());
+		Assert.assertEquals("did not get equal file lengths", localDestFile.length(), destFile.length());
 
-		Assert.assertTrue("checksums do not match", dataObjectAO
-				.verifyChecksumBetweenLocalAndIrods(destFile, localDestFile));
+		Assert.assertTrue("checksums do not match",
+				dataObjectAO.verifyChecksumBetweenLocalAndIrods(destFile, localDestFile));
 
 	}
 
 	@Test
-	public final void testParallelFilePutThenGetUsingExecutor()
-			throws Exception {
+	public final void testParallelFilePutThenGetUsingExecutor() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutThenGetUsingExecutor.txt";
 		String testRetrievedFileName = "testParallelFilePutThenGetUsingExecutor.txt";
 		long testFileLength = 40000 * 1024;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						testFileLength);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLength);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(true);
@@ -299,18 +246,14 @@ public class ParallelTransferOperationsTest {
 		jargonProperties.setTransferThreadPoolTimeoutMillis(30000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		File localSourceFile = new File(localFileName);
 
-		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
-				null);
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null, null);
 
 		System.out.println("closing irodsfilesystem for put");
 		irodsFileSystem.close();
@@ -319,27 +262,21 @@ public class ParallelTransferOperationsTest {
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-		dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		File retrievedLocalFile = new File(absPath + "/"
-				+ testRetrievedFileName);
-		TransferControlBlock tcb = irodsFileSystem
-				.getIRODSAccessObjectFactory()
+		File retrievedLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		TransferControlBlock tcb = irodsFileSystem.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
-		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
-				null, tcb);
+		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile, null, tcb);
 
-		assertionHelper.assertLocalScratchFileLengthEquals(
-				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
+		assertionHelper.assertLocalScratchFileLengthEquals(IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
 				testFileLength);
 	}
 
 	@Ignore
-	public final void testParallelFilePutThenGetUsingExecutorMultipleClients()
-			throws Exception {
+	public final void testParallelFilePutThenGetUsingExecutorMultipleClients() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutThenGetUsingExecutorMultipleClients.txt";
 		String testRetrievedFileName = "testParallelFilePutThenGetUsingExecutorRetrieved.txt";
@@ -347,14 +284,11 @@ public class ParallelTransferOperationsTest {
 		int numberOfClients = 3;
 
 		for (int i = 0; i < numberOfClients; i++) {
-			String absPath = scratchFileUtils
-					.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-			FileGenerator.generateFileOfFixedLengthGivenName(absPath, i
-					+ testFileName, testFileLength);
+			String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+			FileGenerator.generateFileOfFixedLengthGivenName(absPath, i + testFileName, testFileLength);
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(true);
@@ -363,16 +297,13 @@ public class ParallelTransferOperationsTest {
 		jargonProperties.setTransferThreadPoolTimeoutMillis(30000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
-		ExecutorService executorService = Executors
-				.newFixedThreadPool(numberOfClients);
+		ExecutorService executorService = Executors.newFixedThreadPool(numberOfClients);
 		final List<PutThenGetTester> testers = new ArrayList<PutThenGetTester>();
 
 		for (int i = 0; i < numberOfClients; i++) {
-			String absPath = scratchFileUtils
-					.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-			PutThenGetTester putThenGetTester = new PutThenGetTester(i
-					+ testFileName, absPath + i + testFileName, absPath + i
-					+ testRetrievedFileName, irodsAccount, irodsFileSystem);
+			String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+			PutThenGetTester putThenGetTester = new PutThenGetTester(i + testFileName, absPath + i + testFileName,
+					absPath + i + testRetrievedFileName, irodsAccount, irodsFileSystem);
 			testers.add(putThenGetTester);
 		}
 
@@ -380,29 +311,24 @@ public class ParallelTransferOperationsTest {
 		executorService.shutdown();
 
 		for (int i = 0; i < numberOfClients; i++) {
-			assertionHelper.assertLocalScratchFileLengthEquals(
-					IRODS_TEST_SUBDIR_PATH + "/" + i + testRetrievedFileName,
+			assertionHelper.assertLocalScratchFileLengthEquals(IRODS_TEST_SUBDIR_PATH + "/" + i + testRetrievedFileName,
 					testFileLength);
 		}
 	}
 
 	@Ignore
-	public final void testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPool()
-			throws Exception {
+	public final void testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPool() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPool.txt";
 		String testRetrievedFileName = "testParallelFilePutThenGetUsingExecutorMultipleClientsMoreClientsLessPoolRetrieved.txt";
 		long testFileLength = 400000 * 1024;
 		int numberOfClients = 3;
 		for (int i = 0; i < numberOfClients; i++) {
-			String absPath = scratchFileUtils
-					.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-			FileGenerator.generateFileOfFixedLengthGivenName(absPath, i
-					+ testFileName, testFileLength);
+			String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+			FileGenerator.generateFileOfFixedLengthGivenName(absPath, i + testFileName, testFileLength);
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(true);
@@ -411,24 +337,20 @@ public class ParallelTransferOperationsTest {
 		jargonProperties.setTransferThreadPoolTimeoutMillis(30000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
-		ExecutorService executorService = Executors
-				.newFixedThreadPool(numberOfClients);
+		ExecutorService executorService = Executors.newFixedThreadPool(numberOfClients);
 		final List<PutThenGetTester> testers = new ArrayList<PutThenGetTester>();
 
 		for (int i = 0; i < numberOfClients; i++) {
-			String absPath = scratchFileUtils
-					.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-			PutThenGetTester putThenGetTester = new PutThenGetTester(i
-					+ testFileName, absPath + i + testFileName, absPath + i
-					+ testRetrievedFileName, irodsAccount, irodsFileSystem);
+			String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+			PutThenGetTester putThenGetTester = new PutThenGetTester(i + testFileName, absPath + i + testFileName,
+					absPath + i + testRetrievedFileName, irodsAccount, irodsFileSystem);
 			testers.add(putThenGetTester);
 		}
 
 		executorService.invokeAll(testers);
 
 		for (int i = 0; i < numberOfClients; i++) {
-			assertionHelper.assertLocalScratchFileLengthEquals(
-					IRODS_TEST_SUBDIR_PATH + "/" + i + testRetrievedFileName,
+			assertionHelper.assertLocalScratchFileLengthEquals(IRODS_TEST_SUBDIR_PATH + "/" + i + testRetrievedFileName,
 					testFileLength);
 		}
 	}
@@ -440,57 +362,41 @@ public class ParallelTransferOperationsTest {
 	 * @throws Exception
 	 */
 	@Test
-	public final void testParallelFilePutWithConnectionRestarting()
-			throws Exception {
+	public final void testParallelFilePutWithConnectionRestarting() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutWithConnectionRestarting.tdf";
 		String testRetrievedFileName = "testParallelFilePutWithConnectionRestartingRetrieved.tdf";
 		long testFileLength = 100 * 1024 * 1024;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						testFileLength);
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, testFileLength);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+		SettableJargonProperties jargonProperties = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		jargonProperties.setReconnect(true);
 		jargonProperties.setReconnectTimeInMillis(60000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		File localSourceFile = new File(localFileName);
 
-		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
-				null);
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null, null);
 
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-		dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
-		File retrievedLocalFile = new File(absPath + "/"
-				+ testRetrievedFileName);
-		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
-				null, null);
+		File retrievedLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile, null, null);
 
-		assertionHelper.assertLocalScratchFileLengthEquals(
-				IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
+		assertionHelper.assertLocalScratchFileLengthEquals(IRODS_TEST_SUBDIR_PATH + "/" + testRetrievedFileName,
 				testFileLength);
 	}
 
@@ -502,10 +408,8 @@ public class ParallelTransferOperationsTest {
 		private final IRODSAccount irodsAccount;
 		private final IRODSFileSystem irodsFileSystem;
 
-		public PutThenGetTester(final String testFileName,
-				final String localFileName, final String retrievedFileName,
-				final IRODSAccount irodsAccount,
-				final IRODSFileSystem irodsFileSystem) {
+		public PutThenGetTester(final String testFileName, final String localFileName, final String retrievedFileName,
+				final IRODSAccount irodsAccount, final IRODSFileSystem irodsFileSystem) {
 			this.testFileName = testFileName;
 			this.irodsAccount = irodsAccount;
 			this.irodsFileSystem = irodsFileSystem;
@@ -515,34 +419,25 @@ public class ParallelTransferOperationsTest {
 
 		@Override
 		public Object call() throws Exception {
-			String targetIrodsFile = testingPropertiesHelper
-					.buildIRODSCollectionAbsolutePathFromTestProperties(
-							testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-									+ testFileName);
+			String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+					testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 
-			IRODSFileFactory irodsFileFactory = irodsFileSystem
-					.getIRODSFileFactory(irodsAccount);
-			IRODSFile destFile = irodsFileFactory
-					.instanceIRODSFile(targetIrodsFile);
-			DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-					.getIRODSAccessObjectFactory().getDataTransferOperations(
-							irodsAccount);
+			IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+			IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+			DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+					.getDataTransferOperations(irodsAccount);
 
 			File localSourceFile = new File(localFileName);
 
-			dataTransferOperationsAO.putOperation(localSourceFile, destFile,
-					null, null);
+			dataTransferOperationsAO.putOperation(localSourceFile, destFile, null, null);
 
-			irodsFileFactory = irodsFileSystem
-					.getIRODSFileFactory(irodsAccount);
+			irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 			destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-			dataTransferOperationsAO = irodsFileSystem
-					.getIRODSAccessObjectFactory().getDataTransferOperations(
-							irodsAccount);
+			dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+					.getDataTransferOperations(irodsAccount);
 
 			File retrievedLocalFile = new File(retrievedFileName);
-			dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
-					null, null);
+			dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile, null, null);
 			return "ok";
 		}
 

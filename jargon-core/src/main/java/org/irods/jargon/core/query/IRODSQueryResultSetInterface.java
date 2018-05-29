@@ -15,9 +15,9 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 public interface IRODSQueryResultSetInterface {
 
 	/**
-	 * @return {@code <List<List<String>>>} containing the results in
-	 *         row/column form. Note that the columns line up with the selected
-	 *         column names in {@code TranslatedIRODSQuery}
+	 * @return {@code <List<List<String>>>} containing the results in row/column
+	 *         form. Note that the columns line up with the selected column names in
+	 *         {@code TranslatedIRODSQuery}
 	 */
 	List<IRODSQueryResultRow> getResults();
 
@@ -34,8 +34,8 @@ public interface IRODSQueryResultSetInterface {
 	boolean isHasMoreRecords();
 
 	/**
-	 * Convenience method to get the number of result columns, based on the
-	 * number of selects.
+	 * Convenience method to get the number of result columns, based on the number
+	 * of selects.
 	 *
 	 * @return {@code int} with count of result columns.
 	 */
@@ -49,9 +49,8 @@ public interface IRODSQueryResultSetInterface {
 	List<String> getColumnNames();
 
 	/**
-	 * If it is supported, and has been requested, based on the the query type,
-	 * this method returns the total count of records that were the result of
-	 * this query
+	 * If it is supported, and has been requested, based on the the query type, this
+	 * method returns the total count of records that were the result of this query
 	 *
 	 * @return {@code int} with the total records that match this query.
 	 */

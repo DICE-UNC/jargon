@@ -3,7 +3,6 @@ package org.irods.jargon.core.query;
 import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -18,10 +17,9 @@ public class IRODSSimpleQueryResultSetTest {
 		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
 		Mockito.when(columnNames.size()).thenReturn(colCount);
-		IRODSSimpleQueryResultSet resultSet = IRODSSimpleQueryResultSet
-				.instance(simpleQuery, results, columnNames, false);
-		Assert.assertEquals("did not get col count", colCount,
-				resultSet.getNumberOfResultColumns());
+		IRODSSimpleQueryResultSet resultSet = IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
+				false);
+		Assert.assertEquals("did not get col count", colCount, resultSet.getNumberOfResultColumns());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -31,8 +29,7 @@ public class IRODSSimpleQueryResultSetTest {
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
 		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
-		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
-				false);
+		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames, false);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -41,8 +38,7 @@ public class IRODSSimpleQueryResultSetTest {
 		List<IRODSQueryResultRow> results = null;
 		@SuppressWarnings("unchecked")
 		List<String> columnNames = Mockito.mock(List.class);
-		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
-				false);
+		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames, false);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -51,7 +47,6 @@ public class IRODSSimpleQueryResultSetTest {
 		@SuppressWarnings("unchecked")
 		List<IRODSQueryResultRow> results = Mockito.mock(List.class);
 		List<String> columnNames = null;
-		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames,
-				false);
+		IRODSSimpleQueryResultSet.instance(simpleQuery, results, columnNames, false);
 	}
 }

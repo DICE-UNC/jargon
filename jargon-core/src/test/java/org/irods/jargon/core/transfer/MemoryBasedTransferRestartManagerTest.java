@@ -27,13 +27,11 @@ public class MemoryBasedTransferRestartManagerTest {
 		fileRestartInfo.setLocalAbsolutePath(localPath);
 		fileRestartInfo.setRestartType(restartType);
 		fileRestartInfo.setIrodsAccountIdentifier(account.toString());
-		FileRestartInfoIdentifier actual = manager
-				.storeRestart(fileRestartInfo);
+		FileRestartInfoIdentifier actual = manager.storeRestart(fileRestartInfo);
 		Assert.assertNotNull("null identifier", actual);
 		Assert.assertEquals(irodsPath, actual.getAbsolutePath());
 		Assert.assertEquals(restartType, actual.getRestartType());
-		Assert.assertEquals(account.toString(),
-				actual.getIrodsAccountIdentifier());
+		Assert.assertEquals(account.toString(), actual.getIrodsAccountIdentifier());
 
 		FileRestartInfo retrievedInfo = manager.retrieveRestart(actual);
 		Assert.assertNotNull("did not get info back from key", retrievedInfo);
@@ -64,8 +62,7 @@ public class MemoryBasedTransferRestartManagerTest {
 		fileRestartInfo.setLocalAbsolutePath(localPath);
 		fileRestartInfo.setRestartType(restartType);
 		fileRestartInfo.setIrodsAccountIdentifier(account.toString());
-		FileRestartInfoIdentifier actual = manager
-				.storeRestart(fileRestartInfo);
+		FileRestartInfoIdentifier actual = manager.storeRestart(fileRestartInfo);
 		manager.deleteRestart(actual);
 
 		FileRestartInfo retrievedInfo = manager.retrieveRestart(actual);
@@ -94,20 +91,17 @@ public class MemoryBasedTransferRestartManagerTest {
 			fileRestartInfo.getFileRestartDataSegments().add(segment);
 		}
 
-		FileRestartInfoIdentifier actual = manager
-				.storeRestart(fileRestartInfo);
+		FileRestartInfoIdentifier actual = manager.storeRestart(fileRestartInfo);
 
 		// now update the third one
 
-		FileRestartDataSegment thirdSegment = fileRestartInfo
-				.getFileRestartDataSegments().get(2);
+		FileRestartDataSegment thirdSegment = fileRestartInfo.getFileRestartDataSegments().get(2);
 		thirdSegment.setLength(testLength);
 		manager.updateSegment(fileRestartInfo, thirdSegment);
 
 		FileRestartInfo retrievedInfo = manager.retrieveRestart(actual);
 		Assert.assertNotNull("did not retrieve info", retrievedInfo);
-		Assert.assertEquals(retrievedInfo.getFileRestartDataSegments().get(2)
-				.getLength(), thirdSegment.getLength());
+		Assert.assertEquals(retrievedInfo.getFileRestartDataSegments().get(2).getLength(), thirdSegment.getLength());
 
 	}
 
@@ -141,8 +135,7 @@ public class MemoryBasedTransferRestartManagerTest {
 	}
 
 	@Test(expected = FileRestartManagementException.class)
-	public void testUpdateNonExistentSegmentOutOfSynchThreads()
-			throws Exception {
+	public void testUpdateNonExistentSegmentOutOfSynchThreads() throws Exception {
 		MemoryBasedTransferRestartManager manager = new MemoryBasedTransferRestartManager();
 		String irodsPath = "/irods/path";
 		String localPath = "/local/path";

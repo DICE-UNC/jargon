@@ -1,8 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,8 +17,8 @@ public class OpenedDataObjInpTest {
 
 	@Test
 	public final void testInstanceForFileSeek() throws Exception {
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFileSeek(1024, 3, OpenedDataObjInp.SEEK_CURRENT);
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFileSeek(1024, 3,
+				OpenedDataObjInp.SEEK_CURRENT);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<OpenedDataObjInp_PI>");
 		sb.append("<l1descInx>3</l1descInx>\n");
@@ -31,14 +30,12 @@ public class OpenedDataObjInpTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</OpenedDataObjInp_PI>\n");
-		Assert.assertEquals("did not generate expected XML", sb.toString(),
-				openedDataObjInp.getParsedTags());
+		Assert.assertEquals("did not generate expected XML", sb.toString(), openedDataObjInp.getParsedTags());
 	}
 
 	@Test
 	public final void testInstanceForFileWrite() throws Exception {
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFilePut(3, 4194304L);
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFilePut(3, 4194304L);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<OpenedDataObjInp_PI>");
 		sb.append("<l1descInx>3</l1descInx>\n");
@@ -50,16 +47,14 @@ public class OpenedDataObjInpTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</OpenedDataObjInp_PI>\n");
-		Assert.assertEquals("did not generate expected XML", sb.toString(),
-				openedDataObjInp.getParsedTags());
+		Assert.assertEquals("did not generate expected XML", sb.toString(), openedDataObjInp.getParsedTags());
 	}
 
 	@Test
 	public final void testGetApiNumber() throws Exception {
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFileSeek(1024, 3, OpenedDataObjInp.SEEK_CURRENT);
-		Assert.assertEquals("did not get correct api number", 674,
-				openedDataObjInp.getApiNumber());
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFileSeek(1024, 3,
+				OpenedDataObjInp.SEEK_CURRENT);
+		Assert.assertEquals("did not get correct api number", 674, openedDataObjInp.getApiNumber());
 
 	}
 

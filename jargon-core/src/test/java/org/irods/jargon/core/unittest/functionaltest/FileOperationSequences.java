@@ -47,14 +47,11 @@ public class FileOperationSequences {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -65,8 +62,8 @@ public class FileOperationSequences {
 
 	/**
 	 * Mutli-threaded test of multiple operations for a get with shared access
-	 * objects between threads [#1065] [iROD-Chat:9047] Java
-	 * ClosedChannelException in Jargon 3.2.1
+	 * objects between threads [#1065] [iROD-Chat:9047] Java ClosedChannelException
+	 * in Jargon 3.2.1
 	 *
 	 * @throws Exception
 	 */
@@ -77,32 +74,23 @@ public class FileOperationSequences {
 
 		int nbrIterations = 150;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		for (int i = 0; i < nbrIterations; i++) {
-			dataTransferOperationsAO.putOperation(localFile, destFile, null,
-					null);
+			dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 			destFile.delete();
 
 		}
@@ -111,8 +99,8 @@ public class FileOperationSequences {
 
 	/**
 	 * Mutli-threaded test of multiple operations for a get with shared access
-	 * objects between threads [#1065] [iROD-Chat:9047] Java
-	 * ClosedChannelException in Jargon 3.2.1
+	 * objects between threads [#1065] [iROD-Chat:9047] Java ClosedChannelException
+	 * in Jargon 3.2.1
 	 *
 	 * @throws Exception
 	 */
@@ -124,28 +112,20 @@ public class FileOperationSequences {
 		int nbrThreads = 6;
 		int nbrIterations = 50;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
@@ -155,22 +135,16 @@ public class FileOperationSequences {
 
 			ExecutorService exec = Executors.newFixedThreadPool(nbrThreads);
 
-			List<Future<DataObject>> futures = new ArrayList<Future<DataObject>>(
-					nbrThreads);
-			DataObjectAO dataObjectAO = irodsFileSystem
-					.getIRODSAccessObjectFactory()
-					.getDataObjectAO(irodsAccount);
-			DataTransferOperations dto = irodsFileSystem
-					.getIRODSAccessObjectFactory().getDataTransferOperations(
-							irodsAccount);
+			List<Future<DataObject>> futures = new ArrayList<Future<DataObject>>(nbrThreads);
+			DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+			DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+					.getDataTransferOperations(irodsAccount);
 
 			for (int i = 0; i < nbrThreads; i++) {
 				String localFileNameForGet = scratchFileUtils
-						.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-								+ "/" + i + testFileName);
-				futures.add(exec.submit(new MultiThreadSharingOfDataAOBug1065(
-						dataObjectAO, dto, destFile.getAbsolutePath(),
-						localFileNameForGet)));
+						.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + i + testFileName);
+				futures.add(exec.submit(new MultiThreadSharingOfDataAOBug1065(dataObjectAO, dto,
+						destFile.getAbsolutePath(), localFileNameForGet)));
 			}
 
 			for (Future<DataObject> future : futures) {
@@ -183,41 +157,31 @@ public class FileOperationSequences {
 	}
 
 	/**
-	 * Share an IRODSRandomAccess file between threads. Currently ignored, as
-	 * the originating use case may be suspect. Bug [#1066] Auth Exception on
-	 * seek
+	 * Share an IRODSRandomAccess file between threads. Currently ignored, as the
+	 * originating use case may be suspect. Bug [#1066] Auth Exception on seek
 	 *
 	 * @throws Exception
 	 */
 	@Ignore
-	public void testShareIRODSRandomAccessFileBetweenThreadsBug1066()
-			throws Exception {
+	public void testShareIRODSRandomAccessFileBetweenThreadsBug1066() throws Exception {
 		String testFileName = "testShareIRODSRandomAccessFileBetweenThreadsBug1066.txt";
 
 		int nbrThreads = 4;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
@@ -225,14 +189,12 @@ public class FileOperationSequences {
 
 		List<Future<Object>> futures = new ArrayList<Future<Object>>(nbrThreads);
 
-		IRODSRandomAccessFile randomAccessFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount)
+		IRODSRandomAccessFile randomAccessFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSRandomAccessFile(destFile);
 
 		for (int i = 0; i < nbrThreads; i++) {
 			futures.add(exec
-					.submit(new ShareIRODSRandomAccessFileBetweenThreadsBug1066(
-							randomAccessFile, irodsFileSystem)));
+					.submit(new ShareIRODSRandomAccessFileBetweenThreadsBug1066(randomAccessFile, irodsFileSystem)));
 		}
 
 		for (Future<Object> future : futures) {
@@ -245,14 +207,12 @@ public class FileOperationSequences {
 
 }
 
-class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements
-		Callable<Object> {
+class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements Callable<Object> {
 
 	IRODSRandomAccessFile randomAccessFile;
 	IRODSFileSystem irodsFileSystem;
 
-	ShareIRODSRandomAccessFileBetweenThreadsBug1066(
-			final IRODSRandomAccessFile randomAccessFile,
+	ShareIRODSRandomAccessFileBetweenThreadsBug1066(final IRODSRandomAccessFile randomAccessFile,
 			final IRODSFileSystem irodsFileSystem) {
 		super();
 		this.randomAccessFile = randomAccessFile;
@@ -271,8 +231,8 @@ class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements
 class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
 
 	public MultiThreadSharingOfDataAOBug1065(final DataObjectAO dataObjectAO,
-			final DataTransferOperations dataTransferOperations,
-			final String sourceAbsolutePath, final String targetAbsolutePath) {
+			final DataTransferOperations dataTransferOperations, final String sourceAbsolutePath,
+			final String targetAbsolutePath) {
 		super();
 		this.dataObjectAO = dataObjectAO;
 		this.dataTransferOperations = dataTransferOperations;
@@ -288,14 +248,11 @@ class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
 	@Override
 	public DataObject call() throws Exception {
 		DataObject obj = dataObjectAO.findByAbsolutePath(sourceAbsolutePath);
-		TransferControlBlock tcb = dataTransferOperations
-				.getIRODSAccessObjectFactory()
+		TransferControlBlock tcb = dataTransferOperations.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
-		dataTransferOperations.getOperation(sourceAbsolutePath,
-				targetAbsolutePath, "", null, tcb);
-		dataTransferOperations.getIRODSAccessObjectFactory()
-				.closeSessionAndEatExceptions();
+		dataTransferOperations.getOperation(sourceAbsolutePath, targetAbsolutePath, "", null, tcb);
+		dataTransferOperations.getIRODSAccessObjectFactory().closeSessionAndEatExceptions();
 		return obj;
 	}
 

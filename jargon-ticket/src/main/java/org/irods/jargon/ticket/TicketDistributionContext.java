@@ -11,9 +11,9 @@ import java.util.Map;
  * <p>
  * This object is utilized by the {@link TicketDistributionService} to ask for
  * usable Ticket URL links and other information.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TicketDistributionContext {
 	private String host = "";
@@ -83,10 +83,10 @@ public class TicketDistributionContext {
 	}
 
 	/**
-	 * Additional path information, typically an application context/method
-	 * format. In idrop-web this is the controller and controller method that
-	 * will receive ticket requests
-	 * 
+	 * Additional path information, typically an application context/method format.
+	 * In idrop-web this is the controller and controller method that will receive
+	 * ticket requests
+	 *
 	 * @return the context
 	 */
 	public String getContext() {
@@ -103,7 +103,7 @@ public class TicketDistributionContext {
 
 	/**
 	 * Additional parameters that should be added to the generated URL
-	 * 
+	 *
 	 * @return the additionalParameters
 	 */
 	public Map<String, String> getAdditionalParameters() {
@@ -114,8 +114,7 @@ public class TicketDistributionContext {
 	 * @param additionalParameters
 	 *            the additionalParameters to set
 	 */
-	public void setAdditionalParameters(
-			final Map<String, String> additionalParameters) {
+	public void setAdditionalParameters(final Map<String, String> additionalParameters) {
 		this.additionalParameters = additionalParameters;
 	}
 

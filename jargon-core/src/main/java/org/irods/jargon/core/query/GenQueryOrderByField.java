@@ -22,18 +22,16 @@ public class GenQueryOrderByField extends GenQueryField {
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} indicates the type of query field
 	 * @param selectFieldNumericTranslation
-	 *            {@code String} with the iRODS protocol translation of a
-	 *            gen query field
+	 *            {@code String} with the iRODS protocol translation of a gen query
+	 *            field
 	 * @param orderByType
 	 *            {@link OrderByType} that indicates the order by type.
 	 * @return
 	 */
-	static GenQueryOrderByField instance(final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
-			final String selectFieldNumericTranslation,
-			final OrderByType orderByType) {
-		return new GenQueryOrderByField(selectFieldColumnName,
-				selectFieldSource, selectFieldNumericTranslation, orderByType);
+	static GenQueryOrderByField instance(final String selectFieldColumnName, final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation, final OrderByType orderByType) {
+		return new GenQueryOrderByField(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation,
+				orderByType);
 	}
 
 	/**
@@ -42,13 +40,10 @@ public class GenQueryOrderByField extends GenQueryField {
 	 * @param selectFieldNumericTranslation
 	 * @param orderByType
 	 */
-	private GenQueryOrderByField(final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
-			final String selectFieldNumericTranslation,
-			final OrderByType orderByType) {
+	private GenQueryOrderByField(final String selectFieldColumnName, final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation, final OrderByType orderByType) {
 
-		super(selectFieldColumnName, selectFieldSource,
-				selectFieldNumericTranslation);
+		super(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation);
 
 		if (orderByType == null) {
 			throw new IllegalArgumentException("null orderByType");

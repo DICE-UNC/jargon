@@ -35,87 +35,75 @@ public class IRODSQueryResultRow {
 	 *            {@code List<String>} containing the column names.
 	 * @return {@code IRODSQueryResultRow} with the data for this row.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static IRODSQueryResultRow instance(
-			final List<String> queryResultColumns,
-			final List<String> columnNames) throws JargonException {
-		return new IRODSQueryResultRow(queryResultColumns, columnNames, 0,
-				false);
+	public static IRODSQueryResultRow instance(final List<String> queryResultColumns, final List<String> columnNames)
+			throws JargonException {
+		return new IRODSQueryResultRow(queryResultColumns, columnNames, 0, false);
 	}
 
 	/**
-	 * Build a result row from a column of results produced by an IRODS
-	 * GenQuery. This initializer will add information about the position of the
-	 * record to assist in re-query operations
+	 * Build a result row from a column of results produced by an IRODS GenQuery.
+	 * This initializer will add information about the position of the record to
+	 * assist in re-query operations
 	 *
 	 * @param queryResultColumns
-	 *            {@code List<String} with the values for each column of
-	 *            the query
+	 *            {@code List<String} with the values for each column of the query
 	 * @param columnNames
 	 *            {@code List<String} with the values for each column name
 	 * @param recordCount
 	 *            {@code int} with the index of the current record
 	 * @param lastResult
-	 *            {@code boolean} of {@code true} if there are more
-	 *            records to page
+	 *            {@code boolean} of {@code true} if there are more records to page
 	 * @return {@link IRODSQueryResultRow}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static IRODSQueryResultRow instance(
-			final List<String> queryResultColumns,
-			final List<String> columnNames, final int recordCount,
-			final boolean lastResult) throws JargonException {
-		return new IRODSQueryResultRow(queryResultColumns, columnNames,
-				recordCount, lastResult);
+	public static IRODSQueryResultRow instance(final List<String> queryResultColumns, final List<String> columnNames,
+			final int recordCount, final boolean lastResult) throws JargonException {
+		return new IRODSQueryResultRow(queryResultColumns, columnNames, recordCount, lastResult);
 	}
 
 	/**
-	 * Build a result row from a column of results produced by an IRODS
-	 * GenQuery. This initializer will add information about the position of the
-	 * record to assist in re-query operations
+	 * Build a result row from a column of results produced by an IRODS GenQuery.
+	 * This initializer will add information about the position of the record to
+	 * assist in re-query operations
 	 *
 	 * @param queryResultColumns
-	 *            {@code List<String} with the values for each column of
-	 *            the query
+	 *            {@code List<String} with the values for each column of the query
 	 * @param columnNames
 	 *            {@code List<String} with the values for each column name
 	 * @param recordCount
 	 *            {@code int} with the index of the current record
 	 * @param lastResult
-	 *            {@code boolean} of {@code true} if there are more
-	 *            records to page
+	 *            {@code boolean} of {@code true} if there are more records to page
 	 * @param totalRecords
 	 *            {@code int} with the total records that will be returned
 	 * @return {@link IRODSQueryResultRow}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static IRODSQueryResultRow instance(
-			final List<String> queryResultColumns,
-			final List<String> columnNames, final int recordCount,
-			final boolean lastResult, final int totalRecords)
-			throws JargonException {
-		return new IRODSQueryResultRow(queryResultColumns, columnNames,
-				recordCount, lastResult);
+	public static IRODSQueryResultRow instance(final List<String> queryResultColumns, final List<String> columnNames,
+			final int recordCount, final boolean lastResult, final int totalRecords) throws JargonException {
+		return new IRODSQueryResultRow(queryResultColumns, columnNames, recordCount, lastResult);
 	}
 
 	/**
 	 * Private constructor
 	 *
 	 * @param queryResultColumns
-	 *            {@code List<String} with the values for each column of
-	 *            the query
+	 *            {@code List<String} with the values for each column of the query
 	 * @param translatedIRODSQuery
 	 *            {@link TranslatedIRODSQuery} that produced this result
 	 * @param recordCount
 	 *            {@code int} with the index of the current record
 	 * @param lastResult
-	 *            {@code boolean} of {@code true} if there are more
-	 *            records to page
+	 *            {@code boolean} of {@code true} if there are more records to page
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private IRODSQueryResultRow(final List<String> queryResultColumns,
-			final List<String> columnNames, final int recordCount,
-			final boolean lastResult) throws JargonException {
+	private IRODSQueryResultRow(final List<String> queryResultColumns, final List<String> columnNames,
+			final int recordCount, final boolean lastResult) throws JargonException {
 
 		if (queryResultColumns == null) {
 			throw new JargonException("queryResultColumns is null");
@@ -137,11 +125,10 @@ public class IRODSQueryResultRow {
 	 *
 	 * @param columnNumber
 	 *            {@code int} with the location of the desired field.
-	 * @return {@code String} containing the value of the column. It is up
-	 *         to the caller to cast to the appropriate type.
+	 * @return {@code String} containing the value of the column. It is up to the
+	 *         caller to cast to the appropriate type.
 	 * @throws JargonException
-	 *             Indicates that the column could not be located in the
-	 *             results.
+	 *             Indicates that the column could not be located in the results.
 	 */
 	public String getColumn(final int columnNumber) throws JargonException {
 		if (columnNumber < 0 || columnNumber >= queryResultColumns.size()) {
@@ -154,13 +141,12 @@ public class IRODSQueryResultRow {
 	 * Given a columnName, return the value of the column in the result set.
 	 *
 	 * @param columnName
-	 *            {@code String} with the name of the desired field. The
-	 *            search is case-insensitive.
-	 * @return {@code String} containing the value of the column. It is up
-	 *         to the caller to cast to the appropriate type.
+	 *            {@code String} with the name of the desired field. The search is
+	 *            case-insensitive.
+	 * @return {@code String} containing the value of the column. It is up to the
+	 *         caller to cast to the appropriate type.
 	 * @throws JargonException
-	 *             Indicates that the column could not be located in the
-	 *             results.
+	 *             Indicates that the column could not be located in the results.
 	 */
 	public String getColumn(final String columnName) throws JargonException {
 		if (columnName == null || columnName.length() == 0) {
@@ -170,8 +156,7 @@ public class IRODSQueryResultRow {
 		int idx = getColumnNamePosition(columnName);
 
 		if (idx == -1) {
-			throw new JargonException("column name not found in result set:"
-					+ columnName);
+			throw new JargonException("column name not found in result set:" + columnName);
 		}
 
 		return queryResultColumns.get(idx);
@@ -185,6 +170,7 @@ public class IRODSQueryResultRow {
 	 *            {@code int} as column position
 	 * @return {@code Data} {@link Date} or {@code null}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public Date getColumnAsDateOrNull(final int column) throws JargonException {
 		return IRODSDataConversionUtil.getDateFromIRODSValue(getColumn(column));
@@ -197,11 +183,10 @@ public class IRODSQueryResultRow {
 	 *            {@code String} as column name
 	 * @return {@code Data} {@link Date} or {@code null}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public Date getColumnAsDateOrNull(final String columnName)
-			throws JargonException {
-		return IRODSDataConversionUtil
-				.getDateFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
+	public Date getColumnAsDateOrNull(final String columnName) throws JargonException {
+		return IRODSDataConversionUtil.getDateFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
 	}
 
 	/**
@@ -211,10 +196,10 @@ public class IRODSQueryResultRow {
 	 *            {@code int} as column position
 	 * @return {@code int} or 0 if null
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public int getColumnAsIntOrZero(final int column) throws JargonException {
-		return IRODSDataConversionUtil
-				.getIntOrZeroFromIRODSValue(getColumn(column));
+		return IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(getColumn(column));
 	}
 
 	/**
@@ -224,11 +209,10 @@ public class IRODSQueryResultRow {
 	 *            {@code String} as column name
 	 * @return {@code int} or 0 if null
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public int getColumnAsIntOrZero(final String columnName)
-			throws JargonException {
-		return IRODSDataConversionUtil
-				.getIntOrZeroFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
+	public int getColumnAsIntOrZero(final String columnName) throws JargonException {
+		return IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
 	}
 
 	/**
@@ -238,10 +222,10 @@ public class IRODSQueryResultRow {
 	 *            {@code int} as column position
 	 * @return {@code long} or 0 if null
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public long getColumnAsLongOrZero(final int column) throws JargonException {
-		return IRODSDataConversionUtil
-				.getLongOrZeroFromIRODSValue(getColumn(column));
+		return IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(getColumn(column));
 	}
 
 	/**
@@ -251,18 +235,18 @@ public class IRODSQueryResultRow {
 	 *            {@code String} as column name
 	 * @return {@code long} or 0 if null
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public long getColumnAsLongOrZero(final String columnName)
-			throws JargonException {
-		return IRODSDataConversionUtil
-				.getLongOrZeroFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
+	public long getColumnAsLongOrZero(final String columnName) throws JargonException {
+		return IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
 	}
 
 	/**
-	 * Returns the index of the column with the given name, or -1 if not found.
-	 * The match is case-insensitive;
+	 * Returns the index of the column with the given name, or -1 if not found. The
+	 * match is case-insensitive;
 	 *
 	 * @param columnName
+	 *            {@code String} with the name to resolve
 	 * @return {@code int}
 	 */
 	protected int getColumnNamePosition(final String columnName) {
@@ -280,8 +264,8 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Handy method to just get the results as a {@code List} for use in
-	 * forEach and other constructs
+	 * Handy method to just get the results as a {@code List} for use in forEach and
+	 * other constructs
 	 *
 	 * @return {@code List<String>} containing the columns for this row.
 	 */
@@ -303,7 +287,7 @@ public class IRODSQueryResultRow {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -313,16 +297,11 @@ public class IRODSQueryResultRow {
 		builder.append("IRODSQueryResultRow [");
 		if (queryResultColumns != null) {
 			builder.append("queryResultColumns=")
-					.append(queryResultColumns.subList(0,
-							Math.min(queryResultColumns.size(), maxLen)))
-					.append(", ");
+					.append(queryResultColumns.subList(0, Math.min(queryResultColumns.size(), maxLen))).append(", ");
 		}
-		builder.append("recordCount=").append(recordCount)
-				.append(", lastResult=").append(lastResult).append(", ");
+		builder.append("recordCount=").append(recordCount).append(", lastResult=").append(lastResult).append(", ");
 		if (columnNames != null) {
-			builder.append("columnNames=")
-					.append(columnNames.subList(0,
-							Math.min(columnNames.size(), maxLen)));
+			builder.append("columnNames=").append(columnNames.subList(0, Math.min(columnNames.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();

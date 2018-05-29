@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.usertagging.starring;
 
@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A service to star or favorite files or folders
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implements IRODSStarringService {
 
@@ -54,7 +54,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
 	 * findStarredForAbsolutePath(java.lang.String)
 	 */
@@ -81,7 +81,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
 	 * starFileOrCollection(java.lang.String, java.lang.String)
 	 */
@@ -117,8 +117,8 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
 
 		/*
-		 * If I find a starred folder already, then update the AVU data, which
-		 * will just be the description, otherwise add one.
+		 * If I find a starred folder already, then update the AVU data, which will just
+		 * be the description, otherwise add one.
 		 */
 		IRODSStarredFileOrCollection irodsStarredFileOrCollection = findStarredGivenObjStat(irodsAbsolutePath, objStat);
 
@@ -140,7 +140,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
 	 * unstarFileOrCollection(java.lang.String)
 	 */
@@ -158,8 +158,8 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
 
 		/*
-		 * If I find a starred folder already, then update the AVU data, which
-		 * will just be the description, otherwise add one.
+		 * If I find a starred folder already, then update the AVU data, which will just
+		 * be the description, otherwise add one.
 		 */
 		IRODSStarredFileOrCollection irodsStarredFileOrCollection = findStarredGivenObjStat(irodsAbsolutePath, objStat);
 
@@ -187,7 +187,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
 	 * listStarredCollections(int)
 	 */
@@ -222,7 +222,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
 	 * listStarredDataObjects(int)
 	 */
@@ -265,6 +265,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 					QueryConditionOperators.EQUAL, UserTaggingConstants.STAR_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
 					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
+
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -276,7 +277,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 	 * Given a current value of a 'starred' file or folder, and the desired
 	 * description, update the starred metadata. This works for data objects or
 	 * collections.
-	 * 
+	 *
 	 * @param irodsStarredFileOrCollection
 	 * @param irodsAbsolutePath
 	 * @param objStat
@@ -325,9 +326,9 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 	}
 
 	/**
-	 * Given a metadata value (from iRODS AVUs), return the corresponding
-	 * starred object
-	 * 
+	 * Given a metadata value (from iRODS AVUs), return the corresponding starred
+	 * object
+	 *
 	 * @param metadataAndDomainData
 	 *            {@link MetaDataAndDomainData} with the AVU data
 	 * @return {@link IRODSStarredFileOrCollection} with the transformed data
@@ -351,6 +352,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 
 		IRODSStarredFileOrCollection irodsStarredFileOrCollection = new IRODSStarredFileOrCollection(
 				metadataAndDomainData.getMetadataDomain(), metadataAndDomainData.getDomainObjectUniqueName(),
+
 				metadataAndDomainData.getAvuAttribute(), metadataAndDomainData.getAvuValue(),
 				metadataAndDomainData.getSize(), metadataAndDomainData.getCreatedAt(),
 				metadataAndDomainData.getModifiedAt());
@@ -358,6 +360,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implem
 		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
 		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData.isLastResult());
 		log.debug("irodsStarredFileOrCollection:{}", irodsStarredFileOrCollection);
+
 		return irodsStarredFileOrCollection;
 
 	}

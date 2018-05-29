@@ -36,11 +36,10 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	public static final String PHY_PATH = "phyPath";
 
 	/*
-	 * #define SpecColl_PI "int collClass; int type; str
-	 * collection[MAX_NAME_LEN]; str objPath[MAX_NAME_LEN]; str
-	 * resource[NAME_LEN]; str rescHier[MAX_NAME_LEN]; str
-	 * phyPath[MAX_NAME_LEN]; str cacheDir[MAX_NAME_LEN]; int cacheDirty; int
-	 * replNum;"
+	 * #define SpecColl_PI "int collClass; int type; str collection[MAX_NAME_LEN];
+	 * str objPath[MAX_NAME_LEN]; str resource[NAME_LEN]; str
+	 * rescHier[MAX_NAME_LEN]; str phyPath[MAX_NAME_LEN]; str
+	 * cacheDir[MAX_NAME_LEN]; int cacheDirty; int replNum;"
 	 */
 
 	/**
@@ -51,23 +50,17 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(COLL_CLASS, getCollClass()),
-				new Tag(COLLECTION, getCollection()),
-				new Tag(OBJ_PATH, getObjPath()),
-				new Tag(RESOURCE, getResource()),
-				new Tag(RESC_HEIR, getRescHeir()),
-				new Tag(PHY_PATH, getPhyPath()),
-				new Tag(CACHE_DIR, getCacheDir()),
-				new Tag(CACHE_DIRTY, getCacheDirty()),
-				new Tag(REPL_NUM, getReplNum()) });
+		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(COLL_CLASS, getCollClass()),
+				new Tag(COLLECTION, getCollection()), new Tag(OBJ_PATH, getObjPath()), new Tag(RESOURCE, getResource()),
+				new Tag(RESC_HEIR, getRescHeir()), new Tag(PHY_PATH, getPhyPath()), new Tag(CACHE_DIR, getCacheDir()),
+				new Tag(CACHE_DIRTY, getCacheDirty()), new Tag(REPL_NUM, getReplNum()) });
 		return message;
 	}
 
@@ -154,8 +147,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SpecColl [collClass=").append(collClass)
-				.append(", type=").append(type).append(", ");
+		builder.append("SpecColl [collClass=").append(collClass).append(", type=").append(type).append(", ");
 		if (collection != null) {
 			builder.append("collection=").append(collection).append(", ");
 		}
@@ -174,8 +166,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		if (cacheDir != null) {
 			builder.append("cacheDir=").append(cacheDir).append(", ");
 		}
-		builder.append("cacheDirty=").append(cacheDirty).append(", replNum=")
-				.append(replNum).append("]");
+		builder.append("cacheDirty=").append(cacheDirty).append(", replNum=").append(replNum).append("]");
 		return builder.toString();
 	}
 

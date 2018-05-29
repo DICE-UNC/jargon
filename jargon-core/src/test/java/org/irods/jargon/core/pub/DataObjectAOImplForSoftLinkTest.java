@@ -241,6 +241,7 @@ public class DataObjectAOImplForSoftLinkTest {
 				// ok
 			} else {
 				Assert.fail("non trash instance of avu found!");
+
 			}
 		}
 
@@ -507,6 +508,7 @@ public class DataObjectAOImplForSoftLinkTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		ObjStat objStat = listAndSearch.retrieveObjectStatForPath(destFile.getAbsolutePath());
 		Assert.assertNotNull("null objStat", objStat);
+
 		String computedChecksum = dataObjectAO.computeMD5ChecksumOnDataObject(destFile);
 		Assert.assertTrue("did not return a checksum", computedChecksum.length() > 0);
 

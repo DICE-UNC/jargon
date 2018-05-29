@@ -1,8 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,8 +17,7 @@ public class DataObjInpForObjStatTest {
 
 	@Test
 	public final void testInstanceForObjStat() throws Exception {
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance("/a/file/path");
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance("/a/file/path");
 		Assert.assertNotNull("got a null dataObjInp", dataObjInp);
 	}
 
@@ -36,8 +34,7 @@ public class DataObjInpForObjStatTest {
 	@Test
 	public final void testGetParsedTags() throws Exception {
 
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance("/a/file/path");
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance("/a/file/path");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DataObjInp_PI><objPath>/a/file/path</objPath>\n");
@@ -50,7 +47,6 @@ public class DataObjInpForObjStatTest {
 		sb.append("<KeyValPair_PI><ssLen>0</ssLen>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
-		Assert.assertEquals("did not get expected packing instruction",
-				sb.toString(), dataObjInp.getParsedTags());
+		Assert.assertEquals("did not get expected packing instruction", sb.toString(), dataObjInp.getParsedTags());
 	}
 }

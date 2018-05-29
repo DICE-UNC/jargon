@@ -1,8 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,93 +20,75 @@ public class StructFileExtAndRegInpTest {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForExtractBundleNoForce(tarFileName,
-						tarFileCollection, "");
+				.instanceForExtractBundleNoForce(tarFileName, tarFileCollection, "");
 		Assert.assertNotNull("null packing instruction", structFileExtAndRegInp);
-		Assert.assertEquals("did not set correct API num",
-				StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
+		Assert.assertEquals("did not set correct API num", StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
 				structFileExtAndRegInp.getApiNumber());
 		Assert.assertFalse("should not have been flagged as a bulk operation",
 				structFileExtAndRegInp.isExtractAsBulkOperation());
 	}
 
 	@Test
-	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndResource()
-			throws Exception {
+	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndResource() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		String destResource = "resource";
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-						tarFileCollection, destResource);
+				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName, tarFileCollection, destResource);
 		Assert.assertNotNull("null packing instruction", structFileExtAndRegInp);
-		Assert.assertEquals("did not set correct API num",
-				StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
+		Assert.assertEquals("did not set correct API num", StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
 				structFileExtAndRegInp.getApiNumber());
-		Assert.assertEquals("did not set resource properly", destResource,
-				structFileExtAndRegInp.getResourceName());
+		Assert.assertEquals("did not set resource properly", destResource, structFileExtAndRegInp.getResourceName());
 		Assert.assertTrue("should have been flagged as a bulk operation",
 				structFileExtAndRegInp.isExtractAsBulkOperation());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndNullResource()
-			throws Exception {
+	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndNullResource() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		String destResource = null;
-		StructFileExtAndRegInp
-				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-						tarFileCollection, destResource);
+		StructFileExtAndRegInp.instanceForExtractBundleNoForceWithBulkOperation(tarFileName, tarFileCollection,
+				destResource);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndNullTar()
-			throws Exception {
+	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndNullTar() throws Exception {
 		String tarFileName = null;
 		String tarFileCollection = "/test/tarFileCollection";
 		String destResource = "foo";
-		StructFileExtAndRegInp
-				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-						tarFileCollection, destResource);
+		StructFileExtAndRegInp.instanceForExtractBundleNoForceWithBulkOperation(tarFileName, tarFileCollection,
+				destResource);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndNullCollection()
-			throws Exception {
+	public final void testInstanceForExtractBundleNoForceWithBulkOperationAndNullCollection() throws Exception {
 		String tarFileName = "hello";
 		String tarFileCollection = null;
 		String destResource = "foo";
-		StructFileExtAndRegInp
-				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-						tarFileCollection, destResource);
+		StructFileExtAndRegInp.instanceForExtractBundleNoForceWithBulkOperation(tarFileName, tarFileCollection,
+				destResource);
 	}
 
 	@Test
-	public final void testInstanceForExtractBundleWithForceOption()
-			throws Exception {
+	public final void testInstanceForExtractBundleWithForceOption() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForExtractBundleWithForceOption(tarFileName,
-						tarFileCollection, "");
+				.instanceForExtractBundleWithForceOption(tarFileName, tarFileCollection, "");
 		Assert.assertNotNull("null packing instruction", structFileExtAndRegInp);
-		Assert.assertEquals("did not set correct API num",
-				StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
+		Assert.assertEquals("did not set correct API num", StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
 				structFileExtAndRegInp.getApiNumber());
 	}
 
 	@Test
-	public final void testInstanceForExtractBundleWithForceOptionAndBulkOperation()
-			throws Exception {
+	public final void testInstanceForExtractBundleWithForceOptionAndBulkOperation() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForExtractBundleWithForceOptionAndBulkOperation(
-						tarFileName, tarFileCollection, "");
+				.instanceForExtractBundleWithForceOptionAndBulkOperation(tarFileName, tarFileCollection, "");
 		Assert.assertNotNull("null packing instruction", structFileExtAndRegInp);
-		Assert.assertEquals("did not set correct API num",
-				StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
+		Assert.assertEquals("did not set correct API num", StructFileExtAndRegInp.STRUCT_FILE_EXTRACT_AND_REG_API_NBR,
 				structFileExtAndRegInp.getApiNumber());
 		Assert.assertTrue("should have been flagged as a bulk operation",
 				structFileExtAndRegInp.isExtractAsBulkOperation());
@@ -117,11 +98,10 @@ public class StructFileExtAndRegInpTest {
 	public final void testInstanceForCreateBundleOperation() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
-		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForCreateBundle(tarFileName, tarFileCollection, "");
+		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp.instanceForCreateBundle(tarFileName,
+				tarFileCollection, "");
 		Assert.assertNotNull("null packing instruction", structFileExtAndRegInp);
-		Assert.assertEquals("did not set correct API num",
-				StructFileExtAndRegInp.STRUCT_FILE_BUNDLE_API_NBR,
+		Assert.assertEquals("did not set correct API num", StructFileExtAndRegInp.STRUCT_FILE_BUNDLE_API_NBR,
 				structFileExtAndRegInp.getApiNumber());
 	}
 
@@ -129,8 +109,8 @@ public class StructFileExtAndRegInpTest {
 	public final void testMessageForCreateNoResource() throws Exception {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
-		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForCreateBundle(tarFileName, tarFileCollection, "");
+		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp.instanceForCreateBundle(tarFileName,
+				tarFileCollection, "");
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<StructFileExtAndRegInp_PI><objPath>/test/tarFileName.tar</objPath>\n");
@@ -143,8 +123,8 @@ public class StructFileExtAndRegInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</StructFileExtAndRegInp_PI>\n");
 
-		Assert.assertEquals("did not get expected packing instruction",
-				sb.toString(), structFileExtAndRegInp.getParsedTags());
+		Assert.assertEquals("did not get expected packing instruction", sb.toString(),
+				structFileExtAndRegInp.getParsedTags());
 	}
 
 	@Test
@@ -152,9 +132,8 @@ public class StructFileExtAndRegInpTest {
 		String tarFileName = "/test/tarFileName.tar";
 		String tarFileCollection = "/test/tarFileCollection";
 		String resource = "resource";
-		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
-				.instanceForCreateBundle(tarFileName, tarFileCollection,
-						resource);
+		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp.instanceForCreateBundle(tarFileName,
+				tarFileCollection, resource);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<StructFileExtAndRegInp_PI><objPath>/test/tarFileName.tar</objPath>\n");
@@ -171,8 +150,8 @@ public class StructFileExtAndRegInpTest {
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</StructFileExtAndRegInp_PI>\n");
 
-		Assert.assertEquals("did not get expected packing instruction",
-				sb.toString(), structFileExtAndRegInp.getParsedTags());
+		Assert.assertEquals("did not get expected packing instruction", sb.toString(),
+				structFileExtAndRegInp.getParsedTags());
 	}
 
 }

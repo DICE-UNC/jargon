@@ -5,21 +5,19 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
 /**
  * Abstract service to handle ticket processing
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AbstractTicketService {
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	AbstractTicketService(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) {
+	AbstractTicketService(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount) {
 
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
@@ -44,8 +42,7 @@ public class AbstractTicketService {
 		return irodsAccessObjectFactory;
 	}
 
-	public void setIrodsAccessObjectFactory(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+	public void setIrodsAccessObjectFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 

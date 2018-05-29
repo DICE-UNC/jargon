@@ -38,82 +38,75 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	private final boolean adminMode;
 
 	/**
-	 * Create an instance of the packing instruction to change permissions on
-	 * the file as an administrator.
+	 * Create an instance of the packing instruction to change permissions on the
+	 * file as an administrator.
 	 *
 	 * @param recursive
-	 *            {@code boolean} that indicates whether this is a
-	 *            recursive operation
+	 *            {@code boolean} that indicates whether this is a recursive
+	 *            operation
 	 * @param zone
-	 *            {@code String} that gives an optional zone id. Leave
-	 *            blank if not used.
+	 *            {@code String} that gives an optional zone id. Leave blank if not
+	 *            used.
 	 * @param absolutePath
-	 *            {@code String} with the absolute path to the iRODS file
-	 *            or collection.
+	 *            {@code String} with the absolute path to the iRODS file or
+	 *            collection.
 	 * @param userName
-	 *            {@code String} with the iRODS user name to set
-	 *            permissions for.
+	 *            {@code String} with the iRODS user name to set permissions for.
 	 * @param permission
-	 *            {@code String} of value read, write, or own to describe
-	 *            the permission.
+	 *            {@code String} of value read, write, or own to describe the
+	 *            permission.
 	 * @return {@link ModAccessControlInp}
 	 */
-	public static ModAccessControlInp instanceForSetPermission(
-			final boolean recursive, final String zone,
-			final String absolutePath, final String userName,
-			final String permission) {
-		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, userName, permission, false);
+	public static ModAccessControlInp instanceForSetPermission(final boolean recursive, final String zone,
+			final String absolutePath, final String userName, final String permission) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive, zone, absolutePath, userName, permission,
+				false);
 	}
 
 	/**
-	 * Create an instance of the packing instruction to change permissions on
-	 * the file. This is equivalent to the -M icommand option for ichmod.
+	 * Create an instance of the packing instruction to change permissions on the
+	 * file. This is equivalent to the -M icommand option for ichmod.
 	 *
 	 * @param recursive
-	 *            {@code boolean} that indicates whether this is a
-	 *            recursive operation
+	 *            {@code boolean} that indicates whether this is a recursive
+	 *            operation
 	 * @param zone
-	 *            {@code String} that gives an optional zone id. Leave
-	 *            blank if not used.
+	 *            {@code String} that gives an optional zone id. Leave blank if not
+	 *            used.
 	 * @param absolutePath
-	 *            {@code String} with the absolute path to the iRODS file
-	 *            or collection.
+	 *            {@code String} with the absolute path to the iRODS file or
+	 *            collection.
 	 * @param userName
-	 *            {@code String} with the iRODS user name to set
-	 *            permissions for.
+	 *            {@code String} with the iRODS user name to set permissions for.
 	 * @param permission
-	 *            {@code String} of value read, write, or own to describe
-	 *            the permission.
+	 *            {@code String} of value read, write, or own to describe the
+	 *            permission.
 	 * @return {@link ModAccessControlInp}
 	 */
-	public static ModAccessControlInp instanceForSetPermissionInAdminMode(
-			final boolean recursive, final String zone,
-			final String absolutePath, final String userName,
-			final String permission) {
-		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, userName, permission, true);
+	public static ModAccessControlInp instanceForSetPermissionInAdminMode(final boolean recursive, final String zone,
+			final String absolutePath, final String userName, final String permission) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive, zone, absolutePath, userName, permission,
+				true);
 	}
 
 	/**
 	 * Create an instance of packing instruction to set a collection to inherit.
 	 *
 	 * @param recursive
-	 *            {@code boolean} that indicates whether this is a
-	 *            recursive operation
+	 *            {@code boolean} that indicates whether this is a recursive
+	 *            operation
 	 * @param zone
-	 *            {@code String} that gives an optional zone id. Leave
-	 *            blank if not used.
+	 *            {@code String} that gives an optional zone id. Leave blank if not
+	 *            used.
 	 * @param absolutePath
-	 *            {@code String} with the absolute path to the iRODS file
-	 *            or collection.
+	 *            {@code String} with the absolute path to the iRODS file or
+	 *            collection.
 	 * @return {@link ModAccessControlInp}
 	 */
-	public static ModAccessControlInp instanceForSetInheritOnACollection(
-			final boolean recursive, final String zone,
+	public static ModAccessControlInp instanceForSetInheritOnACollection(final boolean recursive, final String zone,
 			final String absolutePath) {
-		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, "", INHERIT_PERMISSION, false);
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive, zone, absolutePath, "", INHERIT_PERMISSION,
+				false);
 	}
 
 	/**
@@ -121,21 +114,20 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * With admin mode
 	 *
 	 * @param recursive
-	 *            {@code boolean} that indicates whether this is a
-	 *            recursive operation
+	 *            {@code boolean} that indicates whether this is a recursive
+	 *            operation
 	 * @param zone
-	 *            {@code String} that gives an optional zone id. Leave
-	 *            blank if not used.
+	 *            {@code String} that gives an optional zone id. Leave blank if not
+	 *            used.
 	 * @param absolutePath
-	 *            {@code String} with the absolute path to the iRODS file
-	 *            or collection.
+	 *            {@code String} with the absolute path to the iRODS file or
+	 *            collection.
 	 * @return {@link ModAccessControlInp}
 	 */
-	public static ModAccessControlInp instanceForSetInheritOnACollectionInAdminMode(
-			final boolean recursive, final String zone,
-			final String absolutePath) {
-		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, "", INHERIT_PERMISSION, true);
+	public static ModAccessControlInp instanceForSetInheritOnACollectionInAdminMode(final boolean recursive,
+			final String zone, final String absolutePath) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive, zone, absolutePath, "", INHERIT_PERMISSION,
+				true);
 	}
 
 	/**
@@ -143,21 +135,20 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * inherit.
 	 *
 	 * @param recursive
-	 *            {@code boolean} that indicates whether this is a
-	 *            recursive operation
+	 *            {@code boolean} that indicates whether this is a recursive
+	 *            operation
 	 * @param zone
-	 *            {@code String} that gives an optional zone id. Leave
-	 *            blank if not used.
+	 *            {@code String} that gives an optional zone id. Leave blank if not
+	 *            used.
 	 * @param absolutePath
-	 *            {@code String} with the absolute path to the iRODS file
-	 *            or collection.
+	 *            {@code String} with the absolute path to the iRODS file or
+	 *            collection.
 	 * @return {@link ModAccessControlInp}
 	 */
-	public static ModAccessControlInp instanceForSetNoInheritOnACollection(
-			final boolean recursive, final String zone,
+	public static ModAccessControlInp instanceForSetNoInheritOnACollection(final boolean recursive, final String zone,
 			final String absolutePath) {
-		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, "", NOINHERIT_PERMISSION, false);
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive, zone, absolutePath, "",
+				NOINHERIT_PERMISSION, false);
 	}
 
 	/**
@@ -165,26 +156,25 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * inherit. In admin mode.
 	 *
 	 * @param recursive
-	 *            {@code boolean} that indicates whether this is a
-	 *            recursive operation
+	 *            {@code boolean} that indicates whether this is a recursive
+	 *            operation
 	 * @param zone
-	 *            {@code String} that gives an optional zone id. Leave
-	 *            blank if not used.
+	 *            {@code String} that gives an optional zone id. Leave blank if not
+	 *            used.
 	 * @param absolutePath
-	 *            {@code String} with the absolute path to the iRODS file
-	 *            or collection.
+	 *            {@code String} with the absolute path to the iRODS file or
+	 *            collection.
 	 * @return {@link ModAccessControlInp}
 	 */
-	public static ModAccessControlInp instanceForSetNoInheritOnACollectionInAdminMode(
-			final boolean recursive, final String zone,
-			final String absolutePath) {
-		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
-				zone, absolutePath, "", NOINHERIT_PERMISSION, true);
+	public static ModAccessControlInp instanceForSetNoInheritOnACollectionInAdminMode(final boolean recursive,
+			final String zone, final String absolutePath) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive, zone, absolutePath, "",
+				NOINHERIT_PERMISSION, true);
 	}
 
 	/**
-	 * Private constructor for creating a version of the packing instruction to
-	 * set permissions on a collection or data object.
+	 * Private constructor for creating a version of the packing instruction to set
+	 * permissions on a collection or data object.
 	 *
 	 * @param apiNumber
 	 * @param recursive
@@ -193,15 +183,12 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 * @param permission
 	 */
-	private ModAccessControlInp(final int apiNumber, final boolean recursive,
-			final String zone, final String absolutePath,
-			final String userName, final String permission,
-			final boolean adminMode) {
+	private ModAccessControlInp(final int apiNumber, final boolean recursive, final String zone,
+			final String absolutePath, final String userName, final String permission, final boolean adminMode) {
 		super();
 
 		if (apiNumber <= 0) {
-			throw new IllegalArgumentException(
-					"apiNumber is less than or equal to zero");
+			throw new IllegalArgumentException("apiNumber is less than or equal to zero");
 		}
 
 		if (zone == null) {
@@ -220,22 +207,17 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty permission");
 		}
 
-		if (permission.equals(OWN_PERMISSION)
-				|| permission.equals(READ_PERMISSION)
-				|| permission.equals(WRITE_PERMISSION)
-				|| permission.equals(INHERIT_PERMISSION)
-				|| permission.equals(NOINHERIT_PERMISSION)
-				|| permission.equals(NULL_PERMISSION)) {
+		if (permission.equals(OWN_PERMISSION) || permission.equals(READ_PERMISSION)
+				|| permission.equals(WRITE_PERMISSION) || permission.equals(INHERIT_PERMISSION)
+				|| permission.equals(NOINHERIT_PERMISSION) || permission.equals(NULL_PERMISSION)) {
 			// OK
 		} else {
 			throw new IllegalArgumentException("invalid permission");
 		}
 
-		if (permission.equals(INHERIT_PERMISSION)
-				|| permission.equals(NOINHERIT_PERMISSION)) {
+		if (permission.equals(INHERIT_PERMISSION) || permission.equals(NOINHERIT_PERMISSION)) {
 			if (!userName.isEmpty()) {
-				throw new IllegalArgumentException(
-						"userName cannot be specified if setting inherit/noinherit");
+				throw new IllegalArgumentException("userName cannot be specified if setting inherit/noinherit");
 			}
 		} else {
 			if (userName.isEmpty()) {
@@ -255,7 +237,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -278,11 +260,9 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			myPermission.append(permission);
 		}
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(RECURSIVE_FLAG, recursiveVal),
-				new Tag(ACCESS_LEVEL, myPermission.toString()),
-				new Tag(USER_NAME, userName), new Tag(ZONE, zone),
-				new Tag(PATH, absolutePath) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(RECURSIVE_FLAG, recursiveVal), new Tag(ACCESS_LEVEL, myPermission.toString()),
+						new Tag(USER_NAME, userName), new Tag(ZONE, zone), new Tag(PATH, absolutePath) });
 
 		return message;
 	}

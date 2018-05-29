@@ -37,21 +37,18 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param irodsFileOutputStream
 	 *            {@link IRODSFileOutputStream} that underlies this stream
 	 */
-	public PackingIrodsOutputStream(
-			final IRODSFileOutputStream irodsFileOutputStream) {
+	public PackingIrodsOutputStream(final IRODSFileOutputStream irodsFileOutputStream) {
 		if (irodsFileOutputStream == null) {
 			throw new IllegalArgumentException("null irodsFileOutputStream");
 		}
 
-		byteBufferSizeMax = irodsFileOutputStream.getFileIOOperations()
-				.getJargonProperties().getPutBufferSize();
+		byteBufferSizeMax = irodsFileOutputStream.getFileIOOperations().getJargonProperties().getPutBufferSize();
 		if (byteBufferSizeMax <= 0) {
-			throw new IllegalStateException(
-					"cannot have a zero or negative buffer size");
+			throw new IllegalStateException("cannot have a zero or negative buffer size");
 		}
 		byteArrayOutputStream = new ByteArrayOutputStream();
 		this.irodsFileOutputStream = irodsFileOutputStream;
@@ -59,13 +56,12 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[],
-	 * int, int)
+	 *
+	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[], int,
+	 * int)
 	 */
 	@Override
-	public void write(final byte[] b, final int off, final int len)
-			throws IOException {
+	public void write(final byte[] b, final int off, final int len) throws IOException {
 		log.debug("write()");
 		controlBytesIn += len;
 		log.debug("controlBytesIn:{}", controlBytesIn);
@@ -92,7 +88,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[])
 	 */
 	@Override
@@ -102,7 +98,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(int)
 	 */
 	@Override
@@ -114,7 +110,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.OutputStream#close()
 	 */
 	@Override
@@ -129,13 +125,13 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.OutputStream#flush()
 	 */
 	@Override
 	public void flush() throws IOException {
 		log.debug("flush()...see if any bytes are buffered");
-		if (this.byteArrayOutputStream.size() > 0) {
+		if (byteArrayOutputStream.size() > 0) {
 			log.debug("flushing buffered bytes and resetting");
 			flushAndResetBufferStream();
 			log.debug("now flushing the underlying iRODS stream");

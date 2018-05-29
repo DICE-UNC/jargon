@@ -26,25 +26,26 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class ResourceGroupAOImpl extends IRODSGenericAO implements
-		ResourceGroupAO {
+public class ResourceGroupAOImpl extends IRODSGenericAO implements ResourceGroupAO {
 
-	private static Logger log = LoggerFactory
-			.getLogger(ResourceGroupAOImpl.class);
+	private static Logger log = LoggerFactory.getLogger(ResourceGroupAOImpl.class);
 
 	/**
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected ResourceGroupAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected ResourceGroupAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceGroupAO#listResourceGroupNames()
 	 */
 	@Override
@@ -54,28 +55,21 @@ public class ResourceGroupAOImpl extends IRODSGenericAO implements
 
 		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			log.info("resource groups are not supported post iRODS4, simply list parent resources");
-			ResourceAO resourceAO = getIRODSAccessObjectFactory()
-					.getResourceAO(getIRODSAccount());
+			ResourceAO resourceAO = getIRODSAccessObjectFactory().getResourceAO(getIRODSAccount());
 			return resourceAO.listResourceNames();
 		}
 
 		AbstractIRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_RESC_GROUP_NAME)
-					.addOrderByGenQueryField(
-							RodsGenQueryEnum.COL_RESC_GROUP_NAME,
-							OrderByType.ASC);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_RESC_GROUP_NAME)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_RESC_GROUP_NAME, OrderByType.ASC);
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
-									.getJargonProperties()
-									.getMaxFilesAndDirsQueryMax()), 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(builder.exportIRODSQueryFromBuilder(
+					getIRODSAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax()), 0);
 		} catch (JargonQueryException e) {
 			log.error("jargon query exception getting results", e);
 			throw new JargonException(e);

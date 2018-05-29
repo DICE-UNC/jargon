@@ -22,22 +22,24 @@ public interface TreeSummarizingService {
 	 *            {@code String} with an absolute path to an iRODS tree
 	 * @return {@link TreeSummary}
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	TreeSummary generateTreeSummaryForIrodsFileTree(String irodsFilePath)
-			throws FileNotFoundException, JargonException;
+	TreeSummary generateTreeSummaryForIrodsFileTree(String irodsFilePath) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Create a summary describing the contents of a local file tree
 	 *
-	 * @param irodsFilePath
-	 *            {@code String} with an absolute path to a local file
-	 *            system tree
+	 * 
+	 * @param localFilePath
+	 *            {@code String} with an absolute path to a local file system tree
 	 * @return {@link TreeSummary}
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	TreeSummary generateTreeSummaryForLocalFileTree(String localFilePath)
-			throws FileNotFoundException, JargonException;
+	TreeSummary generateTreeSummaryForLocalFileTree(String localFilePath) throws FileNotFoundException, JargonException;
 
 }

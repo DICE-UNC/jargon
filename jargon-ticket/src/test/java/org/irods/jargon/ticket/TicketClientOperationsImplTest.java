@@ -149,12 +149,6 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	/**
-	 * Put a file to irods, then put to it as a secondary user with a ticket using
-	 * overwrite, giving that existing file name, and using a force option
-	 * 
-	 * @throws Exception
-	 */
 	@Test
 	public final void testPutFileToIRODSUsingTicketExistingFileSpecifyFile() throws Exception {
 
@@ -493,6 +487,11 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
+	 * <<<<<<< HEAD
+	 * 
+	 * =======
+	 *
+	 * >>>>>>> master
 	 * 
 	 * @throws Exception
 	 */
@@ -571,6 +570,11 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
+	 * <<<<<<< HEAD
+	 * 
+	 * =======
+	 *
+	 * >>>>>>> master
 	 * 
 	 * @throws Exception
 	 */
@@ -649,7 +653,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * Get a ticket on a data object, then get the data back as a stream
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -729,7 +733,11 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * Get a ticket on a data object whose abs path has embedded spaces, then get
-	 * the data back as a stream
+	 * the data back as a stream <<<<<<< HEAD
+	 * 
+	 * =======
+	 *
+	 * >>>>>>> master
 	 * 
 	 * @throws Exception
 	 */
@@ -809,7 +817,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * Try to stream from a collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -867,7 +875,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * Get a ticket on a data object, but the root cache dir does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -932,7 +940,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * nominal invocation of upload
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1004,7 +1012,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * nominal invocation of upload
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1076,7 +1084,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * nominal invocation of upload, but input stream is empty
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1146,7 +1154,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * nominal invocation of upload, but there is no ticket
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -1204,7 +1212,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * I don't have a temp cache directory!
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -1270,7 +1278,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * upload that would result in overwrite
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)

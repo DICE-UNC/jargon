@@ -24,20 +24,20 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Static initializer takes creates a shopping cart
 	 *
-	 * @return <code>FileShoppingCart</code> instane.
+	 * 
+	 * @return {@code FileShoppingCart} instance.
 	 */
 	public static FileShoppingCart instance() {
 		return new FileShoppingCart();
 	}
 
 	/**
-	 * Serialize the contents of the shopping cart as a {@code String} where
-	 * each file in the cart is one line, followed by a carriage return (\n)
-	 * character. This is a suitable format for saving the shopping cart as a
-	 * text file.
+	 * Serialize the contents of the shopping cart as a {@code String} where each
+	 * file in the cart is one line, followed by a carriage return (\n) character.
+	 * This is a suitable format for saving the shopping cart as a text file.
 	 *
-	 * @return <code>String</code> with one shopping cart file per line. The
-	 *         value will be blank if no files are in the cart
+	 * @return {@code String} with one shopping cart file per line. The value will
+	 *         be blank if no files are in the cart
 	 */
 	public String serializeShoppingCartContentsToStringOneItemPerLine() {
 		StringBuilder sb = new StringBuilder();
@@ -60,6 +60,7 @@ public class FileShoppingCart implements Serializable {
 	 *            method.
 	 * @return {@link FileShoppingCart} instance
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public static FileShoppingCart instanceFromSerializedStringRepresentation(final String stringRepresentation)
 			throws JargonException {
@@ -69,8 +70,8 @@ public class FileShoppingCart implements Serializable {
 		}
 
 		/*
-		 * Go through the entries by splitting on \n and create the new cart. An
-		 * empty cart is returned if no entries in the serialized string data
+		 * Go through the entries by splitting on \n and create the new cart. An empty
+		 * cart is returned if no entries in the serialized string data
 		 */
 
 		FileShoppingCart fileShoppingCart = new FileShoppingCart();
@@ -99,7 +100,8 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Handy method to check if cart has any entries.
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if cart has entries
+	 * 
+	 * @return {@code boolean} of {@code true} if cart has entries
 	 */
 	public boolean hasItems() {
 		return (shoppingCartEntries.entrySet().size() > 0);
@@ -143,9 +145,10 @@ public class FileShoppingCart implements Serializable {
 	}
 
 	/**
-	 * Get a <code>List<String></code> of the file names in the shopping cart
+	 * 
+	 * Get a {@code List<String>} of the file names in the shopping cart
 	 *
-	 * @return <code>List<String></code> with the files in the shopping cart
+	 * @return {@code List<String>} with the files in the shopping carts
 	 */
 	public List<String> getShoppingCartFileList() {
 		List<String> fileNames = new ArrayList<>();

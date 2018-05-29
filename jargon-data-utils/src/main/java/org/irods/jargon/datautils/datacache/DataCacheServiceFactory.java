@@ -18,7 +18,6 @@ public interface DataCacheServiceFactory {
 	 * org.irods.jargon.datautils.image.ImageServiceFactory#instanceThumbnailService
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
-	public abstract DataCacheService instanceDataCacheService(
-			IRODSAccount irodsAccount);
+	public abstract DataCacheService instanceDataCacheService(IRODSAccount irodsAccount);
 
 }

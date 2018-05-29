@@ -1,10 +1,9 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.ProtocolFormException;
 import org.irods.jargon.core.packinstr.DataObjInpForReg.ChecksumHandling;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,8 +22,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test
 	public final void testInstance() throws Exception {
-		DataObjInpForReg.instance("phys", "irods", "", "", false, false,
-				ChecksumHandling.NONE, false, "");
+		DataObjInpForReg.instance("phys", "irods", "", "", false, false, ChecksumHandling.NONE, false, "");
 	}
 
 	/**
@@ -32,8 +30,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceNullPhysPath() throws Exception {
-		DataObjInpForReg.instance(null, "irods", "", "", false, false,
-				ChecksumHandling.NONE, false, "");
+		DataObjInpForReg.instance(null, "irods", "", "", false, false, ChecksumHandling.NONE, false, "");
 	}
 
 	/**
@@ -41,8 +38,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceSpacePhysPath() throws Exception {
-		DataObjInpForReg.instance("", "irods", "", "", false, false,
-				ChecksumHandling.NONE, false, "");
+		DataObjInpForReg.instance("", "irods", "", "", false, false, ChecksumHandling.NONE, false, "");
 	}
 
 	/**
@@ -50,8 +46,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceNullIrodsPath() throws Exception {
-		DataObjInpForReg.instance("pys", null, "", "", false, false,
-				ChecksumHandling.NONE, false, "");
+		DataObjInpForReg.instance("pys", null, "", "", false, false, ChecksumHandling.NONE, false, "");
 	}
 
 	/**
@@ -59,8 +54,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceSpaceIrodsPath() throws Exception {
-		DataObjInpForReg.instance("phys", "", "", "", false, false,
-				ChecksumHandling.NONE, false, "");
+		DataObjInpForReg.instance("phys", "", "", "", false, false, ChecksumHandling.NONE, false, "");
 	}
 
 	/**
@@ -68,8 +62,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceNullChecksumHandling() throws Exception {
-		DataObjInpForReg.instance("pys", "irods", "", "", false, false, null,
-				false, "");
+		DataObjInpForReg.instance("pys", "irods", "", "", false, false, null, false, "");
 	}
 
 	/**
@@ -77,8 +70,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testInstanceNullChecksum() throws Exception {
-		DataObjInpForReg.instance("pys", "irods", "", "", false, false,
-				ChecksumHandling.NONE, false, null);
+		DataObjInpForReg.instance("pys", "irods", "", "", false, false, ChecksumHandling.NONE, false, null);
 	}
 
 	/**
@@ -86,8 +78,7 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = ProtocolFormException.class)
 	public final void testInstanceChecksumMissingWhenVerify() throws Exception {
-		DataObjInpForReg.instance("pys", "irods", "", "", false, false,
-				ChecksumHandling.VERFIY_CHECKSUM, false, "");
+		DataObjInpForReg.instance("pys", "irods", "", "", false, false, ChecksumHandling.VERFIY_CHECKSUM, false, "");
 	}
 
 	/**
@@ -95,15 +86,13 @@ public class DataObjInpForRegTest {
 	 */
 	@Test(expected = ProtocolFormException.class)
 	public final void testInstanceChecksumWhenRecursive() throws Exception {
-		DataObjInpForReg.instance("pys", "irods", "", "", false, true,
-				ChecksumHandling.VERFIY_CHECKSUM, false, "xxx");
+		DataObjInpForReg.instance("pys", "irods", "", "", false, true, ChecksumHandling.VERFIY_CHECKSUM, false, "xxx");
 	}
 
 	@Test
 	public final void testGetTagValueWhenNoForce() throws Exception {
-		DataObjInpForReg dataObjInput = DataObjInpForReg
-				.instance("phys", "irods", "", "", false, false,
-						ChecksumHandling.NONE, false, "");
+		DataObjInpForReg dataObjInput = DataObjInpForReg.instance("phys", "irods", "", "", false, false,
+				ChecksumHandling.NONE, false, "");
 
 		String tagValue = dataObjInput.getParsedTags();
 		Assert.assertNotNull("null tags returned", tagValue);

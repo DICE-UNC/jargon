@@ -13,11 +13,9 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE
  *
  */
-public abstract class AbstractParallelEncryptWrapper extends
-		AbstractParallelCipherWrapper {
+public abstract class AbstractParallelEncryptWrapper extends AbstractParallelCipherWrapper {
 
-	AbstractParallelEncryptWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	AbstractParallelEncryptWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}

@@ -7,73 +7,68 @@ import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
 public interface BulkFileOperationsAO extends IRODSAccessObject {
 
 	/**
-	 * Creates a bundle (tar) file to be stored in iRODS using the contents of
-	 * the specified collection. An optional (blank if not used) resource can be
+	 * Creates a bundle (tar) file to be stored in iRODS using the contents of the
+	 * specified collection. An optional (blank if not used) resource can be
 	 * specified to store the new bundle. This version is no-force.
 	 *
 	 * @param absolutePathToBundleFileToBeCreatedOnIrods
-	 *            {@code String} with the absolute path to a file on iRODS
-	 *            that will store the created bundle.
+	 *            {@code String} with the absolute path to a file on iRODS that will
+	 *            store the created bundle.
 	 * @param absolutePathToIrodsCollectionToBeBundled
-	 *            {@code String} with the absolute path to a collection on
-	 *            iRODS that will be the source of the bundle.
+	 *            {@code String} with the absolute path to a collection on iRODS
+	 *            that will be the source of the bundle.
 	 * @param resourceNameWhereBundleWillBeStored
-	 *            {@code String} with the optional (leave blank if not
-	 *            used, not null) iRODS resource where the bundle will be
-	 *            stored.
+	 *            {@code String} with the optional (leave blank if not used, not
+	 *            null) iRODS resource where the bundle will be stored.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	void createABundleFromIrodsFilesAndStoreInIrods(
-			final String absolutePathToBundleFileToBeCreatedOnIrods,
-			final String absolutePathToIrodsCollectionToBeBundled,
-			final String resourceNameWhereBundleWillBeStored)
-					throws JargonException;
+	void createABundleFromIrodsFilesAndStoreInIrods(final String absolutePathToBundleFileToBeCreatedOnIrods,
+			final String absolutePathToIrodsCollectionToBeBundled, final String resourceNameWhereBundleWillBeStored)
+			throws JargonException;
 
 	/**
-	 * Creates a bundle (tar) file to be stored in iRODS using the contents of
-	 * the specified collection. An optional (blank if not used) resource can be
+	 * Creates a bundle (tar) file to be stored in iRODS using the contents of the
+	 * specified collection. An optional (blank if not used) resource can be
 	 * specified to store the new bundle. This version uses a force option to
 	 * overwrite the tar file if it already exists.
 	 *
 	 * @param absolutePathToBundleFileToBeCreatedOnIrods
-	 *            {@code String} with the absolute path to a file on iRODS
-	 *            that will store the created bundle.
+	 *            {@code String} with the absolute path to a file on iRODS that will
+	 *            store the created bundle.
 	 * @param absolutePathToIrodsCollectionToBeBundled
-	 *            {@code String} with the absolute path to a collection on
-	 *            iRODS that will be the source of the bundle.
+	 *            {@code String} with the absolute path to a collection on iRODS
+	 *            that will be the source of the bundle.
 	 * @param resourceNameWhereBundleWillBeStored
-	 *            {@code String} with the optional (leave blank if not
-	 *            used, not null) iRODS resource where the bundle will be
-	 *            stored.
+	 *            {@code String} with the optional (leave blank if not used, not
+	 *            null) iRODS resource where the bundle will be stored.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	void createABundleFromIrodsFilesAndStoreInIrodsWithForceOption(
-			String absolutePathToBundleFileToBeCreatedOnIrods,
-			String absolutePathToIrodsCollectionToBeBundled,
-			String resourceNameWhereBundleWillBeStored) throws JargonException;
+	void createABundleFromIrodsFilesAndStoreInIrodsWithForceOption(String absolutePathToBundleFileToBeCreatedOnIrods,
+			String absolutePathToIrodsCollectionToBeBundled, String resourceNameWhereBundleWillBeStored)
+			throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
 	 * target directory. This is a no-force, no-bulk operation.
 	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 *            {@code String} with the absolute path to the tar file in
-	 *            iRODS to be extracted.
+	 *            {@code String} with the absolute path to the tar file in iRODS to
+	 *            be extracted.
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 *            {@code String} with the absolute path to the collection
-	 *            that will be the target of the extraction. The collection does
-	 *            not have to exist.
+	 *            {@code String} with the absolute path to the collection that will
+	 *            be the target of the extraction. The collection does not have to
+	 *            exist.
 	 * @param resourceNameWhereBundleWillBeExtracted
-	 *            {@code String} with the target resource for the
-	 *            extraction. This is optional and should be set to blank if not
-	 *            used (not null).
+	 *            {@code String} with the target resource for the extraction. This
+	 *            is optional and should be set to blank if not used (not null).
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	void extractABundleIntoAnIrodsCollection(
-			String absolutePathToBundleFileInIrodsToBeExtracted,
-			String absolutePathToIrodsCollectionToHoldExtractedFiles,
-			String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException;
+	void extractABundleIntoAnIrodsCollection(String absolutePathToBundleFileInIrodsToBeExtracted,
+			String absolutePathToIrodsCollectionToHoldExtractedFiles, String resourceNameWhereBundleWillBeExtracted)
+			throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
@@ -81,23 +76,21 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * previously extracted files
 	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 *            {@code String} with the absolute path to the tar file in
-	 *            iRODS to be extracted.
+	 *            {@code String} with the absolute path to the tar file in iRODS to
+	 *            be extracted.
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 *            {@code String} with the absolute path to the collection
-	 *            that will be the target of the extraction. The collection does
-	 *            not have to exist.
+	 *            {@code String} with the absolute path to the collection that will
+	 *            be the target of the extraction. The collection does not have to
+	 *            exist.
 	 * @param resourceNameWhereBundleWillBeExtracted
-	 *            {@code String} with the target resource for the
-	 *            extraction. This is optional and should be set to blank if not
-	 *            used (not null).
+	 *            {@code String} with the target resource for the extraction. This
+	 *            is optional and should be set to blank if not used (not null).
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	void extractABundleIntoAnIrodsCollectionWithForceOption(
-			String absolutePathToBundleFileInIrodsToBeExtracted,
-			String absolutePathToIrodsCollectionToHoldExtractedFiles,
-			String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException;
+	void extractABundleIntoAnIrodsCollectionWithForceOption(String absolutePathToBundleFileInIrodsToBeExtracted,
+			String absolutePathToIrodsCollectionToHoldExtractedFiles, String resourceNameWhereBundleWillBeExtracted)
+			throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
@@ -105,23 +98,22 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * registration optimization.
 	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 *            {@code String} with the absolute path to the tar file in
-	 *            iRODS to be extracted.
+	 *            {@code String} with the absolute path to the tar file in iRODS to
+	 *            be extracted.
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 *            {@code String} with the absolute path to the collection
-	 *            that will be the target of the extraction. The collection does
-	 *            not have to exist.
+	 *            {@code String} with the absolute path to the collection that will
+	 *            be the target of the extraction. The collection does not have to
+	 *            exist.
 	 * @param resourceNameWhereBundleWillBeExtracted
-	 *            {@code String} with the target resource for the
-	 *            extraction. This is optional and should be set to blank if not
-	 *            used (not null).
+	 *            {@code String} with the target resource for the extraction. This
+	 *            is optional and should be set to blank if not used (not null).
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
 			String absolutePathToBundleFileInIrodsToBeExtracted,
-			String absolutePathToIrodsCollectionToHoldExtractedFiles,
-			String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException;
+			String absolutePathToIrodsCollectionToHoldExtractedFiles, String resourceNameWhereBundleWillBeExtracted)
+			throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given

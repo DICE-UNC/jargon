@@ -19,8 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DiffTreePostProcessor {
 
-	private static Logger log = LoggerFactory
-			.getLogger(DiffTreePostProcessor.class);
+	private static Logger log = LoggerFactory.getLogger(DiffTreePostProcessor.class);
 
 	/**
 	 *
@@ -30,13 +29,14 @@ public class DiffTreePostProcessor {
 	}
 
 	/**
-	 * Given a completed diff tree, post process it to roll up the counts of
-	 * diffs in children. This is useful for display to users
+	 * 
+	 * Given a completed diff tree, post process it to roll up the counts of diffs
+	 * in children. This is useful for display to users
 	 *
 	 * @param fileTreeModel
 	 *            {@link FileTreeModel} that represents the outcome of a diff
-	 *            process. This model will have the nodes in the tree updated
-	 *            with cumulative counts of diffs in children nodes
+	 *            process. This model will have the nodes in the tree updated with
+	 *            cumulative counts of diffs in children nodes
 	 */
 	public void postProcessFileTreeModel(final FileTreeModel fileTreeModel) {
 
@@ -84,8 +84,7 @@ public class DiffTreePostProcessor {
 				count += countDiffsInChildren(childNode);
 			}
 		}
-		FileTreeDiffEntry thisEntry = (FileTreeDiffEntry) fileTreeNode
-				.getUserObject();
+		FileTreeDiffEntry thisEntry = (FileTreeDiffEntry) fileTreeNode.getUserObject();
 		thisEntry.setCountOfDiffsInChildren(count);
 
 		log.info("this entry count updated:{}", thisEntry);

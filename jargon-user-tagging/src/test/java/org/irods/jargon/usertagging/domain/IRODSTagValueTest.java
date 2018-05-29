@@ -1,12 +1,11 @@
 package org.irods.jargon.usertagging.domain;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,8 +23,7 @@ public class IRODSTagValueTest {
 	public void testCreateTag() throws Exception {
 		String expectedTagVal = "tagVal";
 		String expectedTagUser = "tagUser";
-		IRODSTagValue actual = new IRODSTagValue(expectedTagVal,
-				expectedTagUser);
+		IRODSTagValue actual = new IRODSTagValue(expectedTagVal, expectedTagUser);
 		Assert.assertEquals(expectedTagVal, actual.getTagData());
 		Assert.assertEquals(expectedTagUser, actual.getTagUser());
 	}
@@ -63,9 +61,8 @@ public class IRODSTagValueTest {
 		String expectedUser = "testuser";
 		String expectedTag = "testTag";
 
-		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", "xxx", 1, expectedTag,
-						expectedUser, UserTaggingConstants.TAG_AVU_UNIT);
+		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1", "xxx", 1,
+				expectedTag, expectedUser, UserTaggingConstants.TAG_AVU_UNIT);
 
 		IRODSTagValue actual = new IRODSTagValue(metadataAndDomainData);
 

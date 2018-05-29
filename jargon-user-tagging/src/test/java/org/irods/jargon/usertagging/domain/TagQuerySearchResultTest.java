@@ -3,11 +3,10 @@ package org.irods.jargon.usertagging.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,8 +23,7 @@ public class TagQuerySearchResultTest {
 	@Test
 	public void testInstance() throws Exception {
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
-		TagQuerySearchResult result = TagQuerySearchResult.instance("tags",
-				entries);
+		TagQuerySearchResult result = TagQuerySearchResult.instance("tags", entries);
 		Assert.assertNotNull(result);
 	}
 

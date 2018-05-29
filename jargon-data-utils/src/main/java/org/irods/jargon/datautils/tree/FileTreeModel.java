@@ -14,17 +14,17 @@ public class FileTreeModel extends DefaultTreeModel {
 	private static final long serialVersionUID = -4326229056412362449L;
 
 	/**
-	 * Creates a tree specifying whether any node can have children, or whether
-	 * only certain nodes can have children.
+	 * 
+	 * Creates a tree specifying whether any node can have children, or whether only
+	 * certain nodes can have children.
 	 *
 	 * @param root
 	 *            {@link FileTreeNode} that is the root of the file tree
 	 * @param asksAllowsChildren
-	 *            {@code boolean}, false if any node can have children,
-	 *            true if each node is asked to see if it can have children
+	 *            {@code boolean}, false if any node can have children, true if each
+	 *            node is asked to see if it can have children
 	 */
-	public FileTreeModel(final FileTreeNode root,
-			final boolean asksAllowsChildren) {
+	public FileTreeModel(final FileTreeNode root, final boolean asksAllowsChildren) {
 		super(root, asksAllowsChildren);
 	}
 

@@ -24,11 +24,9 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public final class ParallelPutFileTransferStrategy extends
-		AbstractParallelFileTransferStrategy {
+public final class ParallelPutFileTransferStrategy extends AbstractParallelFileTransferStrategy {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ParallelPutFileTransferStrategy.class);
+	public static final Logger log = LoggerFactory.getLogger(ParallelPutFileTransferStrategy.class);
 
 	/**
 	 * Create an instance of a strategy to accomplish a parallel file transfer.
@@ -38,48 +36,39 @@ public final class ParallelPutFileTransferStrategy extends
 	 * @param port
 	 *            {@code int} with the port number for the host.
 	 * @param numberOfThreads
-	 *            {@code int} with the number of threads over which the
-	 *            transfer will occur.
+	 *            {@code int} with the number of threads over which the transfer
+	 *            will occur.
 	 * @param password
-	 *            {@code String} with the password sent by iRODS for this
-	 *            transfer.
+	 *            {@code String} with the password sent by iRODS for this transfer.
 	 * @param localFile
 	 *            {@code File} representing the local file
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @param transferLength
-	 *            {@code long} with the length of the total file to
-	 *            transfer
+	 *            {@code long} with the length of the total file to transfer
 	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} that controls and keeps track of
-	 *            the transfer operation, required.
+	 *            {@link TransferControlBlock} that controls and keeps track of the
+	 *            transfer operation, required.
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} or {@code null} if
-	 *            not desired. This can receive call-backs on the status of the
-	 *            parallel transfer operation.
+	 *            {@link TransferStatusCallbackListener} or {@code null} if not
+	 *            desired. This can receive call-backs on the status of the parallel
+	 *            transfer operation.
 	 * @param fileRestartInfo
+	 *            {@link FileRestartInfo}
 	 * @param negotiatedClientServerConfiguration
-	 *            {@link NegotiatedClientServerConfiguration} including
-	 *            encryption requirements
+	 *            {@link NegotiatedClientServerConfiguration} including encryption
+	 *            requirements
 	 * @return {@link ParallelPutFileTransferStrategy}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static ParallelPutFileTransferStrategy instance(
-			final String host,
-			final int port,
-			final int numberOfThreads,
-			final int password,
-			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final long transferLength,
-			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo,
-			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws JargonException {
-		return new ParallelPutFileTransferStrategy(host, port, numberOfThreads,
-				password, localFile, irodsAccessObjectFactory, transferLength,
-				transferControlBlock, transferStatusCallbackListener,
+	public static ParallelPutFileTransferStrategy instance(final String host, final int port, final int numberOfThreads,
+			final int password, final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength, final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener, final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) throws JargonException {
+		return new ParallelPutFileTransferStrategy(host, port, numberOfThreads, password, localFile,
+				irodsAccessObjectFactory, transferLength, transferControlBlock, transferStatusCallbackListener,
 				fileRestartInfo, negotiatedClientServerConfiguration);
 	}
 
@@ -101,39 +90,28 @@ public final class ParallelPutFileTransferStrategy extends
 
 	}
 
-	private ParallelPutFileTransferStrategy(
-			final String host,
-			final int port,
-			final int numberOfThreads,
-			final int password,
-			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final long transferLength,
-			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo,
-			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws JargonException {
-		super(host, port, numberOfThreads, password, localFile,
-				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener, fileRestartInfo,
+	private ParallelPutFileTransferStrategy(final String host, final int port, final int numberOfThreads,
+			final int password, final File localFile, final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength, final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener, final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) throws JargonException {
+		super(host, port, numberOfThreads, password, localFile, irodsAccessObjectFactory, transferLength,
+				transferControlBlock, transferStatusCallbackListener, fileRestartInfo,
 				negotiatedClientServerConfiguration);
 
-		if (transferControlBlock.getTransferOptions()
-				.isIntraFileStatusCallbacks()
+		if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks()
 				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
-					.instance(TransferStatus.TransferType.PUT, transferLength,
-							transferControlBlock,
-							transferStatusCallbackListener));
+			setConnectionProgressStatusListener(
+					DefaultIntraFileProgressCallbackListener.instance(TransferStatus.TransferType.PUT, transferLength,
+							transferControlBlock, transferStatusCallbackListener));
 		}
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()
@@ -141,8 +119,7 @@ public final class ParallelPutFileTransferStrategy extends
 	@Override
 	public void transfer() throws JargonException {
 		log.info("initiating transfer for: {}", toString());
-		ExecutorService executor = getIrodsAccessObjectFactory()
-				.getIrodsSession().getParallelTransferThreadPool();
+		ExecutorService executor = getIrodsAccessObjectFactory().getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
 			log.info("no pool available, transfer using single executor");
 			ExecutorService executorService = null;
@@ -160,8 +137,7 @@ public final class ParallelPutFileTransferStrategy extends
 		}
 	}
 
-	private void transferWithExecutor(final ExecutorService executor)
-			throws JargonException {
+	private void transferWithExecutor(final ExecutorService executor) throws JargonException {
 		log.info("initiating transfer for: {} without executor", toString());
 		final List<ParallelPutTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutTransferThread>();
 		localFile.length();
@@ -169,8 +145,7 @@ public final class ParallelPutFileTransferStrategy extends
 
 		for (int i = 0; i < numberOfThreads; i++) {
 
-			parallelTransferThread = ParallelPutTransferThread
-					.instance(this, i);
+			parallelTransferThread = ParallelPutTransferThread.instance(this, i);
 			parallelPutTransferThreads.add(parallelTransferThread);
 			log.info("created transfer thread:{}", parallelTransferThread);
 
@@ -178,8 +153,7 @@ public final class ParallelPutFileTransferStrategy extends
 
 		try {
 			log.info("invoking executor threads for put");
-			List<Future<ParallelTransferResult>> transferThreadStates = executor
-					.invokeAll(parallelPutTransferThreads);
+			List<Future<ParallelTransferResult>> transferThreadStates = executor.invokeAll(parallelPutTransferThreads);
 
 			for (Future<ParallelTransferResult> transferState : transferThreadStates) {
 				try {

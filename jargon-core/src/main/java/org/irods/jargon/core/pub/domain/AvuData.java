@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.pub.domain;
 
-import org.irods.jargon.core.exception.JargonException;
-
 /**
  * Representation of an AVU metadata item. This class is mutable and should be
  * used carefully. Jargon libraries will not alter the values of mutable objects
@@ -21,10 +19,9 @@ public final class AvuData extends IRODSDomainObject {
 	private String unit = "";
 
 	/**
-	 * Static initializer returns an {@code AvuData}. Note that unused
-	 * values should be set to 'blank' rather then {@code null}. An
-	 * {@code IllegalArgumentException} will be thrown if something is
-	 * null.
+	 * Static initializer returns an {@code AvuData}. Note that unused values should
+	 * be set to 'blank' rather then {@code null}. An
+	 * {@code IllegalArgumentException} will be thrown if something is null.
 	 *
 	 * @param attribute
 	 *            {@code String} with the AVU attribute.
@@ -32,10 +29,10 @@ public final class AvuData extends IRODSDomainObject {
 	 *            {@code String} with the AVU value.
 	 * @param unit
 	 *            {@code String} with AVU unit.
-	 * @throws JargonException
+	 * @return {@link AvuData}
+	 *
 	 */
-	public static AvuData instance(final String attribute, final String value,
-			final String unit) throws JargonException {
+	public static AvuData instance(final String attribute, final String value, final String unit) {
 		return new AvuData(attribute, value, unit);
 	}
 
@@ -52,21 +49,19 @@ public final class AvuData extends IRODSDomainObject {
 	 *            {@code String} with the AVU value.
 	 * @param unit
 	 *            {@code String} with AVU unit.
-	 * @throws JargonException
+	 *
 	 */
-	public AvuData(final String attribute, final String value, final String unit)
-			throws JargonException {
+	public AvuData(final String attribute, final String value, final String unit) {
 		if (attribute == null || attribute.isEmpty()) {
-			throw new JargonException("attribute is null or empty");
+			throw new IllegalArgumentException("attribute is null or empty");
 		}
 
 		if (value == null || value.isEmpty()) {
-			throw new JargonException("value is null or empty");
+			throw new IllegalArgumentException("value is null or empty");
 		}
 
 		if (unit == null) {
-			throw new JargonException(
-					"unit is null, leave blank String if empty");
+			throw new IllegalArgumentException("unit is null, leave blank String if empty");
 		}
 
 		this.attribute = attribute;
@@ -119,8 +114,7 @@ public final class AvuData extends IRODSDomainObject {
 		}
 
 		AvuData other = (AvuData) obj;
-		return (attribute.equals(other.attribute) && value.equals(other.value) && unit
-				.equals(other.unit));
+		return (attribute.equals(other.attribute) && value.equals(other.value) && unit.equals(other.unit));
 	}
 
 	@Override

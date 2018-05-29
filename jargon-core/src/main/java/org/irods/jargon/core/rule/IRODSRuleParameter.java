@@ -107,8 +107,8 @@ public class IRODSRuleParameter {
 	}
 
 	/**
-	 * For parameters that do not have initial values. Parameters that are not
-	 * input values for the rule engine.
+	 * For parameters that do not have initial values. Parameters that are not input
+	 * values for the rule engine.
 	 */
 	void setNullValue() {
 		value = "";
@@ -144,11 +144,10 @@ public class IRODSRuleParameter {
 	}
 
 	/**
-	 * Get the value part of the parameter as a
-	 * {@code String}.  Note that arrays are translated into Strings.
+	 * Get the value part of the parameter as a {@code String}. Note that arrays are
+	 * translated into Strings.
 	 *
-	 * @return {@code String} containing the value of the
-	 *         IRODSRuleParameter.
+	 * @return {@code String} containing the value of the IRODSRuleParameter.
 	 */
 	public String retrieveStringValue() {
 		if (value.getClass().isArray() && type.equals(EXEC_CMD_OUT_PI)) {
@@ -191,6 +190,8 @@ public class IRODSRuleParameter {
 
 	/**
 	 * Return the value with leading and trailing quotes stripped out
+	 *
+	 * @return {@code String} with the stripped value
 	 */
 	public String getValueAsStringWithQuotesStripped() {
 		int initQuote = retrieveStringValue().indexOf('"');
@@ -209,25 +210,22 @@ public class IRODSRuleParameter {
 				new Tag[] { new Tag(IRODSConstants.label, getUniqueName()), new Tag(IRODSConstants.type, getType()), });
 
 		if (type.equals(INT_PI)) {
-			param.addTag(new Tag(INT_PI,
-					new Tag[] {
-							// only one parameter, the int
-							new Tag(MY_INT, retrieveIntValue()), }));
+			param.addTag(new Tag(INT_PI, new Tag[] {
+					// only one parameter, the int
+					new Tag(MY_INT, retrieveIntValue()), }));
 
 		} else if (type.equals(BUF_LEN_PI)) {
-			param.addTag(new Tag(BUF_LEN_PI,
-					new Tag[] {
-							// send a byte buffer
-							new Tag(BUFLEN, retrieveByteValue().length),
-							// maybe convert to Base64?
-							new Tag(BUF, new String(retrieveByteValue())), }));
+			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
+					// send a byte buffer
+					new Tag(BUFLEN, retrieveByteValue().length),
+					// maybe convert to Base64?
+					new Tag(BUF, new String(retrieveByteValue())), }));
 		} else {// STR_PI or NULL_PI
-			param.addTag(new Tag(STR_PI,
-					new Tag[] {
-							// only one parameter, the string
-							// if default, try sending the string value, might
-							// work...
-							new Tag(MY_STR, retrieveStringValue()), }));
+			param.addTag(new Tag(STR_PI, new Tag[] {
+					// only one parameter, the string
+					// if default, try sending the string value, might
+					// work...
+					new Tag(MY_STR, retrieveStringValue()), }));
 
 		}
 		return param;

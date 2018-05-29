@@ -46,19 +46,16 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	/**
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected UserGroupAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#addUserGroup(org.irods.jargon.core
-	 * .pub.domain.UserGroup)
-	 */
 	@Override
 	public void addUserGroup(final UserGroup userGroup) throws DuplicateDataException, JargonException {
 
@@ -122,11 +119,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(java.lang.String)
-	 */
 	@Override
 	public void removeUserGroup(final String userGroupName) throws JargonException {
 
@@ -147,12 +139,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(org.irods.jargon
-	 * .core.pub.domain.UserGroup)
-	 */
 	@Override
 	public void removeUserGroup(final UserGroup userGroup) throws JargonException {
 		log.info("removeUserGroup()");
@@ -294,11 +280,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#findByName(java.lang.String)
-	 */
 	@Override
 	public UserGroup findByName(final String userGroupName) throws JargonException {
 
@@ -342,11 +323,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#findWhere(java.lang.String)
-	 */
 	@Override
 	public List<UserGroup> findWhere(final String whereClause) throws JargonException, JargonQueryException {
 
@@ -386,12 +362,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		return userGroups;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#listUserGroupMembers(java.lang.
-	 * String)
-	 */
 	@Override
 	public List<User> listUserGroupMembers(final String userGroupName) throws JargonException {
 
@@ -444,11 +414,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		return users;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#findUserGroups(java.lang.String)
-	 */
 	@Override
 	public List<UserGroup> findUserGroups(final String userGroupName) throws JargonException {
 
@@ -502,12 +467,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		return userGroups;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#findUserGroupsForUser(java
-	 * .lang.String)
-	 */
 	@Override
 	public List<UserGroup> findUserGroupsForUser(final String userName) throws JargonException {
 		if (userName == null || userName.length() == 0) {
@@ -551,12 +510,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		return userGroups;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#isUserInGroup(java.lang.String,
-	 * java.lang.String)
-	 */
 	@Override
 	public boolean isUserInGroup(final String userName, final String groupName) throws JargonException {
 
@@ -609,12 +562,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.UserGroupAO#addUserToGroup(java.lang.String,
-	 * java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void addUserToGroup(final String userGroupName, final String userName, final String zoneName)
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
@@ -675,13 +622,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		getIRODSProtocol().irodsFunction(adminPI);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#removeUserFromGroup(java.lang.String ,
-	 * java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void removeUserFromGroup(final String userGroupName, final String userName, final String zoneName)
 

@@ -78,9 +78,9 @@ public class CollectionAOHelper extends AOHelper {
 	 * collection data in the iCAT
 	 *
 	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} to which the selects will be
-	 *            added
+	 *            {@link IRODSGenQueryBuilder} to which the selects will be added
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
 	public static void buildSelectsByAppendingToBuilder(final IRODSGenQueryBuilder builder)
 			throws GenQueryBuilderException {
@@ -100,9 +100,9 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build a set of selects for collection metadata. This method does not add
-	 * the "select" statement or any trailing delimiter, and is handy when you
-	 * want to tack a metadata selection onto the end of a query.
+	 * Build a set of selects for collection metadata. This method does not add the
+	 * "select" statement or any trailing delimiter, and is handy when you want to
+	 * tack a metadata selection onto the end of a query.
 	 *
 	 * @return {@code String} with metadata select fragment.
 	 */
@@ -117,14 +117,14 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Return a {@code Collection} domain object given a result row from a
-	 * query
+	 * Return a {@code Collection} domain object given a result row from a query
 	 *
 	 * @param row
-	 *            {@link org.irods.jargon.core.query.IRODSQueryResultRow}
-	 *            containing the result of a query
+	 *            {@link org.irods.jargon.core.query.IRODSQueryResultRow} containing
+	 *            the result of a query
 	 * @return {@link Collection} that represents the data in the row.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static Collection buildCollectionFromResultSetRow(final IRODSQueryResultRow row) throws JargonException {
 		Collection collection = new Collection();
@@ -153,12 +153,13 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Given a set of AVU Query parameters, build the appropriate condition to
-	 * add to a query
+	 * Given a set of AVU Query parameters, build the appropriate condition to add
+	 * to a query
 	 *
 	 * @param queryElement
-	 *            {@code StringBuilder} with the given AVU query in iquest
-	 *            query form.
+	 *            {@code StringBuilder} with the given AVU query in iquest query
+	 *            form.
+	 * @return {@link StringBuilder} with condition data
 	 */
 	public static StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
 		StringBuilder queryCondition = new StringBuilder();
@@ -188,6 +189,7 @@ public class CollectionAOHelper extends AOHelper {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS.getName());
 			queryCondition.append(SPACE);
+
 			queryCondition.append(queryElement.getOperator().getOperatorAsString());
 
 			queryCondition.append(SPACE);
@@ -200,14 +202,14 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Append the appropriately formed query condition to the provided builder
-	 * for a collection metadata query
+	 * Append the appropriately formed query condition to the provided builder for a
+	 * collection metadata query
 	 *
 	 * @param queryElement
 	 *            {@link AVUQueryElement} to be added as a condition
 	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} that will have the derived
-	 *            condition appended
+	 *            {@link IRODSGenQueryBuilder} that will have the derived condition
+	 *            appended
 	 * @throws JargonQueryException
 	 *             if the query cannot be built
 	 */
@@ -215,6 +217,7 @@ public class CollectionAOHelper extends AOHelper {
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
+
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME, queryElement.getOperator(),
 					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
@@ -234,8 +237,10 @@ public class CollectionAOHelper extends AOHelper {
 	 * Build a list of collection results based on the result of a query
 	 *
 	 * @param resultSet
+	 *            {@link IRODSQueryResultSetInterface}
 	 * @return List {@link Collection}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static List<Collection> buildListFromResultSet(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
@@ -250,17 +255,17 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * for a result set row, create a
-	 * {@code CollectionAndDataObjectListingEntry}
+	 * for a result set row, create a {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
 	 *            {@code IRODSQueryResultRow} with raw data.
 	 * @param totalRecords
-	 *            {@code int} with the optional total records in the
-	 *            database, not always available in the iCAT, this can be set to
-	 *            0 if not available
+	 *            {@code int} with the optional total records in the database, not
+	 *            always available in the iCAT, this can be set to 0 if not
+	 *            available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQuery(
 			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {
@@ -285,17 +290,18 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * for a result set row from a query for data objects in a collection,
-	 * create a {@code CollectionAndDataObjectListingEntry}
+	 * for a result set row from a query for data objects in a collection, create a
+	 * {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
 	 *            {@code IRODSQueryResultRow} with raw data
 	 * @param totalRecords
-	 *            {@code int} with the optional total records in the
-	 *            database, not always available in the iCAT, this can be set to
-	 *            0 if not available
+	 *            {@code int} with the optional total records in the database, not
+	 *            always available in the iCAT, this can be set to 0 if not
+	 *            available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQuery(
 			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {
@@ -322,7 +328,9 @@ public class CollectionAOHelper extends AOHelper {
 	 * Append selects to the provided builder for collection queries
 	 *
 	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
 	public static void buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(
 			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
@@ -341,15 +349,16 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build an inheritance query for the collection by appending the selects
-	 * and conditions to the {@code IRODSGenQueryBuilder} provided
+	 * Build an inheritance query for the collection by appending the selects and
+	 * conditions to the {@code IRODSGenQueryBuilder} provided
 	 *
 	 * @param absolutePathToCollection
-	 *            {@code String} with the absolute path to the iRODS
-	 *            collection for which the permission bit will be queried
+	 *            {@code String} with the absolute path to the iRODS collection for
+	 *            which the permission bit will be queried
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static void buildInheritanceQueryForCollectionAbsolutePath(final String absolutePathToCollection,
 			final IRODSGenQueryBuilder builder) throws JargonException {
@@ -372,27 +381,31 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * @param userFilePermissions
+	 *            {@code List} of {@link UserFilePermission}
 	 * @param row
+	 *            {@link IRODSQueryResultRow}
+	 * @param irodsAbsolutePath
+	 *            {@code String} with the iRODS path
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static void buildUserFilePermissionForCollection(final List<UserFilePermission> userFilePermissions,
 			final IRODSQueryResultRow row, final String irodsAbsolutePath) throws JargonException {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the
-		 * permissions query, so, unfortunately, I need to do another query to
-		 * get the user type
+		 * permissions query, so, unfortunately, I need to do another query to get the
+		 * user type
 		 */
 		UserFilePermission userFilePermission;
 
 		/*
-		 * Gracefully ignore a not found for the user name and zone, just set
-		 * the type to unknown and return what I have.
+		 * Gracefully ignore a not found for the user name and zone, just set the type
+		 * to unknown and return what I have.
 		 */
 		try {
 			/*
-			 * User user = userAO .findByIdInZone(row.getColumn(10),
-			 * collectionZone);
+			 * User user = userAO .findByIdInZone(row.getColumn(10), collectionZone);
 			 */
 
 			userFilePermission = new UserFilePermission(row.getColumn(8), row.getColumn(11),
@@ -411,8 +424,15 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * @param userFilePermissions
+	 *            {@code List} of {@link UserFilePermission}
 	 * @param row
+	 *            {@link IRODSQueryResultRow} with the query data
+	 * @param irodsAbsolutePath
+	 *            {@code String} with the iRODS path for the data object
+	 * @param currentZone
+	 *            {@code String} with the current zone
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static void buildUserFilePermissionForDataObject(final List<UserFilePermission> userFilePermissions,
 			final IRODSQueryResultRow row, final String irodsAbsolutePath, final String currentZone)
@@ -420,8 +440,8 @@ public class CollectionAOHelper extends AOHelper {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the
-		 * permissions query, so, unfortunately, I need to do another query to
-		 * get the user type
+		 * permissions query, so, unfortunately, I need to do another query to get the
+		 * user type
 		 */
 		UserFilePermission userFilePermission;
 
@@ -432,11 +452,14 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build a select for a collection ACL with the given collection absolute
-	 * path
+	 * Build a select for a collection ACL with the given collection absolute path
 	 *
 	 * @param irodsCollectionAbsolutePath
+	 *            {@code String} with the iRODS path
 	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
 	public static void buildACLQueryForCollectionName(final String irodsCollectionAbsolutePath,

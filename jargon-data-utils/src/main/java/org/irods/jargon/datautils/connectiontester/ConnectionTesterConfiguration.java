@@ -14,8 +14,8 @@ package org.irods.jargon.datautils.connectiontester;
 public class ConnectionTesterConfiguration {
 
 	/**
-	 * Local source path for directory under which test files are created, put,
-	 * and gotten
+	 * Local source path for directory under which test files are created, put, and
+	 * gotten
 	 */
 	private String localSourceParentDirectory = "";
 
@@ -46,8 +46,8 @@ public class ConnectionTesterConfiguration {
 	 * @param localSourceParentDirectory
 	 *            the localSourceParentDirectory to set
 	 */
-	public void setLocalSourceParentDirectory(
-			final String localSourceParentDirectory) {
+	public void setLocalSourceParentDirectory(final String localSourceParentDirectory) {
+
 		this.localSourceParentDirectory = localSourceParentDirectory;
 	}
 

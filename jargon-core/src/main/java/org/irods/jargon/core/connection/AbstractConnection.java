@@ -414,7 +414,7 @@ public abstract class AbstractConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	protected void sendInNetworkOrder(final int value, boolean flush) throws IOException {
+	protected void sendInNetworkOrder(final int value, final boolean flush) throws IOException {
 		sendInNetworkOrder(value);
 		if (flush) {
 			flush();
@@ -498,7 +498,7 @@ public abstract class AbstractConnection {
 	 *             Send buffer empty
 	 * @throws IOException
 	 *             If an IOException occurs
-	 * 
+	 *
 	 */
 	public void flush() throws IOException {
 		if (connection.isClosed()) {
@@ -520,7 +520,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Reads a byte from the server.
-	 * 
+	 *
 	 * @return <code>byte</code> with the byte read
 	 *
 	 * @throws IOException
@@ -547,7 +547,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Read into the given output stream
-	 * 
+	 *
 	 * @param destination
 	 *            {@link OutputStream} with the value read from the connection
 	 * @param length
@@ -636,7 +636,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Reads a byte array from the server. Blocks until {@code length} number of
 	 * bytes are read.
-	 * 
+	 *
 	 * @param value
 	 *            {code byte[]} with the value that was read
 	 * @param length

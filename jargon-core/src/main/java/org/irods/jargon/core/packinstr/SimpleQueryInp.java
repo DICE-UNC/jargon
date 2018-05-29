@@ -68,8 +68,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 		return maxBuffSize;
 	}
 
-	private SimpleQueryInp(final int apiNbr,
-			final AbstractAliasedQuery simpleQuery) {
+	private SimpleQueryInp(final int apiNbr, final AbstractAliasedQuery simpleQuery) {
 		super();
 
 		if (apiNbr <= 0) {
@@ -118,12 +117,10 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 			arg4 = simpleQuery.getArguments().get(3);
 		}
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(SQL, simpleQuery.getQueryString()),
-				new Tag(ARG1, arg1), new Tag(ARG2, arg2), new Tag(ARG3, arg3),
-				new Tag(ARG4, arg4),
-				new Tag(CONTROL, simpleQuery.getContinuationValue()),
-				new Tag(FORM, 2), new Tag(MAX_BUF_SIZE, maxBuffSize), });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(SQL, simpleQuery.getQueryString()), new Tag(ARG1, arg1), new Tag(ARG2, arg2),
+						new Tag(ARG3, arg3), new Tag(ARG4, arg4), new Tag(CONTROL, simpleQuery.getContinuationValue()),
+						new Tag(FORM, 2), new Tag(MAX_BUF_SIZE, maxBuffSize), });
 
 		return message;
 

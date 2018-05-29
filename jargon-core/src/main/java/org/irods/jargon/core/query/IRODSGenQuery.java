@@ -16,8 +16,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	private final String queryString;
 
 	/**
-	 * Creates an immutable description of a general query to IRODS with
-	 * defaults.
+	 * Creates an immutable description of a general query to IRODS with defaults.
 	 *
 	 * @param queryString
 	 *            {@code String} version of an IRODS Query
@@ -25,11 +24,11 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	 *            {@code int} with the number of desired results
 	 * @return {@link IRODSGenQuery}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static IRODSGenQuery instance(final String queryString,
-			final int numberOfResultsDesired) throws JargonException {
-		return new IRODSGenQuery(queryString, numberOfResultsDesired,
-				RowCountOptions.NO_ROW_COUNT, 0);
+	public static IRODSGenQuery instance(final String queryString, final int numberOfResultsDesired)
+			throws JargonException {
+		return new IRODSGenQuery(queryString, numberOfResultsDesired, RowCountOptions.NO_ROW_COUNT, 0);
 	}
 
 	/**
@@ -40,21 +39,20 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	 * @param numberOfResultsDesired
 	 *            {@code int} with the number of desired results
 	 * @param rowCountOption
-	 * @return {@code RowCountOptions} enumeration indicating the type of
-	 *         row count to be returned.
+	 *            {@link RowCountOptions} indicating how to calculate the row index
+	 *            (e.g. are skipped rows counted}
+	 * @return {@code RowCountOptions} enumeration indicating the type of row count
+	 *         to be returned.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static IRODSGenQuery instance(final String queryString,
-			final int numberOfResultsDesired,
+	public static IRODSGenQuery instance(final String queryString, final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption) throws JargonException {
-		return new IRODSGenQuery(queryString, numberOfResultsDesired,
-				rowCountOption, 0);
+		return new IRODSGenQuery(queryString, numberOfResultsDesired, rowCountOption, 0);
 	}
 
-	private IRODSGenQuery(final String queryString,
-			final int numberOfResultsDesired,
-			final RowCountOptions rowCountOption, final int skip)
-			throws JargonException {
+	private IRODSGenQuery(final String queryString, final int numberOfResultsDesired,
+			final RowCountOptions rowCountOption, final int skip) throws JargonException {
 
 		super(numberOfResultsDesired);
 
@@ -63,8 +61,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 		}
 
 		if (numberOfResultsDesired <= 0) {
-			throw new JargonException(
-					"number of results desired must be greater than zero");
+			throw new JargonException("number of results desired must be greater than zero");
 		}
 
 		if (rowCountOption == null) {
@@ -78,10 +75,8 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 		this.queryString = queryString;
 	}
 
-	private IRODSGenQuery(final String queryString,
-			final int numberOfResultsDesired) throws JargonException {
-		this(queryString, numberOfResultsDesired, RowCountOptions.NO_ROW_COUNT,
-				0);
+	private IRODSGenQuery(final String queryString, final int numberOfResultsDesired) throws JargonException {
+		this(queryString, numberOfResultsDesired, RowCountOptions.NO_ROW_COUNT, 0);
 	}
 
 	public String getQueryString() {

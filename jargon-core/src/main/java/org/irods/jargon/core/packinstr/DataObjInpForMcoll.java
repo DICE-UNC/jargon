@@ -35,16 +35,14 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} target path for the mounted collection
 	 * @param destRescName
-	 *            {@code String}, blank if unused, that describes the
-	 *            destination resource name
+	 *            {@code String}, blank if unused, that describes the destination
+	 *            resource name
 	 * @return {@link DataObjInpForMcoll}
 	 */
-	public static DataObjInpForMcoll instanceForMSSOMount(
-			final String microServiceSourceFile,
+	public static DataObjInpForMcoll instanceForMSSOMount(final String microServiceSourceFile,
 			final String targetFileAbsolutePath, final String destRescName) {
 
-		return new DataObjInpForMcoll(microServiceSourceFile,
-				targetFileAbsolutePath, COLL_TYPE_MSSO, destRescName);
+		return new DataObjInpForMcoll(microServiceSourceFile, targetFileAbsolutePath, COLL_TYPE_MSSO, destRescName);
 	}
 
 	/**
@@ -58,13 +56,10 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the storage resource
 	 * @return {@link DataObjInpForMcoll}
 	 */
-	public static DataObjInpForMcoll instanceForFileSystemMount(
-			final String localFileSystemAbsolutePath,
-			final String irodsMountedCollectionAbsolutePath,
-			final String destRescName) {
+	public static DataObjInpForMcoll instanceForFileSystemMount(final String localFileSystemAbsolutePath,
+			final String irodsMountedCollectionAbsolutePath, final String destRescName) {
 
-		return new DataObjInpForMcoll(localFileSystemAbsolutePath,
-				irodsMountedCollectionAbsolutePath, COLL_TYPE_MOUNT,
+		return new DataObjInpForMcoll(localFileSystemAbsolutePath, irodsMountedCollectionAbsolutePath, COLL_TYPE_MOUNT,
 				destRescName);
 	}
 
@@ -72,62 +67,52 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to mount a soft link
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the source path for the mounted
-	 *            collection
+	 *            {@code String} with the source path for the mounted collection
 	 * @param targetFileAbsolutePath
 	 *            {@code String} target path for the mounted collection
 	 * @param destRescName
-	 *            {@code String}, blank if unused, that describes the
-	 *            destination resource name
+	 *            {@code String}, blank if unused, that describes the destination
+	 *            resource name
 	 * @return {@link DataObjInpForMcoll}
 	 */
-	public static DataObjInpForMcoll instanceForSoftLinkMount(
-			final String sourceFileAbsolutePath,
+	public static DataObjInpForMcoll instanceForSoftLinkMount(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String destRescName) {
 
-		return new DataObjInpForMcoll(sourceFileAbsolutePath,
-				targetFileAbsolutePath, COLL_TYPE_LINK, destRescName);
+		return new DataObjInpForMcoll(sourceFileAbsolutePath, targetFileAbsolutePath, COLL_TYPE_LINK, destRescName);
 	}
 
 	/**
-	 * Private constructor, use the instance methods to create the proper
-	 * instance.
+	 * Private constructor, use the instance methods to create the proper instance.
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the source path for the mounted
-	 *            collection
+	 *            {@code String} with the source path for the mounted collection
 	 * @param targetFileAbsolutePath
 	 *            {@code String} target path for the mounted collection
 	 * @param collectionType
-	 *            {@code String} with a collection type, as understood by
-	 *            the iRODS imcoll protocol
+	 *            {@code String} with a collection type, as understood by the iRODS
+	 *            imcoll protocol
 	 * @param destRescName
-	 *            {@code String}, blank if unused, that describes the
-	 *            destination resource name
+	 *            {@code String}, blank if unused, that describes the destination
+	 *            resource name
 	 */
-	private DataObjInpForMcoll(final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String collectionType,
-			final String destRescName) {
+	private DataObjInpForMcoll(final String sourceFileAbsolutePath, final String targetFileAbsolutePath,
+			final String collectionType, final String destRescName) {
 
 		super();
 		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"sourceFileAbsolutePath is null or empty");
+			throw new IllegalArgumentException("sourceFileAbsolutePath is null or empty");
 		}
 
 		if (targetFileAbsolutePath == null || targetFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"targetFileAbsolutePath is null or empty");
+			throw new IllegalArgumentException("targetFileAbsolutePath is null or empty");
 		}
 
 		if (collectionType == null || collectionType.isEmpty()) {
-			throw new IllegalArgumentException(
-					"collectionType is null or empty");
+			throw new IllegalArgumentException("collectionType is null or empty");
 		}
 
 		if (destRescName == null) {
-			throw new IllegalArgumentException(
-					"destRescName is null, set to blank if unused");
+			throw new IllegalArgumentException("destRescName is null, set to blank if unused");
 		}
 
 		this.sourceFileAbsolutePath = sourceFileAbsolutePath;
@@ -141,14 +126,11 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, targetFileAbsolutePath),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, operationType) });
+		Tag message = new Tag(DataObjInp.PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, targetFileAbsolutePath), new Tag(DataObjInp.CREATE_MODE, 0),
+						new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
+						new Tag(DataObjInp.DATA_SIZE, 0), new Tag(DataObjInp.NUM_THREADS, 0),
+						new Tag(DataObjInp.OPR_TYPE, operationType) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		kvps.add(KeyValuePair.instance("collectionType", collectionType));
@@ -165,8 +147,8 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * sending msg: <DataObjInp_PI>
 	 * <objPath>/test1/home/test1/jargon-scratch/MountedCollectionAOImplForMSSOTest
 	 * /testMountMSSOWorkflow/mounted</objPath> <createMode>0</createMode>
@@ -175,8 +157,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * <ssLen>4</ssLen> <keyWord>collectionType</keyWord>
 	 * <keyWord>dataType</keyWord> <keyWord>destRescName</keyWord>
 	 * <keyWord>filePath</keyWord> <svalue>mssoStructFile</svalue> <svalue>msso
-	 * file</svalue> <svalue>test1-resc</svalue>
-	 * <svalue>/test1/home/test1/jargon
+	 * file</svalue> <svalue>test1-resc</svalue> <svalue>/test1/home/test1/jargon
 	 * -scratch/MountedCollectionAOImplForMSSOTest
 	 * /testMountMSSOWorkflow/eCWkflow.mss</svalue> </KeyValPair_PI>
 	 * </DataObjInp_PI>

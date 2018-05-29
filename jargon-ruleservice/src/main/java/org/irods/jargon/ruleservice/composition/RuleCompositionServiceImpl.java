@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.ruleservice.composition;
 
@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Service implementation to support composition of rules
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RuleCompositionServiceImpl extends AbstractJargonService implements RuleCompositionService {
 
@@ -41,7 +41,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * addInputParameterToRule(java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -92,7 +92,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * addOutputParameterToRule(java.lang.String, java.lang.String)
 	 */
@@ -139,7 +139,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * parseStringIntoRule(java.lang.String)
 	 */
@@ -156,7 +156,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		final AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(
 				getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()),
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(),
-				this.getIrodsAccessObjectFactory().getJargonProperties());
+				getIrodsAccessObjectFactory().getJargonProperties());
 
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(inputRuleAsString);
 
@@ -173,7 +173,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * loadRuleFromIrods(java.lang.String)
 	 */
@@ -234,7 +234,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
 	 * 
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * loadRuleFromIrodsAsString(java.lang.String)
@@ -296,13 +296,6 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		return ruleString;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.ruleservice.composition.RuleCompositionService#storeRule
-	 * (java.lang.String, org.irods.jargon.ruleservice.composition.Rule)
-	 */
 	@Override
 	public Rule storeRule(final String ruleAbsolutePath, final Rule rule) throws JargonException {
 
@@ -341,7 +334,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * storeRuleFromParts(java.lang.String, java.lang.String, java.util.List,
 	 * java.util.List)
@@ -434,7 +427,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * executeRuleFromParts(java.lang.String, java.util.List, java.util.List)
 	 */
@@ -462,7 +455,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory.getRuleProcessingAO(getIrodsAccount());
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings(this.irodsAccessObjectFactory.getJargonProperties());
+				.instanceWithDefaultAutoSettings(irodsAccessObjectFactory.getJargonProperties());
 
 		log.info("getting ready to submit rule:{}", ruleAsString);
 		return ruleProcessingAO.executeRule(ruleAsString, null, ruleInvocationConfiguration);
@@ -505,7 +498,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * deleteInputParameterFromRule(java.lang.String, java.lang.String)
 	 */
@@ -550,7 +543,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
 	 * deleteOutputParameterFromRule(java.lang.String, java.lang.String)
 	 */

@@ -10,8 +10,6 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
@@ -21,6 +19,7 @@ import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,12 +42,10 @@ public class IRODSRandomAccessFileTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -58,8 +55,7 @@ public class IRODSRandomAccessFileTest {
 	}
 
 	/**
-	 * Bug [#1557] Griffin log shows error -1220000 raised from Jargon for ftp
-	 * write
+	 * Bug [#1557] Griffin log shows error -1220000 raised from Jargon for ftp write
 	 *
 	 * @throws Exception
 	 */
@@ -68,22 +64,17 @@ public class IRODSRandomAccessFileTest {
 		// generate a local scratch file
 		String testFileName = "testCreateAndCloseNoDefResc.txt";
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setDefaultStorageResource("");
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory
-				.instanceIRODSRandomAccessFile(targetIrodsCollection + "/"
-						+ testFileName);
+				.instanceIRODSRandomAccessFile(targetIrodsCollection + "/" + testFileName);
 		irodsRandomAccessFile.close();
 		irodsFileSystem.closeAndEatExceptions();
 
@@ -96,60 +87,45 @@ public class IRODSRandomAccessFileTest {
 		int fileLengthInKb = 2;
 		long fileLengthInBytes = fileLengthInKb * 1024;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String inputFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLengthInBytes);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String inputFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				fileLengthInBytes);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
 		// read back the test file so I can compare
 
 		// here I'm saving the source file as a byte array as my 'expected'
 		// value for my test assertion
-		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(
-				inputFileName));
+		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(inputFileName));
 		byte[] inputBytes = new byte[1024];
 		fis.read(inputBytes);
 		fis.close();
 
 		// now try to do the seek
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
-				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
-						+ testFileName);
+				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/' + testFileName);
 
 		char readData = (char) randomAccessFile.read();
 		char expectedReadData = (char) inputBytes[0];
 
-		Assert.assertEquals(
-				"byte I read does not match the first byte I wrote",
-				expectedReadData, readData);
+		Assert.assertEquals("byte I read does not match the first byte I wrote", expectedReadData, readData);
 
 	}
 
@@ -163,42 +139,32 @@ public class IRODSRandomAccessFileTest {
 	public void testLargeRandomAccessPutThenOverwrite() throws Exception {
 		// generate a local scratch file
 		String testFileName = "testLargeRandomAccessPutThenOverwrite.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						60 * 1024 * 1024);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				60 * 1024 * 1024);
 
-		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
-		ChecksumValue expectedChecksum = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount)
-				.computeChecksumOnDataObject(destFile);
+		ChecksumValue expectedChecksum = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataObjectChecksumUtilitiesAO(irodsAccount).computeChecksumOnDataObject(destFile);
 
-		byte[] buffer = new byte[irodsFileSystem.getIRODSAccessObjectFactory()
-				.getJargonProperties().getPutBufferSize()];
+		byte[] buffer = new byte[irodsFileSystem.getIRODSAccessObjectFactory().getJargonProperties()
+				.getPutBufferSize()];
 
-		IRODSRandomAccessFile irodsRaFile = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount)
+		IRODSRandomAccessFile irodsRaFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSRandomAccessFile(destFile);
 
 		RandomAccessFile localRaFile = new RandomAccessFile(localFile, "r");
@@ -234,27 +200,20 @@ public class IRODSRandomAccessFileTest {
 
 		localRaFile.close();
 		irodsRaFile.close();
-		ChecksumValue actualChecksum = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount)
-				.computeChecksumOnDataObject(destFile);
+		ChecksumValue actualChecksum = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataObjectChecksumUtilitiesAO(irodsAccount).computeChecksumOnDataObject(destFile);
 
-		Assert.assertEquals("irods checksum values don't match",
-				expectedChecksum, actualChecksum);
+		Assert.assertEquals("irods checksum values don't match", expectedChecksum, actualChecksum);
 
-		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession()
-				.getLocalChecksumComputerFactory()
-				.instance(actualChecksum.getChecksumEncoding())
-				.computeChecksumValueForLocalFile(localFileName);
+		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession().getLocalChecksumComputerFactory()
+				.instance(actualChecksum.getChecksumEncoding()).computeChecksumValueForLocalFile(localFileName);
 
-		Assert.assertEquals(
-				"irods checksum value doesnt match local after operations",
-				localChecksum, actualChecksum);
+		Assert.assertEquals("irods checksum value doesnt match local after operations", localChecksum, actualChecksum);
 
 	}
 
-	private void copyDataIntoRaFile(final RandomAccessFile localRaFile,
-			final IRODSRandomAccessFile irodsRaFile, final long ptr,
-			final long offset, final byte[] buffer) throws Exception {
+	private void copyDataIntoRaFile(final RandomAccessFile localRaFile, final IRODSRandomAccessFile irodsRaFile,
+			final long ptr, final long offset, final byte[] buffer) throws Exception {
 
 		long gap = offset;
 		localRaFile.seek(ptr);
@@ -286,59 +245,45 @@ public class IRODSRandomAccessFileTest {
 		int fileLengthInKb = 2;
 		long fileLengthInBytes = fileLengthInKb * 1024;
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String inputFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						fileLengthInBytes);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String inputFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				fileLengthInBytes);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
 		// here I'm saving the source file as a byte array as my 'expected'
 		// value for my test assertion
-		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(
-				inputFileName));
+		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(inputFileName));
 		byte[] inputBytes = new byte[1024];
 		fis.read(inputBytes);
 		fis.close();
 
 		// now try to do the seek
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
-				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
-						+ testFileName);
+				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/' + testFileName);
 
 		randomAccessFile.seek(200L, FileIOOperations.SeekWhenceType.SEEK_START);
 		byte[] bytesToRead = new byte[20];
 		randomAccessFile.read(bytesToRead);
 		byte[] expectedBytes = new byte[20];
 		System.arraycopy(inputBytes, 200, expectedBytes, 0, 20);
-		Assert.assertTrue(
-				"did not seek and read the same data that I originally wrote",
+		Assert.assertTrue("did not seek and read the same data that I originally wrote",
 				Arrays.equals(expectedBytes, bytesToRead));
 
 	}
@@ -352,41 +297,29 @@ public class IRODSRandomAccessFileTest {
 	public void testUnmatchedAPIWhenReadingRAFile() throws Exception {
 
 		String testFileName = "testfileForApi.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				1);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSRandomAccessFile randomAccessFile = irodsFileFactory
-				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/'
-						+ testFileName);
+				.instanceIRODSRandomAccessFile(targetIrodsCollection + '/' + testFileName);
 
 		int nbytes = 0;
 		int offset = 0;

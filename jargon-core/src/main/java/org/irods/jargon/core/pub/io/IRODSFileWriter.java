@@ -33,9 +33,9 @@ public class IRODSFileWriter extends Writer {
 	 * @param irodsFileFactory
 	 *            {@link IRODSFileFactory} that will create the file.
 	 * @throws IOException
+	 *             for any iRODS error
 	 */
-	public IRODSFileWriter(final IRODSFile irodsFile,
-			final IRODSFileFactory irodsFileFactory) throws IOException {
+	public IRODSFileWriter(final IRODSFile irodsFile, final IRODSFileFactory irodsFileFactory) throws IOException {
 		super();
 
 		if (irodsFile == null) {
@@ -47,22 +47,18 @@ public class IRODSFileWriter extends Writer {
 		}
 
 		try {
-			irodsFileOutputStream = irodsFileFactory
-					.instanceIRODSFileOutputStream(irodsFile);
+			irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 		} catch (JargonException e) {
-			throw new IOException("unable to open IRODSFileOutputStream for:"
-					+ irodsFile.getAbsolutePath());
+			throw new IOException("unable to open IRODSFileOutputStream for:" + irodsFile.getAbsolutePath());
 		}
 
-		connectionEncoding = irodsFileOutputStream.getFileIOOperations()
-				.getIRODSSession()
-				.buildPipelineConfigurationBasedOnJargonProperties()
-				.getDefaultEncoding();
+		connectionEncoding = irodsFileOutputStream.getFileIOOperations().getIRODSSession()
+				.buildPipelineConfigurationBasedOnJargonProperties().getDefaultEncoding();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Writer#close()
 	 */
 	@Override
@@ -73,7 +69,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Writer#flush()
 	 */
 	@Override
@@ -83,12 +79,11 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Writer#write(char[], int, int)
 	 */
 	@Override
-	public void write(final char[] cbuf, final int off, final int len)
-			throws IOException {
+	public void write(final char[] cbuf, final int off, final int len) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		OutputStreamWriter osw = new OutputStreamWriter(bos, connectionEncoding);
 		osw.write(cbuf, off, len);

@@ -29,22 +29,22 @@ import org.slf4j.LoggerFactory;
  */
 public class AESKeyGenerator extends AbstractKeyGenerator {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AESKeyGenerator.class);
+	public static final Logger log = LoggerFactory.getLogger(AESKeyGenerator.class);
 
 	/**
 	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration}
 	 */
-	public AESKeyGenerator(
-			final PipelineConfiguration pipelineConfiguration,
+	public AESKeyGenerator(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.encrypt.AbstractKeyGenerator#generateKey()
 	 */
@@ -58,26 +58,19 @@ public class AESKeyGenerator extends AbstractKeyGenerator {
 	private SecretKeySpec initSecretKey() throws EncryptionException {
 		try {
 			SecretKeyFactory factory = SecretKeyFactory
-					.getInstance(getPipelineConfiguration()
-							.getEncryptionAlgorithmEnum().getKeyGenType());
+					.getInstance(getPipelineConfiguration().getEncryptionAlgorithmEnum().getKeyGenType());
 			KeyGenerator kgen = KeyGenerator.getInstance("AES");
 			kgen.init(256); // 192 and 256 bits may not be available
-			char[] randPwd = new String(kgen.generateKey().getEncoded())
-					.toCharArray();
+			char[] randPwd = new String(kgen.generateKey().getEncoded()).toCharArray();
 
 			// Generate the secret key specs.
-			KeySpec keySpec = new PBEKeySpec(
-					randPwd,
-					RandomUtils
-							.generateRandomBytesOfLength(getPipelineConfiguration()
-									.getEncryptionSaltSize()),
-							getPipelineConfiguration().getEncryptionNumberHashRounds(),
-							getPipelineConfiguration().getEncryptionAlgorithmEnum()
-							.getKeySize());
+			KeySpec keySpec = new PBEKeySpec(randPwd,
+					RandomUtils.generateRandomBytesOfLength(getPipelineConfiguration().getEncryptionSaltSize()),
+					getPipelineConfiguration().getEncryptionNumberHashRounds(),
+					getPipelineConfiguration().getEncryptionAlgorithmEnum().getKeySize());
 
 			SecretKey secretKey = factory.generateSecret(keySpec);
-			SecretKeySpec secretSpec = new SecretKeySpec(
-					secretKey.getEncoded(), "AES");
+			SecretKeySpec secretSpec = new SecretKeySpec(secretKey.getEncoded(), "AES");
 			return secretSpec;
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			log.error("error creating secret key", e);

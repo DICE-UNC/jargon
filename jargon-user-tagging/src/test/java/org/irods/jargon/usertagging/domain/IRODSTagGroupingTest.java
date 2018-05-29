@@ -1,10 +1,9 @@
 package org.irods.jargon.usertagging.domain;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,17 +25,13 @@ public class IRODSTagGroupingTest {
 		String expectedTags = "tag1 tag2 tag3:tag3sub tag4 himom";
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(
-				expectedMetadataDomain, expectedDomainName, expectedTags,
-				expectedUser);
+		IRODSTagGrouping irodsTagGrouping = new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
+				expectedTags, expectedUser);
 
 		Assert.assertEquals(expectedUser, irodsTagGrouping.getUserName());
-		Assert.assertEquals(expectedDomainName,
-				irodsTagGrouping.getDomainUniqueName());
-		Assert.assertEquals(expectedTags,
-				irodsTagGrouping.getSpaceDelimitedTagsForDomain());
-		Assert.assertEquals(expectedMetadataDomain,
-				irodsTagGrouping.getMetadataDomain());
+		Assert.assertEquals(expectedDomainName, irodsTagGrouping.getDomainUniqueName());
+		Assert.assertEquals(expectedTags, irodsTagGrouping.getSpaceDelimitedTagsForDomain());
+		Assert.assertEquals(expectedMetadataDomain, irodsTagGrouping.getMetadataDomain());
 
 	}
 
@@ -48,8 +43,7 @@ public class IRODSTagGroupingTest {
 		String expectedTags = "tag1 tag2 tag3:tag3sub tag4 himom";
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
-				expectedTags, expectedUser);
+		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 
 	}
 
@@ -61,8 +55,7 @@ public class IRODSTagGroupingTest {
 		String expectedTags = "tag1 tag2 tag3:tag3sub tag4 himom";
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
-				expectedTags, expectedUser);
+		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 
 	}
 
@@ -74,8 +67,7 @@ public class IRODSTagGroupingTest {
 		String expectedTags = "tag1 tag2 tag3:tag3sub tag4 himom";
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
-				expectedTags, expectedUser);
+		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 
 	}
 
@@ -87,8 +79,7 @@ public class IRODSTagGroupingTest {
 		String expectedTags = "tag1 tag2 tag3:tag3sub tag4 himom";
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
-				expectedTags, expectedUser);
+		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 
 	}
 
@@ -100,8 +91,7 @@ public class IRODSTagGroupingTest {
 		String expectedTags = "";
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
-				expectedTags, expectedUser);
+		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 
 	}
 
@@ -113,8 +103,7 @@ public class IRODSTagGroupingTest {
 		String expectedTags = null;
 		MetadataDomain expectedMetadataDomain = MetadataDomain.DATA;
 
-		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName,
-				expectedTags, expectedUser);
+		new IRODSTagGrouping(expectedMetadataDomain, expectedDomainName, expectedTags, expectedUser);
 
 	}
 

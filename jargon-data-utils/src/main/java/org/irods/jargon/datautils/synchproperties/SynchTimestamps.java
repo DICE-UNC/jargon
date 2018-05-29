@@ -12,17 +12,14 @@ public final class SynchTimestamps {
 
 	private final long irodsSynchTimestamp;
 
-	public SynchTimestamps(final long localSynchTimestamp,
-			final long irodsSynchTimestamp) {
+	public SynchTimestamps(final long localSynchTimestamp, final long irodsSynchTimestamp) {
 
 		if (localSynchTimestamp < 0) {
-			throw new IllegalArgumentException(
-					"localSynchTimestamp less than zero");
+			throw new IllegalArgumentException("localSynchTimestamp less than zero");
 		}
 
 		if (irodsSynchTimestamp < 0) {
-			throw new IllegalArgumentException(
-					"irodsSynchTimestamp less than zero");
+			throw new IllegalArgumentException("irodsSynchTimestamp less than zero");
 		}
 
 		this.localSynchTimestamp = localSynchTimestamp;

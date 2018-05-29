@@ -19,11 +19,14 @@ public final class EscapeTagChars {
 	/**
 	 * Escape characters for text appearing in Tag markup.
 	 *
+	 * @param aText
+	 *            {@code String} to escape
+	 * @return {@code String} escaped
+	 *
 	 */
 	public static String forHTML(final String aText) {
 		final StringBuilder result = new StringBuilder();
-		final StringCharacterIterator iterator = new StringCharacterIterator(
-				aText);
+		final StringCharacterIterator iterator = new StringCharacterIterator(aText);
 		char character = iterator.current();
 		while (character != CharacterIterator.DONE) {
 			if (character == '<') {
@@ -109,18 +112,21 @@ public final class EscapeTagChars {
 	 * Replaces all {@code '&'} characters with {@code '&amp;'}.
 	 *
 	 * <P>
-	 * An ampersand character may appear in the query string of a URL. The
-	 * ampersand character is indeed valid in a URL.
-	 * <em>However, URLs usually appear as an {@code HREF} attribute, and
-	   such attributes have the additional constraint that ampersands
-	   must be escaped.</em>
+	 * An ampersand character may appear in the query string of a URL. The ampersand
+	 * character is indeed valid in a URL. <em>However, URLs usually appear as an
+	 * {@code HREF} attribute, and such attributes have the additional constraint
+	 * that ampersands must be escaped.</em>
 	 *
 	 * <P>
 	 * The JSTL {@code <c:url>} tag does indeed perform proper URL encoding of query
-	 * parameters. But it does not, in general, produce text which is valid as
-	 * an {@code HREF} attribute, simply because it does not escape the
-	 * ampersand character. This is a nuisance when multiple query parameters
-	 * appear in the URL, since it requires a little extra work.
+	 * parameters. But it does not, in general, produce text which is valid as an
+	 * {@code HREF} attribute, simply because it does not escape the ampersand
+	 * character. This is a nuisance when multiple query parameters appear in the
+	 * URL, since it requires a little extra work.
+	 *
+	 * @param aURL
+	 *            {@code String} with the parameter to escape
+	 * @return {@code String} with the result
 	 */
 	public static String forHrefAmpersand(final String aURL) {
 		return aURL.replace("&", "&amp;");
@@ -134,10 +140,14 @@ public final class EscapeTagChars {
 	 * special characters such as spaces.
 	 *
 	 * <P>
-	 * It is important to note that if a query string appears in an
-	 * {@code HREF} attribute, then there are two issues - ensuring the query
-	 * string is valid HTTP (it is URL-encoded), and ensuring it is valid HTML
-	 * (ensuring the ampersand is escaped).
+	 * It is important to note that if a query string appears in an {@code HREF}
+	 * attribute, then there are two issues - ensuring the query string is valid
+	 * HTTP (it is URL-encoded), and ensuring it is valid HTML (ensuring the
+	 * ampersand is escaped).
+	 *
+	 * @param aURLFragment
+	 *            {@code String} to escape
+	 * @return {@code String} escaped
 	 */
 	public static String forURL(final String aURLFragment) {
 		String result = null;
@@ -153,10 +163,9 @@ public final class EscapeTagChars {
 	 * Escape characters for text appearing as XML data, between tags.
 	 *
 	 * <P>
-	 * The following characters are replaced with corresponding character
-	 * entities :
+	 * The following characters are replaced with corresponding character entities :
 	 * <table border='1' cellpadding='3' cellspacing='0'>
-     * <caption>character replacements</caption>
+	 * <caption>character replacements</caption>
 	 * <tr>
 	 * <th>Character</th>
 	 * <th>Encoding</th>
@@ -184,15 +193,17 @@ public final class EscapeTagChars {
 	 * </table>
 	 *
 	 * <P>
-	 * Note that JSTL's {@code <c:out>} escapes the exact same set of characters
-	 * as this method. <span class='highlight'>That is, {@code <c:out>} is good
-	 * for escaping to produce valid XML, but not for producing safe
-	 * HTML.</span>
+	 * Note that JSTL's {@code <c:out>} escapes the exact same set of characters as
+	 * this method. <span class='highlight'>That is, {@code <c:out>} is good for
+	 * escaping to produce valid XML, but not for producing safe HTML.</span>
+	 *
+	 * @param aText
+	 *            {@code String} xml
+	 * @return {@code String} escaped
 	 */
 	public static String forXML(final String aText) {
 		final StringBuilder result = new StringBuilder();
-		final StringCharacterIterator iterator = new StringCharacterIterator(
-				aText);
+		final StringCharacterIterator iterator = new StringCharacterIterator(aText);
 		char character = iterator.current();
 		while (character != CharacterIterator.DONE) {
 			if (character == '<') {
@@ -216,8 +227,8 @@ public final class EscapeTagChars {
 	}
 
 	/**
-	 * Escapes characters for text appearing as data in the <a
-	 * href='http://www.json.org/'>Javascript Object Notation</a> (JSON) data
+	 * Escapes characters for text appearing as data in the
+	 * <a href='http://www.json.org/'>Javascript Object Notation</a> (JSON) data
 	 * interchange format.
 	 *
 	 * <P>
@@ -263,8 +274,13 @@ public final class EscapeTagChars {
 	 * </table>
 	 *
 	 * <P>
-	 * See <a href='http://www.ietf.org/rfc/rfc4627.txt'>RFC 4627</a> for more
-	 * information.
+	 *
+	 * @param aText
+	 *            {@code String} to escape
+	 * @return {@code String} with the escaped text
+	 *
+	 *         See <a href='http://www.ietf.org/rfc/rfc4627.txt'>RFC 4627</a> for
+	 *         more information.
 	 */
 	public static String forJSON(final String aText) {
 		final StringBuilder result = new StringBuilder();
@@ -297,14 +313,17 @@ public final class EscapeTagChars {
 		return result.toString();
 	}
 
-/**
-	   Return {@code aText} with all {@code '<'} and {@code '>'} characters
-	   replaced by their escaped equivalents.
+	/**
+	 * Return {@code aText} with all {@code '<'} and {@code '>'} characters replaced
+	 * by their escaped equivalents.
+	 *
+	 * @param aText
+	 *            {@code String} to escape
+	 * @return {@code String} with escaped text
 	 */
 	public static String toDisableTags(final String aText) {
 		final StringBuilder result = new StringBuilder();
-		final StringCharacterIterator iterator = new StringCharacterIterator(
-				aText);
+		final StringCharacterIterator iterator = new StringCharacterIterator(aText);
 		char character = iterator.current();
 		while (character != CharacterIterator.DONE) {
 			if (character == '<') {
@@ -322,8 +341,8 @@ public final class EscapeTagChars {
 	}
 
 	/**
-	 * Replace characters having special meaning in regular expressions with
-	 * their escaped equivalents, preceded by a '\' character.
+	 * Replace characters having special meaning in regular expressions with their
+	 * escaped equivalents, preceded by a '\' character.
 	 *
 	 * <P>
 	 * The escaped characters include :
@@ -338,12 +357,15 @@ public final class EscapeTagChars {
 	 * <li>( and )
 	 * <li>^ and $
 	 * </ul>
+	 *
+	 * @param aRegexFragment
+	 *            {@code String}
+	 * @return {@code String}
 	 */
 	public static String forRegex(final String aRegexFragment) {
 		final StringBuilder result = new StringBuilder();
 
-		final StringCharacterIterator iterator = new StringCharacterIterator(
-				aRegexFragment);
+		final StringCharacterIterator iterator = new StringCharacterIterator(aRegexFragment);
 		char character = iterator.current();
 		while (character != CharacterIterator.DONE) {
 			/*
@@ -392,9 +414,13 @@ public final class EscapeTagChars {
 	/**
 	 * Escape characters in replacement strings.
 	 *
-	 * If replacement text can contain arbitrary characters, then you will
-	 * usually need to escape that text, to ensure special characters are
-	 * interpreted literally.
+	 * If replacement text can contain arbitrary characters, then you will usually
+	 * need to escape that text, to ensure special characters are interpreted
+	 * literally.
+	 *
+	 * @param aInput
+	 *            {@code String}
+	 * @return {@code String} escaped
 	 */
 	public static String forReplacementString(final String aInput) {
 		return Matcher.quoteReplacement(aInput);
@@ -413,13 +439,10 @@ public final class EscapeTagChars {
 		// empty - prevent construction
 	}
 
-	private static final Pattern SCRIPT = Pattern.compile("<SCRIPT>",
-			Pattern.CASE_INSENSITIVE);
-	private static final Pattern SCRIPT_END = Pattern.compile("</SCRIPT>",
-			Pattern.CASE_INSENSITIVE);
+	private static final Pattern SCRIPT = Pattern.compile("<SCRIPT>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern SCRIPT_END = Pattern.compile("</SCRIPT>", Pattern.CASE_INSENSITIVE);
 
-	private static void addCharEntity(final Integer aIdx,
-			final StringBuilder aBuilder) {
+	private static void addCharEntity(final Integer aIdx, final StringBuilder aBuilder) {
 		String padding = "";
 		if (aIdx <= 9) {
 			padding = "00";

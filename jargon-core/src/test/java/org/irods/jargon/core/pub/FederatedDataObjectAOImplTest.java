@@ -3,8 +3,6 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -14,6 +12,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,12 +35,10 @@ public class FederatedDataObjectAOImplTest {
 		}
 
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -62,42 +59,33 @@ public class FederatedDataObjectAOImplTest {
 		}
 		// generate a local scratch file
 		String testFileName = "testFindByCollectionPathAndDataNameCrossZone.dat";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
 
 		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 		File sourceFile = new File(localFileName);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 		destFile.deleteWithForceOption();
 		dto.putOperation(sourceFile, destFile, null, null);
 
 		IRODSAccount localZoneAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory()
-				.getDataObjectAO(localZoneAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(localZoneAccount);
 
-		DataObject dataObject = dataObjectAO.findByCollectionNameAndDataName(
-				targetIrodsCollection, testFileName);
+		DataObject dataObject = dataObjectAO.findByCollectionNameAndDataName(targetIrodsCollection, testFileName);
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}
@@ -108,50 +96,39 @@ public class FederatedDataObjectAOImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testFindByCollectionPathAndDataNameCrossZoneInForeignZoneHomeDirBug152()
-			throws Exception {
+	public void testFindByCollectionPathAndDataNameCrossZoneInForeignZoneHomeDirBug152() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
 		// generate a local scratch file
 		String testFileName = "testFindByCollectionPathAndDataNameCrossZoneInForeignZoneHomeDirBug152.dat";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFileName = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
 
 		String targetIrodsFile = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
 		File sourceFile = new File(localFileName);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
-		IRODSFile targetIrodsCollectionAsIrodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
+		IRODSFile targetIrodsCollectionAsIrodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
 		targetIrodsCollectionAsIrodsFile.mkdirs();
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
 		destFile.deleteWithForceOption();
 		dto.putOperation(sourceFile, destFile, null, null);
 
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		DataObject dataObject = dataObjectAO.findByCollectionNameAndDataName(
-				targetIrodsCollection, testFileName);
+		DataObject dataObject = dataObjectAO.findByCollectionNameAndDataName(targetIrodsCollection, testFileName);
 		Assert.assertNotNull("null data object, was not found", dataObject);
 
 	}

@@ -493,6 +493,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			response = getIRODSProtocol().irodsFunction(specificQueryInp);
 		} catch (DataNotFoundException e) {
 			log.info("no results from iRODS, return as an empty result set");
+
 			return new SpecificQueryResultSet(specificQuery, specificQueryDefinition.getColumnNames());
 		}
 

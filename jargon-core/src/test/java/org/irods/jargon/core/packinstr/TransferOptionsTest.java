@@ -1,8 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
-import org.junit.Assert;
-
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,8 +19,7 @@ public class TransferOptionsTest {
 		TransferOptions expected = new TransferOptions();
 		expected.setComputeChecksumAfterTransfer(true);
 		TransferOptions actual = new TransferOptions(expected);
-		Assert.assertEquals("did not properly set checksum option",
-				expected.isComputeChecksumAfterTransfer(),
+		Assert.assertEquals("did not properly set checksum option", expected.isComputeChecksumAfterTransfer(),
 				actual.isComputeChecksumAfterTransfer());
 	}
 
@@ -31,18 +29,15 @@ public class TransferOptionsTest {
 		expected.setComputeAndVerifyChecksumAfterTransfer(true);
 		TransferOptions actual = new TransferOptions(expected);
 		Assert.assertEquals("did not properly set verify checksum option",
-				expected.isComputeAndVerifyChecksumAfterTransfer(),
-				actual.isComputeAndVerifyChecksumAfterTransfer());
+				expected.isComputeAndVerifyChecksumAfterTransfer(), actual.isComputeAndVerifyChecksumAfterTransfer());
 	}
 
 	@Test
-	public final void testCopyConstructorIntraFileStatusCallbacks()
-			throws Exception {
+	public final void testCopyConstructorIntraFileStatusCallbacks() throws Exception {
 		TransferOptions expected = new TransferOptions();
 		expected.setIntraFileStatusCallbacks(true);
 		TransferOptions actual = new TransferOptions(expected);
-		Assert.assertEquals("did not properly set intraFileStatusCallbacks",
-				expected.isIntraFileStatusCallbacks(),
+		Assert.assertEquals("did not properly set intraFileStatusCallbacks", expected.isIntraFileStatusCallbacks(),
 				actual.isIntraFileStatusCallbacks());
 	}
 

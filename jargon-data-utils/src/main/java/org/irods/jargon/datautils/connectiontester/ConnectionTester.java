@@ -14,8 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public interface ConnectionTester {
 
-	public abstract ConnectionTestResult runTests(final List<TestType> testTypes)
-			throws JargonException;
+	public abstract ConnectionTestResult runTests(final List<TestType> testTypes) throws JargonException;
 
 	public enum TestType {
 		SMALL, MEDIUM, LARGE, EXTRA_LARGE

@@ -1,9 +1,8 @@
 package org.irods.jargon.usertagging.domain;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

@@ -26,34 +26,36 @@ public interface TransferStatusCallbackListener {
 	}
 
 	/**
-	 * Method that will receive a callback on the status of a transfer
-	 * operation. Note that when a status listener is registered for callbacks,
-	 * that exceptions that occur in the transfer are not thrown, rather, the
-	 * exceptions are transmitted back in the status callback for processing,
-	 * and the callee must decide how to handle an exception.
+	 * Method that will receive a callback on the status of a transfer operation.
+	 * Note that when a status listener is registered for callbacks, that exceptions
+	 * that occur in the transfer are not thrown, rather, the exceptions are
+	 * transmitted back in the status callback for processing, and the callee must
+	 * decide how to handle an exception.
 	 * <p>
 	 *
 	 * @param transferStatus
 	 *            {@link org.irods.jargon.core.transfer.TransferStatus} with
 	 *            information on the transfer.
 	 * @return {@link FileStatusCallbackResponse} that indicates whether a file
-	 *         should be skipped in a pre file operation. The nominal response
-	 *         is CONTINUE, a SKIP has no effect except in the pre file transfer
+	 *         should be skipped in a pre file operation. The nominal response is
+	 *         CONTINUE, a SKIP has no effect except in the pre file transfer
 	 *         response
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public FileStatusCallbackResponse statusCallback(
-			final TransferStatus transferStatus) throws JargonException;
+	public FileStatusCallbackResponse statusCallback(final TransferStatus transferStatus) throws JargonException;
 
 	/**
-	 * Method will receive a callback at the initiation and completion of an
-	 * overall transfer {@link org.irods.jargon.core.transfer.TransferStatus}
-	 * with information on the transfer.
+	 * Method will receive a callback at the initiation and completion of an overall
+	 * transfer {@link org.irods.jargon.core.transfer.TransferStatus} with
+	 * information on the transfer.
 	 *
+	 * @param transferStatus
+	 *            {@link TransferStatus}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public void overallStatusCallback(final TransferStatus transferStatus)
-			throws JargonException;
+	public void overallStatusCallback(final TransferStatus transferStatus) throws JargonException;
 
 	/**
 	 * A callback from a running transfer will occur if a file exists during an
@@ -61,15 +63,15 @@ public interface TransferStatusCallbackListener {
 	 * determine this behavior in real time by answering the call back.
 	 *
 	 * @param irodsAbsolutePath
-	 *            {@code String} with the absolute path to the file or
-	 *            collection to be over-written.
+	 *            {@code String} with the absolute path to the file or collection to
+	 *            be over-written.
 	 * @param isCollection
-	 *            {@code boolean} that hints that the path is a collection,
-	 *            versus a data object. This is mostly useful for creating a
-	 *            more specific dialog in the case of a user interface.
+	 *            {@code boolean} that hints that the path is a collection, versus a
+	 *            data object. This is mostly useful for creating a more specific
+	 *            dialog in the case of a user interface.
 	 * @return {@link CallbackResponse} enum value determining the behavior of
 	 *         overwrites for the given transfer.
 	 */
-	public CallbackResponse transferAsksWhetherToForceOperation(
-			final String irodsAbsolutePath, final boolean isCollection);
+	public CallbackResponse transferAsksWhetherToForceOperation(final String irodsAbsolutePath,
+			final boolean isCollection);
 }

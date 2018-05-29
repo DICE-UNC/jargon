@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AuthenticationFactoryImpl implements AuthenticationFactory {
 
-	private Logger log = LoggerFactory
-			.getLogger(AuthenticationFactoryImpl.class);
+	private Logger log = LoggerFactory.getLogger(AuthenticationFactoryImpl.class);
 
 	@Override
 	public AuthMechanism instanceAuthMechanism(final IRODSAccount irodsAccount)
@@ -47,8 +46,7 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 			log.info("using standard auth");
 			return new GSIAuth();
 		} else {
-			throw new AuthUnavailableException("auth method not avaialble for:"
-					+ authScheme);
+			throw new AuthUnavailableException("auth method not avaialble for:" + authScheme);
 		}
 
 	}

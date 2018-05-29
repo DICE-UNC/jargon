@@ -13,18 +13,15 @@ public class NoAPIPrivException extends JargonException {
 	private static final long serialVersionUID = 5020600855655284826L;
 	private static final int ERROR_CODE = ErrorEnum.SYS_NO_API_PRIV.getInt();
 
-	public NoAPIPrivException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public NoAPIPrivException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public NoAPIPrivException(final String message, final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public NoAPIPrivException(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public NoAPIPrivException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public NoAPIPrivException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 

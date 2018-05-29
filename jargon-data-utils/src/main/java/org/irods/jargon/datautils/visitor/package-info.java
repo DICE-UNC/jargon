@@ -6,9 +6,10 @@
  * The contents of this package should be considered provisional and are
  * certainly subject to change.
  * <p/>
+ * 
  * This package implements the Heirarchical Visitor Pattern described here:
  * http://wiki.c2.com/?HierarchicalVisitorPattern
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */

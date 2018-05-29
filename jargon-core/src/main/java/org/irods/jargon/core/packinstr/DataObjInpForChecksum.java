@@ -30,8 +30,8 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 	private String fileAbsolutePath = "";
 
 	/**
-	 * Optional checksum value used for operations where a checksum validation
-	 * is requested. This will be the computed checksum of the file in question.
+	 * Optional checksum value used for operations where a checksum validation is
+	 * requested. This will be the computed checksum of the file in question.
 	 * <p>
 	 * Can be set to {@code null} if no checksum is specified
 	 */
@@ -42,19 +42,16 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 	// public static DataObjInpForChecksum instanceForChecksumDataObject(final
 	// String irodsAbsolutePath )
 
-	private DataObjInpForChecksum(final String fileAbsolutePath,
-			final String resourceName, final int replicaNumber,
+	private DataObjInpForChecksum(final String fileAbsolutePath, final String resourceName, final int replicaNumber,
 			final ChecksumOptions checksumOptions) {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"file absolute path is null or empty");
+			throw new IllegalArgumentException("file absolute path is null or empty");
 		}
 
 		if (resourceName == null) {
-			throw new IllegalArgumentException(
-					"resourceName is null, may be set to blank if not required");
+			throw new IllegalArgumentException("resourceName is null, may be set to blank if not required");
 		}
 
 		if (checksumOptions == null) {
@@ -70,14 +67,11 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, 0) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()), new Tag(DataObjInp.CREATE_MODE, 0),
+						new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
+						new Tag(DataObjInp.DATA_SIZE, 0), new Tag(DataObjInp.NUM_THREADS, 0),
+						new Tag(DataObjInp.OPR_TYPE, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
@@ -98,8 +92,8 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 		}
 
 		/*
-		 * If a resource name is provided, use that, otherwise look and see if a
-		 * replica number is added
+		 * If a resource name is provided, use that, otherwise look and see if a replica
+		 * number is added
 		 */
 
 		if (!resourceName.isEmpty()) {
@@ -109,8 +103,8 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 		}
 
 		/*
-		 * if (getOperationType() == REPLICATE_OPERATION_TYPE &&
-		 * isReplicationToAll()) { kvps.add(KeyValuePair.instance(ALL, "")); }
+		 * if (getOperationType() == REPLICATE_OPERATION_TYPE && isReplicationToAll()) {
+		 * kvps.add(KeyValuePair.instance(ALL, "")); }
 		 */
 
 		message.addTag(createKeyValueTag(kvps));
