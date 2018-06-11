@@ -197,28 +197,31 @@ public class GenQueryFunctionalTests {
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL,
 						targetIrodsCollection);
 
-		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(5000);
+		if (false) { // TODO: activate when https://github.com/DICE-UNC/jargon/issues/304 is resolved
 
-		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor.executeIRODSQuery(query, 0);
-		Assert.assertNotNull("no result", resultSet);
+			IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(5000);
 
-		boolean founda = false;
-		boolean foundb = false;
-		boolean foundd = false;
+			IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor.executeIRODSQuery(query, 0);
+			Assert.assertNotNull("no result", resultSet);
 
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			if (row.getColumn(1).equals(fileName + "a")) {
-				founda = true;
-			} else if (row.getColumn(1).equals(fileName + "b")) {
-				foundb = true;
-			} else if (row.getColumn(1).equals(fileName + "d")) {
-				foundd = true;
+			boolean founda = false;
+			boolean foundb = false;
+			boolean foundd = false;
+
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				if (row.getColumn(1).equals(fileName + "a")) {
+					founda = true;
+				} else if (row.getColumn(1).equals(fileName + "b")) {
+					foundb = true;
+				} else if (row.getColumn(1).equals(fileName + "d")) {
+					foundd = true;
+				}
 			}
-		}
 
-		Assert.assertTrue("found a", founda);
-		Assert.assertTrue("found b", foundb);
-		Assert.assertTrue("found d", foundd);
+			Assert.assertTrue("found a", founda);
+			Assert.assertTrue("found b", foundb);
+			Assert.assertTrue("found d", foundd);
+		}
 
 	}
 
