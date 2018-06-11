@@ -1,14 +1,14 @@
 
 # Project: Jargon-core API
-#### Date: 05/24/2018
-#### Release Version: 4.2.2.1-RELEASE
-#### git tag: 4.2.2.1-RELEASE
+#### Date: 
+#### Release Version: 4.2.2.2-SNAPSHOT
+#### git tag: 4.2.2.2-SNAPSHOT
 #### Developer: Mike Conway
 
 ## News
 
 4.2.3 Compatability and maintenance
-for milestone: https://github.com/DICE-UNC/jargon/milestone/22
+for milestone: https://github.com/DICE-UNC/jargon/milestone/23
 
 =======
 
@@ -39,21 +39,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-#### Add trash operations service #280
+#### NOT_IN in gen query #304
 
-Adding service object for managing trash to retrofit into MetaLnx
-
-#### Escape spec chars in pam password #288
-
-Added escaping of characters that cause problems with the kvp processing when sending PAM passwords and integrated into PAMAuth. This is linked to iRODS https://github.com/irods/irods/issues/3528
-
-#### Indexer/visitor pattern for data utils #296
-
-Add code to support easy impl of metadata/file indexers via a Visitor pattern on iRODS directories. This is added to the jargon-data-utils and 
-provides a reliable way of traversing an iRODS hierarchy with control, applying a user-supplied procedure at each node via the Hierarchical Visitor pattern. This also has a dedicated implementation (at least an initial one) of a visitor with additional facilities for indexing crawlers. This will be optimized as time goes forward but is in employment already for several locations.
-
-#### JavaDoc cleanups #279
-
-Cleanups and fixes to javadocs to allow generation
-
-
+Add some missing query operators for NOT IN, IN, BETWEEN, and NOT BETWEEN
