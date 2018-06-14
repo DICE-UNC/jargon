@@ -10,7 +10,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-core</artifactId>
-	<packaging>jar</packaging>
 	<name>Jargon Core</name>
 	<description>Core API for the iRODS Data grid</description>
 	<dependencies>
