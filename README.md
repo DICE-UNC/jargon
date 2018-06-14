@@ -1,5 +1,3 @@
-
-
 # Project: Jargon-core API
 ### Date:
 ### Release Version: 4.3.0.0-SNAPSHOT
@@ -41,6 +39,7 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
+
 
 #### Remove old thumbnail code #165
 

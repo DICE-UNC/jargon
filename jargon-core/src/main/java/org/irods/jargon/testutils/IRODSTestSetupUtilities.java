@@ -5,13 +5,19 @@ package org.irods.jargon.testutils;
 
 import static org.irods.jargon.testutils.TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY;
 
+import java.io.File;
+import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.UnixFileRenameException;
+import org.irods.jargon.core.pub.CollectionAO;
+import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
@@ -28,14 +34,21 @@ public class IRODSTestSetupUtilities {
 	private TestingPropertiesHelper testingPropertiesHelper;
 	private Properties testingProperties;
 	private IRODSFileSystem irodsFileSystem;
+	private CollectionAO collectionAO;
+	private DataObjectAO dataObjectAO;
 
 	public static final Logger log = LoggerFactory.getLogger(IRODSTestSetupUtilities.class);
 
 	public IRODSTestSetupUtilities() throws TestConfigurationException {
 		testingPropertiesHelper = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesHelper.getTestProperties();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
 		try {
 			irodsFileSystem = IRODSFileSystem.instance();
+			dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+			collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
 		} catch (JargonException e) {
 			throw new TestConfigurationException("cannot create IRODSFileSystem", e);
 		}
@@ -145,4 +158,86 @@ public class IRODSTestSetupUtilities {
 			}
 		}
 	}
+
+	/**
+	 * Add randomly from a pool of Avu metadata to a nested collection of files and
+	 * folders. Each list of candidates is tested with a random number and added at
+	 * that point based on a threshold value
+	 * 
+	 * @param irodsAbsolutePath
+	 *            {@code String} with a parent path
+	 * @param candidateAvusForData
+	 *            {@link AvuData} in a {@code List} that will be added to data
+	 *            objects if a random number is above a threshold
+	 * @param candidateAvusForCollections
+	 *            {@link AvuData} in a {@code List} that will be added to
+	 *            collections if a random number is above a threshold
+	 * @param thresholdToAdd
+	 *            {@code int} to compare to a random number to indicate that the
+	 *            given avu should be added at the given node or leaf (0-99)
+	 * @throws Exception
+	 *             for any error
+	 */
+	public void decorateDirWithMetadata(final String irodsAbsolutePath, final List<AvuData> candidateAvusForData,
+			final List<AvuData> candidateAvusForCollections, final int thresholdToAdd) throws Exception {
+
+		log.info("decorateDirWithMetadata()");
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties,
+				testingProperties.getProperty(IRODS_SCRATCH_DIR_KEY));
+		IRODSFile rootFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(irodsAbsolutePath);
+		Random rand = new Random();
+
+		processCollectionToAddMetadata(rootFile, candidateAvusForData, candidateAvusForCollections, thresholdToAdd,
+				rand);
+
+	}
+
+	private void processCollectionToAddMetadata(IRODSFile dir, List<AvuData> candidateAvusForData,
+			List<AvuData> candidateAvusForCollections, int thresholdToAdd, Random random) throws JargonException {
+		log.info("processCollectionToAddMetadata()");
+		log.info("rootFile:{}", dir.getAbsolutePath());
+
+		// for each candidate dir avu see if I add it
+
+		for (AvuData avu : candidateAvusForCollections) {
+			if (random.nextInt(100) > thresholdToAdd) {
+				log.debug("adding avu:{}", avu);
+				log.debug("     to collection:{}", dir);
+				collectionAO.addAVUMetadata(dir.getAbsolutePath(), avu);
+			}
+		}
+
+		// now process children
+		IRODSFile irodsFile;
+
+		for (File child : dir.listFiles()) {
+			irodsFile = (IRODSFile) child;
+			if (irodsFile.isDirectory()) {
+				processCollectionToAddMetadata(irodsFile, candidateAvusForData, candidateAvusForCollections,
+						thresholdToAdd, random);
+			} else {
+				processFileToAddMetadata(irodsFile, candidateAvusForData, thresholdToAdd, random);
+			}
+		}
+
+	}
+
+	private void processFileToAddMetadata(IRODSFile irodsFile, List<AvuData> candidateAvusForData, int thresholdToAdd,
+			Random random) throws JargonException {
+		log.info("processFileToAddMetadata()");
+		log.info("irodsFile:{}", irodsFile);
+		// for each candidate file avu see if I add it
+
+		for (AvuData avu : candidateAvusForData) {
+			if (random.nextInt(100) > thresholdToAdd) {
+				log.debug("adding avu:{}", avu);
+				log.debug("     to data obj:{}", irodsFile);
+				dataObjectAO.addAVUMetadata(irodsFile.getAbsolutePath(), avu);
+			}
+		}
+
+	}
+
 }
