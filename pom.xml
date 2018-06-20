@@ -39,6 +39,36 @@
 			</roles>
 		</developer>
 	</developers>
+	<repositories>
+		
+		<repository>
+			<id>dice.repository snaps</id>
+			<name>dice.repository.snapshots</name>
+			<url>https://raw.github.com/DICE-UNC/DICE-Maven/master/snapshots</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>dice.repository</id>
+			<name>dice.repository</name>
+			<url>https://raw.github.com/DICE-UNC/DICE-Maven/master/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+		</repository>
+		
+	</repositories>
 
 	<reporting>
 		<plugins>
