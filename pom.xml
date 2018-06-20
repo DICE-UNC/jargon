@@ -39,8 +39,7 @@
 			</roles>
 		</developer>
 	</developers>
-	<repositories>
-		
+        <repositories>
 		<repository>
 			<id>dice.repository snaps</id>
 			<name>dice.repository.snapshots</name>
@@ -67,7 +66,6 @@
 				<checksumPolicy>warn</checksumPolicy>
 			</snapshots>
 		</repository>
-		
 	</repositories>
 
 	<reporting>
