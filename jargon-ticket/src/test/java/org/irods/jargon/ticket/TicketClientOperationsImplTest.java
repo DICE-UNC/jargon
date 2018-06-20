@@ -9,7 +9,6 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.CatNoAccessException;
-import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OverwriteException;
@@ -436,7 +435,7 @@ public class TicketClientOperationsImplTest {
 	public final void testGetFileFromIRODSUsingTicketOnFileAsAnonymousNoTicketAccess() throws Exception {
 
 		if (!testTicket) {
-			throw new DataNotFoundException("expected");
+			throw new FileNotFoundException("expected");
 		}
 
 		// generate a local scratch file
@@ -487,11 +486,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
-	 * <<<<<<< HEAD
 	 * 
-	 * =======
-	 *
-	 * >>>>>>> master
 	 * 
 	 * @throws Exception
 	 */
@@ -570,11 +565,6 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
-	 * <<<<<<< HEAD
-	 * 
-	 * =======
-	 *
-	 * >>>>>>> master
 	 * 
 	 * @throws Exception
 	 */
@@ -733,11 +723,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * Get a ticket on a data object whose abs path has embedded spaces, then get
-	 * the data back as a stream <<<<<<< HEAD
-	 * 
-	 * =======
-	 *
-	 * >>>>>>> master
+	 * the data back as a stream
 	 * 
 	 * @throws Exception
 	 */

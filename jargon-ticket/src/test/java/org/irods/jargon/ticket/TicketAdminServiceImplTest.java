@@ -2957,7 +2957,7 @@ public class TicketAdminServiceImplTest {
 	public void createTicketFromTicketObjectForCollectionNotExists() throws Exception {
 
 		if (!testTicket) {
-			throw new DataNotFoundException("expected");
+			throw new FileNotFoundException("expected");
 		}
 
 		String collectionName = "createTicketFromTicketObjectForCollectionNotExists";
