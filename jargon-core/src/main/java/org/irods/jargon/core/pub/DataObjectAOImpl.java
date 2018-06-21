@@ -3710,17 +3710,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * getPermissionForDataObjectForUserName (java.lang.String, java.lang.String)
-	 * =======
-	 *
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
-	 * (java.lang.String, java.lang.String) >>>>>>> master
-	 */
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(final String irodsAbsolutePath,
 			final String userName) throws JargonException {
