@@ -33,7 +33,7 @@ public class TicketDistributionServiceImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public final void testGetTicketDistributionServiceNullContext() throws Exception {
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException();
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -209,7 +209,7 @@ public class TicketDistributionServiceImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public final void testGetTicketDistributionForTicketThatsMissingTicketString() throws Exception {
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException();
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -231,7 +231,7 @@ public class TicketDistributionServiceImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public final void testGetTicketDistributionForTicketThatsMissingIRODSPath() throws Exception {
 		if (!testTicket) {
-			return;
+			throw new IllegalArgumentException();
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
