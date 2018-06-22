@@ -19,7 +19,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ IrodsVirtualFileSystemTest.class })
+@Suite.SuiteClasses({ ConnectionTests.class, IRODSGenQueryTest.class, IRODSGenQueryTranslatorTest.class,
+		TranslatedIRODSQueryTest.class, ProtocolTests.class, AOTests.class, FileTests.class, RuleTests.class,
+		PackingInstructionTests.class, DomainTests.class, TransferTests.class, LocalFileUtilsTest.class,
+		RemoteExecuteServiceImplTest.class, IRODSPasswordUtilitiesTest.class, IRODSUriUtilsTest.class,
+		IRODSUriUserInfoTest.class, MiscIRODSUtilsTest.class, AuthTests.class, ChecksumTests.class,
+		TransferRestartTests.class, RandomUtilsTest.class, IrodsVersionTest.class, CyberduckProfileBuilderTest.class,
+
+		SslNegotiationFunctionalTests.class, EncryptedTransferTests.class, ClientHintsTransformTest.class })
 
 /**
  * Suite to run all tests (except long running and functional), further refined
