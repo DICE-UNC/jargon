@@ -6,9 +6,9 @@
 ## News
 
 
-https://github.com/DICE-UNC/jargon/milestone/13
+https://github.com/DICE-UNC/jargon/milestone/24
 
-This version of Jargon is currently targeted at Metalnx.  There are still some features that are considered early access and may not support a full range
+This version of Jargon is currently targeted at metadata templates and other features  Metalnx.  There are still some features that are considered early access and may not support a full range
 of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
 
 Please go to https://github.com/DICE-UNC/jargon for the latest news and info.
@@ -29,7 +29,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.2, it also maintains very reasonable backards compatability to iRODS 3.3.1 however this is no longer actively tested
+* Jargon supports iRODS 4.1.0 through 4.2.3, it also maintains very reasonable backards compatability to iRODS 3.3.1 however this is no longer actively tested
 
 ## Libraries
 
@@ -68,4 +68,4 @@ affordances can be generally applied.
 
 #### deprecation of old idrop-web and demo code #291
 
-A few cleanups of old vestigal code.
+A few cleanups of old vestigial code.
