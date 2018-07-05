@@ -1,10 +1,14 @@
 # Project: Jargon-core API
+
 ### Date: 07/05/2018
 ### Release Version: 4.3.0.0-RELEASE
 ### git tag: 4.3.0.0-RELEASE
 
 ## News
 
+4.2.3 Compatability and maintenance
+for milestone: https://github.com/DICE-UNC/jargon/milestone/23
+>>>>>>> origin/4-2-stable
 
 https://github.com/DICE-UNC/jargon/milestone/24
 
