@@ -1,16 +1,15 @@
 # Project: Jargon-core API
 
 ### Date: 07/05/2018
-### Release Version: 4.3.0.0-RELEASE
-### git tag: 4.3.0.0-RELEASE
+### Release Version: 4.3.0.1-SNAPSHOT
+### git tag: 4.3.0.1-SNAPSHOT
 
 ## News
 
 
-https://github.com/DICE-UNC/jargon/milestone/24
+https://github.com/DICE-UNC/jargon/milestone/25
 
-This version of Jargon is currently targeted at metadata templates and other features  Metalnx.  There are still some features that are considered early access and may not support a full range
-of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
+This is a maintenance and minor feature development release to support Metalnx 2.0.1 and other efforts
 
 Please go to https://github.com/DICE-UNC/jargon for the latest news and info.
 
@@ -39,34 +38,3 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
-
-
-#### Remove old thumbnail code #165
-
-Remove old image thumbnail code that relied on specific 'lifetime library' configuration.  This will later be replaced by a more globally applicable set of tools.  Likely in the jargon-extensions package
-
-####  Add file to string and vice versa to support cloud browser editor #166
-
-Add file to string and vice versa in FileSamplerService of data utils.  This allows cloud browser to turn a file into an edit pane and store edits to irods.
-
-#### File save via cloud browser is deleting metadata #232
-
-Fix save of string to file (in Stream2StreamAO) to not delete a file when overwriting, so as to preserve metadata
-
-#### Add list user groups like x method #233
-
-Enhanced user group and user queries for cloud browser
-
-#### add col user type to genquery #235
-
-Add user type to LIKE queries to discriminate users from groups in find 'like' queries
-
-#### add add'l collection listing methods accommodating heuristic path guessing #275
-
-Add additional methods for collection browsing to accommodate browsing down from the top of the tree past
-collections that are actually hidden by strict acls. Much of this is to support the MetaLnx browser but these sorts of client
-affordances can be generally applied.
-
-#### deprecation of old idrop-web and demo code #291
-
-A few cleanups of old vestigial code.
