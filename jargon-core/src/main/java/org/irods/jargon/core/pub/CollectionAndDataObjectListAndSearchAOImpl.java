@@ -64,14 +64,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	public static final Logger log = LoggerFactory.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
 	private final CollectionListingUtils collectionListingUtils;
 
-	/**
-	 * Constructor to be called by the {@link IRODSAccessObjectFactory}
-	 * 
-	 * @param irodsSession
-	 * @param irodsAccount
-	 * @throws JargonException
-	 */
-
 	protected CollectionAndDataObjectListAndSearchAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);

@@ -82,6 +82,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * @return <code>DataObjInp</code> containing the necessary packing instruction
 	 * 
 	 * @throws JargonException
+	 *             {@code JargonException}
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryDataObjWithOffset(final String fileAbsolutePath,
 			final SpecColInfo specColInfo, final long offset) throws JargonException {
@@ -146,6 +147,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 *            <code>long</code> with the offset value from a previous request
 	 * @return <code>DataObjInp</code> containing the necessary packing instruction
 	 * @throws JargonException
+	 *             {@code JargonException}
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryCollectionsWithOffset(final String fileAbsolutePath,
 			final SpecColInfo specColInfo, final long offset) throws JargonException {

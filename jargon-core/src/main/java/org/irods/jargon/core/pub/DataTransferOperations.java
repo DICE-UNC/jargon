@@ -228,7 +228,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * default should be to throw an {@code OverwriteException} if a local file
 	 * already exists.
 	 * <p>
-	 * There is a force option setting in {@code TransferOptions} for <<<<<<< HEAD
+	 * There is a force option setting in {@code TransferOptions} for
 	 * {@code ForceOption.ASK_CALLBACK_LISTENER}. If this option is set, and a file
 	 * overwrite is detected, the {@code TransferStatusCallbackListener} will be
 	 * consulted. The client that implements the callback listener interface will
@@ -522,13 +522,21 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	/**
 	 * Rename a source to a target file in place, as opposed to a move or copy
 	 * operation.
-	 * <p/>
+	 * <p>
 	 * This means that renaming from source xxx/yyy/zzz to target xxx/yyy/rrr will
 	 * result in xxx/yyy/rrr as the new path of the source file
 	 * 
 	 * @param sourceFileAbsolutePath
+	 *            {@code String}
 	 * @param targetFileAbsolutePath
+	 *            {@code String}
+	 * @throws OverwriteException
+	 *             if an overwrite is attempted and the force option has not been
+	 *             set
+	 * @throws DataNotFoundException
+	 *             if the source iRODS file does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void rename(String sourceFileAbsolutePath, String targetFileAbsolutePath)
 

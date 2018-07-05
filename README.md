@@ -1,7 +1,7 @@
 # Project: Jargon-core API
-### Date:
-### Release Version: 4.3.0.0-SNAPSHOT
-### git tag:
+### Date: 07/05/2018
+### Release Version: 4.3.0.0-RELEASE
+### git tag: 4.3.0.0-RELEASE
 
 ## News
 
@@ -22,7 +22,6 @@ Jargon-core consists of the following libraries
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-user-profile - allows management of user profile and related configuration data in a user home directory
 * jargon-ticket - support for ticket processing
-* jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
 * jargon-pool - initial implementation of commons-pool caching of iRODS agent connections.  This is initially for WebDav, and will be utilized as an option in REST and cloud browser.  Consider this code experimental
 
@@ -70,4 +69,3 @@ affordances can be generally applied.
 #### deprecation of old idrop-web and demo code #291
 
 A few cleanups of old vestigal code.
-

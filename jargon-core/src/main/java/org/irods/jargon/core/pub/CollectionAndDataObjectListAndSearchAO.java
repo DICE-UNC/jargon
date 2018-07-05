@@ -517,7 +517,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Return the {@code CollectionAndDataObjectListingEntry} that is associated
 	 * with the given iRODS absolute path. This is equivalent to doing an 'objStat'
 	 * on the given path, and in fact, this is how the data is retrieved from iRODS.
-	 * <p/>
+	 * <p>
 	 * This variant of the method is appropriate for interfaces or occasions where a
 	 * user may need to drill down from the top past collections that are not
 	 * actually visible due to strict acls. In this case, the method will 'guess' at
@@ -593,7 +593,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
-	 * @return <code>List</code> of {@CollectionAndDataObjectListingEntry} that
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry} that
 	 *         represents the collections and data objects beneath the parent
 	 * @throws FileNotFoundException
 	 *             if file is missing
@@ -662,6 +662,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @param partialStartIndex
 	 *            <code>int</code> with a paging offset
 	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
