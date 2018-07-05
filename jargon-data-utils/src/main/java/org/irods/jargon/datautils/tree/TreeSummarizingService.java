@@ -31,7 +31,7 @@ public interface TreeSummarizingService {
 	/**
 	 * Create a summary describing the contents of a local file tree
 	 *
-	 * 
+	 *
 	 * @param localFilePath
 	 *            {@code String} with an absolute path to a local file system tree
 	 * @return {@link TreeSummary}

@@ -1,6 +1,6 @@
 /**
  * Service to test conections to iRODS
- * 
+ *
  * @author Mike Conway - DICE
  *
  */

@@ -381,7 +381,7 @@ public final class ParallelGetTransferThread extends AbstractParallelTransferThr
 		}
 
 		while (myLength > 0) {
-			log.info(">>>>>>>>>>>>> top of while, my length:{} <<<<<<<<<<<", myLength);
+			log.info(" top of while, my length:{} ", myLength);
 			if (ptr > buffer.length) {
 				log.error("ptr out of synch");
 				log.error("buffer size:{}", buffer.length);

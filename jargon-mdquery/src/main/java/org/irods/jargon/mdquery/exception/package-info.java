@@ -1,5 +1,6 @@
 /**
  * General exceptions
+ * 
  * @author Mike Conway - DICE
  *
  */

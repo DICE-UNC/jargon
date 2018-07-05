@@ -7,8 +7,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ MetadataQueryJsonServiceTest.class,
-		MetadataQueryServiceImplTest.class })
+@SuiteClasses({ MetadataQueryJsonServiceTest.class, MetadataQueryServiceImplTest.class })
 public class AllTests {
 
 }

@@ -151,7 +151,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} to check
-	 * 
+	 *
 	 * @return {@code boolean} of {@code true} if file is data object, exists, and
 	 *         is executable
 	 * @throws JargonException

@@ -29,7 +29,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * @param resourceName
 	 *            {@code String} that contains the resource name, or blank if not
 	 *            used
-	 * 
+	 *
 	 * @return {@code String} with the iRODS host name that should be used to
 	 *         connect, or null if no reconnect host is needed.
 	 * @throws JargonException
@@ -49,7 +49,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * @param resourceName
 	 *            {@code String} that contains the resource name, or blank if not
 	 *            used
-	 * 
+	 *
 	 * @return {@code String} with the iRODS host name that should be used to
 	 *         connect, or null if no reconnect host is needed.
 	 * @throws JargonException
@@ -92,7 +92,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * An example would be as a result of creating a new file or folder, where the
 	 * created object needs to be inserted into a cached representation of directory
 	 * contents.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 * @return {@link CollectionAndDataObjectListingEntry} associated with the p;ath

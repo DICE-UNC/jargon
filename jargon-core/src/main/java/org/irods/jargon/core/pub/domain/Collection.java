@@ -257,7 +257,7 @@ public class Collection extends IRODSDomainObject {
 		return isProxy;
 	}
 
-	public void setProxy(boolean isProxy) {
+	public void setProxy(final boolean isProxy) {
 		this.isProxy = isProxy;
 	}
 

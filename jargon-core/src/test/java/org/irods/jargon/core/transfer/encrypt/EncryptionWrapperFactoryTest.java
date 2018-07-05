@@ -8,10 +8,9 @@ import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class EncryptionWrapperFactoryTest {
 

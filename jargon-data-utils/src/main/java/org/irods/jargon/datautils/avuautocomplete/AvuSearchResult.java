@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.avuautocomplete;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Result of an AVU search
- * 
+ *
  * @author Mike Conway - NIEHS
  *
  */
@@ -30,7 +30,7 @@ public class AvuSearchResult {
 	private int nextOffset = 0;
 
 	/**
-	 * 
+	 *
 	 */
 	public AvuSearchResult() {
 	}
@@ -39,7 +39,7 @@ public class AvuSearchResult {
 		return offset;
 	}
 
-	public void setOffset(int offset) {
+	public void setOffset(final int offset) {
 		this.offset = offset;
 	}
 
@@ -47,7 +47,7 @@ public class AvuSearchResult {
 		return more;
 	}
 
-	public void setMore(boolean more) {
+	public void setMore(final boolean more) {
 		this.more = more;
 	}
 
@@ -55,7 +55,7 @@ public class AvuSearchResult {
 		return elements;
 	}
 
-	public void setElements(List<String> elements) {
+	public void setElements(final List<String> elements) {
 		this.elements = elements;
 	}
 
@@ -82,7 +82,7 @@ public class AvuSearchResult {
 	 * @param nextOffset
 	 *            the nextOffset to set
 	 */
-	public void setNextOffset(int nextOffset) {
+	public void setNextOffset(final int nextOffset) {
 		this.nextOffset = nextOffset;
 	}
 

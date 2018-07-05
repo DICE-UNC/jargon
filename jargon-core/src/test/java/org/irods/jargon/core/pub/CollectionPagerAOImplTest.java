@@ -49,8 +49,8 @@ public class CollectionPagerAOImplTest {
 		Mockito.when(irodsSession.getJargonProperties()).thenReturn(jargonProperties);
 
 		/*
-		 * Collection listing should return a set that emulates a count of max
-		 * and total records 2x max and not last entry
+		 * Collection listing should return a set that emulates a count of max and total
+		 * records 2x max and not last entry
 		 */
 
 		final ObjStat objStat = new ObjStat();

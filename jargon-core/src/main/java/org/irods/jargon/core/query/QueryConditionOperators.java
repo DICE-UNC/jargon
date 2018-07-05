@@ -29,7 +29,7 @@ public enum QueryConditionOperators {
 	/**
 	 * Get the query operator from the genQuery friendly string value, (e.g. ">"
 	 * symbol)
-	 * 
+	 *
 	 * @param stringValue
 	 *            {@code String} with the symbolic value
 	 * @return {@link QueryConditionOperators} with the enum corresponding
@@ -110,7 +110,7 @@ public enum QueryConditionOperators {
 	/**
 	 * Turn a string-ified representation of the enum value (e.g. "GREATER THAN") to
 	 * the actual enum value
-	 * 
+	 *
 	 * @param stringValue
 	 *            {@code String} with the string-ified enum name
 	 * @return {@link QueryConditionOperators} enum value

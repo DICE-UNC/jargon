@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Improved facility to list under a parent collection in a manner that supports
  * paging by clients
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionPagerAO {
 
@@ -34,11 +34,11 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 			throws JargonException {
 		super(irodsSession, irodsAccount);
 
-		this.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
-		this.getIRODSAccessObjectFactory().getDataObjectAO(getIRODSAccount());
-		this.getIRODSAccessObjectFactory().getCollectionAO(getIRODSAccount());
-		this.collectionAndDataObjectListAndSearchAO = this.getIRODSAccessObjectFactory()
+		getIRODSAccessObjectFactory().getDataObjectAO(getIRODSAccount());
+		getIRODSAccessObjectFactory().getCollectionAO(getIRODSAccount());
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 	}
 
@@ -137,7 +137,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent
 	 * (java.lang.String)
 	 */
@@ -171,7 +171,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 				.setCollectionAndDataObjectListingEntries(listAndCount.getCollectionAndDataObjectListingEntries());
 
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()
-				|| listAndCount.getCountThisPage() + 1 < this.getJargonProperties().getMaxFilesAndDirsQueryMax()) {
+				|| listAndCount.getCountThisPage() + 1 < getJargonProperties().getMaxFilesAndDirsQueryMax()) {
 			log.info("collections are empty or less then max, so get data objects");
 
 			addDataObjectsToExistingListing(pagingAwareCollectionListing);
@@ -200,13 +200,13 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	/*
 	 * Wraps the provided path as a descriptor for initially obtaining the first
 	 * page
-	 * 
+	 *
 	 * @param irodsAbsolutePath
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws FileNotFoundException
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	private PagingAwareCollectionListing obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(

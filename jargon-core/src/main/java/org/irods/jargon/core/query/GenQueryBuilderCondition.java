@@ -74,7 +74,6 @@ class GenQueryBuilderCondition {
 		return sb.toString();
 	}
 
-	
 	/**
 	 * Create a query condition for multi-value (BETWEEN, IN, etc) condition. Note
 	 * that the individual values are to be provided in an array without quotes,

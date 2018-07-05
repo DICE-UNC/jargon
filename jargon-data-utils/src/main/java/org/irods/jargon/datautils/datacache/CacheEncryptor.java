@@ -94,7 +94,7 @@ public class CacheEncryptor {
 	}
 
 	/**
-	 * 
+	 *
 	 * Takes a single String as an argument and returns an Encrypted version of that
 	 * String.
 	 *

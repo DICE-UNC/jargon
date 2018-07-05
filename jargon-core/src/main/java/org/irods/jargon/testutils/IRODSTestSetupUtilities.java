@@ -163,7 +163,7 @@ public class IRODSTestSetupUtilities {
 	 * Add randomly from a pool of Avu metadata to a nested collection of files and
 	 * folders. Each list of candidates is tested with a random number and added at
 	 * that point based on a threshold value
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with a parent path
 	 * @param candidateAvusForData
@@ -194,8 +194,9 @@ public class IRODSTestSetupUtilities {
 
 	}
 
-	private void processCollectionToAddMetadata(IRODSFile dir, List<AvuData> candidateAvusForData,
-			List<AvuData> candidateAvusForCollections, int thresholdToAdd, Random random) throws JargonException {
+	private void processCollectionToAddMetadata(final IRODSFile dir, final List<AvuData> candidateAvusForData,
+			final List<AvuData> candidateAvusForCollections, final int thresholdToAdd, final Random random)
+			throws JargonException {
 		log.info("processCollectionToAddMetadata()");
 		log.info("rootFile:{}", dir.getAbsolutePath());
 
@@ -224,8 +225,8 @@ public class IRODSTestSetupUtilities {
 
 	}
 
-	private void processFileToAddMetadata(IRODSFile irodsFile, List<AvuData> candidateAvusForData, int thresholdToAdd,
-			Random random) throws JargonException {
+	private void processFileToAddMetadata(final IRODSFile irodsFile, final List<AvuData> candidateAvusForData,
+			final int thresholdToAdd, final Random random) throws JargonException {
 		log.info("processFileToAddMetadata()");
 		log.info("irodsFile:{}", irodsFile);
 		// for each candidate file avu see if I add it

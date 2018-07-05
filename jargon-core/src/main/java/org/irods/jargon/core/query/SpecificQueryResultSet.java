@@ -66,7 +66,7 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

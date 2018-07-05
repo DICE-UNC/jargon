@@ -21,12 +21,11 @@ import org.irods.jargon.testutils.TestConfigurationException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 /**
  * Functional tests of various permutations of ssl negotiation and auth methods.

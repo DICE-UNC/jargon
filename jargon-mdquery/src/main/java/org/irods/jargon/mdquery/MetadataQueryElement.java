@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.mdquery;
 
@@ -12,7 +12,7 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 
 /**
  * Simple POJO for an element of a query, suitable for serialization
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -28,13 +28,13 @@ public class MetadataQueryElement {
 	 */
 	private QueryConditionOperators operator = QueryConditionOperators.EQUAL;
 	/**
-	 * Value for the query, which may be an array of one for a normal query, or
-	 * two for between, or many for an 'in' query
+	 * Value for the query, which may be an array of one for a normal query, or two
+	 * for between, or many for an 'in' query
 	 */
 	private List<String> attributeValue = new ArrayList<String>();
 	/**
-	 * Connector to tie this query with the following entry, typically an AND,
-	 * but will support one OR
+	 * Connector to tie this query with the following entry, typically an AND, but
+	 * will support one OR
 	 */
 	private Connector connector = Connector.AND;
 
@@ -50,9 +50,7 @@ public class MetadataQueryElement {
 			builder.append("operator=").append(operator).append(", ");
 		}
 		if (attributeValue != null) {
-			builder.append("value=")
-					.append(attributeValue.subList(0,
-							Math.min(attributeValue.size(), maxLen)))
+			builder.append("value=").append(attributeValue.subList(0, Math.min(attributeValue.size(), maxLen)))
 					.append(", ");
 		}
 		if (connector != null) {
@@ -71,7 +69,7 @@ public class MetadataQueryElement {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public MetadataQueryElement() {
 
@@ -81,7 +79,7 @@ public class MetadataQueryElement {
 		return attributeName;
 	}
 
-	public void setAttributeName(String attributeName) {
+	public void setAttributeName(final String attributeName) {
 		this.attributeName = attributeName;
 	}
 
@@ -89,7 +87,7 @@ public class MetadataQueryElement {
 		return operator;
 	}
 
-	public void setOperator(QueryConditionOperators operator) {
+	public void setOperator(final QueryConditionOperators operator) {
 		this.operator = operator;
 	}
 
@@ -97,15 +95,15 @@ public class MetadataQueryElement {
 		return attributeValue;
 	}
 
-	public void setAttributeValue(List<String> value) {
-		this.attributeValue = value;
+	public void setAttributeValue(final List<String> value) {
+		attributeValue = value;
 	}
 
 	public Connector getConnector() {
 		return connector;
 	}
 
-	public void setConnector(Connector connector) {
+	public void setConnector(final Connector connector) {
 		this.connector = connector;
 	}
 

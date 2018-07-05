@@ -1,9 +1,8 @@
 package org.irods.jargon.core.rule;
 
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.junit.Test;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 public class RuleTypeEvaluatorTest {
 

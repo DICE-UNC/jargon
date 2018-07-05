@@ -233,12 +233,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
-	 * loadRuleFromIrodsAsString(java.lang.String)
-	 */
+	
 	@Override
 	public String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
 			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException {
@@ -597,7 +592,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.ruleservice.composition.RuleCompositionService#storeRule
 	 * (java.lang.String, java.lang.String)

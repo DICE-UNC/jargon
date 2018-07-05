@@ -45,8 +45,7 @@ public class FileTooLargeException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileTooLargeException(final String message, final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public FileTooLargeException(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 		// TODO Auto-generated constructor stub
 	}
@@ -55,8 +54,7 @@ public class FileTooLargeException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileTooLargeException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public FileTooLargeException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -64,8 +62,7 @@ public class FileTooLargeException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileTooLargeException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public FileTooLargeException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

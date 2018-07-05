@@ -86,6 +86,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 3768525818721463742L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -150,6 +155,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -2454688619503603024L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -237,6 +247,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 7311594785598163913L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -250,6 +265,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals2 = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -6654229958410438278L;
+
 			{
 				add(expectedAttribValue2);
 			}
@@ -263,6 +283,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals3 = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 1422486670335140648L;
+
 			{
 				add(expectedAttribValue3);
 			}
@@ -313,8 +338,6 @@ public class MetadataQueryServiceImplTest {
 
 		final String expectedAttribName3 = "testSimpleAvuQueryCollectionWithPathHintattrib3";
 		final String expectedAttribValue3 = "testSimpleAvuQueryCollectionWithPathHintvalue3";
-		final String expectedAttribUnits3 = "testSimpleAvuQueryCollectionWithPathHintunits";
-
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
@@ -349,6 +372,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -2421933826367225199L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -362,6 +390,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals2 = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -1865812672570745880L;
+
 			{
 				add(expectedAttribValue2);
 			}
@@ -375,6 +408,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals3 = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -9184949440646674338L;
+
 			{
 				add(expectedAttribValue3);
 			}
@@ -454,6 +492,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 4071941050619506448L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -505,6 +548,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -1532506013030117943L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -589,6 +637,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -8013696243369062357L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -702,6 +755,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 7473144390114916964L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -821,6 +879,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -835166182864893893L;
+
 			{
 				add(expectedAttribValue);
 			}
@@ -846,7 +909,7 @@ public class MetadataQueryServiceImplTest {
 	/**
 	 * Test for issue with query metadata tags size > 0 #187 (this passes)
 	 * https://github.com/DICE-UNC/irods-cloud-browser/issues/187
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -911,6 +974,11 @@ public class MetadataQueryServiceImplTest {
 		element.setOperator(QueryConditionOperators.GREATER_THAN);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 3970267173962675539L;
+
 			{
 				add("0");
 			}

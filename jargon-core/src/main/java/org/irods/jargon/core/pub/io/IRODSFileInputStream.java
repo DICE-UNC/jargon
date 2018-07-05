@@ -33,7 +33,7 @@ public class IRODSFileInputStream extends InputStream {
 	/**
 	 * Creates a {@code FileInputStream} by opening a connection to an actual file,
 	 * the file named by the path name {@code name} in the file system.
-	 * 
+	 *
 	 * <p>
 	 * First, the security is checked to verify the file can be written.
 	 * <p>
@@ -184,7 +184,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * {@code -1} is returned. This method blocks until input data is available, the
 	 * end of the stream is detected, or an exception is thrown.
 	 *
-	 * 
+	 *
 	 * @return the next byte of data, or {@code -1} if the end of the stream is
 	 *         reached.
 	 * @exception IOException
@@ -233,7 +233,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * returned; otherwise, at least one byte is read and stored into {@code b}.
 	 *
 	 * <p>
-	 * 
+	 *
 	 * The first byte read is stored into element {@code b[off]}, the next one into
 	 * {@code b[off+1]}, and so on. The number of bytes read is, at most, equal to
 	 * {@code len}. Let <i>k</i> be the number of bytes actually read; these bytes

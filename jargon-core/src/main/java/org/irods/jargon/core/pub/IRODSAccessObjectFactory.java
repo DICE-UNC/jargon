@@ -548,7 +548,7 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Service for pagable collection listings
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@IRODSAccount} with the authenticating principal
 	 * @return {@link CollectionPagerAO}

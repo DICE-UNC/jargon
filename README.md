@@ -6,9 +6,6 @@
 
 ## News
 
-4.2.3 Compatability and maintenance
-for milestone: https://github.com/DICE-UNC/jargon/milestone/23
->>>>>>> origin/4-2-stable
 
 https://github.com/DICE-UNC/jargon/milestone/24
 

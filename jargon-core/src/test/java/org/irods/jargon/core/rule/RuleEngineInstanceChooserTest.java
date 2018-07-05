@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.connection.SettableJargonProperties;
-import org.junit.Test;
-
 import org.junit.Assert;
+import org.junit.Test;
 
 public class RuleEngineInstanceChooserTest {
 

@@ -16,9 +16,9 @@ import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
  * say 'page forward' and delegate all of the head-scratching about how to
  * accomplish that to this service, which you will love, because that sucks to
  * manage mostly.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public interface CollectionPagerAO {
 
@@ -33,9 +33,9 @@ public interface CollectionPagerAO {
 	 * {@link PagingAwareCollectionListingDescriptor} can be extracted from the
 	 * listing (to save memory storing the whole listing in some state keeping
 	 * mechanism) to help manage paging.
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the iRODS absolute path of the parent
 	 *            collection
@@ -56,7 +56,7 @@ public interface CollectionPagerAO {
 	 * <code>PagingAwareCollectionListingDescriptor</code>, page forwards. This will
 	 * give the next page of whatever (collections, data objects) are available, and
 	 * if need be page across the Collections/Data Objects boundary.
-	 * 
+	 *
 	 * @param lastListingDescriptor
 	 *            {@link PagingAwareCollectionListingDescriptor} from the previous
 	 *            page, as retained by the client. This keeps state of the position

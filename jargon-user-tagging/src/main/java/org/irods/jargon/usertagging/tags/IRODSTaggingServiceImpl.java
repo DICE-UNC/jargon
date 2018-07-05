@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * does ensure that tag query/maintenance operations are done as the logged-in
  * user. Generally, the caller of this lower level service is responsible for
  * allowing or preventing updates on behalf of other users.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  *
  */

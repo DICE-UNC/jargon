@@ -369,7 +369,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @return {@code Object} that will be either a {@code DataObject} or
 	 *         {@code Collection} object based on the object at the given absolute
 	 *         path in iRODS.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 *             if the given objectAbsolutePath does not exist
 	 * @throws JargonException
@@ -606,7 +606,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * Given a parent path, get a total of the data sizes underneath that path
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the path to the parent collection,
 	 *            children data objects are totaled
@@ -630,9 +630,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path.
 	 * @return {@link ObjStat} associated witha path
-	 * 
+	 *
 	 * @throws FileNotFoundException
-	 * 
+	 *
 	 *             if file is missing
 	 * @throws JargonException
 	 *             {@link JargonException}
@@ -642,7 +642,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * List data objects underneath a given parent path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has already been obtained
 	 * @param partialStartIndex
@@ -656,7 +656,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * List collections underneath a given parent path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has already been obtained
 	 * @param partialStartIndex
@@ -673,7 +673,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	/**
 	 * Return a count of the number of collections under the path represented by the
 	 * objStat
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} for the target collection
 	 * @return <code>int</code> with the collection count
@@ -687,7 +687,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	/**
 	 * Return a count of the number of data objects under the path represented by
 	 * the objStat
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} for the target collection
 	 * @return <code>int</code> with the data object count

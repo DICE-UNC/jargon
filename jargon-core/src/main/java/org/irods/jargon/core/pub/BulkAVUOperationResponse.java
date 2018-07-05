@@ -27,13 +27,12 @@ public class BulkAVUOperationResponse {
 			final String message) {
 		return new BulkAVUOperationResponse(resultStatus, avuData, message);
 	}
-	
-	public static BulkAVUOperationResponse instance(
-			final ResultStatus resultStatus, final AvuData avuData,
+
+	public static BulkAVUOperationResponse instance(final ResultStatus resultStatus, final AvuData avuData,
 			final String message, final String path) {
 		return new BulkAVUOperationResponse(resultStatus, avuData, message, path);
 	}
-	
+
 	/**
 	 *
 	 */
@@ -54,12 +53,12 @@ public class BulkAVUOperationResponse {
 		this.avuData = avuData;
 		this.resultStatus = resultStatus;
 		this.message = message;
-		this.path = "";
+		path = "";
 
 	}
-	
-	private BulkAVUOperationResponse(final ResultStatus resultStatus,
-			final AvuData avuData, final String message, final String path) {
+
+	private BulkAVUOperationResponse(final ResultStatus resultStatus, final AvuData avuData, final String message,
+			final String path) {
 
 		if (resultStatus == null) {
 			throw new IllegalArgumentException("null resultStatus");
@@ -72,7 +71,7 @@ public class BulkAVUOperationResponse {
 		if (message == null) {
 			throw new IllegalArgumentException("null message");
 		}
-		
+
 		if (path == null) {
 			throw new IllegalArgumentException("null path");
 		}
@@ -84,7 +83,6 @@ public class BulkAVUOperationResponse {
 
 	}
 
-	
 	/**
 	 * @return the avuData
 	 */

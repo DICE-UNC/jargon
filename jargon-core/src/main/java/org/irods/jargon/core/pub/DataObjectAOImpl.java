@@ -166,14 +166,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * ======= >>>>>>> master
-	 *
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#findByAbsolutePath(java.lang.String )
-	 */
+
 	@Override
 	public DataObject findByAbsolutePath(final String absolutePath) throws FileNotFoundException, JargonException {
 
@@ -341,7 +334,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * listener, then the {@code TransferStatusCallbackListener} will receive a
 	 * message asking for the overwrite option for this transfer operation. This is
 	 * the appropriate mode when the client is interactive.
-	 * 
+	 *
 	 *
 	 * @param localFile
 	 *            {@code File} with a source file or directory in the local file
@@ -349,7 +342,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * @param irodsFileDestination
 	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param transferControlBlock
-	 * 
+	 *
 	 *            {@link TransferControlBlock} that will control aspects of the data
 	 *            transfer. Note that the {@link TransferOptions} that are a member
 	 *            of the {@code TransferControlBlock} may be specified here to pass
@@ -449,7 +442,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * listener, then the {@code TransferStatusCallbackListener} will receive a
 	 * message asking for the overwrite option for this transfer operation. This is
 	 * the appropriate mode when the client is interactive.
-	 * 
+	 *
 	 *
 	 * @param localFile
 	 *            {@code File} with a source file or directory in the local file
@@ -1789,17 +1782,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		return responses;
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * deleteBulkAVUMetadataFromDataObject (java.lang.String, java.util.List)
-	 * =======
-	 *
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#deleteBulkAVUMetadataFromDataObject
-	 * (java.lang.String, java.util.List) >>>>>>> master
-	 */
+
 	@Override
 	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(final String absolutePath,
 			final List<AvuData> avuData) throws JargonException {
@@ -3010,17 +2993,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * setAccessPermissionWriteInAdminMode (java.lang.String, java.lang.String,
-	 * java.lang.String) =======
-	 *
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode
-	 * (java.lang.String, java.lang.String, java.lang.String) >>>>>>> master
-	 */
+	
 	@Override
 	public void setAccessPermissionWriteInAdminMode(final String zone, final String absolutePath, final String userName)
 			throws JargonException {
@@ -3710,17 +3683,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * getPermissionForDataObjectForUserName (java.lang.String, java.lang.String)
-	 * =======
-	 *
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
-	 * (java.lang.String, java.lang.String) >>>>>>> master
-	 */
+
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(final String irodsAbsolutePath,
 			final String userName) throws JargonException {

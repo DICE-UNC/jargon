@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transform;
 
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Transformation of iRODS client hints API
- * 
+ *
  * @author Mike Conway - NIEHS
  *
  */

@@ -43,7 +43,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 	public static final Logger log = LoggerFactory.getLogger(SynchPropertiesServiceImpl.class);
 
 	/**
-	 * 
+	 *
 	 * Default (no-values) constructor. The account and {@code IRODSFileSystem} need
 	 * to be initialized va the setter methods.
 	 */
@@ -52,7 +52,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 	}
 
 	/**
-	 * 
+	 *
 	 * Constructor initializes dependencies. These can also be set after using the
 	 * default constructor.
 	 *
@@ -60,7 +60,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 	 *            {@code IRODSAccessObjectFactory} that can create various access
 	 *            objects to interact with iRODS
 	 * @param irodsAccount
-	 * 
+	 *
 	 *            {@code IRODSAccount} that describes the user and server to connect
 	 *            to
 	 */
@@ -195,10 +195,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl imp
 	}
 
 	/**
-	 * Parse the synch directory AVU value for component values to build a <<<<<<<
+	 * Parse the synch directory AVU value for component values to build a 
 	 * {@code UserSynchTarget} description.
 	 *
-	 * 
+	 *
 	 * @param metaDataAndDomainData
 	 *            {@link MetaDataAndDomainData} from an AVU query
 	 * @return {@link UserSynchTarget} describing a synch relationship for this

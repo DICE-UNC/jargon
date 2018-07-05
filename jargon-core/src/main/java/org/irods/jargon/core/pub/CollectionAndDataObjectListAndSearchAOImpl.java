@@ -53,9 +53,9 @@ import org.slf4j.LoggerFactory;
  * Note the comments in individual methods for details on behavior of these
  * methods across s federation, and with special collections (e.g. soft links,
  * mounted collections) supported.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		implements CollectionAndDataObjectListAndSearchAO {
@@ -75,7 +75,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			log.warn("specific query is not supported on this server");
 			specificQueryAO = null;
 		}
-		this.collectionListingUtils = new CollectionListingUtils(irodsAccount, this.getIRODSAccessObjectFactory());
+		collectionListingUtils = new CollectionListingUtils(irodsAccount, getIRODSAccessObjectFactory());
 	}
 
 	@Override
@@ -312,8 +312,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(this.getIRODSAccount(),
-				this.getIRODSAccessObjectFactory());
+		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(getIRODSAccount(),
+				getIRODSAccessObjectFactory());
 		final List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 
 		entries.addAll(collectionListingUtils.listCollectionsUnderPath(objStat, 0));
@@ -522,7 +522,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countCollectionsUnderPath(java.lang.String)
 	 */
@@ -786,7 +786,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * List collections under a path, given that the objStat is known.
 	 * <p>
 	 * Handles soft links
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 * @param partialStartIndex
 	 * @param objStat
@@ -1034,7 +1034,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPath(org.irods.jargon.core.pub.domain.ObjStat, int)
 	 */
@@ -1048,8 +1048,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(this.getIRODSAccount(),
-				this.getIRODSAccessObjectFactory());
+		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(getIRODSAccount(),
+				getIRODSAccessObjectFactory());
 
 		return collectionListingUtils.listDataObjectsUnderPath(objStat, partialStartIndex);
 
@@ -1139,8 +1139,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	/**
 	 * Given the objStat, list the data objects under the path and the associated
 	 * file permissions
-	 * 
-	 * 
+	 *
+	 *
 	 * @param absolutePathToParent
 	 *            {@code String} with the original absolute path as requested. This
 	 *            may not be the canonical path if this is a special collection
@@ -1442,8 +1442,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
-		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(this.getIRODSAccount(),
-				this.getIRODSAccessObjectFactory());
+		final CollectionListingUtils collectionListingUtils = new CollectionListingUtils(getIRODSAccount(),
+				getIRODSAccessObjectFactory());
 
 		ObjStat objStat = null;
 		try {

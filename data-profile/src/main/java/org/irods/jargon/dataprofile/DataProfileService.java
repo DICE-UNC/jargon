@@ -7,7 +7,7 @@ public interface DataProfileService {
 
 	/**
 	 * Retrieve a summary profile of a data object or collection
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file or
 	 *            collection

@@ -241,13 +241,13 @@ public final class StructFileExtAndRegInp extends AbstractIRODSPackingInstructio
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		if (this.bundleType == BundleType.TAR || bundleType == BundleType.DEFAULT) {
+		if (bundleType == BundleType.TAR || bundleType == BundleType.DEFAULT) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, TAR_DATA_TYPE_KW_VALUE));
-		} else if (this.bundleType == BundleType.GZIP) {
+		} else if (bundleType == BundleType.GZIP) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, GZIP_DATA_TYPE_KW_VALUE));
-		} else if (this.bundleType == BundleType.BZIP) {
+		} else if (bundleType == BundleType.BZIP) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, BZIP_DATA_TYPE_KW_VALUE));
-		} else if (this.bundleType == BundleType.ZIP) {
+		} else if (bundleType == BundleType.ZIP) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, ZIP_DATA_TYPE_KW_VALUE));
 		}
 

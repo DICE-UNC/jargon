@@ -44,7 +44,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * @param executionHost
 	 *            {@code String} with the name of the host on which to run the
 	 *            command
-	 * 
+	 *
 	 * @return {@code InputStream} with the results of the command invocation.
 	 * @throws JargonException
 	 *             for iRODS error

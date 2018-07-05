@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Generic utils (for the package) to do collection listings
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class CollectionListingUtils {
 
@@ -66,9 +66,9 @@ class CollectionListingUtils {
 	 * Phase 3 when path is /zone/home - for current zone - add a dir for the user
 	 * name, see if a public dir. For foreign zone, add a dir for user#homeZone and
 	 * see if a public dir
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param absolutePathToParent
 	 *            {@code String} with the current parent
 	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry} that has
@@ -97,7 +97,7 @@ class CollectionListingUtils {
 
 		/*
 		 * Phase1 - under root
-		 * 
+		 *
 		 * Get a list of zones as subdirs
 		 */
 
@@ -148,7 +148,7 @@ class CollectionListingUtils {
 	/**
 	 * Heuristic processing allows ObjStats to be returned (though fake) at points
 	 * in the hierarchy were strict ACLs would otherwise preclude
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the iRODS path
 	 * @return {@link ObjStat}
@@ -178,7 +178,7 @@ class CollectionListingUtils {
 
 		/*
 		 * Phase1 - under root
-		 * 
+		 *
 		 * Generate an objStat for root
 		 */
 
@@ -261,7 +261,7 @@ class CollectionListingUtils {
 		StringBuilder sb = new StringBuilder(path);
 		sb.append("/public");
 		ObjStat statForPublic;
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.irodsAccessObjectFactory
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsAccessObjectFactory
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		try {
 			statForPublic = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(sb.toString());
@@ -294,7 +294,7 @@ class CollectionListingUtils {
 		sb.append("/");
 		sb.append(zone);
 		sb.append("/home/public");
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.irodsAccessObjectFactory
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsAccessObjectFactory
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		try {
@@ -388,7 +388,7 @@ class CollectionListingUtils {
 
 	/**
 	 * Create a collection and listing entry for the home dir
-	 * 
+	 *
 	 * @return
 	 */
 	private CollectionAndDataObjectListingEntry createStandInForUserDir(final ObjStat objStat) {
@@ -415,7 +415,7 @@ class CollectionListingUtils {
 	 * List the collections underneath the given path
 	 * <p>
 	 * Works with soft links
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} from iRODS that details the nature of the
 	 *            collection
@@ -426,8 +426,8 @@ class CollectionListingUtils {
 	 *             {@link FileNotFoundException}
 	 * @throws JargonException
 	 *             {@link JargonException}
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(final ObjStat objStat,
 			final int partialStartIndex) throws FileNotFoundException, JargonException {
@@ -450,7 +450,7 @@ class CollectionListingUtils {
 
 		/*
 		 * Special collections are processed in different ways.
-		 * 
+		 *
 		 * Listing for soft links substitutes the source path for the target path in the
 		 * query
 		 */
@@ -486,7 +486,7 @@ class CollectionListingUtils {
 		specColInfo.setReplNum(objStat.getReplNumber());
 		specColInfo.setType(2);
 
-		if (this.irodsAccessObjectFactory.getIRODSServerProperties(this.irodsAccount).isAtLeastIrods410()) {
+		if (irodsAccessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			specColInfo.setUseResourceHierarchy(true);
 		}
 
@@ -780,7 +780,7 @@ class CollectionListingUtils {
 	/**
 	 * Use the data in the objStat, in the case of special collections, to augment
 	 * the entry for a collection
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath
@@ -912,7 +912,7 @@ class CollectionListingUtils {
 
 	/**
 	 * Given an objStat, get the count of collections under the path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat}
 	 * @return <code>int</code> with the total collections under a given path
@@ -1021,7 +1021,7 @@ class CollectionListingUtils {
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	CollectionListingUtils(IRODSAccount irodsAccount, IRODSAccessObjectFactory irodsAccessObjectFactory)
+	CollectionListingUtils(final IRODSAccount irodsAccount, final IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
 		super();
 
@@ -1040,7 +1040,7 @@ class CollectionListingUtils {
 
 	/**
 	 * Retrieve an iRODS ObjStat object for the given iRODS path
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with an absolute path to an irods object
 	 * @return {@link ObjStat} from iRODS

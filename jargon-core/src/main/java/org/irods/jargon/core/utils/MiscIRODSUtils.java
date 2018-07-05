@@ -34,7 +34,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Given an iRODS path, do path cleanup and normalization, also checking for max
 	 * size violations
-	 * 
+	 *
 	 * @param irodsPath
 	 *            {@link String} with an iRODS path
 	 * @return {@link String} with a normalized iRODS path
@@ -335,7 +335,7 @@ public class MiscIRODSUtils {
 	 * default UTF-8 encoding
 	 *
 	 * @param inputStream
-	 * 
+	 *
 	 *            {@link InputStream} to be converted to a string using the given
 	 *            encoding
 	 * @return {@link String} with the stream contents

@@ -12,10 +12,9 @@ import org.irods.jargon.core.utils.RandomUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class AesCipherEncryptWrapperTest {
 

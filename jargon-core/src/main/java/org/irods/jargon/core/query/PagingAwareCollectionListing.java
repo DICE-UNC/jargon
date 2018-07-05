@@ -38,8 +38,8 @@ public class PagingAwareCollectionListing {
 	 * Default (no-values) constructor for simple value object
 	 */
 	public PagingAwareCollectionListing() {
-		this.pagingAwareCollectionListingDescriptor = new PagingAwareCollectionListingDescriptor();
-		this.collectionAndDataObjectListingEntries = new ArrayList<>();
+		pagingAwareCollectionListingDescriptor = new PagingAwareCollectionListingDescriptor();
+		collectionAndDataObjectListingEntries = new ArrayList<>();
 	}
 
 	public List<CollectionAndDataObjectListingEntry> getCollectionAndDataObjectListingEntries() {
@@ -47,7 +47,7 @@ public class PagingAwareCollectionListing {
 	}
 
 	public void setCollectionAndDataObjectListingEntries(
-			List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries) {
+			final List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries) {
 		this.collectionAndDataObjectListingEntries = collectionAndDataObjectListingEntries;
 	}
 
@@ -56,7 +56,7 @@ public class PagingAwareCollectionListing {
 	}
 
 	public void setPagingAwareCollectionListingDescriptor(
-			PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor) {
+			final PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor) {
 		this.pagingAwareCollectionListingDescriptor = pagingAwareCollectionListingDescriptor;
 	}
 

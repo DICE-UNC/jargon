@@ -186,7 +186,7 @@ public class DiscoveredServerPropertiesCache {
 	 *            {@link String} with the hostname
 	 * @param zoneName
 	 *            {@link String} with the zone name
-	 * 
+	 *
 	 */
 	public void deleteCachedClientHints(final String host, final String zoneName) {
 
@@ -401,7 +401,7 @@ public class DiscoveredServerPropertiesCache {
 	 * @param zoneName
 	 *            {@code String} with the name of the iRODS zone this applies to
 	 *            return
-	 * 
+	 *
 	 * @return {@code Map} with the cache for the host and zone
 	 */
 	private Map<String, String> getCacheForHostAndZoneAndAddIfNotThere(final String host, final String zoneName) {

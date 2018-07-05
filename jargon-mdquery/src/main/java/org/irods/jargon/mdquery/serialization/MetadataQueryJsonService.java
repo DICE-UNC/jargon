@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.mdquery.serialization;
 
@@ -16,28 +16,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * 
+ *
  * Service to create and parse JSON representations of metadata queries
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class MetadataQueryJsonService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(MetadataQueryJsonService.class);
+	public static final Logger log = LoggerFactory.getLogger(MetadataQueryJsonService.class);
 
 	private final ObjectMapper objectMapper;
 
 	public MetadataQueryJsonService() {
-		this.objectMapper = new ObjectMapper();
+		objectMapper = new ObjectMapper();
 		objectMapper.setSerializationInclusion(Include.ALWAYS);
 	}
 
 	/**
-	 * Create a <code>String</code>-ified JSON representation of the metadata
-	 * query
-	 * 
+	 * Create a <code>String</code>-ified JSON representation of the metadata query
+	 *
 	 * @param metadataQuery
 	 *            {@link MetadataQuery} transfer object
 	 * @return <code>String</code> with JSON representing the metadata query
@@ -56,15 +54,14 @@ public class MetadataQueryJsonService {
 
 	/**
 	 * Turn JSON back to a metadata query
-	 * 
+	 *
 	 * @param jsonString
 	 *            <code>String</code> that is a valid JSON representation of a
 	 *            metadata query
 	 * @return {@link MetadataQuery} based on the JSON serialization
 	 * @throws MetadataQueryException
 	 */
-	public MetadataQuery metadataQueryFromJson(final String jsonString)
-			throws MetadataQueryException {
+	public MetadataQuery metadataQueryFromJson(final String jsonString) throws MetadataQueryException {
 		if (jsonString == null || jsonString.isEmpty()) {
 			throw new IllegalArgumentException("null or empty jsonString");
 		}

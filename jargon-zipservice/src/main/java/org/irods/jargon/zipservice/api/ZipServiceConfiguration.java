@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.zipservice.api;
 
@@ -9,20 +9,19 @@ import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
  * Basic configuration for the zip service.
  * <p/>
  * <b>Current assumptions for first round of service</b>
- * 
+ *
  * <ul>
- * <li>Bundles will be subdirectories under the bundleSubdirPath</li>
- * *
+ * <li>Bundles will be subdirectories under the bundleSubdirPath</li> *
  * <li>The bundleSubdirPath will be under the logged-in user home</li>
  * <li>A bundle is created as a directory under that bundle path with the
  * bundlePrefix and a time stamp</li>
  * <li>The resulting bundle is underneath the bundleSubDirPath at the same level
  * as the child dir that was bundled up</li>
- * 
+ *
  * </ul>
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -32,13 +31,13 @@ public class ZipServiceConfiguration {
 	 */
 	private long maxTotalBytesForZip = 5 * 1024 * 1024 * 1024; // default to 5GB
 	/**
-	 * Treat the temp bundle creation dir as a relative path in user home
-	 * currently defaults to true
+	 * Treat the temp bundle creation dir as a relative path in user home currently
+	 * defaults to true
 	 */
 	private boolean generateTempDirInUserHome = true;
 	/**
-	 * The subdir that will be used under the bundle directory for creating
-	 * child bundle folders
+	 * The subdir that will be used under the bundle directory for creating child
+	 * bundle folders
 	 */
 	private String bundleSubDirPath = ".jargonZipService";
 	/**
@@ -52,8 +51,8 @@ public class ZipServiceConfiguration {
 	private boolean failFast = true;
 
 	/**
-	 * Type of bundle to generate, note that for now it should stand at default
-	 * and generate a tar.
+	 * Type of bundle to generate, note that for now it should stand at default and
+	 * generate a tar.
 	 */
 	private BundleType preferredBundleType = BundleType.DEFAULT;
 
@@ -68,7 +67,7 @@ public class ZipServiceConfiguration {
 	 * @param maxTotalBytesForZip
 	 *            the maxTotalBytesForZip to set
 	 */
-	public void setMaxTotalBytesForZip(long maxTotalBytesForZip) {
+	public void setMaxTotalBytesForZip(final long maxTotalBytesForZip) {
 		this.maxTotalBytesForZip = maxTotalBytesForZip;
 	}
 
@@ -122,7 +121,7 @@ public class ZipServiceConfiguration {
 	 * @param bundleSubDirPath
 	 *            the bundleSubDirPath to set
 	 */
-	public void setBundleSubDirPath(String bundleSubDirPath) {
+	public void setBundleSubDirPath(final String bundleSubDirPath) {
 		this.bundleSubDirPath = bundleSubDirPath;
 	}
 
@@ -137,7 +136,7 @@ public class ZipServiceConfiguration {
 	 * @param bundlePrefix
 	 *            the bundlePrefix to set
 	 */
-	public void setBundlePrefix(String bundlePrefix) {
+	public void setBundlePrefix(final String bundlePrefix) {
 		this.bundlePrefix = bundlePrefix;
 	}
 
@@ -152,7 +151,7 @@ public class ZipServiceConfiguration {
 	 * @param failFast
 	 *            the failFast to set
 	 */
-	public void setFailFast(boolean failFast) {
+	public void setFailFast(final boolean failFast) {
 		this.failFast = failFast;
 	}
 
@@ -160,7 +159,7 @@ public class ZipServiceConfiguration {
 		return preferredBundleType;
 	}
 
-	public void setPreferredBundleType(BundleType preferredBundleType) {
+	public void setPreferredBundleType(final BundleType preferredBundleType) {
 		this.preferredBundleType = preferredBundleType;
 	}
 
@@ -168,7 +167,7 @@ public class ZipServiceConfiguration {
 	 * @param generateTempDirInUserHome
 	 *            the generateTempDirInUserHome to set
 	 */
-	public void setGenerateTempDirInUserHome(boolean generateTempDirInUserHome) {
+	public void setGenerateTempDirInUserHome(final boolean generateTempDirInUserHome) {
 		this.generateTempDirInUserHome = generateTempDirInUserHome;
 	}
 

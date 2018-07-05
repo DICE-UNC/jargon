@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.dataprofile;
 
@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaMetadataKeys;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -27,27 +28,24 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * This should be considered a provisional solution while we work to standardize
  * treatment of MIME types as a standard part of iRODS
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
-public class DataTypeResolutionServiceImpl extends AbstractJargonService
-		implements DataTypeResolutionService {
+public class DataTypeResolutionServiceImpl extends AbstractJargonService implements DataTypeResolutionService {
 
 	public static final String APPLICATION_IRODS_RULE = "application/irods-rule";
-	public static final Logger log = LoggerFactory
-			.getLogger(DataTypeResolutionServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(DataTypeResolutionServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#
 	 * resolveDataTypeWithProvidedAvuAndDataObject
 	 * (org.irods.jargon.core.pub.domain.DataObject, java.util.List)
 	 */
 	@Override
-	public String resolveDataTypeWithProvidedAvuAndDataObject(
-			final DataObject dataObject,
+	public String resolveDataTypeWithProvidedAvuAndDataObject(final DataObject dataObject,
 			final List<MetaDataAndDomainData> metadata) throws JargonException {
 
 		log.info("resolveDataTypeWithProvidedAvuAndDataObject()");
@@ -96,14 +94,13 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService
 
 	/**
 	 * Temporary shim for first cloud browser release
-	 * 
+	 *
 	 * @param dataObject
 	 * @return
 	 */
-	private String determimeMimeTypeOfIrodsObjects(DataObject dataObject) {
+	private String determimeMimeTypeOfIrodsObjects(final DataObject dataObject) {
 
-		String extension = LocalFileUtils.getFileExtension(dataObject
-				.getDataName());
+		String extension = LocalFileUtils.getFileExtension(dataObject.getDataName());
 		if (extension == null || extension.isEmpty()) {
 			return null;
 		}
@@ -119,33 +116,29 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#
 	 * determineMimeTypeViaTika(org.irods.jargon.core.pub.domain.DataObject)
 	 */
 	@Override
-	public String determineMimeTypeViaTika(DataObject dataObject)
-			throws JargonException {
+	public String determineMimeTypeViaTika(final DataObject dataObject) throws JargonException {
 		AutoDetectParser parser = new AutoDetectParser();
 		Detector detector = parser.getDetector();
 		Metadata md = new Metadata();
-		md.add(Metadata.RESOURCE_NAME_KEY, dataObject.getDataName());
+		md.add(TikaMetadataKeys.RESOURCE_NAME_KEY, dataObject.getDataName());
 		MediaType mediaType;
 		try {
 			mediaType = detector.detect(null, md);
 		} catch (IOException e) {
-			throw new JargonException(
-					"io exception determining file type by extension", e);
+			throw new JargonException("io exception determining file type by extension", e);
 		}
 		return mediaType.toString();
 	}
 
-	private String searchAvusForMimeType(
-			final List<MetaDataAndDomainData> metadata) {
+	private String searchAvusForMimeType(final List<MetaDataAndDomainData> metadata) {
 
 		for (MetaDataAndDomainData metadataValue : metadata) {
-			if (metadataValue.getAvuUnit().equals(
-					UserTaggingConstants.MIME_TYPE_AVU_UNIT)) {
+			if (metadataValue.getAvuUnit().equals(UserTaggingConstants.MIME_TYPE_AVU_UNIT)) {
 				return metadataValue.getAvuAttribute();
 			}
 		}
@@ -154,7 +147,7 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public DataTypeResolutionServiceImpl() {
 		super();
@@ -164,9 +157,8 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public DataTypeResolutionServiceImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+	public DataTypeResolutionServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 

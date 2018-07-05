@@ -227,59 +227,59 @@ public class AvuAutocompleteServiceImplTest {
 	 * testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties
 	 * ); IRODSAccessObjectFactory accessObjectFactory =
 	 * irodsFileSystem.getIRODSAccessObjectFactory();
-	 * 
+	 *
 	 * // Test instance for collection String testDirName =
 	 * "testGatherAvailableAttributesForBothCollNoPrefix"; String
 	 * targetIrodsCollection =
 	 * testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
 	 * testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testDirName);
-	 * 
+	 *
 	 * // Adding collection IRODSFile irodsFile =
 	 * accessObjectFactory.getIRODSFileFactory(irodsAccount)
 	 * .instanceIRODSFile(targetIrodsCollection); irodsFile.mkdirs();
-	 * 
+	 *
 	 * CollectionAO collectionAO =
 	 * accessObjectFactory.getCollectionAO(irodsAccount);
-	 * 
+	 *
 	 * // initialize the collection AVU data String expectedAttribName =
 	 * "testGatherAvailableAttributesForBothCollNoPrefix-testmdattrib1"; String
 	 * expectedAttribValue =
 	 * "testGatherAvailableAttributesForBothCollNoPrefix-testmdvalue1"; String
 	 * expectedAttribUnits =
 	 * "testGatherAvailableAttributesForBothCollNoPrefix-test1mdunits";
-	 * 
+	 *
 	 * AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue,
 	 * expectedAttribUnits); collectionAO.deleteAVUMetadata(targetIrodsCollection,
 	 * avuData); collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
-	 * 
+	 *
 	 * // Test instance for DataObj String testFileName =
 	 * "testGatherAvailableAttributesForDataObjWithPrefix.dat"; String absPath =
 	 * scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 	 * String localFileName =
 	 * FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
-	 * 
+	 *
 	 * // Adding DataObj String dataObjectAbsPath = targetIrodsCollection + '/' +
 	 * testFileName; DataTransferOperations dto =
 	 * irodsFileSystem.getIRODSAccessObjectFactory()
 	 * .getDataTransferOperations(irodsAccount); dto.putOperation(localFileName,
 	 * targetIrodsCollection, irodsAccount.getDefaultStorageResource(), null, null);
-	 * 
+	 *
 	 * DataObjectAO dataObjectAO =
 	 * irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-	 * 
+	 *
 	 * // initialize the AVU data String expectedAttribName2 =
 	 * "testGatherAvailableAttributesForBothDataObjNoPrefix-testmdattrib1"; String
 	 * expectedAttribValue2 =
 	 * "testGatherAvailableAttributesForBothDataObjNoPrefix-testmdvalue1"; String
 	 * expectedAttribUnits2 =
 	 * "testGatherAvailableAttributesForBothDataObjNoPrefix-testmdunits";
-	 * 
+	 *
 	 * avuData = AvuData.instance(expectedAttribName2, expectedAttribValue2,
 	 * expectedAttribUnits2);
-	 * 
+	 *
 	 * dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 	 * dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
-	 * 
+	 *
 	 * // now test AvuAutocompleteService service = new
 	 * AvuAutocompleteServiceImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
 	 * irodsAccount); AvuSearchResult actual =

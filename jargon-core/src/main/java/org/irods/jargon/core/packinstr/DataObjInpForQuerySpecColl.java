@@ -70,17 +70,17 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	/**
 	 * Create the DataObjInp packing instruction to query data objects in special
 	 * collections with an offset
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
-	 * 
+	 *
 	 * @param offset
 	 *            <code>log</code> with the offset value to skip ahead
-	 * 
+	 *
 	 * @return <code>DataObjInp</code> containing the necessary packing instruction
-	 * 
+	 *
 	 * @throws JargonException
 	 *             {@code JargonException}
 	 */
@@ -138,7 +138,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	/**
 	 * Create the DataObjInp packing instruction to query collections in special
 	 * collections with a paging offset
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param specColInfo

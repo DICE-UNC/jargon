@@ -19,7 +19,7 @@ import org.junit.Test;
 
 /**
  * Tests of various types of gen query
- * 
+ *
  * @author conwaymc
  *
  */

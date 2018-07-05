@@ -84,7 +84,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * the {@link IRODSServerProperties} object and does simple caching to reduce
 	 * traffic to iRODS. A refresh flag will force the data to be updated and
 	 * re-cached.
-	 * 
+	 *
 	 * @param refresh
 	 *            <code>boolean</code> to refresh any cached value
 	 * @return {@link ClientHints} describing the iRODS server or <code>null</code>
