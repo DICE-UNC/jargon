@@ -158,7 +158,6 @@ public class DataProfile<T extends IRODSDomainObject> {
 		this.pathComponents = pathComponents;
 	}
 
-<<<<<<< HEAD
 	@Override
 	public String toString() {
 		final int maxLen = 10;
@@ -177,19 +176,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 						: null)
 				.append("]");
 		return builder.toString();
-=======
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "DataProfile [file=" + file + ", domainObject=" + domainObject + ", metadata=" + metadata + ", acls="
-				+ acls + ", isStarred=" + isStarred + ", isShared=" + isShared + ", mimeType=" + mimeType
-				+ ", infoType=" + infoType + ", irodsTagValues=" + irodsTagValues + ", parentPath=" + parentPath
-				+ ", childName=" + childName + ", pathComponents=" + pathComponents + "]";
->>>>>>> master
+
 	}
 
 	/**

@@ -3683,10 +3683,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 	}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(final String irodsAbsolutePath,
 			final String userName) throws JargonException {
