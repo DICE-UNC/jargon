@@ -46,11 +46,11 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * <<<<<<< HEAD Write the string to a file
-	 * 
-	 * @param file
-	 * @param string
-	 * @throws IOException
+	 * Write the string to a file
+	 *
+	 * @param file {@link File}
+	 * @param string {@code String}
+	 * @throws IOException {@link IOException}
 	 */
 	public static void stringToFile(final File file, final String string) throws IOException {
 		if (file == null) {
@@ -70,11 +70,11 @@ public class LocalFileUtils {
 
 	/**
 	 * Return the contents of a file as a string
-	 * 
+	 *
 	 * @param file
 	 *            {@link File} to read
 	 * @return <code>String</code> with the file contents
-	 * @throws IOException
+	 * @throws IOException {@link IOException}
 	 */
 	public static String fileContentsAsString(final File file) throws IOException {
 		if (file == null) {
@@ -98,7 +98,7 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * ======= >>>>>>> origin/master Parse a file name to get the stuff after the
+	 * Parse a file name to get the stuff after the
 	 * last '.' character to treat as the file extension
 	 *
 	 * @param fileName
@@ -417,7 +417,7 @@ public class LocalFileUtils {
 	 * Given a checksum digest as a {@code byte[]}, return a {@code String} as used
 	 * in iRODS packing instructions
 	 *
-	 * 
+	 *
 	 * @param digestAsByteArray
 	 *            {@code byte[]} which is a checksum value
 	 * @return {@code String} in hex that represents this checkSum

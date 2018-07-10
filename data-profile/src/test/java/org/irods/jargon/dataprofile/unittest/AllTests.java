@@ -6,8 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ DataProfileServiceImplTest.class,
-		DataTypeResolutionServiceImplTest.class })
+@Suite.SuiteClasses({ DataProfileServiceImplTest.class, DataTypeResolutionServiceImplTest.class })
 public class AllTests {
 
 }

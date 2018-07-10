@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.mdquery.exception;
 
@@ -7,19 +7,19 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
 
 /**
  * General unchecked exception for metadata queries
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class MetadataQueryRuntimeException extends JargonRuntimeException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5850439092572959832L;
 
 	/**
-	 * 
+	 *
 	 */
 	public MetadataQueryRuntimeException() {
 	}
@@ -27,14 +27,14 @@ public class MetadataQueryRuntimeException extends JargonRuntimeException {
 	/**
 	 * @param message
 	 */
-	public MetadataQueryRuntimeException(String message) {
+	public MetadataQueryRuntimeException(final String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public MetadataQueryRuntimeException(Throwable cause) {
+	public MetadataQueryRuntimeException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -42,7 +42,7 @@ public class MetadataQueryRuntimeException extends JargonRuntimeException {
 	 * @param message
 	 * @param cause
 	 */
-	public MetadataQueryRuntimeException(String message, Throwable cause) {
+	public MetadataQueryRuntimeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

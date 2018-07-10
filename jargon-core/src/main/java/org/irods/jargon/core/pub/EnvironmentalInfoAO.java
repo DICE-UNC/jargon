@@ -17,7 +17,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @return {@link IRODSServerProperties} containing information such as boot
 	 *         time, version
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer() throws JargonException;
 
@@ -27,7 +27,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @return {@code long} with the time since epoch that is the current server
 	 *         time
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	long getIRODSServerCurrentTime() throws JargonException;
 
@@ -44,7 +44,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *             if the {@code listCommands.sh} script is not in the iRODS remote
 	 *             exec bin directory
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<RemoteCommandInformation> listAvailableRemoteCommands() throws DataNotFoundException, JargonException;
 
@@ -57,7 +57,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List<String>} with the names of the available microservices.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<String> listAvailableMicroservices() throws JargonException;
 
@@ -72,24 +72,25 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return {@code boolean} that will be {@code true} if I can run specific query
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	boolean isAbleToRunSpecificQuery() throws JargonException;
 
 	/**
 	 * Make a call and retrieve the available client hints. Note this may be
 	 * <code>null</code> if the version of iRODS does not support client hints API.
-	 * <p/>
+	 * <p>
 	 * Note that the {@link EnvironmentalInfoAccessor} folds this information into
 	 * the {@link IRODSServerProperties} object and does simple caching to reduce
 	 * traffic to iRODS. A refresh flag will force the data to be updated and
 	 * re-cached.
-	 * 
+	 *
 	 * @param refresh
 	 *            <code>boolean</code> to refresh any cached value
 	 * @return {@link ClientHints} describing the iRODS server or <code>null</code>
 	 *         if that data is not available
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	ClientHints retrieveClientHints(final boolean refresh) throws JargonException;
 

@@ -38,7 +38,7 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject impleme
 
 	/**
 	 * constructor that ignores created, modified dates and data size
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@link MetadataDomain} enum value that describes the iCAT domain
 	 *            the annotation is for
@@ -68,14 +68,14 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject impleme
 		this.metadataDomain = metadataDomain;
 		this.domainUniqueName = domainUniqueName;
 		this.userName = userName;
-		this.dataSize = 0L;
-		this.createdAt = null;
-		this.modifiedAt = null;
+		dataSize = 0L;
+		createdAt = null;
+		modifiedAt = null;
 	}
 
 	/**
 	 * All fields constructor
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@link MetadataDomain} enum value that describes the iCAT domain
 	 *            the annotation is for
@@ -92,8 +92,8 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject impleme
 	 * @param modifiedAt
 	 *            {@link Date} created, can be <code>null</code>
 	 */
-	public UserAnnotatedCatalogItem(MetadataDomain metadataDomain, String domainUniqueName, String userName,
-			long dataSize, Date createdAt, Date modifiedAt) {
+	public UserAnnotatedCatalogItem(final MetadataDomain metadataDomain, final String domainUniqueName,
+			final String userName, final long dataSize, final Date createdAt, final Date modifiedAt) {
 		super();
 
 		if (metadataDomain == null) {
@@ -158,7 +158,7 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

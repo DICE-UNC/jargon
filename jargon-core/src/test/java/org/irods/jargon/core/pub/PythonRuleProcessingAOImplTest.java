@@ -15,11 +15,10 @@ import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class PythonRuleProcessingAOImplTest {
 

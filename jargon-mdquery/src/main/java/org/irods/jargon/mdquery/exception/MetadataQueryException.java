@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.mdquery.exception;
 
@@ -12,14 +12,14 @@ import org.irods.jargon.core.exception.JargonException;
 public class MetadataQueryException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6215448904296396234L;
 
 	/**
 	 * @param message
 	 */
-	public MetadataQueryException(String message) {
+	public MetadataQueryException(final String message) {
 		super(message);
 	}
 
@@ -27,14 +27,14 @@ public class MetadataQueryException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public MetadataQueryException(String message, Throwable cause) {
+	public MetadataQueryException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public MetadataQueryException(Throwable cause) {
+	public MetadataQueryException(final Throwable cause) {
 		super(cause);
 		// TODO Auto-genrated constructor stub
 	}
@@ -44,8 +44,7 @@ public class MetadataQueryException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public MetadataQueryException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public MetadataQueryException(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -53,8 +52,7 @@ public class MetadataQueryException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public MetadataQueryException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public MetadataQueryException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -62,8 +60,7 @@ public class MetadataQueryException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public MetadataQueryException(String message,
-			int underlyingIRODSExceptionCode) {
+	public MetadataQueryException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

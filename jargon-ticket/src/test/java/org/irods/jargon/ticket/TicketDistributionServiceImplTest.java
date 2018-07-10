@@ -174,8 +174,8 @@ public class TicketDistributionServiceImplTest {
 
 	/*
 	 * Get a ticket distribution for a valid ticket and context where I don't have a
-	 * mid-tier host, so no URL generated <<<<<<< HEAD
-	 * 
+	 * mid-tier host, so no URL generated 
+	 *
 	 */
 	@Test
 	public final void testGetTicketDistributionForTicketNoHostInContext() throws Exception {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.dataprofile;
 
@@ -28,15 +28,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Service that will gather data associated with a Data Object or Collection
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
-public class DataProfileServiceImpl extends AbstractJargonService implements
-		DataProfileService {
+public class DataProfileServiceImpl extends AbstractJargonService implements DataProfileService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(DataProfileServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(DataProfileServiceImpl.class);
 
 	private final DataTypeResolutionService dataTypeResolutionService;
 
@@ -44,10 +42,8 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public DataProfileServiceImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount,
-			final DataTypeResolutionService dataTypeResolutionService) {
+	public DataProfileServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount, final DataTypeResolutionService dataTypeResolutionService) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (dataTypeResolutionService == null) {
@@ -62,14 +58,13 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 	 * Null constructor for easy mocking
 	 */
 	public DataProfileServiceImpl() {
-		this.dataTypeResolutionService = null;
+		dataTypeResolutionService = null;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.dataprofile.DataProfileService#retrieveDataProfile(java
+	 *
+	 * @see org.irods.jargon.dataprofile.DataProfileService#retrieveDataProfile(java
 	 * .lang.String)
 	 */
 	@Override
@@ -80,19 +75,16 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 		log.info("retrieveDataProfile()");
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIrodsAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 		log.info("getting objStat...");
 
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePath);
 
 		if (objStat.isSomeTypeOfCollection()) {
 			return retrieveDataProfileForCollection(irodsAbsolutePath, objStat);
@@ -102,15 +94,12 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 	}
 
-	private DataProfile<DataObject> retrieveDataProfileForDataObject(
-			String irodsAbsolutePath, ObjStat objStat)
-			throws FileNotFoundException, JargonException {
+	private DataProfile<DataObject> retrieveDataProfileForDataObject(final String irodsAbsolutePath,
+			final ObjStat objStat) throws FileNotFoundException, JargonException {
 
 		log.info("retrieveDataProfileForDataObject()");
-		DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory()
-				.getDataObjectAO(getIrodsAccount());
-		DataObject dataObject = dataObjectAO
-				.findByAbsolutePath(irodsAbsolutePath);
+		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
+		DataObject dataObject = dataObjectAO.findByAbsolutePath(irodsAbsolutePath);
 		log.info("got dataObject:{}", dataObject);
 
 		DataProfile<DataObject> dataProfile = new DataProfile<DataObject>();
@@ -119,23 +108,20 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("get AVUs");
 
-		dataProfile.setMetadata(dataObjectAO
-				.findMetadataValuesForDataObject(irodsAbsolutePath));
+		dataProfile.setMetadata(dataObjectAO.findMetadataValuesForDataObject(irodsAbsolutePath));
 
 		log.info("get ACLs...");
 
-		dataProfile.setAcls(dataObjectAO
-				.listPermissionsForDataObject(irodsAbsolutePath));
+		dataProfile.setAcls(dataObjectAO.listPermissionsForDataObject(irodsAbsolutePath));
 
 		log.info("look for special AVUs");
 
-		checkIfStarred(dataProfile, this.getIrodsAccount().getUserName());
-		checkIfShared(dataProfile, this.getIrodsAccount().getUserName());
+		checkIfStarred(dataProfile, getIrodsAccount().getUserName());
+		checkIfShared(dataProfile, getIrodsAccount().getUserName());
 		extractTags(dataProfile);
 		establishDataType(dataProfile);
 
-		dataProfile.setPathComponents(MiscIRODSUtils
-				.breakIRODSPathIntoComponents(irodsAbsolutePath));
+		dataProfile.setPathComponents(MiscIRODSUtils.breakIRODSPathIntoComponents(irodsAbsolutePath));
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
 
@@ -146,29 +132,24 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 	}
 
-	private void establishDataType(DataProfile<DataObject> dataProfile)
-			throws JargonException {
+	private void establishDataType(final DataProfile<DataObject> dataProfile) throws JargonException {
 		log.info("establishDataType()");
 
-		dataProfile.setMimeType(this.getDataTypeResolutionService()
-				.resolveDataTypeWithProvidedAvuAndDataObject(
-						dataProfile.getDomainObject(),
-						dataProfile.getMetadata()));
+		dataProfile.setMimeType(getDataTypeResolutionService()
+				.resolveDataTypeWithProvidedAvuAndDataObject(dataProfile.getDomainObject(), dataProfile.getMetadata()));
 
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void extractTags(DataProfile dataProfile) throws JargonException {
+	private void extractTags(final DataProfile dataProfile) throws JargonException {
 
 		List<IRODSTagValue> resultValues = new ArrayList<IRODSTagValue>();
 		List<MetaDataAndDomainData> metadata = dataProfile.getMetadata();
 
 		for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 
-			if (metadataAndDomainData.getAvuUnit().equals(
-					UserTaggingConstants.TAG_AVU_UNIT)
-					&& metadataAndDomainData.getAvuValue().equals(
-							getIrodsAccount().getUserName())) {
+			if (metadataAndDomainData.getAvuUnit().equals(UserTaggingConstants.TAG_AVU_UNIT)
+					&& metadataAndDomainData.getAvuValue().equals(getIrodsAccount().getUserName())) {
 				resultValues.add(new IRODSTagValue(metadataAndDomainData));
 
 			}
@@ -181,41 +162,38 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 	/**
 	 * See if this is a shared file or collection
-	 * 
+	 *
 	 * @param dataProfile
 	 */
 	@SuppressWarnings("rawtypes")
-	private void checkIfShared(DataProfile dataProfile, String userName) {
-		boolean shared = searchAvusForUnit(dataProfile,
-				UserTaggingConstants.SHARE_AVU_UNIT, userName);
+	private void checkIfShared(final DataProfile dataProfile, final String userName) {
+		boolean shared = searchAvusForUnit(dataProfile, UserTaggingConstants.SHARE_AVU_UNIT, userName);
 		dataProfile.setShared(shared);
 
 	}
 
 	/**
 	 * Look for starred in AVUs
-	 * 
+	 *
 	 * @param dataProfile
 	 */
 	@SuppressWarnings("rawtypes")
-	private void checkIfStarred(final DataProfile dataProfile, String userName) {
+	private void checkIfStarred(final DataProfile dataProfile, final String userName) {
 
-		boolean starred = searchAvusForUnit(dataProfile,
-				UserTaggingConstants.STAR_AVU_UNIT, userName);
+		boolean starred = searchAvusForUnit(dataProfile, UserTaggingConstants.STAR_AVU_UNIT, userName);
 		dataProfile.setStarred(starred);
 	}
 
 	/**
 	 * Look for a special AVU in the list of retrieved AVUs
-	 * 
+	 *
 	 * @param dataProfile
 	 * @param avuUnit
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean searchAvusForUnit(
-			@SuppressWarnings("rawtypes") final DataProfile dataProfile,
-			final String avuUnit, final String userName) {
+	private boolean searchAvusForUnit(@SuppressWarnings("rawtypes") final DataProfile dataProfile, final String avuUnit,
+			final String userName) {
 
 		if (dataProfile.getMetadata() == null) {
 			throw new IllegalStateException("null metadata in dataProfile");
@@ -225,8 +203,7 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 		List<MetaDataAndDomainData> metadata = dataProfile.getMetadata();
 
 		for (MetaDataAndDomainData metadataValue : metadata) {
-			if (metadataValue.getAvuUnit().equals(avuUnit)
-					&& metadataValue.getAvuValue().equals(userName)) {
+			if (metadataValue.getAvuUnit().equals(avuUnit) && metadataValue.getAvuValue().equals(userName)) {
 				foundValue = true;
 				break;
 			}
@@ -235,13 +212,11 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 	}
 
-	private DataProfile<Collection> retrieveDataProfileForCollection(
-			String irodsAbsolutePath, ObjStat objStat) throws JargonException {
+	private DataProfile<Collection> retrieveDataProfileForCollection(final String irodsAbsolutePath,
+			final ObjStat objStat) throws JargonException {
 		log.info("retrieveDataProfileForCollection()");
-		CollectionAO collectionAO = this.getIrodsAccessObjectFactory()
-				.getCollectionAO(getIrodsAccount());
-		Collection collection = collectionAO
-				.findByAbsolutePath(irodsAbsolutePath);
+		CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
+		Collection collection = collectionAO.findByAbsolutePath(irodsAbsolutePath);
 		log.info("got collection:{}", collection);
 
 		DataProfile<Collection> dataProfile = new DataProfile<Collection>();
@@ -251,8 +226,7 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 		log.info("get AVUs");
 
 		try {
-			dataProfile.setMetadata(collectionAO
-					.findMetadataValuesForCollection(irodsAbsolutePath));
+			dataProfile.setMetadata(collectionAO.findMetadataValuesForCollection(irodsAbsolutePath));
 		} catch (JargonQueryException e) {
 
 			throw new JargonException("error querying for AVU metadata", e);
@@ -260,17 +234,15 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("get ACLs...");
 
-		dataProfile.setAcls(collectionAO
-				.listPermissionsForCollection(irodsAbsolutePath));
+		dataProfile.setAcls(collectionAO.listPermissionsForCollection(irodsAbsolutePath));
 
 		log.info("look for special AVUs");
 
-		checkIfStarred(dataProfile, this.getIrodsAccount().getUserName());
-		checkIfShared(dataProfile, this.getIrodsAccount().getUserName());
+		checkIfStarred(dataProfile, getIrodsAccount().getUserName());
+		checkIfShared(dataProfile, getIrodsAccount().getUserName());
 		extractTags(dataProfile);
 		dataProfile.setMimeType("");
-		dataProfile.setPathComponents(MiscIRODSUtils
-				.breakIRODSPathIntoComponents(irodsAbsolutePath));
+		dataProfile.setPathComponents(MiscIRODSUtils.breakIRODSPathIntoComponents(irodsAbsolutePath));
 		CollectionAndPath collectionAndPath = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
 
@@ -283,7 +255,7 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.dataprofile.DataProfileService#getDataTypeResolutionService
 	 * ()

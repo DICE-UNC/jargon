@@ -48,7 +48,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	private String description = "";
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -163,7 +163,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

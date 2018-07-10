@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.dataprofile;
 
@@ -14,7 +14,7 @@ import org.irods.jargon.usertagging.domain.IRODSTagValue;
 /**
  * Represents a consolidated summary of a data object or collection as a simple
  * POJO
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -43,7 +43,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 	 */
 	private List<String> pathComponents = null;
 
-	public void setDomainObject(T domainObject) {
+	public void setDomainObject(final T domainObject) {
 		this.domainObject = domainObject;
 	}
 
@@ -52,7 +52,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public DataProfile() {
 	}
@@ -73,19 +73,19 @@ public class DataProfile<T extends IRODSDomainObject> {
 		return isShared;
 	}
 
-	public void setMetadata(List<MetaDataAndDomainData> metadata) {
+	public void setMetadata(final List<MetaDataAndDomainData> metadata) {
 		this.metadata = metadata;
 	}
 
-	public void setAcls(List<UserFilePermission> acls) {
+	public void setAcls(final List<UserFilePermission> acls) {
 		this.acls = acls;
 	}
 
-	public void setStarred(boolean isStarred) {
+	public void setStarred(final boolean isStarred) {
 		this.isStarred = isStarred;
 	}
 
-	public void setShared(boolean isShared) {
+	public void setShared(final boolean isShared) {
 		this.isShared = isShared;
 	}
 
@@ -93,7 +93,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 		return mimeType;
 	}
 
-	public void setMimeType(String mimeType) {
+	public void setMimeType(final String mimeType) {
 		this.mimeType = mimeType;
 	}
 
@@ -101,7 +101,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 		return file;
 	}
 
-	public void setFile(boolean file) {
+	public void setFile(final boolean file) {
 		this.file = file;
 	}
 
@@ -109,7 +109,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 		return irodsTagValues;
 	}
 
-	public void setIrodsTagValues(List<IRODSTagValue> irodsTagValues) {
+	public void setIrodsTagValues(final List<IRODSTagValue> irodsTagValues) {
 		this.irodsTagValues = irodsTagValues;
 	}
 
@@ -124,7 +124,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 	 * @param parentPath
 	 *            the parentPath to set
 	 */
-	public void setParentPath(String parentPath) {
+	public void setParentPath(final String parentPath) {
 		this.parentPath = parentPath;
 	}
 
@@ -139,7 +139,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 	 * @param childName
 	 *            the childName to set
 	 */
-	public void setChildName(String childName) {
+	public void setChildName(final String childName) {
 		this.childName = childName;
 	}
 
@@ -154,10 +154,11 @@ public class DataProfile<T extends IRODSDomainObject> {
 	 * @param pathComponents
 	 *            the pathComponents to set
 	 */
-	public void setPathComponents(List<String> pathComponents) {
+	public void setPathComponents(final List<String> pathComponents) {
 		this.pathComponents = pathComponents;
 	}
 
+<<<<<<< HEAD
 	@Override
 	public String toString() {
 		final int maxLen = 10;
@@ -176,6 +177,19 @@ public class DataProfile<T extends IRODSDomainObject> {
 						: null)
 				.append("]");
 		return builder.toString();
+=======
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DataProfile [file=" + file + ", domainObject=" + domainObject + ", metadata=" + metadata + ", acls="
+				+ acls + ", isStarred=" + isStarred + ", isShared=" + isShared + ", mimeType=" + mimeType
+				+ ", infoType=" + infoType + ", irodsTagValues=" + irodsTagValues + ", parentPath=" + parentPath
+				+ ", childName=" + childName + ", pathComponents=" + pathComponents + "]";
+>>>>>>> master
 	}
 
 	/**
@@ -189,7 +203,7 @@ public class DataProfile<T extends IRODSDomainObject> {
 	 * @param infoType
 	 *            the infoType to set
 	 */
-	public void setInfoType(String infoType) {
+	public void setInfoType(final String infoType) {
 		this.infoType = infoType;
 	}
 

@@ -173,7 +173,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#find(java.lang.String)
 	 */
 	@Override
@@ -244,7 +244,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserGroupAO#findAll()
 	 */
 	@Override

@@ -24,7 +24,7 @@ public interface RuleCompositionService {
 	/**
 	 * Return a <code>String</code> which is the raw contents of an iRODS rule file
 	 * on iRODS
-	 * 
+	 *
 	 * @param absolutePathToRuleFile
 	 *            <code>String</code> with an iRODS absolute path to a rules file
 	 * @return <code>String</code> with the raw rule contents
@@ -38,7 +38,7 @@ public interface RuleCompositionService {
 	/**
 	 * Store a rule presented as a raw String. This method will parse the String out
 	 * as a level of validation.
-	 * 
+	 *
 	 * @param ruleAbsolutePath
 	 *            <code>String</code> with the iRODS absolute path where the rule
 	 *            will be stored
@@ -51,7 +51,7 @@ public interface RuleCompositionService {
 
 	/**
 	 * Run a rule based on an arbitrary raw string that holds the desired rule
-	 * 
+	 *
 	 * @param rule
 	 *            <code>String</code> with the raw rule text
 	 * @return {@link IRODSRuleExecResult} with the output parameters and log from

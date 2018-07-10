@@ -19,11 +19,6 @@ class GenQueryBuilderCondition {
 	private final QueryConditionOperators operator;
 	private final String value;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -56,7 +51,7 @@ class GenQueryBuilderCondition {
 	 *            condition
 	 * @param value
 	 *            {@code String} with the right hand side of the query condition
-	 * @return
+	 * @return {@link GenQueryBuilderCondition}
 	 */
 	static GenQueryBuilderCondition instance(final String selectFieldColumnName,
 			final SelectFieldSource selectFieldSource, final String selectFieldNumericTranslation,
@@ -66,29 +61,7 @@ class GenQueryBuilderCondition {
 				operator, value);
 	}
 
-	/**
-	 * Create a query condition for an 'BETWEEN' condition. Note that the individual
-	 * values for the BETWEEN are to be provided in an array without quotes, which
-	 * will be added during processing
-	 *
-	 * @param selectFieldColumnName
-	 *            {@code String} with the column name
-	 * @param selectFieldSource
-	 *            {@link SelectFieldSource} that reflects the type of field
-	 * @param selectFieldNumericTranslation
-	 *            {@code String} with the numeric iRODS gen query protocol value
-	 *            that maps to this field
-	 * @param valuesWithoutQuotes
-	 *            {@code List<String>} of in arguments, as non quoted strings
-	 * @return
-	 */
-	static GenQueryBuilderCondition instanceForBetween(final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource, final String selectFieldNumericTranslation,
-			final List<String> valuesWithoutQuotes) {
-
-		if (valuesWithoutQuotes == null || valuesWithoutQuotes.isEmpty()) {
-			throw new IllegalArgumentException("null or empty valueWithoutQuotes");
-		}
+	private static String stackListValues(final List<String> valuesWithoutQuotes) {
 
 		StringBuilder sb = new StringBuilder();
 		for (String value : valuesWithoutQuotes) {
@@ -98,15 +71,13 @@ class GenQueryBuilderCondition {
 			sb.append("' ");
 
 		}
-
-		return new GenQueryBuilderCondition(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation,
-				QueryConditionOperators.BETWEEN, sb.toString());
+		return sb.toString();
 	}
 
 	/**
-	 * Create a query condition for an 'IN' condition. Note that the individual
-	 * values for the IN are to be provided in an array without quotes, which will
-	 * be added during processing
+	 * Create a query condition for multi-value (BETWEEN, IN, etc) condition. Note
+	 * that the individual values are to be provided in an array without quotes,
+	 * which will be added during processing
 	 *
 	 * @param selectFieldColumnName
 	 *            {@code String} with the column name
@@ -117,45 +88,28 @@ class GenQueryBuilderCondition {
 	 *            that maps to this field
 	 * @param valuesWithoutQuotes
 	 *            {@code List<String>} of in arguments, as non quoted strings
-	 * @return
+	 * @return {@link GenQueryBuilderCondition}
 	 */
-	static GenQueryBuilderCondition instanceForIn(final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource, final String selectFieldNumericTranslation,
-			final List<String> valuesWithoutQuotes) {
+	static GenQueryBuilderCondition instanceForMultiValue(final String selectFieldColumnName,
+			final QueryConditionOperators operator, final SelectFieldSource selectFieldSource,
+			final String selectFieldNumericTranslation, final List<String> valuesWithoutQuotes) {
 
 		if (valuesWithoutQuotes == null || valuesWithoutQuotes.isEmpty()) {
 			throw new IllegalArgumentException("null or empty valueWithoutQuotes");
 		}
 
-		StringBuilder sb = new StringBuilder();
-		sb.append('(');
-		boolean first = true;
-		for (String value : valuesWithoutQuotes) {
+		/* between and not between need 2 vals */
 
-			if (!first) {
-				sb.append(",");
-
+		if (operator == QueryConditionOperators.BETWEEN || operator == QueryConditionOperators.NOT_BETWEEN) {
+			if (valuesWithoutQuotes.size() != 2) {
+				throw new IllegalArgumentException("between type queries need two values");
 			}
-			sb.append("'");
-			sb.append(value);
-			sb.append("'");
-			first = false;
 		}
 
-		sb.append(")");
-
 		return new GenQueryBuilderCondition(selectFieldColumnName, selectFieldSource, selectFieldNumericTranslation,
-				QueryConditionOperators.IN, sb.toString());
+				operator, stackListValues(valuesWithoutQuotes));
 	}
 
-	/**
-	 *
-	 * @param selectFieldColumnName
-	 * @param selectFieldSource
-	 * @param selectFieldNumericTranslation
-	 * @param operator
-	 * @param value
-	 */
 	private GenQueryBuilderCondition(final String selectFieldColumnName, final SelectFieldSource selectFieldSource,
 			final String selectFieldNumericTranslation, final QueryConditionOperators operator, final String value) {
 		this.selectFieldColumnName = selectFieldColumnName;

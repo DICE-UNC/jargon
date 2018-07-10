@@ -181,8 +181,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 		log.info("rename() from {}", sourceFileAbsolutePath);
 		log.info("to {}", targetFileAbsolutePath);
 
-		IRODSFile sourceFile = this.getIRODSFileFactory().instanceIRODSFile(sourceFileAbsolutePath);
-		IRODSFile targetFile = this.getIRODSFileFactory().instanceIRODSFile(targetFileAbsolutePath);
+		IRODSFile sourceFile = getIRODSFileFactory().instanceIRODSFile(sourceFileAbsolutePath);
+		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(targetFileAbsolutePath);
 		sourceFile.renameTo(targetFile);
 	}
 
@@ -891,7 +891,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            {@link IRODSFile}
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
-	 *            <<<<<<< HEAD implementation that will receive callbacks of
+	 *          implementation that will receive callbacks of
 	 *            success/failure of each individual file transfer. This may be set
 	 *            to {@code null}, in which case, exceptions that are thrown will be
 	 *            rethrown by this method to the caller.
@@ -899,17 +899,14 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between the
 	 *            initiator of the transfer and the transfer process. This may be
-	 *            set to {@code null} if those facilities are not needed. =======
-	 *            implementation that will receive callbacks of success/failure of
-	 *            each individual file transfer. This may be set to {@code null}, in
+	 *            set to {@code null} if those facilities are not needed.  This may be set to {@code null}, in
 	 *            which case, exceptions that are thrown will be rethrown by this
 	 *            method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between the
 	 *            initiator of the transfer and the transfer process. This may be
-	 *            set to {@code null} if those facilities are not needed. >>>>>>>
-	 *            origin/master
+	 *            set to {@code null} if those facilities are not needed.
 	 * @param je
 	 *            {@link JargonException} that was the error
 	 * @throws JargonException
@@ -955,14 +952,10 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            of the transfer.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
-	 *            <<<<<<< HEAD implementation that will receive callbacks of
+	 *           HEAD implementation that will receive callbacks of
 	 *            success/failure of each individual file transfer. This may be set
 	 *            to {@code null}, in which case, exceptions that are thrown will be
-	 *            re-thrown by this method to the caller. ======= implementation
-	 *            that will receive callbacks of success/failure of each individual
-	 *            file transfer. This may be set to {@code null}, in which case,
-	 *            exceptions that are thrown will be re-thrown by this method to the
-	 *            caller. >>>>>>> origin/master
+	 *            re-thrown by this method to the caller. 
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between the

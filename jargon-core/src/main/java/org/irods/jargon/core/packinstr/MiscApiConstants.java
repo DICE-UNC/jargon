@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
 /**
  * Misc API number and other constants
- * 
+ *
  * @author Mike Conway - NIEHS
  *
  */

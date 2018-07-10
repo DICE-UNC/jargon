@@ -32,7 +32,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	private final Logger log = LoggerFactory.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
-	 * 
+	 *
 	 * Create a protocol manager that will cache a single temporary connection in a
 	 * pool for reuse. This is because temp passwords are one-time only. This allows
 	 * client applications to (somewhat) transparently simulate the ability to get a

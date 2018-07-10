@@ -70,15 +70,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		super(irodsSession, irodsAccount);
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserId(java.lang.
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserId(java.lang.
-	 * >>>>>>> origin/master String)
-	 */
+
 	@Override
 	public List<AvuData> listUserMetadataForUserId(final String userId) throws JargonException {
 
@@ -133,15 +125,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserName(java.lang
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadataForUserName(java.lang
-	 * >>>>>>> origin/master .String)
-	 */
+
 	@Override
 	public List<AvuData> listUserMetadataForUserName(final String userName) throws JargonException {
 
@@ -190,7 +174,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.accessobject.UserAO#addUser(org.irods.jargon.core
 	 * .domain.User)
 	 */
@@ -245,7 +229,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#findAll()
 	 */
 	@Override
@@ -285,7 +269,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#findWhere(java.lang.String)
 	 */
 	@Override
@@ -333,7 +317,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#findById(java.lang.String)
 	 */
 	@Override
@@ -358,7 +342,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#findByIdInZone(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -417,7 +401,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#findByName(java.lang.String)
 	 */
 	@Override
@@ -489,7 +473,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#findUserNameLike(java.lang.String)
 	 */
 	@Override
@@ -591,15 +575,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#retriveUserDNByUserId(java.lang.String)
-	 * >>>>>>> origin/master
-	 */
+
 	@Override
 	public String retriveUserDNByUserId(final String userId) throws JargonException {
 		return UserAOHelper.findUserDnIfExists(userId, getGenQueryExecutor());
@@ -607,7 +583,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#deleteUser(java.lang.String)
 	 */
 	@Override
@@ -691,15 +667,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForConnectedUser()
-	 * >>>>>>> origin/master
-	 */
+
 	@Override
 	public String getTemporaryPasswordForConnectedUser() throws JargonException {
 		GetTempPasswordIn getPasswordInPI = GetTempPasswordIn.instance();
@@ -714,15 +682,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		return tempPassword;
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#getTemporaryPasswordForASpecifiedUser
-	 * >>>>>>> origin/master (java.lang.String)
-	 */
+
 	@Override
 	public String getTemporaryPasswordForASpecifiedUser(final String targetUserName) throws JargonException {
 
@@ -776,15 +736,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#changeAUserPasswordByAnAdmin(java.lang
-	 * >>>>>>> origin/master .String, java.lang.String)
-	 */
+
 	@Override
 	public void changeAUserPasswordByAnAdmin(final String userName, final String newPassword) throws JargonException {
 
@@ -836,7 +788,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -919,7 +871,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#modifyAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -933,7 +885,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#deleteAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
 	 */
@@ -1002,7 +954,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserAO#updateUserDN(java.lang.String,
 	 * java.lang.String)
 	 */

@@ -24,7 +24,7 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Static initializer takes creates a shopping cart
 	 *
-	 * 
+	 *
 	 * @return {@code FileShoppingCart} instance.
 	 */
 	public static FileShoppingCart instance() {
@@ -100,7 +100,7 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Handy method to check if cart has any entries.
 	 *
-	 * 
+	 *
 	 * @return {@code boolean} of {@code true} if cart has entries
 	 */
 	public boolean hasItems() {
@@ -145,7 +145,7 @@ public class FileShoppingCart implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * Get a {@code List<String>} of the file names in the shopping cart
 	 *
 	 * @return {@code List<String>} with the files in the shopping carts

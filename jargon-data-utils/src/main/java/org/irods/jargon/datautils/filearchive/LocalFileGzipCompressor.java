@@ -32,7 +32,7 @@ public class LocalFileGzipCompressor {
 	public static final Logger log = LoggerFactory.getLogger(LocalFileGzipCompressor.class);
 
 	/**
-	 * 
+	 *
 	 * Take the given file and compress it to a gzip with a .gzip extension added
 	 *
 	 * @param inputFileAbsolutePath

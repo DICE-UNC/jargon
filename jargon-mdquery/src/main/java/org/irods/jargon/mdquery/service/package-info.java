@@ -1,5 +1,6 @@
 /**
  * API for metadata query
+ * 
  * @author Mike Conway - DICE
  *
  */

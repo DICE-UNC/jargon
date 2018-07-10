@@ -49,7 +49,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamBytesToIRODSFile(byte[],org.
 	 * irods.jargon.core.pub.io.IRODSFile)
@@ -94,7 +94,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#transferStreamToFileUsingIOStreams
 	 * (java.io.InputStream, java.io.File, long, int)
@@ -240,7 +240,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopyUsingStandardIO
 	 * (java.io.InputStream, java.io.OutputStream)
@@ -325,7 +325,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
 	 * InputStream, java.io.OutputStream)
 	 */
@@ -362,15 +362,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	}
 
-	/*
-	 * (non-Javadoc) <<<<<<< HEAD
-	 * 
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
-	 * =======
-	 *
-	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
-	 * >>>>>>> origin/master jargon.core.pub.io.IRODSFile)
-	 */
+	
 	@Override
 	public byte[] streamFileToByte(final IRODSFile irodsFile) throws JargonException {
 
@@ -411,7 +403,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile
 	 * (java.lang.String, java.lang.String)

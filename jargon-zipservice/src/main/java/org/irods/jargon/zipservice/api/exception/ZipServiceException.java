@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.zipservice.api.exception;
 
@@ -12,14 +12,14 @@ import org.irods.jargon.core.exception.JargonException;
 public class ZipServiceException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3527136057177654744L;
 
 	/**
 	 * @param message
 	 */
-	public ZipServiceException(String message) {
+	public ZipServiceException(final String message) {
 		super(message);
 	}
 
@@ -27,14 +27,14 @@ public class ZipServiceException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public ZipServiceException(String message, Throwable cause) {
+	public ZipServiceException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ZipServiceException(Throwable cause) {
+	public ZipServiceException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -43,8 +43,7 @@ public class ZipServiceException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZipServiceException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ZipServiceException(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -52,7 +51,7 @@ public class ZipServiceException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZipServiceException(Throwable cause, int underlyingIRODSExceptionCode) {
+	public ZipServiceException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,7 +59,7 @@ public class ZipServiceException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZipServiceException(String message, int underlyingIRODSExceptionCode) {
+	public ZipServiceException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

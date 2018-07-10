@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.mdquery;
 
@@ -11,9 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * A POJO that represents a metadata (AVU) query in the same sort of manner as
  * imeta. This can be used as a basis for a virtual collection type.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  *
  */
 @XmlRootElement
@@ -34,7 +34,7 @@ public class MetadataQuery {
 	 * <li>Check the zone from any path hint</li>
 	 * <li>Use the zone of the iRODS account</li>
 	 * </ul>
-	 * 
+	 *
 	 * In that priority order
 	 */
 	private String targetZone = "";
@@ -51,7 +51,7 @@ public class MetadataQuery {
 		return queryType;
 	}
 
-	public void setQueryType(QueryType queryType) {
+	public void setQueryType(final QueryType queryType) {
 		this.queryType = queryType;
 	}
 
@@ -59,7 +59,7 @@ public class MetadataQuery {
 		return pathHint;
 	}
 
-	public void setPathHint(String pathHint) {
+	public void setPathHint(final String pathHint) {
 		this.pathHint = pathHint;
 	}
 
@@ -67,8 +67,7 @@ public class MetadataQuery {
 		return metadataQueryElements;
 	}
 
-	public void setMetadataQueryElements(
-			List<MetadataQueryElement> metadataQueryElements) {
+	public void setMetadataQueryElements(final List<MetadataQueryElement> metadataQueryElements) {
 		this.metadataQueryElements = metadataQueryElements;
 	}
 
@@ -87,9 +86,8 @@ public class MetadataQuery {
 			builder.append("pathHint=").append(pathHint).append(", ");
 		}
 		if (metadataQueryElements != null) {
-			builder.append("metadataQueryElements=").append(
-					metadataQueryElements.subList(0,
-							Math.min(metadataQueryElements.size(), maxLen)));
+			builder.append("metadataQueryElements=")
+					.append(metadataQueryElements.subList(0, Math.min(metadataQueryElements.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();
@@ -99,7 +97,7 @@ public class MetadataQuery {
 		return targetZone;
 	}
 
-	public void setTargetZone(String targetZone) {
+	public void setTargetZone(final String targetZone) {
 		this.targetZone = targetZone;
 	}
 

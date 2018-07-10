@@ -44,7 +44,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * @param executionHost
 	 *            {@code String} with the name of the host on which to run the
 	 *            command
-	 * 
+	 *
 	 * @return {@code InputStream} with the results of the command invocation.
 	 * @throws JargonException
 	 *             for iRODS error
@@ -92,7 +92,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
 	 *            {@code String} with the absolute path to an iRODS file used to
 	 *            find the corresponding physical path, which will be passed to the
-	 *            remote script as the first argument. <<<<<<< HEAD
+	 *            remote script as the first argument.
 	 * @return {@code InputStream} with the results of the command invocation. Empty
 	 *         master buffer if file was not found.
 	 * @throws JargonException

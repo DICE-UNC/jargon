@@ -369,7 +369,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @return {@code Object} that will be either a {@code DataObject} or
 	 *         {@code Collection} object based on the object at the given absolute
 	 *         path in iRODS.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 *             if the given objectAbsolutePath does not exist
 	 * @throws JargonException
@@ -517,7 +517,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Return the {@code CollectionAndDataObjectListingEntry} that is associated
 	 * with the given iRODS absolute path. This is equivalent to doing an 'objStat'
 	 * on the given path, and in fact, this is how the data is retrieved from iRODS.
-	 * <p/>
+	 * <p>
 	 * This variant of the method is appropriate for interfaces or occasions where a
 	 * user may need to drill down from the top past collections that are not
 	 * actually visible due to strict acls. In this case, the method will 'guess' at
@@ -593,7 +593,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
-	 * @return <code>List</code> of {@CollectionAndDataObjectListingEntry} that
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry} that
 	 *         represents the collections and data objects beneath the parent
 	 * @throws FileNotFoundException
 	 *             if file is missing
@@ -606,7 +606,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * Given a parent path, get a total of the data sizes underneath that path
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the path to the parent collection,
 	 *            children data objects are totaled
@@ -630,9 +630,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path.
 	 * @return {@link ObjStat} associated witha path
-	 * 
+	 *
 	 * @throws FileNotFoundException
-	 * 
+	 *
 	 *             if file is missing
 	 * @throws JargonException
 	 *             {@link JargonException}
@@ -642,7 +642,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * List data objects underneath a given parent path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has already been obtained
 	 * @param partialStartIndex
@@ -656,12 +656,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 
 	/**
 	 * List collections underneath a given parent path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has already been obtained
 	 * @param partialStartIndex
 	 *            <code>int</code> with a paging offset
 	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
@@ -671,7 +673,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	/**
 	 * Return a count of the number of collections under the path represented by the
 	 * objStat
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} for the target collection
 	 * @return <code>int</code> with the collection count
@@ -685,7 +687,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	/**
 	 * Return a count of the number of data objects under the path represented by
 	 * the objStat
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} for the target collection
 	 * @return <code>int</code> with the data object count

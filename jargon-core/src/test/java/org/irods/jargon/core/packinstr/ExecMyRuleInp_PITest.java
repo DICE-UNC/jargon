@@ -7,10 +7,9 @@ import org.irods.jargon.core.rule.AbstractRuleTranslator;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IrodsRuleEngineRuleTranslator;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class ExecMyRuleInp_PITest {
 

@@ -260,21 +260,29 @@ public class IRODSGenQueryBuilder {
 		}
 
 		/*
-		 * Format the query based on the operator TODO: add handling for tables, in, etc
+		 * Format the query based on the operator
 		 */
 
-		if (operator == QueryConditionOperators.IN) {
-			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
-
-					.instanceForIn(rodsGenQueryEnumValue.getName(), SelectFieldSource.DEFINED_QUERY_FIELD,
-							String.valueOf(rodsGenQueryEnumValue.getNumericValue()), nonQuotedValues);
+		if (operator == QueryConditionOperators.IN || operator == QueryConditionOperators.NOT_IN
+				|| operator == QueryConditionOperators.NOT_BETWEEN || operator == QueryConditionOperators.BETWEEN) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition.instanceForMultiValue(
+					rodsGenQueryEnumValue.getName(), operator, SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()), nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
-
+		} else if (operator == QueryConditionOperators.NOT_IN) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition.instanceForMultiValue(
+					rodsGenQueryEnumValue.getName(), operator, SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()), nonQuotedValues);
+			conditions.add(genQueryBuilderCondition);
+		} else if (operator == QueryConditionOperators.NOT_BETWEEN) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition.instanceForMultiValue(
+					rodsGenQueryEnumValue.getName(), operator, SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()), nonQuotedValues);
+			conditions.add(genQueryBuilderCondition);
 		} else if (operator == QueryConditionOperators.BETWEEN) {
-			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
-
-					.instanceForBetween(rodsGenQueryEnumValue.getName(), SelectFieldSource.DEFINED_QUERY_FIELD,
-							String.valueOf(rodsGenQueryEnumValue.getNumericValue()), nonQuotedValues);
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition.instanceForMultiValue(
+					rodsGenQueryEnumValue.getName(), operator, SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()), nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
 		} else {
 			throw new UnsupportedOperationException("query operator not yet supported:" + operator);

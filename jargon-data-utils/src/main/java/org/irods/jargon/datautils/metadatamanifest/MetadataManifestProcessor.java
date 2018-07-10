@@ -9,7 +9,7 @@ public interface MetadataManifestProcessor {
 
 	/**
 	 * Convert a <code>MetadataManifest</code> to string-ified json
-	 * 
+	 *
 	 * @param metadataManifest
 	 *            {@link MetadataManifest}
 	 * @return <code>String</code> containing JSON
@@ -19,7 +19,7 @@ public interface MetadataManifestProcessor {
 
 	/**
 	 * Convert a json string to a <code>MetadataManifest</code>
-	 * 
+	 *
 	 * @param jsonString
 	 *            <code>String</code> containing json
 	 * @return {@link MetadataManifest}

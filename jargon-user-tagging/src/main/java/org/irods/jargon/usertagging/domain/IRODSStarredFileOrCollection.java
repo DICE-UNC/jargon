@@ -58,20 +58,19 @@ public final class IRODSStarredFileOrCollection extends UserAnnotatedCatalogItem
 	 * * Constructor describes the user and object that is being starred, and
 	 * providing a description. Includes information on data size, create, and
 	 * modified dates
-	 * 
+	 *
 	 * @param metadataDomain
-	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
-	 *            that identifies the domain object type that is tagged (e.g.
-	 *            DataObject, Collection)
+	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value that
+	 *            identifies the domain object type that is tagged (e.g. DataObject,
+	 *            Collection)
 	 * @param domainUniqueName
-	 *            <code>String</code> with the unque name for the tagged data
-	 *            object (e.g. iRODS absolute path for a data object or
-	 *            collection).
+	 *            <code>String</code> with the unque name for the tagged data object
+	 *            (e.g. iRODS absolute path for a data object or collection).
 	 * @param description
 	 *            <code>String</code> with a description of the favorite.
 	 * @param userName
-	 *            <code>String</code> with the user name who is associated with
-	 *            the tags.
+	 *            <code>String</code> with the user name who is associated with the
+	 *            tags.
 	 * @param dataSize
 	 *            <code>long</code> with the data size
 	 * @param createdAt
@@ -79,12 +78,10 @@ public final class IRODSStarredFileOrCollection extends UserAnnotatedCatalogItem
 	 * @param modifiedAt
 	 *            {@link Date} modified, can be null
 	 */
-	public IRODSStarredFileOrCollection(MetadataDomain metadataDomain,
-			String domainUniqueName, final String description, String userName,
-			long dataSize, Date createdAt, Date modifiedAt)
-			throws JargonException {
-		super(metadataDomain, domainUniqueName, userName, dataSize, createdAt,
-				modifiedAt);
+	public IRODSStarredFileOrCollection(final MetadataDomain metadataDomain, final String domainUniqueName,
+			final String description, final String userName, final long dataSize, final Date createdAt,
+			final Date modifiedAt) throws JargonException {
+		super(metadataDomain, domainUniqueName, userName, dataSize, createdAt, modifiedAt);
 		if (description == null) {
 			throw new JargonException("null spaceDelimitedTagsForDomain");
 		}

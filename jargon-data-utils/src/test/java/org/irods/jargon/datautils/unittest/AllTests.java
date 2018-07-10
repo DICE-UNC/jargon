@@ -11,7 +11,6 @@ import org.irods.jargon.datautils.filesampler.FileSamplerServiceImplTest;
 import org.irods.jargon.datautils.indexer.AbstractIndexerVisitorTest;
 import org.irods.jargon.datautils.metadatamanifest.MetadataManifestProcessorImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
-import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartServiceImplTest;
 import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImplTest;
 import org.irods.jargon.datautils.tree.DiffTreePostProcessorTest;
@@ -27,11 +26,10 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({ FileTreeDiffEntryTest.class, FileTreeNodeTest.class, FileTreeDiffUtilityTest.class,
 		SynchPropertiesServiceImplTest.class, DataCacheServiceImplTest.class,
 		ConnectionCreatingPoolableObjectFactoryTest.class, TempPasswordCachingProtocolManagerTest.class,
-		ShoppingCartEntryTest.class, FileShoppingCartTest.class, ShoppingCartServiceImplTest.class,
-		DiffTreePostProcessorTest.class, LocalTarFileArchiverTest.class, LocalFileGzipCompressorTest.class,
-		FileSamplerServiceImplTest.class, ConnectionTesterImplTest.class, MetadataManifestProcessorImplTest.class,
-		AvuAutocompleteServiceImplTest.class, AbstractIndexerVisitorTest.class, IrodsVisitedLeafTest.class,
-		IrodsVisitedCompositeTest.class })
+		FileShoppingCartTest.class, ShoppingCartServiceImplTest.class, DiffTreePostProcessorTest.class,
+		LocalTarFileArchiverTest.class, LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class,
+		ConnectionTesterImplTest.class, MetadataManifestProcessorImplTest.class, AvuAutocompleteServiceImplTest.class,
+		AbstractIndexerVisitorTest.class, IrodsVisitedLeafTest.class, IrodsVisitedCompositeTest.class })
 
 public class AllTests {
 

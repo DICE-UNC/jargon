@@ -219,12 +219,9 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 		return fileTreeModel;
 	}
 
-	/**
-	 * <<<<<<< HEAD Given two relative paths, do the diff. This is the recursive
-	 * call that will descend into child directories and update a shared tree model.
-	 * ======= Given two relative paths, do the diff. This is the recursive call
+	/*
+	 * Given two relative paths, do the diff. This is the recursive call
 	 * that will descend into child directories and update a shared tree model.
-	 * >>>>>>> master
 	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
@@ -300,11 +297,9 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 
 	}
 
-	/**
-	 * <<<<<<< HEAD Two relative paths are matched. Decide if they are files or
-	 * directories, and diff appropriately. ======= Two relative paths are matched.
-	 * Decide if they are files or directories, and diff appropriately. >>>>>>>
-	 * master
+	/*
+	 *  Two relative paths are matched. Decide if they are files or
+	 * directories, and diff appropriately.
 	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
@@ -611,12 +606,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implem
 		currentFileTreeNode.add(new FileTreeNode(entry));
 	}
 
-	/**
-	 * I've matched two files by relative paths. Now inspect for changes and <<<<<<<
-	 * HEAD generate any appropriate diff. If either the right or left timestamp is
-	 * set to no checks, then timestamps are not checked at all. ======= generate
+	/*
+	 * I've matched two files by relative paths. Now inspect for changes and  generate
 	 * any appropriate diff. If either the right or left timestamp is set to no
-	 * checks, then timestamps are not checked at all. >>>>>>> master
+	 * checks, then timestamps are not checked at all.
 	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide

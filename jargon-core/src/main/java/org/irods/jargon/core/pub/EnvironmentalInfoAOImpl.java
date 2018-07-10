@@ -109,14 +109,14 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 		log.info("first look in cache if not a refresh");
 		if (!refresh) {
-			clientHints = this.getIRODSSession().getDiscoveredServerPropertiesCache()
-					.retrieveClientHints(this.getIRODSAccount().getHost(), this.getIRODSAccount().getZone());
+			clientHints = getIRODSSession().getDiscoveredServerPropertiesCache()
+					.retrieveClientHints(getIRODSAccount().getHost(), getIRODSAccount().getZone());
 		}
 
 		if (clientHints == null) {
 
 			log.info("is a refresh, or hints not found");
-			if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+			if (getIRODSServerProperties().isAtLeastIrods410()) {
 				log.info("going to the server for hints");
 				Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, "",
 						MiscApiConstants.CLIENT_HINTS_API_NBR);
@@ -127,8 +127,8 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 				ClientHintsTransform transformer = new ClientHintsTransform();
 				log.info("refreshing or retrieving new client hints");
 				clientHints = transformer.clientHintsFromIrodsJson(buf.getStringValue());
-				this.getIRODSSession().getDiscoveredServerPropertiesCache().cacheClientHints(
-						this.getIRODSAccount().getHost(), this.getIRODSAccount().getZone(), clientHints);
+				getIRODSSession().getDiscoveredServerPropertiesCache().cacheClientHints(getIRODSAccount().getHost(),
+						getIRODSAccount().getZone(), clientHints);
 			} else {
 				log.info("no client hints available");
 			}

@@ -38,7 +38,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	ChecksumValue computeChecksumValueFromIrodsData(String irodsValue) throws JargonException;
 
 	/**
-	 * 
+	 *
 	 * Given a data object in iRODS, compute its checksum using the defaut algo and
 	 * return it. The algo is determined by iRODS policy
 	 *

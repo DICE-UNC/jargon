@@ -17,67 +17,53 @@ import org.mockito.Mockito;
 public class DataTypeResolutionServiceImplTest {
 
 	@Test
-	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueFromAVU()
-			throws Exception {
+	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueFromAVU() throws Exception {
 
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		DataObject dataObject = new DataObject();
 		String dataName = "file.txt";
 		dataObject.setDataName(dataName);
 
-		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", "blah", 0,
-						"application/xml", "",
-						UserTaggingConstants.MIME_TYPE_AVU_UNIT);
+		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1", "blah",
+				0, "application/xml", "", UserTaggingConstants.MIME_TYPE_AVU_UNIT);
 		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
 		avus.add(metaDataAndDamainData);
 
-		String actual = resolutionService
-				.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
-		Assert.assertEquals("didn't get mime type from AVU", "application/xml",
-				actual);
+		String actual = resolutionService.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
+		Assert.assertEquals("didn't get mime type from AVU", "application/xml", actual);
 
 	}
 
 	@Test
-	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueNoAVU()
-			throws Exception {
+	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueNoAVU() throws Exception {
 
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		DataObject dataObject = new DataObject();
 		String dataName = "file.txt";
 		dataObject.setDataName(dataName);
 
 		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
 
-		String actual = resolutionService
-				.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
-		Assert.assertEquals("didn't get mime type from tika", "text/plain",
-				actual);
+		String actual = resolutionService.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
+		Assert.assertEquals("didn't get mime type from tika", "text/plain", actual);
 
 	}
 
 	@Test
 	public void testGetDataTypeFromExtension() throws Exception {
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		DataObject dataObject = new DataObject();
 		String dataName = "file.txt";
 		dataObject.setDataName(dataName);
@@ -89,26 +75,22 @@ public class DataTypeResolutionServiceImplTest {
 	}
 
 	@Test
-	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueNoAVUAsIrodsRule()
-			throws Exception {
+	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueNoAVUAsIrodsRule() throws Exception {
 
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		DataObject dataObject = new DataObject();
 		String dataName = "file.r";
 		dataObject.setDataName(dataName);
 
 		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
 
-		String actual = resolutionService
-				.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
-		Assert.assertEquals("didn't get mime type as rule",
-				DataTypeResolutionServiceImpl.APPLICATION_IRODS_RULE, actual);
+		String actual = resolutionService.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
+		Assert.assertEquals("didn't get mime type as rule", DataTypeResolutionServiceImpl.APPLICATION_IRODS_RULE,
+				actual);
 
 	}
 

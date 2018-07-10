@@ -486,8 +486,8 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -565,7 +565,7 @@ public class TicketClientOperationsImplTest {
 
 	/**
 	 * [#637] nested subdirs with ticket issued on parent up the tree - no access?
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -724,7 +724,7 @@ public class TicketClientOperationsImplTest {
 	/**
 	 * Get a ticket on a data object whose abs path has embedded spaces, then get
 	 * the data back as a stream
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

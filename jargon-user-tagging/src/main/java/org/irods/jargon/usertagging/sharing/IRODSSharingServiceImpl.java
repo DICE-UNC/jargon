@@ -732,7 +732,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService impleme
 	/*
 	 * Will return {@code true} if I have already checked, and know that the sharing
 	 * specific queries are not set up on iRODS.
-	 * 
+	 *
 	 */
 	private boolean isDeterminedThatSharingQueriesNotSupported() {
 		if (getIrodsAccessObjectFactory().isUsingDynamicServerPropertiesCache()) {

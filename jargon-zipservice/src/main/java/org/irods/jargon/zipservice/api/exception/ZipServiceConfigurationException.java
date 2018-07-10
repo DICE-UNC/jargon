@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.zipservice.api.exception;
 
@@ -9,14 +9,14 @@ package org.irods.jargon.zipservice.api.exception;
 public class ZipServiceConfigurationException extends ZipServiceException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2164051501532502589L;
 
 	/**
 	 * @param message
 	 */
-	public ZipServiceConfigurationException(String message) {
+	public ZipServiceConfigurationException(final String message) {
 		super(message);
 	}
 
@@ -24,14 +24,14 @@ public class ZipServiceConfigurationException extends ZipServiceException {
 	 * @param message
 	 * @param cause
 	 */
-	public ZipServiceConfigurationException(String message, Throwable cause) {
+	public ZipServiceConfigurationException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ZipServiceConfigurationException(Throwable cause) {
+	public ZipServiceConfigurationException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -40,8 +40,8 @@ public class ZipServiceConfigurationException extends ZipServiceException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZipServiceConfigurationException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ZipServiceConfigurationException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -49,8 +49,7 @@ public class ZipServiceConfigurationException extends ZipServiceException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZipServiceConfigurationException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ZipServiceConfigurationException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -58,8 +57,7 @@ public class ZipServiceConfigurationException extends ZipServiceException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZipServiceConfigurationException(String message,
-			int underlyingIRODSExceptionCode) {
+	public ZipServiceConfigurationException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

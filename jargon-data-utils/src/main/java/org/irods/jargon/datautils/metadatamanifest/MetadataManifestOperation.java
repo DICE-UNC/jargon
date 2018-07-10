@@ -4,7 +4,7 @@ import org.irods.jargon.datautils.metadatamanifest.MetadataManifest.Action;
 
 /**
  * Nested individual operation
- * 
+ *
  * @author mcc
  *
  */
@@ -18,7 +18,7 @@ public class MetadataManifestOperation {
 
 	/**
 	 * Create an operation
-	 * 
+	 *
 	 * @param attribute
 	 *            <code>String</code> with the avu attribute
 	 * @param value
@@ -26,8 +26,8 @@ public class MetadataManifestOperation {
 	 * @param unit
 	 *            <code>String</code> with the avu unit
 	 * @param irodsPath
-	 *            <code>String</code> with the target iRODS path. If the
-	 *            containing {@link MetadataManifest} supplies a
+	 *            <code>String</code> with the target iRODS path. If the containing
+	 *            {@link MetadataManifest} supplies a
 	 *            <code>parentIrodsTargetPath</code> then this path should be
 	 *            relative with no leading / character
 	 * @param action
@@ -71,16 +71,21 @@ public class MetadataManifestOperation {
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("MetadataManifestOperation [");
-		if (attribute != null)
+		if (attribute != null) {
 			builder.append("attribute=").append(attribute).append(", ");
-		if (value != null)
+		}
+		if (value != null) {
 			builder.append("value=").append(value).append(", ");
-		if (unit != null)
+		}
+		if (unit != null) {
 			builder.append("unit=").append(unit).append(", ");
-		if (irodsPath != null)
+		}
+		if (irodsPath != null) {
 			builder.append("irodsPath=").append(irodsPath).append(", ");
-		if (action != null)
+		}
+		if (action != null) {
 			builder.append("action=").append(action);
+		}
 		builder.append("]");
 		return builder.toString();
 	}

@@ -87,7 +87,7 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * <<<<<<< HEAD ======= Create a set of selects for a data object, used in
+	 *  Create a set of selects for a data object, used in
 	 * general query.
 	 *
 	 * @param builder

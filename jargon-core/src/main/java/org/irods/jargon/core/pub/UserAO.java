@@ -361,7 +361,7 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Find users using a like query with a given name. Blank queries will return
 	 * all users
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with a partial search
 	 * @return <code>List</code> of {@link User}

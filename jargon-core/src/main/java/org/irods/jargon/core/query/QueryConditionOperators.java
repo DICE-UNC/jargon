@@ -12,8 +12,9 @@ public enum QueryConditionOperators {
 	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_LIKE("not like"), SOUNDS_LIKE(
 			"sounds like"), SOUNDS_NOT_LIKE("sounds not like"), TABLE("table"), NUMERIC_LESS_THAN(
 					"n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO("n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO(
-							"n>="), NUMERIC_GREATER_THAN("n>"), NUMERIC_EQUAL("n="), EQUAL(
-									"="), LESS_THAN("<"), GREATER_THAN(">"), IN("in"), BETWEEN("between"), LIKE("like");
+							"n>="), NUMERIC_GREATER_THAN("n>"), NUMERIC_EQUAL("n="), EQUAL("="), LESS_THAN(
+									"<"), GREATER_THAN(">"), IN("in"), NOT_IN(
+											"not in"), BETWEEN("between"), NOT_BETWEEN("not between"), LIKE("like");
 
 	private String operatorAsString;
 
@@ -28,7 +29,7 @@ public enum QueryConditionOperators {
 	/**
 	 * Get the query operator from the genQuery friendly string value, (e.g. ">"
 	 * symbol)
-	 * 
+	 *
 	 * @param stringValue
 	 *            {@code String} with the symbolic value
 	 * @return {@link QueryConditionOperators} with the enum corresponding
@@ -88,8 +89,15 @@ public enum QueryConditionOperators {
 		if (stringValue.equalsIgnoreCase(IN.operatorAsString)) {
 			return IN;
 		}
+
+		if (stringValue.equalsIgnoreCase(NOT_IN.operatorAsString)) {
+			return NOT_IN;
+		}
 		if (stringValue.equalsIgnoreCase(BETWEEN.operatorAsString)) {
 			return BETWEEN;
+		}
+		if (stringValue.equalsIgnoreCase(NOT_BETWEEN.operatorAsString)) {
+			return NOT_BETWEEN;
 		}
 		if (stringValue.equals(LIKE.operatorAsString)) {
 			return LIKE;
@@ -102,7 +110,7 @@ public enum QueryConditionOperators {
 	/**
 	 * Turn a string-ified representation of the enum value (e.g. "GREATER THAN") to
 	 * the actual enum value
-	 * 
+	 *
 	 * @param stringValue
 	 *            {@code String} with the string-ified enum name
 	 * @return {@link QueryConditionOperators} enum value
@@ -159,11 +167,19 @@ public enum QueryConditionOperators {
 		if (stringValue.equalsIgnoreCase(GREATER_THAN.toString())) {
 			return GREATER_THAN;
 		}
+
+		if (stringValue.equalsIgnoreCase(NOT_IN.toString())) {
+			return NOT_IN;
+		}
 		if (stringValue.equalsIgnoreCase(IN.toString())) {
 			return IN;
 		}
 		if (stringValue.equalsIgnoreCase(BETWEEN.toString())) {
 			return BETWEEN;
+		}
+
+		if (stringValue.equalsIgnoreCase(NOT_BETWEEN.toString())) {
+			return NOT_BETWEEN;
 		}
 		if (stringValue.equals(LIKE.toString())) {
 			return LIKE;

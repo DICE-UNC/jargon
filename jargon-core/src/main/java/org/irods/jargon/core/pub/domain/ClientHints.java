@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.domain;
 
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * iRODS Client Hints from server JSON
- * 
+ *
  * @author Mike Conway - NIEHS
  *
  */
@@ -33,7 +33,7 @@ public class ClientHints {
 
 	/**
 	 * Look at the database plugin type and determine what type of db the ICAT is
-	 * 
+	 *
 	 * @return {@link IcatTypeEnum} value that indicates the type of Icat database
 	 */
 	public IcatTypeEnum whatTypeOfIcatIsIt() {
@@ -68,7 +68,7 @@ public class ClientHints {
 	 * @param strictAcls
 	 *            the strictAcls to set
 	 */
-	public void setStrictAcls(String strictAcls) {
+	public void setStrictAcls(final String strictAcls) {
 		this.strictAcls = strictAcls;
 	}
 
@@ -83,7 +83,7 @@ public class ClientHints {
 	 * @param plugins
 	 *            the plugins to set
 	 */
-	public void setPlugins(List<Plugin> plugins) {
+	public void setPlugins(final List<Plugin> plugins) {
 		this.plugins = plugins;
 	}
 
@@ -98,7 +98,7 @@ public class ClientHints {
 	 * @param hashScheme
 	 *            the hashScheme to set
 	 */
-	public void setHashScheme(String hashScheme) {
+	public void setHashScheme(final String hashScheme) {
 		this.hashScheme = hashScheme;
 	}
 
@@ -113,7 +113,7 @@ public class ClientHints {
 	 * @param matchHashPolicy
 	 *            the matchHashPolicy to set
 	 */
-	public void setMatchHashPolicy(String matchHashPolicy) {
+	public void setMatchHashPolicy(final String matchHashPolicy) {
 		this.matchHashPolicy = matchHashPolicy;
 	}
 
@@ -128,7 +128,7 @@ public class ClientHints {
 	 * @param rules
 	 *            the rules to set
 	 */
-	public void setRules(List<String> rules) {
+	public void setRules(final List<String> rules) {
 		this.rules = rules;
 	}
 
@@ -143,13 +143,13 @@ public class ClientHints {
 	 * @param specificQueries
 	 *            the specificQueries to set
 	 */
-	public void setSpecificQueries(List<String> specificQueries) {
+	public void setSpecificQueries(final List<String> specificQueries) {
 		this.specificQueries = specificQueries;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -204,7 +204,7 @@ class Plugin {
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -219,7 +219,7 @@ class Plugin {
 	 * @param type
 	 *            the type to set
 	 */
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -234,7 +234,7 @@ class Plugin {
 	 * @param version
 	 *            the version to set
 	 */
-	public void setVersion(String version) {
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 
@@ -249,13 +249,13 @@ class Plugin {
 	 * @param checksumSha256
 	 *            the checksumSha256 to set
 	 */
-	public void setChecksumSha256(String checksumSha256) {
+	public void setChecksumSha256(final String checksumSha256) {
 		this.checksumSha256 = checksumSha256;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

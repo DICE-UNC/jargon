@@ -22,10 +22,10 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements BulkFile
 
 	/**
 	 * Get the extension typically associated with a bundle type
-	 * 
+	 *
 	 * @param bundleType
 	 *            {@link BundleType} for an iRODS bundle
-	 * @return
+	 * @return {@code String}
 	 */
 	public static String fileExtensionForBundleType(final BundleType bundleType) {
 		log.info("fileExtensionForBundleType()");
@@ -215,7 +215,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements BulkFile
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * extractABundleIntoAnIrodsCollection(java.lang.String, java.lang.String,
 	 * java.lang.String)

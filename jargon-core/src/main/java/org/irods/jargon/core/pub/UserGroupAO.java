@@ -191,7 +191,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	/**
 	 * Given a search term, find user groups like that term. A blank term will find
 	 * all
-	 * 
+	 *
 	 * @param userGroupName
 	 *            <code>String</code> with
 	 * @return

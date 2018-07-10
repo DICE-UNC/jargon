@@ -84,7 +84,7 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 			}
 
 			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(
-					this.getIrodsAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax());
+					getIrodsAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIrodsAccessObjectFactory()
 					.getIRODSGenQueryExecutor(irodsAccount);
@@ -151,15 +151,17 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
 								QueryConditionOperators.LIKE, forAttribute)
 						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
-								QueryConditionOperators.LIKE, prefix).addOrderByGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE, OrderByType.ASC);
+								QueryConditionOperators.LIKE, prefix)
+						.addOrderByGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE, OrderByType.ASC);
 
 			} else if (avuTypeEnum == AvuTypeEnum.DATA_OBJECT) {
 
 				builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
-						QueryConditionOperators.LIKE, forAttribute)
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
-						QueryConditionOperators.LIKE, prefix).addOrderByGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,  OrderByType.ASC);
+						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
+								QueryConditionOperators.LIKE, forAttribute)
+						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+								QueryConditionOperators.LIKE, prefix)
+						.addOrderByGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE, OrderByType.ASC);
 
 			} else if (avuTypeEnum == AvuTypeEnum.BOTH) {
 
@@ -168,7 +170,7 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 			}
 
 			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(
-					this.getIrodsAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax());
+					getIrodsAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIrodsAccessObjectFactory()
 					.getIRODSGenQueryExecutor(irodsAccount);

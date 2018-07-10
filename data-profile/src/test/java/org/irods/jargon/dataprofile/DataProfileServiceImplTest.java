@@ -26,36 +26,29 @@ public class DataProfileServiceImplTest {
 	@Test
 	public void testRetrieveDataProfileDataObject() throws Exception {
 
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		DataObject dataObject = new DataObject();
 		String dataName = "file.txt";
 		dataObject.setDataName(dataName);
 		dataObject.setCollectionName("/a/collection");
 		String irodsAbsolutePath = "/a/collection/" + dataName;
 
-		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", "blah", 0,
-						"application/xml", "",
-						UserTaggingConstants.MIME_TYPE_AVU_UNIT);
+		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1", "blah",
+				0, "application/xml", "", UserTaggingConstants.MIME_TYPE_AVU_UNIT);
 		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
 		avus.add(metaDataAndDamainData);
 
-		MetaDataAndDomainData starred = MetaDataAndDomainData.instance(
-				MetadataDomain.DATA, "1", "blah", 0, "l",
+		MetaDataAndDomainData starred = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1", "blah", 0, "l",
 				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 
 		avus.add(starred);
 
-		MetaDataAndDomainData shared = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", "blah", 0, "l",
-						irodsAccount.getUserName(),
-						UserTaggingConstants.SHARE_AVU_UNIT);
+		MetaDataAndDomainData shared = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1", "blah", 0, "l",
+				irodsAccount.getUserName(), UserTaggingConstants.SHARE_AVU_UNIT);
 
 		avus.add(shared);
 
@@ -65,71 +58,53 @@ public class DataProfileServiceImplTest {
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath("/some/absolutepath/something.txt");
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(irodsAbsolutePath))
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePath))
 				.thenReturn(objStat);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
-		Mockito.when(dataObjectAO.findByAbsolutePath(irodsAbsolutePath))
-				.thenReturn(dataObject);
+		Mockito.when(dataObjectAO.findByAbsolutePath(irodsAbsolutePath)).thenReturn(dataObject);
 
-		Mockito.when(
-				dataObjectAO.findMetadataValuesForDataObject(irodsAbsolutePath))
-				.thenReturn(avus);
+		Mockito.when(dataObjectAO.findMetadataValuesForDataObject(irodsAbsolutePath)).thenReturn(avus);
 
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
-		DataProfileService dataProfileService = new DataProfileServiceImpl(
-				irodsAccessObjectFactory, irodsAccount, resolutionService);
+		DataProfileService dataProfileService = new DataProfileServiceImpl(irodsAccessObjectFactory, irodsAccount,
+				resolutionService);
 
 		@SuppressWarnings("unchecked")
-		DataProfile<DataObject> actual = dataProfileService
-				.retrieveDataProfile(irodsAbsolutePath);
+		DataProfile<DataObject> actual = dataProfileService.retrieveDataProfile(irodsAbsolutePath);
 		Assert.assertNotNull("null dataProfle", actual);
 		Assert.assertNotNull("no data object", actual.getDomainObject());
 		Assert.assertTrue("should be file", actual.isFile());
 		Assert.assertTrue("shoudl be starred", actual.isStarred());
 		Assert.assertTrue("should be shared", actual.isShared());
-		Assert.assertNotNull("should have collection parent",
-				actual.getParentPath());
-		Assert.assertFalse("should have collection parent", actual
-				.getParentPath().isEmpty());
+		Assert.assertNotNull("should have collection parent", actual.getParentPath());
+		Assert.assertFalse("should have collection parent", actual.getParentPath().isEmpty());
 		Assert.assertNotNull("should have child name", actual.getChildName());
-		Assert.assertFalse("should have child name", actual.getChildName()
-				.isEmpty());
+		Assert.assertFalse("should have child name", actual.getChildName().isEmpty());
 
-		Assert.assertNotNull("should have path components",
-				actual.getPathComponents());
-		Assert.assertFalse("should have path components", actual
-				.getPathComponents().isEmpty());
+		Assert.assertNotNull("should have path components", actual.getPathComponents());
+		Assert.assertFalse("should have path components", actual.getPathComponents().isEmpty());
 
 	}
 
 	@Test
 	public void testRetrieveDataProfileDataObjectWithTags() throws Exception {
 
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		DataObject dataObject = new DataObject();
 		String dataName = "file.txt";
 		dataObject.setDataName(dataName);
 
-		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", "blah", 0, "hi",
-						irodsAccount.getUserName(),
-						UserTaggingConstants.TAG_AVU_UNIT);
+		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData.instance(MetadataDomain.DATA, "1", "blah",
+				0, "hi", irodsAccount.getUserName(), UserTaggingConstants.TAG_AVU_UNIT);
 		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
 		avus.add(metaDataAndDamainData);
 
@@ -138,68 +113,53 @@ public class DataProfileServiceImplTest {
 
 		ObjStat objStat = new ObjStat();
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(dataName)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(dataName)).thenReturn(objStat);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
-		Mockito.when(dataObjectAO.findByAbsolutePath(dataName)).thenReturn(
-				dataObject);
+		Mockito.when(dataObjectAO.findByAbsolutePath(dataName)).thenReturn(dataObject);
 
-		Mockito.when(dataObjectAO.findMetadataValuesForDataObject(dataName))
-				.thenReturn(avus);
+		Mockito.when(dataObjectAO.findMetadataValuesForDataObject(dataName)).thenReturn(avus);
 
-		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
-				.thenReturn(dataObjectAO);
+		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount)).thenReturn(dataObjectAO);
 
-		DataProfileService dataProfileService = new DataProfileServiceImpl(
-				irodsAccessObjectFactory, irodsAccount, resolutionService);
+		DataProfileService dataProfileService = new DataProfileServiceImpl(irodsAccessObjectFactory, irodsAccount,
+				resolutionService);
 
 		@SuppressWarnings("unchecked")
-		DataProfile<DataObject> actual = dataProfileService
-				.retrieveDataProfile(dataName);
+		DataProfile<DataObject> actual = dataProfileService.retrieveDataProfile(dataName);
 		Assert.assertNotNull("null dataProfle", actual);
 		Assert.assertNotNull("no data object", actual.getDomainObject());
 		Assert.assertTrue("should be file", actual.isFile());
 		Assert.assertFalse("should not be starred", actual.isStarred());
 		Assert.assertFalse("should not be shared", actual.isShared());
-		Assert.assertFalse("should have tags", actual.getIrodsTagValues()
-				.isEmpty());
+		Assert.assertFalse("should have tags", actual.getIrodsTagValues().isEmpty());
 
 	}
 
 	@Test
 	public void testRetrieveDataProfileCollection() throws Exception {
 
-		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildBogusIrodsAccount();
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
+		IRODSAccount irodsAccount = TestingPropertiesHelper.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
 
-		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(irodsAccessObjectFactory,
+				irodsAccount);
 		Collection collection = new Collection();
 		String collName = "/a/collection";
 		collection.setCollectionName(collName);
 
 		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
 
-		MetaDataAndDomainData starred = MetaDataAndDomainData.instance(
-				MetadataDomain.COLLECTION, "1", "blah", 0, "l",
+		MetaDataAndDomainData starred = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1", "blah", 0, "l",
 				irodsAccount.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 
 		avus.add(starred);
 
-		MetaDataAndDomainData shared = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", "blah", 0, "l",
-						irodsAccount.getUserName(),
-						UserTaggingConstants.SHARE_AVU_UNIT);
+		MetaDataAndDomainData shared = MetaDataAndDomainData.instance(MetadataDomain.COLLECTION, "1", "blah", 0, "l",
+				irodsAccount.getUserName(), UserTaggingConstants.SHARE_AVU_UNIT);
 
 		avus.add(shared);
 
@@ -208,49 +168,35 @@ public class DataProfileServiceImplTest {
 
 		ObjStat objStat = new ObjStat();
 		objStat.setObjectType(ObjectType.COLLECTION);
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(collName)).thenReturn(
-				objStat);
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(collName)).thenReturn(objStat);
 
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
-		Mockito.when(collectionAO.findByAbsolutePath(collName)).thenReturn(
-				collection);
+		Mockito.when(collectionAO.findByAbsolutePath(collName)).thenReturn(collection);
 
-		Mockito.when(collectionAO.findMetadataValuesForCollection(collName))
-				.thenReturn(avus);
+		Mockito.when(collectionAO.findMetadataValuesForCollection(collName)).thenReturn(avus);
 
-		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount))
-				.thenReturn(collectionAO);
+		Mockito.when(irodsAccessObjectFactory.getCollectionAO(irodsAccount)).thenReturn(collectionAO);
 
-		DataProfileService dataProfileService = new DataProfileServiceImpl(
-				irodsAccessObjectFactory, irodsAccount, resolutionService);
+		DataProfileService dataProfileService = new DataProfileServiceImpl(irodsAccessObjectFactory, irodsAccount,
+				resolutionService);
 
 		@SuppressWarnings("unchecked")
-		DataProfile<Collection> actual = dataProfileService
-				.retrieveDataProfile(collName);
+		DataProfile<Collection> actual = dataProfileService.retrieveDataProfile(collName);
 		Assert.assertNotNull("null dataProfle", actual);
 		Assert.assertNotNull("no collection", actual.getDomainObject());
 		Assert.assertFalse("should not be file", actual.isFile());
 		Assert.assertTrue("shoudl be starred", actual.isStarred());
 		Assert.assertTrue("should be shared", actual.isShared());
-		Assert.assertNotNull("should have collection parent",
-				actual.getParentPath());
-		Assert.assertFalse("should have collection parent", actual
-				.getParentPath().isEmpty());
+		Assert.assertNotNull("should have collection parent", actual.getParentPath());
+		Assert.assertFalse("should have collection parent", actual.getParentPath().isEmpty());
 		Assert.assertNotNull("should have child name", actual.getChildName());
-		Assert.assertFalse("should have child name", actual.getChildName()
-				.isEmpty());
+		Assert.assertFalse("should have child name", actual.getChildName().isEmpty());
 
-		Assert.assertNotNull("should have path components",
-				actual.getPathComponents());
-		Assert.assertFalse("should have path components", actual
-				.getPathComponents().isEmpty());
+		Assert.assertNotNull("should have path components", actual.getPathComponents());
+		Assert.assertFalse("should have path components", actual.getPathComponents().isEmpty());
 
 	}
 

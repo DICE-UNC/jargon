@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.metadatamanifest;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Represents metadata operations to be applied to files in iRODS
- * 
+ *
  * @author mcc
  *
  */
@@ -20,7 +20,7 @@ public class MetadataManifest {
 
 	/**
 	 * How to treat failures in each operation
-	 * 
+	 *
 	 * @author mcc
 	 *
 	 */
@@ -36,10 +36,10 @@ public class MetadataManifest {
 	private FailureMode failureMode = FailureMode.FAIL_FAST;
 
 	/**
-	 * a parent path. This should trigger processing of path information for
-	 * each operation using the path information in each operation as a relative
-	 * path underneath this parent path. Leaving this blank here will treat
-	 * operation paths as absolute paths
+	 * a parent path. This should trigger processing of path information for each
+	 * operation using the path information in each operation as a relative path
+	 * underneath this parent path. Leaving this blank here will treat operation
+	 * paths as absolute paths
 	 */
 	private String parentIrodsTargetPath = "";
 
@@ -64,12 +64,15 @@ public class MetadataManifest {
 		final int maxLen = 10;
 		final StringBuilder builder = new StringBuilder();
 		builder.append("MetadataManifest [");
-		if (operation != null)
+		if (operation != null) {
 			builder.append("operation=").append(operation.subList(0, Math.min(operation.size(), maxLen))).append(", ");
-		if (failureMode != null)
+		}
+		if (failureMode != null) {
 			builder.append("failureMode=").append(failureMode).append(", ");
-		if (parentIrodsTargetPath != null)
+		}
+		if (parentIrodsTargetPath != null) {
 			builder.append("parentIrodsTargetPath=").append(parentIrodsTargetPath);
+		}
 		builder.append("]");
 		return builder.toString();
 	}

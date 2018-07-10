@@ -7,10 +7,9 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class IrodsRuleEngineRuleTranslatorTest {
 

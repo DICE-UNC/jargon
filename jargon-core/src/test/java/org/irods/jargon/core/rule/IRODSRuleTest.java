@@ -3,10 +3,9 @@ package org.irods.jargon.core.rule;
 import java.util.ArrayList;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class IRODSRuleTest {
 

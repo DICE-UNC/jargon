@@ -28,11 +28,10 @@ import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)

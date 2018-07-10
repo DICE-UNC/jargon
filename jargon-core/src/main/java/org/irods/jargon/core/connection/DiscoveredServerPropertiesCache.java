@@ -179,16 +179,14 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * <<<<<<< HEAD Delete the {@code ClientHints} If the zone has no cache,
-	 * silently ignore ======= Delete the {@code IRODSServerProperties} If the zone
-	 * has no cache, silently ignore >>>>>>> origin/master
+	 * Delete the {@code IRODSServerProperties} If the zone has no cache, silently
+	 * ignore
 	 *
 	 * @param host
 	 *            {@link String} with the hostname
 	 * @param zoneName
 	 *            {@link String} with the zone name
-	 * @param propertyName
-	 *            {@link String} with the property name
+	 *
 	 */
 	public void deleteCachedClientHints(final String host, final String zoneName) {
 
@@ -212,8 +210,11 @@ public class DiscoveredServerPropertiesCache {
 	 * ignore
 	 *
 	 * @param host
+	 *            {@code String} with host name
 	 * @param zoneName
+	 *            {@code String} with zone name
 	 * @param propertyName
+	 *            {@code String} with property name
 	 */
 
 	public void deleteCachedIRODSServerProperties(final String host, final String zoneName, final String propertyName) {
@@ -396,8 +397,12 @@ public class DiscoveredServerPropertiesCache {
 	 * if it doesn't exist
 	 *
 	 * @param host
+	 *            {@code String} with the name of the iRODS host this applies to
 	 * @param zoneName
-	 * @return
+	 *            {@code String} with the name of the iRODS zone this applies to
+	 *            return
+	 *
+	 * @return {@code Map} with the cache for the host and zone
 	 */
 	private Map<String, String> getCacheForHostAndZoneAndAddIfNotThere(final String host, final String zoneName) {
 
@@ -416,13 +421,6 @@ public class DiscoveredServerPropertiesCache {
 		return discoveredServerPropertiesCache.get(cacheKey);
 	}
 
-	/**
-	 * Look for a properties map for the given host and zone
-	 *
-	 * @param host
-	 * @param zoneName
-	 * @return
-	 */
 	private Map<String, String> getCacheForHostAndZone(final String host, final String zoneName) {
 
 		if (host == null || host.isEmpty()) {
@@ -439,13 +437,9 @@ public class DiscoveredServerPropertiesCache {
 		return discoveredServerPropertiesCache.get(cacheKey);
 	}
 
-	/**
+	/*
 	 * Standard way to concatenate the host and zone name, trimming white space in
 	 * the process. This allows consistent look up
-	 *
-	 * @param host
-	 * @param zoneName
-	 * @return
 	 */
 	private String buildHostPlusZone(final String host, final String zoneName) {
 		if (host == null || host.isEmpty()) {

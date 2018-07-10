@@ -334,7 +334,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link Stream2StreamAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -344,7 +344,7 @@ public interface IRODSAccessObjectFactory {
 	 *
 	 * @return {@link JargonProperties}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	JargonProperties getJargonProperties() throws JargonException;
 
@@ -355,7 +355,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link DataObjectAuditAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	DataObjectAuditAO getDataObjectAuditAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -366,7 +366,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link CollectionAuditAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -377,7 +377,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link MountedCollectionAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	MountedCollectionAO getMountedCollectionAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -388,7 +388,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link IRODSRegistrationOfFilesAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -399,7 +399,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link TransferControlBlock} reflecting default options and
 	 *         properties.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException;
 
@@ -410,7 +410,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties() throws JargonException;
 
@@ -424,7 +424,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link ProtocolExtensionPoint} that may be used to communicate with
 	 *         iRODS using packing instructions.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	ProtocolExtensionPoint getProtocolExtensionPoint(IRODSAccount irodsAccount) throws JargonException;
 
@@ -437,7 +437,7 @@ public interface IRODSAccessObjectFactory {
 	 *            properties will be derived
 	 * @return {@link IRODSServerProperties} for the server at the given account
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount) throws JargonException;
 
@@ -450,7 +450,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link ResourceGroupAO} that can interact with resource groups on the
 	 *         iCAT
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -462,7 +462,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} that describes the connection to iRODS.
 	 * @return {@link org.irods.jargon.core.pub.SpecificQueryAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -492,7 +492,7 @@ public interface IRODSAccessObjectFactory {
 	 *             If the principal cannot be authenticated. This will be thrown on
 	 *             initial authentication
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount) throws AuthenticationException, JargonException;
 
@@ -516,7 +516,7 @@ public interface IRODSAccessObjectFactory {
 	 *             If the principal cannot be authenticated. This will be thrown on
 	 *             initial authentication
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	AuthResponse authenticateIRODSAccountUtilizingCachedConnectionIfPresent(IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException;
@@ -548,11 +548,12 @@ public interface IRODSAccessObjectFactory {
 
 	/**
 	 * Service for pagable collection listings
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@IRODSAccount} with the authenticating principal
 	 * @return {@link CollectionPagerAO}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -564,7 +565,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link DataObjectChecksumUtilitiesAO} that supports varous checksum
 	 *         operations
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -575,7 +576,7 @@ public interface IRODSAccessObjectFactory {
 	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link TrashOperationsAO}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 
 	TrashOperationsAO getTrashOperationsAO(IRODSAccount irodsAccount) throws JargonException;

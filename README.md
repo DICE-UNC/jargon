@@ -1,15 +1,16 @@
 # Project: Jargon-core API
-### Date:
+
+### Date: 07/05/2018
 ### Release Version: 4.3.1.0-SNAPSHOT
-### git tag:
+### git tag: 
 
 ## News
 
 
-https://github.com/DICE-UNC/jargon/milestone/24
 
-This version of Jargon is currently targeted at metadata templates and other features  Metalnx.  There are still some features that are considered early access and may not support a full range
-of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
+https://github.com/DICE-UNC/jargon/milestone/25
+
+This is a maintenance and minor feature development release to support Metalnx 2.0.1 and other efforts
 
 Please go to https://github.com/DICE-UNC/jargon for the latest news and info.
 

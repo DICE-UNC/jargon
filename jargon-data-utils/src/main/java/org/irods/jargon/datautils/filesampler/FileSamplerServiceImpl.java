@@ -29,18 +29,15 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
-		implements FileSamplerService {
+public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl implements FileSamplerService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(FileSamplerServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(FileSamplerServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public FileSamplerServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public FileSamplerServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -53,14 +50,14 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.filesampler.FileSamplerService#sampleToByteArray
 	 * (java.lang.String, int)
 	 */
 	@Override
-	public byte[] sampleToByteArray(final String irodsAbsolutePath,
-			final int sampleSize) throws FileNotFoundException, JargonException {
+	public byte[] sampleToByteArray(final String irodsAbsolutePath, final int sampleSize)
+			throws FileNotFoundException, JargonException {
 
 		log.info("sampleToByteArray()");
 
@@ -76,15 +73,13 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("sampleSize:{}", sampleSize);
 
 		if (sampleSize > MAX_SAMPLE_SIZE) {
-			throw new IllegalArgumentException(
-					"sample size too large,use an input stream");
+			throw new IllegalArgumentException("sample size too large,use an input stream");
 		}
 
 		log.info("getting input stream...");
 		InputStream inputStream = null;
 		try {
-			inputStream = new BufferedInputStream(getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(getIrodsAccount())
+			inputStream = new BufferedInputStream(getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSFileInputStream(irodsAbsolutePath));
 
 			byte[] sample = IOUtils.toByteArray(inputStream, sampleSize);
@@ -104,29 +99,25 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.filesampler.FileSamplerService#
 	 * convertFileContentsToString(java.lang.String, long)
 	 */
 	@Override
-	public String convertFileContentsToString(final String irodsAbsolutePath,
-			final long maxSizeInKb) throws FileNotFoundException,
-			FileTooLargeException, JargonException {
+	public String convertFileContentsToString(final String irodsAbsolutePath, final long maxSizeInKb)
+			throws FileNotFoundException, FileTooLargeException, JargonException {
 
 		log.info("convertFileContentsToString()");
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("maxSizeInKb:{}", maxSizeInKb);
 
-		IRODSFileFactory irodsFileFactory = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount());
+		IRODSFileFactory irodsFileFactory = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount());
 
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(irodsAbsolutePath);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(irodsAbsolutePath);
 		if (!irodsFile.exists()) {
 			log.error("did not find file at path:{}", irodsAbsolutePath);
 			throw new FileNotFoundException("file not found");
@@ -148,8 +139,7 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 			}
 		}
 
-		IRODSFileReader irodsFileReader = irodsFileFactory
-				.instanceIRODSFileReader(irodsAbsolutePath);
+		IRODSFileReader irodsFileReader = irodsFileFactory.instanceIRODSFileReader(irodsAbsolutePath);
 
 		StringWriter writer = null;
 		String fileAsString = null;
@@ -184,14 +174,13 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.filesampler.FileSamplerService#saveStringToFile
 	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void saveStringToFile(String data, String irodsAbsolutePath)
-			throws JargonException {
+	public void saveStringToFile(final String data, final String irodsAbsolutePath) throws JargonException {
 
 		log.info("saveStringToFile()");
 		if (data == null || data.isEmpty()) {
@@ -199,23 +188,19 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 		}
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("data length:{}", data.length());
 
-		IRODSFile irodsFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						irodsAbsolutePath);
+		IRODSFile irodsFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(irodsAbsolutePath);
 
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(getIrodsAccount());
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(getIrodsAccount());
 		try {
-			stream2StreamAO.streamBytesToIRODSFile(data
-					.getBytes(getIrodsAccessObjectFactory()
-							.getJargonProperties().getEncoding()), irodsFile);
+			stream2StreamAO.streamBytesToIRODSFile(
+					data.getBytes(getIrodsAccessObjectFactory().getJargonProperties().getEncoding()), irodsFile);
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding streaming to file", e);
 			throw new JargonException("error writing  file", e);

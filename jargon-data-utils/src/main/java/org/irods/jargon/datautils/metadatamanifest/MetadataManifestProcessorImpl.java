@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.metadatamanifest;
 
@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Implementation of a manifest processor that can manage AVUs at a given path
  * via a bulk operation
- * 
+ *
  * @author mcc
  *
  */
@@ -36,8 +36,12 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService impleme
 
 	public static final Logger log = LoggerFactory.getLogger(MetadataManifestProcessorImpl.class);
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#metadataManifestToJson(org.irods.jargon.datautils.metadatamanifest.MetadataManifest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#
+	 * metadataManifestToJson(org.irods.jargon.datautils.metadatamanifest.
+	 * MetadataManifest)
 	 */
 	@Override
 	public String metadataManifestToJson(final MetadataManifest metadataManifest) throws JargonException {
@@ -57,8 +61,11 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService impleme
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#stringJsonToMetadataManifest(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#
+	 * stringJsonToMetadataManifest(java.lang.String)
 	 */
 	@Override
 	public MetadataManifest stringJsonToMetadataManifest(final String jsonString) throws JargonException {
@@ -77,8 +84,12 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService impleme
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#processManifest(org.irods.jargon.datautils.metadatamanifest.MetadataManifest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.metadatamanifest.MetdataManifest#processManifest(
+	 * org.irods.jargon.datautils.metadatamanifest.MetadataManifest)
 	 */
 	@Override
 	public List<BulkAVUOperationResponse> processManifest(final MetadataManifest metadataManifest)
@@ -91,7 +102,7 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService impleme
 		final List<BulkAVUOperationResponse> responses = new ArrayList<>();
 
 		// TODO: consider cache strategy for objStat data - mcc
-		final CollectionAndDataObjectListAndSearchAO collectionSearchAO = this.getIrodsAccessObjectFactory()
+		final CollectionAndDataObjectListAndSearchAO collectionSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 
 		CollectionAO collectionAO = null;
@@ -131,14 +142,14 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService impleme
 			try {
 				if (objStat.isSomeTypeOfCollection()) {
 					if (collectionAO == null) {
-						collectionAO = this.getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
+						collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
 					}
 
 					collectionAO.addAVUMetadata(path, avuData);
 
 				} else {
 					if (dataObjectAO == null) {
-						dataObjectAO = this.getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
+						dataObjectAO = getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
 					}
 
 					dataObjectAO.addAVUMetadata(path, avuData);

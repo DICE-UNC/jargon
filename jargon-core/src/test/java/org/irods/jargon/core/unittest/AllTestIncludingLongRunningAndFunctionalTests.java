@@ -14,7 +14,7 @@ import org.irods.jargon.core.unittest.functionaltest.TestParallelTransferToIcatR
 import org.irods.jargon.core.unittest.functionaltest.pep.IRODSFileOutputStreamPEPFunctionalTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
- 
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AllTests.class, IRODSThousandFilesTest.class, IRODSThousandCollectionsTest.class,
 		FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest.class, ParallelTransferOperationsTest.class,

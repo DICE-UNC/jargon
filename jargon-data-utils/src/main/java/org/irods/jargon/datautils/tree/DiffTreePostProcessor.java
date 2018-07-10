@@ -29,7 +29,7 @@ public class DiffTreePostProcessor {
 	}
 
 	/**
-	 * 
+	 *
 	 * Given a completed diff tree, post process it to roll up the counts of diffs
 	 * in children. This is useful for display to users
 	 *

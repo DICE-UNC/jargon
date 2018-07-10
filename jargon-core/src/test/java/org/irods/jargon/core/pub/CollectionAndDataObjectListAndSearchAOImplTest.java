@@ -1473,7 +1473,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	@Test
 	/**
 	 * Obtain an entry at the given valid abs path that is a data object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testCollectionAndDataObjectListingEntryForDataObject() throws Exception {
@@ -1511,7 +1511,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	@Ignore
 	/**
 	 * Obtain an entry at the given valid abs path that is a data object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testCollectionAndDataObjectListingEntryForDataObject2dot09gig() throws Exception {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -9,7 +9,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 
 /**
  * Utility class used to characterize listings
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -31,7 +31,7 @@ public class ListAndCount {
 	 * @param countTotal
 	 *            the countTotal to set
 	 */
-	public void setCountTotal(int countTotal) {
+	public void setCountTotal(final int countTotal) {
 		this.countTotal = countTotal;
 	}
 
@@ -47,7 +47,7 @@ public class ListAndCount {
 	 *            the collectionAndDataObjectListingEntries to set
 	 */
 	public void setCollectionAndDataObjectListingEntries(
-			List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries) {
+			final List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries) {
 		this.collectionAndDataObjectListingEntries = collectionAndDataObjectListingEntries;
 	}
 
@@ -62,7 +62,7 @@ public class ListAndCount {
 	 * @param countThisPage
 	 *            the countThisPage to set
 	 */
-	public void setCountThisPage(int countThisPage) {
+	public void setCountThisPage(final int countThisPage) {
 		this.countThisPage = countThisPage;
 	}
 
@@ -77,7 +77,7 @@ public class ListAndCount {
 	 * @param endOfRecords
 	 *            the endOfRecords to set
 	 */
-	public void setEndOfRecords(boolean endOfRecords) {
+	public void setEndOfRecords(final boolean endOfRecords) {
 		this.endOfRecords = endOfRecords;
 	}
 
@@ -92,13 +92,13 @@ public class ListAndCount {
 	 * @param offsetStart
 	 *            the offsetStart to set
 	 */
-	public void setOffsetStart(int offsetStart) {
+	public void setOffsetStart(final int offsetStart) {
 		this.offsetStart = offsetStart;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -117,8 +117,7 @@ public class ListAndCount {
 		if (collectionAndDataObjectListingEntries != null) {
 			builder.append("collectionAndDataObjectListingEntries=");
 			builder.append(collectionAndDataObjectListingEntries.subList(0,
-					Math.min(collectionAndDataObjectListingEntries.size(),
-							maxLen)));
+					Math.min(collectionAndDataObjectListingEntries.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();

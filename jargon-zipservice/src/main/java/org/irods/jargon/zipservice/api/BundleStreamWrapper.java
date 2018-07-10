@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.zipservice.api;
 
@@ -8,7 +8,7 @@ import java.io.InputStream;
 /**
  * Wraps an imput stream from a bundle with extra info (such as length), useful
  * in
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -19,8 +19,7 @@ public class BundleStreamWrapper {
 	 * @param length
 	 * @param bundleFileName
 	 */
-	public BundleStreamWrapper(InputStream inputStream, long length,
-			String bundleFileName) {
+	public BundleStreamWrapper(final InputStream inputStream, final long length, final String bundleFileName) {
 		super();
 		this.inputStream = inputStream;
 		this.length = length;
@@ -64,7 +63,7 @@ public class BundleStreamWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

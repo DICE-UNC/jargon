@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.zipservice.api;
 
@@ -17,15 +17,15 @@ import org.irods.jargon.core.pub.io.IRODSFileInputStream;
  */
 public class BundleClosingInputStream extends IRODSFileInputStream {
 
-	public BundleClosingInputStream(IRODSFile irodsFile,
-			FileIOOperations fileIOOperations) throws FileNotFoundException {
+	public BundleClosingInputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations)
+			throws FileNotFoundException {
 		super(irodsFile, fileIOOperations);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileInputStream#close()
 	 */
 	@Override
