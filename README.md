@@ -7,6 +7,8 @@
 ## News
 
 
+Branch for issue #312
+
 https://github.com/DICE-UNC/jargon/milestone/25
 
 This is a maintenance and minor feature development release to support Metalnx 2.0.1 and other efforts
