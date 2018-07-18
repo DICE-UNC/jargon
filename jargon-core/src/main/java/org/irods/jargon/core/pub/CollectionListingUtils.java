@@ -77,8 +77,8 @@ class CollectionListingUtils {
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHomeByLookingForPublicAndHome(
-			final String absolutePathToParent) throws FileNotFoundException, JargonException {
+	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHome(final String absolutePathToParent)
+			throws FileNotFoundException, JargonException {
 
 		log.info("handleNoListingUnderRootOrHomeByLookingForPublicAndHome()");
 
@@ -120,20 +120,34 @@ class CollectionListingUtils {
 		}
 
 		/*
-		 * Phase 3, under home, see if home zone
+		 * Phase 3, under home, go ahead and list!
 		 */
 
-		components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
-		if (components.size() == 3 && components.get(2).equals("home")) {
-			log.info("under home, see if same zone as login");
-			if (irodsAccount.getZone().equals(components.get(1))) {
-				log.info("under logged in zone, add user and public dirs");
-				collectionAndDataObjectListingEntries.addAll(createStandInsUnderHomeInLoggedInZone(path));
-			} else {
-				log.info("under federated zone, add federated user");
-				collectionAndDataObjectListingEntries.addAll(createStandInsUnderHomeInFederatedZone(components.get(1)));
+		final List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
+		ObjStat homeStat = new ObjStat();
+		homeStat.setAbsolutePath(path);
+		homeStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
+
+		entries.addAll(listCollectionsUnderPath(homeStat, 0));
+		entries.addAll(listDataObjectsUnderPath(homeStat, 0));
+
+		if (entries.isEmpty()) {
+			log.info("final fallback...I can't find anything!");
+			components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
+			if (components.size() == 3 && components.get(2).equals("home")) {
+				log.info("under home, see if same zone as login");
+				if (irodsAccount.getZone().equals(components.get(1))) {
+					log.info("under logged in zone, add user and public dirs");
+					collectionAndDataObjectListingEntries.addAll(createStandInsUnderHomeInLoggedInZone(path));
+				} else {
+					log.info("under federated zone, add federated user");
+					collectionAndDataObjectListingEntries
+							.addAll(createStandInsUnderHomeInFederatedZone(components.get(1)));
+				}
+				return collectionAndDataObjectListingEntries;
 			}
-			return collectionAndDataObjectListingEntries;
+		} else {
+			return entries;
 		}
 
 		/*
@@ -445,7 +459,7 @@ class CollectionListingUtils {
 
 		if (objStat.isStandInGeneratedObjStat()) {
 			log.info("this objStat was heuristically generated, create stand-in subdirs if needed");
-			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(objStat.getAbsolutePath());
+			return handleNoListingUnderRootOrHome(objStat.getAbsolutePath());
 		}
 
 		/*

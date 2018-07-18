@@ -38,3 +38,8 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
+
+#### Improve behavior of heuristic path guessing under home #313
+
+The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This 
+is corrected to better reflect the available directories under 'home'

@@ -199,7 +199,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			log.info(
 					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			entries = collectionListingUtils
-					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
+					.handleNoListingUnderRootOrHome(absolutePathToParent);
 			pagingAwareCollectionListing.setCollectionAndDataObjectListingEntries(entries);
 
 			descriptor.setCollectionsComplete(true);
@@ -280,7 +280,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			log.info(
 					"didn't find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
-			return collectionListingUtils.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
+			return collectionListingUtils.handleNoListingUnderRootOrHome(absolutePathToParent);
 		}
 
 		/*
@@ -351,7 +351,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			log.info(
 					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
-			return collectionListingUtils.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
+			return collectionListingUtils.handleNoListingUnderRootOrHome(absolutePathToParent);
 		}
 
 		/*
@@ -659,7 +659,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		} catch (final FileNotFoundException fnf) {
 			log.info(
 					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
-			return collectionListingUtils.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(path);
+			return collectionListingUtils.handleNoListingUnderRootOrHome(path);
 		}
 
 		return listCollectionsUnderPath(objStat, partialStartIndex);
