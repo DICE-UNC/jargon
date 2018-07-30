@@ -125,6 +125,9 @@
 									test.option.ssl.configured=${test.option.ssl.configured}
 									jargon.test.pam.user=${jargon.test.pam.user}
 									jargon.test.pam.password=${jargon.test.pam.password}
+									test.option.krb=${test.option.krb}
+									jargon.test.krb.user=${jargon.test.krb.user}
+									jargon.test.krb.password=${jargon.test.krb.password}
 									test.federated.irods.admin=${jargon.test.federated.irods.admin}
 									test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}
 									test.federated.irods.user=${jargon.test.federated.irods.user}
