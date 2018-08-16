@@ -166,7 +166,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	}
 
-
 	@Override
 	public DataObject findByAbsolutePath(final String absolutePath) throws FileNotFoundException, JargonException {
 
@@ -1782,7 +1781,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		return responses;
 	}
 
-
 	@Override
 	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(final String absolutePath,
 			final List<AvuData> avuData) throws JargonException {
@@ -2993,7 +2991,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	}
 
-	
 	@Override
 	public void setAccessPermissionWriteInAdminMode(final String zone, final String absolutePath, final String userName)
 			throws JargonException {

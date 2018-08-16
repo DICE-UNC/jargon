@@ -65,6 +65,9 @@ java test resources directory -->
  			    <jargon.test.pam.user>pam</jargon.test.pam.user>
                 <jargon.test.pam.password>pam</jargon.test.pam.password>
  				<test.option.pam>false</test.option.pam>
+ 				<jargon.test.krb.user>kerberos</jargon.test.krb.user> <!-- kerberos@LOCAL -->
+				<jargon.test.krb.password>kerberos</jargon.test.krb.password>
+				<test.option.krb>false</test.option.krb>
  				<test.option.ssl.configured>false</test.option.ssl.configured>
 				<test.option.distributed.resources>false</test.option.distributed.resources>
 				<test.option.registration>true</test.option.registration>
