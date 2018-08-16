@@ -43,10 +43,10 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	private boolean aborted = false;
 
 	/**
-	 * Optional filter for deciding whether to index a collection or file. Maybe be
+	 * Filter for deciding whether to index a collection or file. Maybe be
 	 * left <code>null</code> for no filtering
 	 */
-	private IndexerFilterInterface indexerFilter = null;
+	private ConfigurableIndexerFilter indexerFilter = null;
 
 	/**
 	 * Wraps a stack of metadata from the current node up to the root
@@ -246,7 +246,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 			throw new IllegalArgumentException("null or empty startingCollectionPath");
 		}
 		log.info("startingCollectionPath:{}", startingCollectionPath);
-		log.info("beginning the crawl...east to west...north to south...");
+		log.info("beginning the crawl...");
 
 		IRODSFileImpl startingPoint;
 		try {
@@ -259,8 +259,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 			IrodsVisitedComposite startingComposite = new IrodsVisitedComposite(startingPoint);
 			startingComposite.accept(this);
-
-			log.info("....crawl!");
+			log.info("....crawl complete!");
 		} catch (JargonException e) {
 			log.error("error in obtaining metadata", e);
 			throw new JargonRuntimeException("error lauching visitor", e);
@@ -283,11 +282,11 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	 */
 	public abstract boolean visitWithMetadata(HierLeaf hierLeaf, MetadataRollup metadataRollup);
 
-	public IndexerFilterInterface getIndexerFilter() {
+	public ConfigurableIndexerFilter getIndexerFilter() {
 		return indexerFilter;
 	}
 
-	public void setIndexerFilter(final IndexerFilterInterface indexerFilter) {
+	public void setIndexerFilter(final ConfigurableIndexerFilter indexerFilter) {
 		this.indexerFilter = indexerFilter;
 	}
 

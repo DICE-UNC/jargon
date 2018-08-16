@@ -122,6 +122,153 @@ public class AbstractIndexerVisitorTest {
 		Assert.assertEquals(avuAttribName, md.getAvuAttribute());
 		Assert.assertEquals(testParentDir, md.getAvuValue());
 	}
+	
+	@Test
+	public void testVisitWhenCollMarkedNoIndex() throws Exception {
+		String testParentDir = "testVisitWhenCollMarkedNoIndex";
+		String testChildDir = "testVisitWhenCollMarkedNoIndexChild";
+		String avuAttribName = "avuAssociatedWith";
+
+		String testFileName = "testVisitWhenCollMarkedNoIndex.dat";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		ConfigurableIndexerFilter filter = new ConfigurableIndexerFilter();
+		filter.setIndexerName(testParentDir);
+		filter.setIndexIfNoAvuOnCollection(true);
+		filter.setIndexIfNoAvuOnDataObject(true);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsParentCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testParentDir);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testParentDir + "/" + testChildDir);
+
+		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsParentCollection);
+		parentDir.mkdirs();
+		
+		// put a noindex avu on the parent dir..we don't want to see the child visited
+		
+		AvuData noindex = AvuData.instance(ConfigurableIndexerFilter.STANDARD_DENY_ATTRIBUTE, "testVisitWhenCollMarkedNoIndex", ConfigurableIndexerFilter.STANDARD_INDEXING_UNIT);
+
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.addAVUMetadata(targetIrodsParentCollection, noindex);
+
+		IRODSFile targetDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetDir.mkdirs();
+
+		AvuData avuData = AvuData.instance(avuAttribName, targetDir.getName(), "");
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName = "testmdattrib1";
+		String expectedAttribValue = "testmdvalue1";
+		String expectedAttribUnits = "test1mdunits";
+
+		dto.putOperation(localFileName, targetIrodsCollection, irodsAccount.getDefaultStorageResource(), null, null);
+		avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+		irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(dataObjectAbsPath);
+
+		IrodsVisitedComposite composite = new IrodsVisitedComposite((IRODSFileImpl) parentDir);
+		TestIndexVisitor visitor = new TestIndexVisitor(irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		visitor.setIndexerFilter(filter);
+
+		composite.accept(visitor);
+		NodeVisitLog log = visitor.getNodeVisitLog();
+		Assert.assertFalse("no log entries", log.getLogEntries().isEmpty());
+		NodeVisitLogEntry actual = log.getLogEntries().get(0);
+		Assert.assertEquals(targetIrodsParentCollection, actual.getNodeAbsolutePath());
+		Assert.assertFalse("should not have visited", actual.isResultOfVisit());
+		
+		
+	}
+	
+	@Test
+	public void testVisitWhenCollNotMarkedNoIndex() throws Exception {
+		String testParentDir = "testVisitWhenCollNotMarkedNoIndex";
+		String testChildDir = "testVisitWhenCollNotMarkedNoIndexChild";
+		String avuAttribName = "avuAssociatedWith";
+
+		String testFileName = "testVisitWhenCollNotMarkedNoIndex.dat";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		ConfigurableIndexerFilter filter = new ConfigurableIndexerFilter();
+		filter.setIndexerName(testParentDir);
+		filter.setIndexIfNoAvuOnCollection(true);
+		filter.setIndexIfNoAvuOnDataObject(true);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsParentCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testParentDir);
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testParentDir + "/" + testChildDir);
+
+		IRODSFile parentDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsParentCollection);
+		parentDir.mkdirs();
+		
+		
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		IRODSFile targetDir = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetDir.mkdirs();
+
+		AvuData avuData = AvuData.instance(avuAttribName, targetDir.getName(), "");
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName = "testmdattrib1";
+		String expectedAttribValue = "testmdvalue1";
+		String expectedAttribUnits = "test1mdunits";
+
+		dto.putOperation(localFileName, targetIrodsCollection, irodsAccount.getDefaultStorageResource(), null, null);
+		avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+		irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(dataObjectAbsPath);
+
+		IrodsVisitedComposite composite = new IrodsVisitedComposite((IRODSFileImpl) parentDir);
+		TestIndexVisitor visitor = new TestIndexVisitor(irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		visitor.setIndexerFilter(filter);
+
+		composite.accept(visitor);
+		NodeVisitLog log = visitor.getNodeVisitLog();
+		Assert.assertFalse("no log entries", log.getLogEntries().isEmpty());
+		NodeVisitLogEntry actual = log.getLogEntries().get(0);
+		Assert.assertEquals(targetIrodsParentCollection, actual.getNodeAbsolutePath());
+		Assert.assertTrue("should  have visited", actual.isResultOfVisit());
+		Assert.assertTrue("should have indexed into children", log.getLogEntries().size() > 1);
+		
+		
+	}
+
+
 
 	@Test
 	public void testVisitWithMetadata() throws Exception {
@@ -156,7 +303,7 @@ public class AbstractIndexerVisitorTest {
 
 		IrodsVisitedLeaf leaf = new IrodsVisitedLeaf(irodsFile);
 		TestIndexVisitor visitor = new TestIndexVisitor(irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
-
+		
 		leaf.accept(visitor);
 		NodeVisitLog log = visitor.getNodeVisitLog();
 		Assert.assertFalse("no log entries", log.getLogEntries().isEmpty());
