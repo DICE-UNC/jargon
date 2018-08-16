@@ -39,3 +39,9 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
+
+
+#### Add 'noindex' semantics and ability to ignore data objects w/no metadata #314
+
+Added DONOTINDEX support for collections being indexed using the org.irods.jargon.datautils.indexer services. This allows collections to be marked per-indexer as ignored. 
+For details see the INDEXING.md file located in the jargon-data-utils submodule.
