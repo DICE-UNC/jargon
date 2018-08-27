@@ -22,7 +22,7 @@ public class JargonConnectionCache extends GenericKeyedObjectPool<IRODSAccount, 
 
 	public JargonConnectionCache(final KeyedPooledObjectFactory<IRODSAccount, AbstractIRODSMidLevelProtocol> factory,
 			final JargonKeyedPoolConfig config) {
-		super(factory);
+		super(factory, config);
 		setMaxIdlePerKey(config.getMaxIdlePerKey());
 		setMinEvictableIdleTimeMillis(30000);
 		setTimeBetweenEvictionRunsMillis(45000);
