@@ -1,4 +1,4 @@
-myTestRule {
+listEnabledMsis {
 #Output
 #  Buffer holding list of microservices in form Key=Value
 #Output from running the example is:

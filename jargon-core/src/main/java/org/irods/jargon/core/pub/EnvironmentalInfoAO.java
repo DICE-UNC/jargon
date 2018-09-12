@@ -6,6 +6,7 @@ import org.irods.jargon.core.connection.EnvironmentalInfoAccessor;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 
@@ -56,10 +57,13 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * This method will operate on iRODS servers version 3.0 and up.
 	 *
 	 * @return {@code List<String>} with the names of the available microservices.
+	 * @throws OperationNotSupportedByThisServerException
+	 *             {@link OperationNotSupportedByThisServerException} if cannot list
+	 *             the msis (for servers < 3.0)
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
-	List<String> listAvailableMicroservices() throws JargonException;
+	List<String> listAvailableMicroservices() throws OperationNotSupportedByThisServerException, JargonException;
 
 	/**
 	 * Check (by version) whether this server can run specific (SQL) query
