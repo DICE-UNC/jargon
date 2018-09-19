@@ -17,6 +17,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.packinstr.MiscApiConstants;
 import org.irods.jargon.core.packinstr.Tag;
@@ -219,19 +220,14 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
-	 * ()
-	 */
 	@Override
-	public List<String> listAvailableMicroservices() throws JargonException {
+	public List<String> listAvailableMicroservices()
+			throws OperationNotSupportedByThisServerException, JargonException {
 		log.info("listAvailableMicroservices()");
 		List<String> availableMicroservices = new ArrayList<String>();
 
 		if (!getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
-			throw new JargonException("service not available on servers prior to rods3.0");
+			throw new OperationNotSupportedByThisServerException("service not available on servers prior to rods3.0");
 		}
 
 		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());

@@ -30,18 +30,22 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.3, it also maintains very reasonable backards compatability to iRODS 3.3.1 however this is no longer actively tested
+* Jargon supports iRODS 4.1.0 through 4.2.3, it also maintains very reasonable backwards compatability to iRODS 3.3.1 however this is no longer actively tested
 
 ## Libraries
 
 Jargon-core uses Maven for dependency management.  See the pom.xml file for references to various dependencies.
 
-Note that the following bug and feature requests are logged in GForge with related commit information https://github.com/DICE-UNC/jargon/issues
+Note that the following bug and feature requests are logged in GitHub with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
-
 
 #### Add 'noindex' semantics and ability to ignore data objects w/no metadata #314
 
 Added DONOTINDEX support for collections being indexed using the org.irods.jargon.datautils.indexer services. This allows collections to be marked per-indexer as ignored. 
 For details see the INDEXING.md file located in the jargon-data-utils submodule.
+
+#### Improve behavior of heuristic path guessing under home #313
+
+The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This 
+is corrected to better reflect the available directories under 'home'

@@ -5,7 +5,9 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -142,4 +144,86 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 		listAndSearch.listDataObjectsAndCollectionsUnderPath(workingDir);
 
 	}
+
+	@Test
+	public void testListingUnderHomeWithGroupPermittedFolderBug313() throws Exception {
+
+		if (!testingPropertiesHelper.isTestStrictACL(testingProperties)) {
+			return;
+		}
+
+		SettableJargonProperties newProps = new SettableJargonProperties();
+		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
+
+		String workingDir = "/" + irodsAccount.getZone() + "/home";
+		String homeDir = "grpBug313";
+		String groupName = "test-grpBug313";
+		String subFolderName = "testListingUnderHomeWithGroupPermittedFolderBug313";
+
+		// create a folder under home for grpBug313
+
+		IRODSAccount adminAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSFile groupTopLevel = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(adminAccount)
+				.instanceIRODSFile(workingDir, homeDir);
+		groupTopLevel.delete();
+		groupTopLevel.mkdirs();
+
+		// add a group to go with this folder
+
+		UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserGroupAO(adminAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(groupName);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		try {
+			userGroupAO.addUserGroup(userGroup);
+		} catch (DuplicateDataException dde) {
+			System.out.println("TODO why does it do this?");
+			/*
+			 * TODO: irods treats the group as existing b/c the directory is there under
+			 * home..why?
+			 */
+		}
+
+		// make test2 a member of grpBug313
+
+		IRODSAccount test2Account = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		userGroupAO.addUserToGroup(groupName, test2Account.getUserName(), "");
+
+		// set permissions, inheritance make a dir under /zone/home/grpBug313
+
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(adminAccount);
+		collectionAO.setAccessPermissionInheritAsAdmin("", groupTopLevel.getAbsolutePath(), true);
+		collectionAO.setAccessPermissionOwnAsAdmin("", groupTopLevel.getAbsolutePath(), groupName, true);
+
+		// add a subfolder to find
+		IRODSFile subfolderFile = irodsFileSystem.getIRODSAccessObjectFactory().getIRODSFileFactory(adminAccount)
+				.instanceIRODSFile(groupTopLevel.getAbsolutePath(), subFolderName);
+		subfolderFile.mkdirs();
+
+		// do a listing under /zone/home as secondary user and expect to see the
+		// grpBug313 folder under home with the user and public
+		String queryPath = "/" + irodsAccount.getZone() + "/home";
+		CollectionAndDataObjectListAndSearchAO collList = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(test2Account);
+		List<CollectionAndDataObjectListingEntry> listing = collList.listDataObjectsAndCollectionsUnderPath(queryPath);
+		Assert.assertFalse("no entries", listing.isEmpty());
+
+		boolean foundExpectedEntryViaGroup = false;
+
+		for (CollectionAndDataObjectListingEntry entry : listing) {
+			if (entry.getNodeLabelDisplayValue().equals(homeDir)) {
+				foundExpectedEntryViaGroup = true;
+			}
+		}
+
+		Assert.assertTrue("Didnt find expected entry via group permissions", foundExpectedEntryViaGroup);
+
+	}
+
 }
