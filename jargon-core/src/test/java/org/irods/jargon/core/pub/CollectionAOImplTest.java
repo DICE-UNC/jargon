@@ -1343,6 +1343,7 @@ public class CollectionAOImplTest {
 		collFile.mkdirs();
 
 		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionInherit("", collFile.getAbsolutePath(), false);
 		Collection collection = collectionAO.findByAbsolutePath(targetIrodsCollection);
 
 		Assert.assertNotNull("did not find the collection, was null", collection);
@@ -1351,6 +1352,7 @@ public class CollectionAOImplTest {
 				collection.getCollectionName());
 		Assert.assertEquals("collection Name should be same as requested path", targetIrodsCollection,
 				collection.getCollectionName());
+		Assert.assertTrue("inheritance should be true", collection.inheritanceSet());
 		Assert.assertFalse("is set as a proxy", collection.isProxy());
 
 	}

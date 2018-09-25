@@ -43,3 +43,7 @@ Note that the following bug and feature requests are logged in GitHub with relat
 
 The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This 
 is corrected to better reflect the available directories under 'home'
+
+#### Remove user profile subproject and migrate over to jargon-extensions #315
+
+Remove user-profile submodule as old idrop-web legacy, this functionality is being revised and added to jargon-extensions-if for the purposes of standardizing MetaLnx

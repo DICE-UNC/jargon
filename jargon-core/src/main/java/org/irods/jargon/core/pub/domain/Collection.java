@@ -68,6 +68,17 @@ public class Collection extends IRODSDomainObject {
 		this.collectionId = collectionId;
 	}
 
+	/**
+	 * Handy method to check if inherit permissions are set
+	 * 
+	 * @return {@code boolean} of {@code true} if inheritance is set on the
+	 *         collection. NB that the {@code getCollectionInheritance} will return
+	 *         a raw "1" in the string value. This method is for convenience.
+	 */
+	public boolean inheritanceSet() {
+		return collectionInheritance.equals("1");
+	}
+
 	public String getCollectionName() {
 		return collectionName;
 	}
