@@ -1,8 +1,7 @@
 # Project: Jargon-core API
-
 ### Date: 07/05/2018
-### Release Version: 4.3.0.1-SNAPSHOT
-### git tag: 4.3.0.1-SNAPSHOT
+### Release Version: 4.3.0.1-RELEASE
+### git tag: 4.3.0.1-RELEASE
 
 ## News
 
@@ -41,9 +40,13 @@ Note that the following bug and feature requests are logged in GitHub with relat
 
 #### Improve behavior of heuristic path guessing under home #313
 
-The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This 
+The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This
 is corrected to better reflect the available directories under 'home'
 
 #### Remove user profile subproject and migrate over to jargon-extensions #315
 
 Remove user-profile submodule as old idrop-web legacy, this functionality is being revised and added to jargon-extensions-if for the purposes of standardizing MetaLnx
+
+#### Update misc dependencies #316
+
+Misc dependency updates via jargon-pom
