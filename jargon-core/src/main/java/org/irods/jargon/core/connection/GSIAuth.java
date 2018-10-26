@@ -40,7 +40,7 @@ class GSIAuth extends AuthMechanism {
 	 * @param irodsCommands
 	 * @throws JargonException
 	 */
-	void sendGSIPassword(final GSIIRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands)
+	void sendGSIPassword(final GSIIRODSAccount irodsAccount, final IRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
 		log.info("sendGSIPassword()");

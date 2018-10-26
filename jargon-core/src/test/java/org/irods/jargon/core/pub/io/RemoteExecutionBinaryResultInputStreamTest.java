@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -77,7 +76,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
@@ -129,7 +128,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
@@ -151,7 +150,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testMark() throws Exception {
-		AbstractIRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
+		IRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(irodsCommands, 1);
 		bis.mark(100);
 		bis.close();
@@ -159,7 +158,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testReset() throws Exception {
-		AbstractIRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
+		IRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(irodsCommands, 1);
 		bis.reset();
 		bis.close();
@@ -167,7 +166,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 	@Test
 	public void testMarkSupported() throws Exception {
-		AbstractIRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
+		IRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 0,
 				"rods4.1.9", "xx", "xx");
 		Mockito.when(irodsCommands.getIRODSServerProperties()).thenReturn(irodsServerProperties);
@@ -179,7 +178,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 	@Test
 	public void testRemoteExecutionBinaryResultInputStream() throws Exception {
 
-		AbstractIRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
+		IRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 0,
 				"rods4.1.9", "xx", "xx");
 		Mockito.when(irodsCommands.getIRODSServerProperties()).thenReturn(irodsServerProperties);
@@ -194,7 +193,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoteExecutionBinaryResultInputStreamNullCommands() throws Exception {
 
-		AbstractIRODSMidLevelProtocol irodsCommands = null;
+		IRODSMidLevelProtocol irodsCommands = null;
 		new RemoteExecutionBinaryResultInputStream(irodsCommands, 1);
 
 	}
@@ -203,7 +202,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoteExecutionBinaryResultInputStreamZeroDescriptor() throws Exception {
 
-		AbstractIRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
+		IRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
 		new RemoteExecutionBinaryResultInputStream(irodsCommands, 0);
 
 	}

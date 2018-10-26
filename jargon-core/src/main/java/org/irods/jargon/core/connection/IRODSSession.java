@@ -353,7 +353,7 @@ public class IRODSSession {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	public AbstractIRODSMidLevelProtocol currentConnection(final IRODSAccount irodsAccount) throws JargonException {
+	public IRODSMidLevelProtocol currentConnection(final IRODSAccount irodsAccount) throws JargonException {
 
 		if (irodsProtocolManager == null) {
 			log.error("no irods connection manager provided");
@@ -366,7 +366,7 @@ public class IRODSSession {
 			throw new IllegalArgumentException("irodsAccount is null");
 		}
 
-		AbstractIRODSMidLevelProtocol irodsProtocol = null;
+		IRODSMidLevelProtocol irodsProtocol = null;
 
 		Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
@@ -410,11 +410,11 @@ public class IRODSSession {
 	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} with a
 	 *         renewed connection
 	 * @throws AuthenticationException
-	 *             for auth error
+	 *             {@link AuthenticationException} for auth error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException} for iRODS error
 	 */
-	public AbstractIRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(final IRODSAccount irodsAccount)
+	public IRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
 
 		log.info("renewConnection()");
@@ -422,7 +422,7 @@ public class IRODSSession {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsMidLevelProtocol = currentConnection(irodsAccount);
 
 		log.info("evaluate conn for renewal:{}", irodsAccount);
 
@@ -441,11 +441,14 @@ public class IRODSSession {
 	 * connection and potentially renew the connection if necessary.
 	 *
 	 * @param irodsMidLevelProtocol
+	 *            {@link IRODSMidLevelProtocol}
 	 * @return {@code boolean} that will be {@code true} if the conn was shut down
 	 * @throws AuthenticationException
+	 *             {@link AuthenticationException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
-	private boolean evaluateConnectionForRenewal(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
+	private boolean evaluateConnectionForRenewal(final IRODSMidLevelProtocol irodsMidLevelProtocol)
 			throws AuthenticationException, JargonException {
 
 		int renewalInterval = irodsMidLevelProtocol.getPipelineConfiguration().getSocketRenewalIntervalInSeconds();
@@ -493,8 +496,8 @@ public class IRODSSession {
 		return irodsProtocol;
 	}
 
-	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
+	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount, final IRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
 		log.debug("addUserInfoForGSIAccount()");
 
 		if (irodsAccount == null) {

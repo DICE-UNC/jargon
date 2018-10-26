@@ -6,7 +6,7 @@ package org.irods.jargon.core.remoteexecute;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmd;
 import org.irods.jargon.core.packinstr.ExecCmd.PathHandlingMode;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
-	private final AbstractIRODSMidLevelProtocol irodsCommands;
+	private final IRODSMidLevelProtocol irodsMidLevelProtocol;
 	private final String commandToExecuteWithoutArguments;
 	private final String argumentsToPassWithCommand;
 	private final String executionHost;
@@ -56,16 +56,16 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		sb.append(absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
 		sb.append("\n   pathHandlingMode:");
 		sb.append(pathHandlingMode);
-		sb.append("\n   irodsCommands:");
-		sb.append(irodsCommands);
+		sb.append("\n   irodsMidLevelProtocol:");
+		sb.append(irodsMidLevelProtocol);
 		return sb.toString();
 	}
 
 	/**
 	 * Static instance method for a remote execution service.
 	 *
-	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol}
+	 * @param irodsMidLevelProtocol
+	 *            {@link IRODSMidLevelProtocol}
 	 * @param commandToExecuteWithoutArguments
 	 *            {@code String} with the name of the command to execute. Do not put
 	 *            arguments into this field.
@@ -80,7 +80,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	public static final RemoteExecutionService instance(final AbstractIRODSMidLevelProtocol irodsCommands,
+	public static final RemoteExecutionService instance(final IRODSMidLevelProtocol irodsCommands,
 			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
 			final String executionHost) throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
@@ -92,8 +92,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * iRODS absolute path to compute the physical path and add it as a command
 	 * argument.
 	 *
-	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol}
+	 * @param irodsMidLevelProtocol
+	 *            {@link IRODSMidLevelProtocol}
 	 * @param commandToExecuteWithoutArguments
 	 *            {@code String} with the name of the command to execute. Do not put
 	 *            arguments into this field.
@@ -112,10 +112,10 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *             for iRODS error
 	 */
 	public static final RemoteExecutionService instanceWhenUsingAbsPathToSetCommandArg(
-			final AbstractIRODSMidLevelProtocol irodsCommands, final String commandToExecuteWithoutArguments,
+			final IRODSMidLevelProtocol irodsMidLevelProtocol, final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn) throws JargonException {
-		return new RemoteExecuteServiceImpl(irodsCommands, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+		return new RemoteExecuteServiceImpl(irodsMidLevelProtocol, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT);
 	}
@@ -124,8 +124,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * Static instance method for a remote execution service when using the provided
 	 * iRODS absolute path to find the host upon which to execute.
 	 *
-	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol}
+	 * @param irodsMidLevelProtocol
+	 *            {@link IRODSMidLevelProtocol}
 	 * @param commandToExecuteWithoutArguments
 	 *            {@code String} with the name of the command to execute. Do not put
 	 *            arguments into this field.
@@ -144,7 +144,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *             for iRODS error
 	 */
 	public static final RemoteExecutionService instanceWhenUsingAbsPathToFindExecutionHost(
-			final AbstractIRODSMidLevelProtocol irodsCommands, final String commandToExecuteWithoutArguments,
+			final IRODSMidLevelProtocol irodsCommands, final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn) throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
@@ -155,7 +155,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	/**
 	 * Constructor for a remote execution service.
 	 *
-	 * @param irodsCommands
+	 * @param irodsMidLevelProtocol
 	 *            {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
 	 *            that will be used to send commands to iRODS. The connection is
 	 *            used but not closed or altered.
@@ -180,13 +180,13 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	private RemoteExecuteServiceImpl(final AbstractIRODSMidLevelProtocol irodsCommands,
+	private RemoteExecuteServiceImpl(final IRODSMidLevelProtocol irodsCommands,
 			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
 			final String executionHost, final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 			final PathHandlingMode pathHandlingMode) throws JargonException {
 
 		if (irodsCommands == null) {
-			throw new JargonException("null irodsCommands");
+			throw new JargonException("null irodsMidLevelProtocol");
 		}
 
 		if (commandToExecuteWithoutArguments == null || commandToExecuteWithoutArguments.length() == 0) {
@@ -210,7 +210,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			throw new IllegalArgumentException("null pathHandlingMode");
 		}
 
-		this.irodsCommands = irodsCommands;
+		this.irodsMidLevelProtocol = irodsCommands;
 		this.commandToExecuteWithoutArguments = commandToExecuteWithoutArguments;
 		this.argumentsToPassWithCommand = argumentsToPassWithCommand;
 		this.executionHost = executionHost;
@@ -244,7 +244,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		StringBuilder buffer = new StringBuilder();
 
 		try {
-			message = irodsCommands.irodsFunction(execCmd);
+			message = irodsMidLevelProtocol.irodsFunction(execCmd);
 		} catch (NullPointerException e) {
 			log.error("NullPointerException encountered executing a command", e);
 			throw new JargonException(
@@ -298,7 +298,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		StringBuilder buffer = new StringBuilder();
 
 		try {
-			message = irodsCommands.irodsFunction(execCmd);
+			message = irodsMidLevelProtocol.irodsFunction(execCmd);
 		} catch (NullPointerException e) {
 			log.error("NullPointerException encountered executing a command", e);
 			throw new JargonException(
@@ -361,8 +361,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		return resultStream;
 	}
 
-	public AbstractIRODSMidLevelProtocol getIrodsCommands() {
-		return irodsCommands;
+	public IRODSMidLevelProtocol getIrodsCommands() {
+		return irodsMidLevelProtocol;
 	}
 
 	public String getCommandToExecuteWithoutArguments() {

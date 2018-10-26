@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
  */
 public class EnvironmentalInfoAccessor {
 
-	private AbstractIRODSMidLevelProtocol irodsProtocol = null;
+	private IRODSMidLevelProtocol irodsProtocol = null;
 	private final Logger log = LoggerFactory.getLogger(EnvironmentalInfoAccessor.class);
 
-	public EnvironmentalInfoAccessor(final AbstractIRODSMidLevelProtocol irodsProtocol) throws JargonException {
+	public EnvironmentalInfoAccessor(final IRODSMidLevelProtocol irodsProtocol) throws JargonException {
 		if (irodsProtocol == null) {
 			throw new JargonException("null irodsProtocol");
 		}

@@ -34,7 +34,7 @@ public class IRODSSimpleConnectionTest {
 	public void testOpenAndCloseSimpleConnection() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		AbstractIRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		connection.disconnect();
 
 		Assert.assertFalse("connection should not be connected", connection.isConnected());

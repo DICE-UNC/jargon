@@ -46,7 +46,7 @@ class SslConnectionUtilities {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for connection
 	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol} that represents the current
+	 *            {@link IRODSMidLevelProtocol} that represents the current
 	 *            connection
 	 * @param doSslStartupSequence
 	 *            {@code boolean} that indicates that
@@ -57,9 +57,8 @@ class SslConnectionUtilities {
 	 * @throws JargonException
 	 * @throws AssertionError
 	 */
-	SSLSocket createSslSocketForProtocol(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands, final boolean doSslStartupSequence)
-			throws JargonException, AssertionError {
+	SSLSocket createSslSocketForProtocol(final IRODSAccount irodsAccount, final IRODSMidLevelProtocol irodsCommands,
+			final boolean doSslStartupSequence) throws JargonException, AssertionError {
 
 		if (doSslStartupSequence) {
 			// start ssl
@@ -162,7 +161,7 @@ class SslConnectionUtilities {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for connection
 	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol} that represents the current
+	 *            {@link IRODSMidLevelProtocol} that represents the current
 	 *            connection
 	 * @param doSslStartupSequence
 	 *            {@code boolean} that indicates that
@@ -170,7 +169,7 @@ class SslConnectionUtilities {
 	 * @throws AssertionError
 	 */
 	void createSslSocketForProtocolAndIntegrateIntoProtocol(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands, final boolean doSslStartupSequence)
+			final IRODSMidLevelProtocol irodsCommands, final boolean doSslStartupSequence)
 			throws JargonException, AssertionError {
 
 		log.info("createSslSocketForProtocolAndIntegrateIntoProtocol()");

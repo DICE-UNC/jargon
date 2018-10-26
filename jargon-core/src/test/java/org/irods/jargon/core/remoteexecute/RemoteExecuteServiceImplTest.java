@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -60,7 +59,7 @@ public class RemoteExecuteServiceImplTest {
 		String args = "";
 		String host = "host";
 
-		AbstractIRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
+		IRODSMidLevelProtocol irodsCommands = Mockito.mock(IRODSMidLevelProtocol.class);
 
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 		Assert.assertNotNull(remoteExecuteService);
@@ -77,7 +76,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.execute();
@@ -110,7 +109,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream;
@@ -160,7 +159,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
@@ -210,7 +209,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
 				.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, targetIrodsFile);
 
@@ -275,7 +274,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
 				.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, targetIrodsFile);
 
@@ -339,7 +338,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
 				.instanceWhenUsingAbsPathToFindExecutionHost(irodsCommands, cmd, args, host, targetIrodsFile);
 
@@ -375,7 +374,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.execute();
@@ -407,7 +406,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		remoteExecuteService.execute();
@@ -426,7 +425,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
 				.instanceWhenUsingAbsPathToSetCommandArg(irodsCommands, cmd, args, host, absPath);
 
@@ -472,7 +471,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
@@ -526,7 +525,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();
@@ -574,7 +573,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		remoteExecuteService.executeAndStream();
@@ -610,7 +609,7 @@ public class RemoteExecuteServiceImplTest {
 
 		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
-		AbstractIRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
+		IRODSMidLevelProtocol irodsCommands = collectionAOImpl.getIRODSProtocol();
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl.instance(irodsCommands, cmd, args, host);
 
 		InputStream inputStream = remoteExecuteService.executeAndStream();

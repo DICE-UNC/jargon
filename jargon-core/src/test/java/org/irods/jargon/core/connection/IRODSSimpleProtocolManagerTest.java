@@ -33,7 +33,7 @@ public class IRODSSimpleProtocolManagerTest {
 	@Test
 	public void testGetIRODSConnection() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("this connection is not connected", irodsProtocol.isConnected());
 		irodsProtocol.disconnectWithForce();
 		Assert.assertFalse("the connection is not closed after disconnect", irodsProtocol.isConnected());
@@ -51,8 +51,7 @@ public class IRODSSimpleProtocolManagerTest {
 	public void testOpenAndClose50Connections() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		for (int i = 0; i < 50; i++) {
-			AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession()
-					.currentConnection(irodsAccount);
+			IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 
 			Assert.assertTrue("this connection is not connected", irodsProtocol.isConnected());
 			irodsProtocol.disconnectWithForce();
@@ -144,7 +143,7 @@ public class IRODSSimpleProtocolManagerTest {
 				for (int i = 0; i < iterations; i++) {
 					// Pause for 1 second
 					Thread.sleep(1000);
-					AbstractIRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession()
+					IRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession()
 							.currentConnection(irodsAccount);
 					connection.disconnect();
 				}

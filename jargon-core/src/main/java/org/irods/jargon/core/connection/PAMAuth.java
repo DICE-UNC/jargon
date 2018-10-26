@@ -107,15 +107,8 @@ public class PAMAuth extends AuthMechanism {
 
 	}
 
-	/**
-	 * @param irodsCommandsToUse
-	 * @throws JargonException
-	 */
-	private void shutdownSslAndCloseConnection(final AbstractIRODSMidLevelProtocol irodsCommandsToUse)
-			throws JargonException {
-
+	private void shutdownSslAndCloseConnection(final IRODSMidLevelProtocol irodsCommandsToUse) throws JargonException {
 		irodsCommandsToUse.shutdown();
-
 	}
 
 	private IRODSMidLevelProtocol establishSecureConnectionForPamAuth(final IRODSAccount irodsAccount,

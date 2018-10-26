@@ -32,7 +32,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have been connected", irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
 	}
@@ -40,7 +40,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testChallengeIsCachedForStandardPassword() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have cached the challenge value",
 				irodsProtocol.getAuthResponse().getChallengeValue().length() > 0);
 		irodsProtocol.disconnect();
@@ -62,14 +62,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		/*
-		 * EnvironmentalInfoAO environmentalInfoAO = testFS
-		 * .getIRODSAccessObjectFactory().getEnvironmentalInfoAO( irodsAccount);
-		 * IRODSServerProperties irodsServerProperties = environmentalInfoAO
-		 * .getIRODSServerProperties();
-		 */
-
-		AbstractIRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory().getIrodsSession()
+		IRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory().getIrodsSession()
 				.currentConnection(irodsAccount);
 		StartupResponseData startupResponseData = irodsCommands.getAuthResponse().getStartupResponse();
 
@@ -96,14 +89,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		/*
-		 * EnvironmentalInfoAO environmentalInfoAO = testFS
-		 * .getIRODSAccessObjectFactory().getEnvironmentalInfoAO( irodsAccount);
-		 * IRODSServerProperties irodsServerProperties = environmentalInfoAO
-		 * .getIRODSServerProperties();
-		 */
-
-		AbstractIRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory().getIrodsSession()
+		IRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory().getIrodsSession()
 				.currentConnection(irodsAccount);
 		StartupResponseData startupResponseData = irodsCommands.getAuthResponse().getStartupResponse();
 
@@ -120,7 +106,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testDisconnect() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		irodsProtocol.disconnect();
 		Assert.assertFalse("i should have disconnected", irodsProtocol.isConnected());
 	}
@@ -128,7 +114,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testConnectAnonymous() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have connected", irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
 		Assert.assertFalse("i should have disconnected", irodsProtocol.isConnected());
@@ -137,7 +123,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testDisconnectWithIOException() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		irodsProtocol.disconnectWithForce();
 		Assert.assertFalse("i should have disconnected", irodsProtocol.isConnected());
 	}
@@ -145,7 +131,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testGetIRODSAccount() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		IRODSAccount actualIRODSAccount = irodsProtocol.getIrodsAccount();
 		irodsProtocol.disconnect();
 		Assert.assertEquals("i should have gotten back the correct IRODSAccount", irodsAccount.getUserName(),
@@ -155,7 +141,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testGetIRODSServerProperties() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		IRODSMidLevelProtocol irodsProtocol = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		IRODSServerProperties irodsServerProperties = irodsProtocol.getIRODSServerProperties();
 		irodsProtocol.disconnect();
 		Assert.assertNotNull(irodsServerProperties);

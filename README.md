@@ -7,7 +7,7 @@
 
 
 
-https://github.com/DICE-UNC/jargon/milestone/25
+https://github.com/DICE-UNC/jargon/milestone/24
 
 This is a maintenance and minor feature development release to support Metalnx 2.0.1 and other efforts
 
@@ -29,7 +29,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.3, it also maintains very reasonable backwards compatability to iRODS 3.3.1 however this is no longer actively tested
+* Jargon supports iRODS current releases, it also maintains very reasonable backwards compatability to iRODS 3.3.1 however this is no longer actively tested
 
 ## Libraries
 
@@ -56,3 +56,9 @@ Remove user-profile submodule as old idrop-web legacy, this functionality is bei
 #### Update misc dependencies #316
 
 Misc dependency updates via jargon-pom
+
+#### enhance pools for NFS4J #317
+
+Clean up confusing and unnecessary AbstractIRODSMidLevelProtocol -> IRODSMidLevelProtocol relationship,
+working on updating pooling code for commons-pool2, more testing. This is for use in MetaLnx, NSF4J, REST, and GA4GH DOS
+tools.

@@ -3,7 +3,6 @@ package org.irods.jargon.datautils.connection;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -74,7 +73,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PooledObjectFact
 	@Override
 	public void destroyObject(PooledObject<IRODSMidLevelProtocol> objectToDestroy) throws Exception {
 		log.info("destroyObject:{}", objectToDestroy.getObject());
-		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = (AbstractIRODSMidLevelProtocol) objectToDestroy;
+		IRODSMidLevelProtocol irodsMidLevelProtocol = objectToDestroy.getObject();
 		irodsMidLevelProtocol.setIrodsProtocolManager(irodsProtocolManager);
 		log.info("disconnecting");
 		irodsMidLevelProtocol.shutdown();
