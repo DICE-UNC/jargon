@@ -3,7 +3,6 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-
 		<version>4.3.1.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -25,7 +24,6 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.jglobus</groupId>
 			<artifactId>gss</artifactId>

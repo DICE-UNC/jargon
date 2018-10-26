@@ -37,15 +37,8 @@ public class IRODSMidLevelProtocolFactory extends AbstractIRODSMidLevelProtocolF
 		super(irodsConnectionFactory, authenticationFactory);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocolFactory
-	 * #createInitialProtocol (org.irods.jargon.core.connection.AbstractConnection,
-	 * org.irods.jargon.core.connection.IRODSProtocolManager)
-	 */
 	@Override
-	protected AbstractIRODSMidLevelProtocol createInitialProtocol(final AbstractConnection connection,
+	protected IRODSMidLevelProtocol createInitialProtocol(final AbstractConnection connection,
 			final IRODSProtocolManager irodsProtocolManager) {
 		return new IRODSMidLevelProtocol(connection, irodsProtocolManager);
 	}

@@ -5,8 +5,8 @@ package org.irods.jargon.core.pub;
 
 import java.util.Map;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
@@ -209,10 +209,10 @@ public final class IRODSFileSystem {
 	 * diagnostics or for other uses, but it is highly recommended that these
 	 * IRODSCommands are not used for any other purpose.
 	 *
-	 * @return {@link AbstractIRODSMidLevelProtocol} that represent protocol-level
+	 * @return {@link IRODSMidLevelProtocol} that represent protocol-level
 	 *         connection to iRODS (above the socket level)
 	 */
-	public Map<String, AbstractIRODSMidLevelProtocol> getConnectionMap() {
+	public Map<String, IRODSMidLevelProtocol> getConnectionMap() {
 		return irodsSession.getIRODSCommandsMap();
 
 	}

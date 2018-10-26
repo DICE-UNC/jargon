@@ -73,7 +73,7 @@ public class IRODSSession {
 	 * is keyed by the {@link IRODSAccount}, so that each thread automatically
 	 * shares a common connection to an iRODS server.
 	 */
-	public static final ThreadLocal<Map<String, AbstractIRODSMidLevelProtocol>> sessionMap = new ThreadLocal<Map<String, AbstractIRODSMidLevelProtocol>>();
+	public static final ThreadLocal<Map<String, IRODSMidLevelProtocol>> sessionMap = new ThreadLocal<Map<String, IRODSMidLevelProtocol>>();
 
 	/**
 	 * The parallel transfer thread pool is lazily initialized on the first parallel
@@ -242,14 +242,14 @@ public class IRODSSession {
 	 */
 	public void closeSession() throws JargonException {
 		log.debug("closing all irods sessions");
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
+		final Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
 			log.warn("closing session that is already closed, silently ignore");
 			return;
 		}
 
-		for (AbstractIRODSMidLevelProtocol irodsMidLevelProtocol : irodsProtocols.values()) {
+		for (IRODSMidLevelProtocol irodsMidLevelProtocol : irodsProtocols.values()) {
 			log.debug("found and am closing connection to : {}", irodsMidLevelProtocol.getIrodsAccount().toString());
 			// irodsMidLevelProtocol.disconnect();
 			getIrodsProtocolManager().returnIRODSProtocol(irodsMidLevelProtocol);
@@ -368,11 +368,11 @@ public class IRODSSession {
 
 		AbstractIRODSMidLevelProtocol irodsProtocol = null;
 
-		Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
+		Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
 			log.debug("no connections are cached, so create a new cache map");
-			irodsProtocols = new HashMap<String, AbstractIRODSMidLevelProtocol>();
+			irodsProtocols = new HashMap<String, IRODSMidLevelProtocol>();
 			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount, irodsProtocols);
 			log.debug("put a reference to a new connection for account: {}", irodsAccount.toString());
 			sessionMap.set(irodsProtocols);
@@ -465,15 +465,9 @@ public class IRODSSession {
 		}
 	}
 
-	/**
-	 * @param irodsAccount
-	 * @param irodsProtocols
-	 * @return
-	 * @throws JargonException
-	 */
-	private AbstractIRODSMidLevelProtocol connectAndAddToProtocolsMap(final IRODSAccount irodsAccount,
-			final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols) throws JargonException {
-		AbstractIRODSMidLevelProtocol irodsProtocol;
+	private IRODSMidLevelProtocol connectAndAddToProtocolsMap(final IRODSAccount irodsAccount,
+			final Map<String, IRODSMidLevelProtocol> irodsProtocols) throws JargonException {
+		IRODSMidLevelProtocol irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
 				buildPipelineConfigurationBasedOnJargonProperties(), this);
 		if (irodsProtocol == null) {
@@ -574,13 +568,13 @@ public class IRODSSession {
 		}
 
 		log.debug("closing irods session for: {}", irodsAccount.toString());
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
+		final Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
 			log.warn("closing session that is already closed, silently ignore");
 			return;
 		}
 
-		final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = irodsProtocols.get(irodsAccount.toString());
+		final IRODSMidLevelProtocol irodsMidLevelProtocol = irodsProtocols.get(irodsAccount.toString());
 
 		if (irodsMidLevelProtocol == null) {
 			log.warn("closing a connection that is not held, silently ignore");
@@ -610,12 +604,13 @@ public class IRODSSession {
 	public void discardSessionForErrors(final IRODSAccount irodsAccount) {
 
 		log.warn("discarding irods session for: {}", irodsAccount.toString());
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
+		final Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
 			log.warn("discarding session that is already closed, silently ignore");
 			return;
 		}
-		AbstractIRODSMidLevelProtocol badConnection;
+
+		IRODSMidLevelProtocol badConnection;
 		badConnection = irodsProtocols.get(irodsAccount.toString());
 		if (badConnection != null) {
 			getIrodsProtocolManager().returnWithForce(badConnection);
@@ -634,9 +629,9 @@ public class IRODSSession {
 	 * direct handle on the connections for this Thread in cases where such status
 	 * information needs to be kept. Returns null if no map is available.
 	 *
-	 * @return {@code Map<String, AbstractIRODSMidLevelProtocol>}
+	 * @return {@code Map<String, IRODSMidLevelProtocol>}
 	 */
-	public Map<String, AbstractIRODSMidLevelProtocol> getIRODSCommandsMap() {
+	public Map<String, IRODSMidLevelProtocol> getIRODSCommandsMap() {
 		return sessionMap.get();
 	}
 

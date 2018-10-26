@@ -2,6 +2,7 @@ package org.irods.jargon.datautils.connection;
 
 import java.util.Properties;
 
+import org.apache.commons.pool2.PooledObject;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
@@ -51,7 +52,7 @@ public class ConnectionCreatingPoolableObjectFactoryTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(irodsAccount,
 				irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
-		Object conn = factory.makeObject();
+		PooledObject conn = factory.makeObject();
 		Assert.assertNotNull("null connection returned", conn);
 		boolean isCommand = conn instanceof IRODSMidLevelProtocol;
 		Assert.assertTrue("did not get a commands", isCommand);

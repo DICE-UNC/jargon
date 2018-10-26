@@ -1,8 +1,7 @@
 # Project: Jargon-core API
-
-### Date: 07/05/2018
+### Date:
 ### Release Version: 4.3.1.0-SNAPSHOT
-### git tag: 
+### git tag:
 
 ## News
 
@@ -42,14 +41,18 @@ Note that the following bug and feature requests are logged in GitHub with relat
 
 #### Add 'noindex' semantics and ability to ignore data objects w/no metadata #314
 
-Added DONOTINDEX support for collections being indexed using the org.irods.jargon.datautils.indexer services. This allows collections to be marked per-indexer as ignored. 
+Added DONOTINDEX support for collections being indexed using the org.irods.jargon.datautils.indexer services. This allows collections to be marked per-indexer as ignored.
 For details see the INDEXING.md file located in the jargon-data-utils submodule.
 
 #### Improve behavior of heuristic path guessing under home #313
 
-The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This 
+The collection listing utilities have an ability to 'guess' through the top directories when StrictACLs are turned on. This was masking otherwise visible paths under 'home' when turned on. This
 is corrected to better reflect the available directories under 'home'
 
 #### Remove user profile subproject and migrate over to jargon-extensions #315
 
 Remove user-profile submodule as old idrop-web legacy, this functionality is being revised and added to jargon-extensions-if for the purposes of standardizing MetaLnx
+
+#### Update misc dependencies #316
+
+Misc dependency updates via jargon-pom

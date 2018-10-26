@@ -80,7 +80,7 @@ public abstract class IRODSProtocolManager {
 	 * @exception JargonException
 	 *                if a general error occurs
 	 */
-	public abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(IRODSAccount irodsAccount,
+	public abstract IRODSMidLevelProtocol getIRODSProtocol(IRODSAccount irodsAccount,
 			PipelineConfiguration pipelineConfiguration, IRODSSession irodsSession)
 			throws AuthenticationException, JargonException;
 
@@ -96,7 +96,7 @@ public abstract class IRODSProtocolManager {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	protected abstract void returnIRODSProtocol(AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+	protected abstract void returnIRODSProtocol(IRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException;
 
 	/**
@@ -118,7 +118,7 @@ public abstract class IRODSProtocolManager {
 	 * @exception JargonException
 	 *                if a general error occurs
 	 */
-	protected AbstractIRODSMidLevelProtocol createNewProtocol(final IRODSAccount irodsAccount,
+	protected IRODSMidLevelProtocol createNewProtocol(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession)
 			throws AuthenticationException, JargonException {
 
@@ -149,9 +149,9 @@ public abstract class IRODSProtocolManager {
 	 * is corrupted and should not be returned to a cache or pool.
 	 *
 	 * @param irodsMidLevelProtocol
-	 *            {@link AbstractIRODSMidLevelProtocol} to be returned
+	 *            {@link IRODSMidLevelProtocol} to be returned
 	 */
-	protected void returnWithForce(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
+	protected void returnWithForce(final IRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.warn("connection returned with IOException, will forcefully close and remove from session cache");
 		if (irodsMidLevelProtocol != null) {
 			irodsMidLevelProtocol.obliterateConnectionAndDiscardErrors();
@@ -216,5 +216,4 @@ public abstract class IRODSProtocolManager {
 			final AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory) {
 		this.irodsMidLevelProtocolFactory = irodsMidLevelProtocolFactory;
 	}
-
 }

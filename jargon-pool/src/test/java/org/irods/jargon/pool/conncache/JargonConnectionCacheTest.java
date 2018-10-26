@@ -2,8 +2,8 @@ package org.irods.jargon.pool.conncache;
 
 import java.util.Properties;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -48,7 +48,7 @@ public class JargonConnectionCacheTest {
 
 		IRODSAccount test1 = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		AbstractIRODSMidLevelProtocol test1Protocol1 = jargonConnectionCache.borrowObject(test1);
+		IRODSMidLevelProtocol test1Protocol1 = jargonConnectionCache.borrowObject(test1);
 		jargonConnectionCache.returnObject(test1, test1Protocol1);
 
 		test1Protocol1 = jargonConnectionCache.borrowObject(test1);
@@ -87,9 +87,9 @@ public class JargonConnectionCacheTest {
 		IRODSAccount test2 = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 		IRODSAccount test3 = testingPropertiesHelper.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
 
-		AbstractIRODSMidLevelProtocol test1Protocol1;
-		AbstractIRODSMidLevelProtocol test1Protocol2;
-		AbstractIRODSMidLevelProtocol test1Protocol3;
+		IRODSMidLevelProtocol test1Protocol1;
+		IRODSMidLevelProtocol test1Protocol2;
+		IRODSMidLevelProtocol test1Protocol3;
 
 		int iters = 100;
 
@@ -128,16 +128,16 @@ public class JargonConnectionCacheTest {
 		IRODSAccount test2 = testingPropertiesHelper.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 		IRODSAccount test3 = testingPropertiesHelper.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
 
-		AbstractIRODSMidLevelProtocol test1Protocol1a;
-		AbstractIRODSMidLevelProtocol test1Protocol1b;
-		AbstractIRODSMidLevelProtocol test1Protocol1c;
+		IRODSMidLevelProtocol test1Protocol1a;
+		IRODSMidLevelProtocol test1Protocol1b;
+		IRODSMidLevelProtocol test1Protocol1c;
 
-		AbstractIRODSMidLevelProtocol test1Protocol2a;
-		AbstractIRODSMidLevelProtocol test1Protocol2b;
-		AbstractIRODSMidLevelProtocol test1Protocol2c;
-		AbstractIRODSMidLevelProtocol test1Protocol2d;
+		IRODSMidLevelProtocol test1Protocol2a;
+		IRODSMidLevelProtocol test1Protocol2b;
+		IRODSMidLevelProtocol test1Protocol2c;
+		IRODSMidLevelProtocol test1Protocol2d;
 
-		AbstractIRODSMidLevelProtocol test1Protocol3;
+		IRODSMidLevelProtocol test1Protocol3;
 
 		int iters = 300;
 
