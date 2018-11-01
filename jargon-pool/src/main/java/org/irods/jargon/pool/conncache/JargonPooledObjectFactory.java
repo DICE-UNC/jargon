@@ -11,6 +11,15 @@ import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Factory for pooled iRODS connections. Note that the key of the pool is the
+ * {@link IRODSAccount} that was originally used to create the object. This may
+ * have resulted in a secondary iRODS account, for example, as a proxy account,
+ * a temp account, or through some other transformation.
+ * 
+ * @author conwaymc
+ *
+ */
 public class JargonPooledObjectFactory extends BaseKeyedPooledObjectFactory<IRODSAccount, IRODSMidLevelProtocol> {
 
 	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
@@ -74,7 +83,6 @@ public class JargonPooledObjectFactory extends BaseKeyedPooledObjectFactory<IROD
 
 	@Override
 	public boolean validateObject(final IRODSAccount key, final PooledObject<IRODSMidLevelProtocol> p) {
-
 		return p.getObject().isConnected();
 	}
 

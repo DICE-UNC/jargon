@@ -4,12 +4,13 @@
 package org.irods.jargon.pool.conncache;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 
 /**
  * @author mconway
  *
  */
-public class JargonKeyedPoolConfig extends GenericKeyedObjectPoolConfig {
+public class JargonKeyedPoolConfig extends GenericKeyedObjectPoolConfig<IRODSMidLevelProtocol> {
 
 	public static final int TIME_30_SECONDS = 30 * 1000;
 	public static final int TIME_60_SECONDS = 30 * 1000;
