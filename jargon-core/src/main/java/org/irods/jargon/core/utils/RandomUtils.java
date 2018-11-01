@@ -5,7 +5,7 @@ package org.irods.jargon.core.utils;
 
 import java.security.SecureRandom;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * Various utils for generating ramdomness (e.g. encryption keys used in
