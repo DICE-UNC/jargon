@@ -15,9 +15,9 @@ import org.irods.jargon.core.checksum.AbstractChecksumComputeStrategy;
 import org.irods.jargon.core.checksum.ChecksumManager;
 import org.irods.jargon.core.checksum.ChecksumManagerImpl;
 import org.irods.jargon.core.checksum.ChecksumValue;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
@@ -87,8 +87,7 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 *  Create a set of selects for a data object, used in
-	 * general query.
+	 * Create a set of selects for a data object, used in general query.
 	 *
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be appended with the
@@ -256,6 +255,8 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link File}
 	 * @param length
 	 *            {@code long} length
+	 * @param irodsProtocol
+	 *            {@link IRODSMidLevelProtocol}
 	 * @param transferOptions
 	 *            {@link TransferOptions}
 	 * @param transferStatusCallbackListener
@@ -266,7 +267,7 @@ public final class DataAOHelper extends AOHelper {
 	 *             for iRODS error
 	 */
 	void processNormalGetTransfer(final File localFileToHoldData, final long length,
-			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferOptions transferOptions,
+			final IRODSMidLevelProtocol irodsProtocol, final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener) throws JargonException {
 
@@ -344,8 +345,8 @@ public final class DataAOHelper extends AOHelper {
 	 * @param targetFile
 	 *            {@link IRODSFile} that will be the target of the put
 	 * @param irodsProtocol
-	 *            {@link IRODSProtocol} that represents the active connection to
-	 *            iRODS
+	 *            {@link IRODSMidLevelProtocol} that represents the active
+	 *            connection to iRODS
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that contains information that
 	 *            controls the transfer operation, this is required
@@ -358,7 +359,7 @@ public final class DataAOHelper extends AOHelper {
 	 *             if file is missing
 	 */
 	void processNormalPutTransfer(final File localFile, final boolean overwrite, final IRODSFile targetFile,
-			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
+			final IRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException, FileNotFoundException {
 
@@ -483,7 +484,7 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	void putReadWriteLoop(final File localFile, final boolean overwrite, final IRODSFile targetFile, final int fd,
-			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
+			final IRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
 			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws JargonException, FileNotFoundException {
 

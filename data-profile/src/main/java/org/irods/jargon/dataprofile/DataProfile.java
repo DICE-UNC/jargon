@@ -158,17 +158,25 @@ public class DataProfile<T extends IRODSDomainObject> {
 		this.pathComponents = pathComponents;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "DataProfile [file=" + file + ", domainObject=" + domainObject + ", metadata=" + metadata + ", acls="
-				+ acls + ", isStarred=" + isStarred + ", isShared=" + isShared + ", mimeType=" + mimeType
-				+ ", infoType=" + infoType + ", irodsTagValues=" + irodsTagValues + ", parentPath=" + parentPath
-				+ ", childName=" + childName + ", pathComponents=" + pathComponents + "]";
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("DataProfile [file=").append(file).append(", domainObject=").append(domainObject)
+				.append(", metadata=")
+				.append(metadata != null ? metadata.subList(0, Math.min(metadata.size(), maxLen)) : null)
+				.append(", acls=").append(acls != null ? acls.subList(0, Math.min(acls.size(), maxLen)) : null)
+				.append(", isStarred=").append(isStarred).append(", isShared=").append(isShared).append(", mimeType=")
+				.append(mimeType).append(", infoType=").append(infoType).append(", irodsTagValues=")
+				.append(irodsTagValues != null ? irodsTagValues.subList(0, Math.min(irodsTagValues.size(), maxLen))
+						: null)
+				.append(", parentPath=").append(parentPath).append(", childName=").append(childName)
+				.append(", pathComponents=")
+				.append(pathComponents != null ? pathComponents.subList(0, Math.min(pathComponents.size(), maxLen))
+						: null)
+				.append("]");
+		return builder.toString();
+
 	}
 
 	/**

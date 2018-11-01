@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
@@ -43,7 +43,7 @@ public class TempPasswordCachingProtocolManagerTest {
 				irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
 		IRODSSession irodsSession = IRODSSession.instance(manager);
 		Assert.assertNotNull("null manager returned", manager);
-		AbstractIRODSMidLevelProtocol commands = manager.getIRODSProtocol(irodsAccount,
+		IRODSMidLevelProtocol commands = manager.getIRODSProtocol(irodsAccount,
 				irodsSession.buildPipelineConfigurationBasedOnJargonProperties(), irodsFileSystem.getIrodsSession());
 		Assert.assertTrue("commands not connected", commands.isConnected());
 		manager.returnIRODSProtocol(commands);

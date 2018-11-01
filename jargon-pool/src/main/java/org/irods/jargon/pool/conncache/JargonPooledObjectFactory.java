@@ -3,16 +3,15 @@ package org.irods.jargon.pool.conncache;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JargonPooledObjectFactory
-		extends BaseKeyedPooledObjectFactory<IRODSAccount, AbstractIRODSMidLevelProtocol> {
+public class JargonPooledObjectFactory extends BaseKeyedPooledObjectFactory<IRODSAccount, IRODSMidLevelProtocol> {
 
 	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
 
@@ -51,7 +50,7 @@ public class JargonPooledObjectFactory
 	}
 
 	@Override
-	public AbstractIRODSMidLevelProtocol create(final IRODSAccount irodsAccount) throws Exception {
+	public IRODSMidLevelProtocol create(final IRODSAccount irodsAccount) throws Exception {
 		log.info("create()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -61,21 +60,20 @@ public class JargonPooledObjectFactory
 	}
 
 	@Override
-	public PooledObject<AbstractIRODSMidLevelProtocol> wrap(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
+	public PooledObject<IRODSMidLevelProtocol> wrap(final IRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.info("wrap()");
-		return new DefaultPooledObject<AbstractIRODSMidLevelProtocol>(irodsMidLevelProtocol);
+		return new DefaultPooledObject<IRODSMidLevelProtocol>(irodsMidLevelProtocol);
 	}
 
 	@Override
-	public void destroyObject(final IRODSAccount key, final PooledObject<AbstractIRODSMidLevelProtocol> p)
-			throws Exception {
+	public void destroyObject(final IRODSAccount key, final PooledObject<IRODSMidLevelProtocol> p) throws Exception {
 		log.info("disconnecting()");
 		p.getObject().shutdown();
 		super.destroyObject(key, p);
 	}
 
 	@Override
-	public boolean validateObject(final IRODSAccount key, final PooledObject<AbstractIRODSMidLevelProtocol> p) {
+	public boolean validateObject(final IRODSAccount key, final PooledObject<IRODSMidLevelProtocol> p) {
 
 		return p.getObject().isConnected();
 	}

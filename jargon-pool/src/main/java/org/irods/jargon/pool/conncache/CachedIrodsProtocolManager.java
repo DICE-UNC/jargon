@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.pool.conncache;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -41,7 +41,7 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 	 * org.irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
-	public AbstractIRODSMidLevelProtocol getIRODSProtocol(final IRODSAccount irodsAccount,
+	public IRODSMidLevelProtocol getIRODSProtocol(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession)
 			throws AuthenticationException, JargonException {
 		log.info("getIRODSProtocol()");
@@ -74,15 +74,8 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
-	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
-	 */
 	@Override
-	protected void returnIRODSProtocol(final AbstractIRODSMidLevelProtocol abstractIrodsMidLevelProtocol)
+	protected void returnIRODSProtocol(final IRODSMidLevelProtocol abstractIrodsMidLevelProtocol)
 			throws JargonException {
 		log.info("returnIRODSProtocol()");
 		if (abstractIrodsMidLevelProtocol == null) {
@@ -146,7 +139,7 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 	 * .irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
 	 */
 	@Override
-	protected void returnWithForce(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
+	protected void returnWithForce(final IRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.warn("returning with force, mark as disconnected");
 		try {
 			getJargonConnectionCache().invalidateObject(irodsMidLevelProtocol.getIrodsAccount(), irodsMidLevelProtocol);

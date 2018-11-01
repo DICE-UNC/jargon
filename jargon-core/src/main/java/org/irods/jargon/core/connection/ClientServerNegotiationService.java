@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 class ClientServerNegotiationService {
 
-	private final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol;
+	private final IRODSMidLevelProtocol irodsMidLevelProtocol;
 
 	private Logger log = LoggerFactory.getLogger(ClientServerNegotiationService.class);
 	public static final String NEGOTIATION_SHARED_SECRET = "SHARED_SECRET";
@@ -44,7 +44,7 @@ class ClientServerNegotiationService {
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} for negotiation
 	 */
-	ClientServerNegotiationService(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
+	ClientServerNegotiationService(final IRODSMidLevelProtocol irodsMidLevelProtocol) {
 		super();
 		this.irodsMidLevelProtocol = irodsMidLevelProtocol;
 		initializeNegotiationTable();
@@ -67,7 +67,7 @@ class ClientServerNegotiationService {
 	/**
 	 * @return the irodsMidLevelProtocol
 	 */
-	AbstractIRODSMidLevelProtocol getIrodsMidLevelProtocol() {
+	IRODSMidLevelProtocol getIrodsMidLevelProtocol() {
 		return irodsMidLevelProtocol;
 	}
 

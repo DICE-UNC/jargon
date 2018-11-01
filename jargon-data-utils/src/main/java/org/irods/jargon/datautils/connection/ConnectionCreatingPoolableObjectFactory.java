@@ -1,7 +1,8 @@
 package org.irods.jargon.datautils.connection;
 
-import org.apache.commons.pool.PoolableObjectFactory;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFactory {
+public class ConnectionCreatingPoolableObjectFactory implements PooledObjectFactory<IRODSMidLevelProtocol> {
 
 	private final IRODSAccount cachedIRODSAccount;
 	private final IRODSProtocolManager irodsProtocolManager;
@@ -65,41 +66,35 @@ public class ConnectionCreatingPoolableObjectFactory implements PoolableObjectFa
 	}
 
 	@Override
-	public void activateObject(final Object objectToActivate) throws Exception {
+	public void activateObject(PooledObject<IRODSMidLevelProtocol> objectToActivate) throws Exception {
 		log.info("activateObject:{}", objectToActivate);
 	}
 
 	@Override
-	public void destroyObject(final Object objectToDestroy) throws Exception {
-		log.info("destroyObject:{}", objectToDestroy);
-		if (!(objectToDestroy instanceof IRODSMidLevelProtocol)) {
-			throw new UnsupportedOperationException("cannot destroy unknown object, expecting an IRODSCommands");
-		}
-		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = (AbstractIRODSMidLevelProtocol) objectToDestroy;
+	public void destroyObject(PooledObject<IRODSMidLevelProtocol> objectToDestroy) throws Exception {
+		log.info("destroyObject:{}", objectToDestroy.getObject());
+		IRODSMidLevelProtocol irodsMidLevelProtocol = objectToDestroy.getObject();
 		irodsMidLevelProtocol.setIrodsProtocolManager(irodsProtocolManager);
 		log.info("disconnecting");
 		irodsMidLevelProtocol.shutdown();
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.apache.commons.pool.PoolableObjectFactory#makeObject()
-	 */
 	@Override
-	public Object makeObject() throws Exception {
+	public PooledObject<IRODSMidLevelProtocol> makeObject() throws Exception {
 		log.info("makeObject returns a new iRODS connection");
-		return irodsProtocolManager.getIRODSProtocol(cachedIRODSAccount, pipelineConfiguration, irodsSession);
+		return new DefaultPooledObject<IRODSMidLevelProtocol>(
+				irodsProtocolManager.getIRODSProtocol(cachedIRODSAccount, pipelineConfiguration, irodsSession));
 	}
 
 	@Override
-	public void passivateObject(final Object arg0) throws Exception {
+	public void passivateObject(PooledObject<IRODSMidLevelProtocol> objectToPassivate) throws Exception {
 		log.info("passivateObject()");
 		// nothing done here
 	}
 
 	@Override
-	public boolean validateObject(final Object arg0) {
+	public boolean validateObject(PooledObject<IRODSMidLevelProtocol> objectToValidate) {
 		return true;
 	}
 

@@ -79,7 +79,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		return authenticationFactory;
 	}
 
-	protected AbstractIRODSMidLevelProtocol instance(final IRODSSession irodsSession, final IRODSAccount irodsAccount,
+	protected IRODSMidLevelProtocol instance(final IRODSSession irodsSession, final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsProtocolManager) throws AuthenticationException, JargonException {
 
 		log.info("instance() method...calling connection life cycle");
@@ -88,7 +88,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		AbstractConnection connection = irodsConnectionFactory.instance(irodsAccount, irodsSession,
 				irodsProtocolManager);
 
-		AbstractIRODSMidLevelProtocol protocol = createInitialProtocol(connection, irodsProtocolManager);
+		IRODSMidLevelProtocol protocol = createInitialProtocol(connection, irodsProtocolManager);
 		try {
 			// add a session reference to the protocol.
 			protocol.setIrodsSession(irodsSession);
@@ -115,10 +115,10 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} that may have connected this session,
 	 *            may be null
-	 * @return {@link AbstractIRODSMidLevelProtocol} that is not yet initialized,
-	 *         but of the right base class
+	 * @return {@link IRODSMidLevelProtocol} that is not yet initialized, but of the
+	 *         right base class
 	 */
-	protected abstract AbstractIRODSMidLevelProtocol createInitialProtocol(final AbstractConnection connection,
+	protected abstract IRODSMidLevelProtocol createInitialProtocol(final AbstractConnection connection,
 			final IRODSProtocolManager irodsProtocolManager);
 
 	/**
@@ -127,7 +127,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * level connection is ready for use by higher-level API functions
 	 *
 	 * @param irodsMidLevelProtocol
-	 *            connected {@link AbstractIRODSMidLevelProtocol} that has been
+	 *            connected {@link IRODSMidLevelProtocol} that has been
 	 *            authenticated
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection as requested
@@ -139,7 +139,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
-	protected AbstractIRODSMidLevelProtocol decorate(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+	protected IRODSMidLevelProtocol decorate(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession) throws JargonException {
 
 		log.info("decorate()");
@@ -185,18 +185,18 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} that may have connected this session,
 	 *            may be null
-	 * @return {@link AbstractIRODSMidLevelProtocol} that is connected and
-	 *         authenticated. This may be decorated with additional information in
-	 *         later steps in the creating life-cycle.
+	 * @return {@link IRODSMidLevelProtocol} that is connected and authenticated.
+	 *         This may be decorated with additional information in later steps in
+	 *         the creating life-cycle.
 	 * @throws AuthenticationException
 	 *             if the authentication failed for invalid credentials
 	 * @throws JargonException
 	 *             for general errors
 	 */
 
-	protected AbstractIRODSMidLevelProtocol authenticate(final AbstractIRODSMidLevelProtocol protocol,
-			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
-			final IRODSProtocolManager irodsProtocolManager) throws AuthenticationException, JargonException {
+	protected IRODSMidLevelProtocol authenticate(final IRODSMidLevelProtocol protocol, final IRODSAccount irodsAccount,
+			final IRODSSession irodsSession, final IRODSProtocolManager irodsProtocolManager)
+			throws AuthenticationException, JargonException {
 
 		log.info("authenticate()");
 
@@ -218,7 +218,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		protocol.setIrodsSession(irodsSession);
 
 		log.info("authenticate...");
-		AbstractIRODSMidLevelProtocol authenticatedProtocol = null;
+		IRODSMidLevelProtocol authenticatedProtocol = null;
 		try {
 			authenticatedProtocol = authMechanism.authenticate(protocol, irodsAccount);
 

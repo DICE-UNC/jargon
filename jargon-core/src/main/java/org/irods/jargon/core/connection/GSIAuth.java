@@ -40,7 +40,7 @@ class GSIAuth extends AuthMechanism {
 	 * @param irodsCommands
 	 * @throws JargonException
 	 */
-	void sendGSIPassword(final GSIIRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands)
+	void sendGSIPassword(final GSIIRODSAccount irodsAccount, final IRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
 		log.info("sendGSIPassword()");
@@ -84,8 +84,8 @@ class GSIAuth extends AuthMechanism {
 	}
 
 	@SuppressWarnings("resource")
-	AbstractIRODSMidLevelProtocol sendGSIAuth(final GSIIRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws AuthenticationException, JargonException {
+	IRODSMidLevelProtocol sendGSIAuth(final GSIIRODSAccount irodsAccount, final IRODSMidLevelProtocol irodsCommands)
+			throws AuthenticationException, JargonException {
 
 		log.info("sendGSIAuth()");
 
@@ -190,18 +190,9 @@ class GSIAuth extends AuthMechanism {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.AuthMechanism#
-	 * processAuthenticationAfterStartup
-	 * (org.irods.jargon.core.connection.IRODSAccount,
-	 * org.irods.jargon.core.connection.IRODSCommands,
-	 * org.irods.jargon.core.connection.StartupResponseData)
-	 */
 	@Override
-	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands, final StartupResponseData startupResponseData)
+	protected IRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
+			final IRODSMidLevelProtocol irodsCommands, final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
 		if (irodsAccount == null) {

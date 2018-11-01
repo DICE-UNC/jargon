@@ -1,9 +1,10 @@
 # Project: Jargon-core API
-### Date: 
+### Date:
 ### Release Version: 4.3.0.2-SNAPSHOT
-### git tag: 
+### git tag:
 
 ## News
+
 
 
 https://github.com/DICE-UNC/jargon/milestone/25
@@ -28,7 +29,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.3, it also maintains very reasonable backwards compatability to iRODS 3.3.1 however this is no longer actively tested
+* Jargon supports iRODS current releases, it also maintains very reasonable backwards compatability to iRODS 3.3.1 however this is no longer actively tested
 
 ## Libraries
 
@@ -37,6 +38,11 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GitHub with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
+
+#### Add 'noindex' semantics and ability to ignore data objects w/no metadata #314
+
+Added DONOTINDEX support for collections being indexed using the org.irods.jargon.datautils.indexer services. This allows collections to be marked per-indexer as ignored.
+For details see the INDEXING.md file located in the jargon-data-utils submodule.
 
 #### Improve behavior of heuristic path guessing under home #313
 
@@ -50,3 +56,9 @@ Remove user-profile submodule as old idrop-web legacy, this functionality is bei
 #### Update misc dependencies #316
 
 Misc dependency updates via jargon-pom
+
+#### enhance pools for NFS4J #317
+
+Clean up confusing and unnecessary AbstractIRODSMidLevelProtocol -> IRODSMidLevelProtocol relationship,
+working on updating pooling code for commons-pool2, more testing. This is for use in MetaLnx, NSF4J, REST, and GA4GH DOS
+tools.

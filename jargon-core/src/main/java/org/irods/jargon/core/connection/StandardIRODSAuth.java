@@ -28,23 +28,27 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 * Do the normal iRODS password challenge/response sequence
 	 *
 	 * @param irodsAccount
-	 * @param irodsCommands
+	 *            {@link IRODSAccount}
+	 * @param irodsMidLevelProtocol
+	 *            {@link IRODSMidLevelProtocol}
 	 * @return {@code String} with the iRODS challenge value, which will be returned
 	 *         in the Auth response
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	private String sendStandardPassword(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
+			final IRODSMidLevelProtocol irodsMidLevelProtocol) throws JargonException {
 
 		log.info("sending standard irods password");
 
-		cachedChallenge = sendAuthRequestAndGetChallenge(irodsCommands);
+		cachedChallenge = sendAuthRequestAndGetChallenge(irodsMidLevelProtocol);
 
-		String response = challengeResponse(cachedChallenge, irodsAccount.getPassword(), irodsCommands);
+		String response = challengeResponse(cachedChallenge, irodsAccount.getPassword(), irodsMidLevelProtocol);
 		AuthResponseInp authResponse_PI = new AuthResponseInp(irodsAccount.getProxyName(), response);
 
 		// should be a header with no body if successful
-		irodsCommands.irodsFunction(IRODSConstants.RODS_API_REQ, authResponse_PI.getParsedTags(), AUTH_RESPONSE_AN);
+		irodsMidLevelProtocol.irodsFunction(IRODSConstants.RODS_API_REQ, authResponse_PI.getParsedTags(),
+				AUTH_RESPONSE_AN);
 
 		return cachedChallenge;
 	}
@@ -53,8 +57,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 * Add the password to the end of the challenge string, pad to the correct
 	 * length, and take the md5 of that.
 	 */
-	private String challengeResponse(final String challenge, String password,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
+	private String challengeResponse(final String challenge, String password, final IRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
 		// Convert base64 string to a byte array
 		byte[] chal = null;
 		byte[] temp = Base64.fromString(challenge);
@@ -109,8 +113,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 	}
 
 	@Override
-	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands, final StartupResponseData startupResponseData)
+	protected IRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
+			final IRODSMidLevelProtocol irodsCommands, final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		log.info("authenticate");
 		String challengeValue = sendStandardPassword(irodsAccount, irodsCommands);

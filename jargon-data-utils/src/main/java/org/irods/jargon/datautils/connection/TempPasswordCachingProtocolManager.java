@@ -1,8 +1,7 @@
 package org.irods.jargon.datautils.connection;
 
-import org.apache.commons.pool.impl.GenericObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool.Config;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -27,7 +26,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	private final IRODSSession irodsSession;
 	private final IRODSProtocolManager baseProtocolManager;
 
-	private GenericObjectPool objectPool = null;
+	private GenericObjectPool<IRODSMidLevelProtocol> objectPool = null;
 
 	private final Logger log = LoggerFactory.getLogger(TempPasswordCachingProtocolManager.class);
 
@@ -84,7 +83,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	public IRODSMidLevelProtocol getIRODSProtocol(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession) throws JargonException {
 		try {
-			IRODSMidLevelProtocol command = (IRODSMidLevelProtocol) objectPool.borrowObject();
+			IRODSMidLevelProtocol command = objectPool.borrowObject();
 
 			command.setIrodsProtocolManager(this);
 			return command;
@@ -117,12 +116,10 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(irodsAccount,
 				irodsSession, baseProtocolManager);
 		log.info("factory created, setting up config and creating pool");
-		GenericObjectPool.Config config = new Config();
-		config.maxActive = 1;
-		config.maxIdle = 1;
-		config.whenExhaustedAction = GenericObjectPool.WHEN_EXHAUSTED_BLOCK;
-
-		objectPool = new GenericObjectPool(factory, config);
+		GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+		config.setMaxTotal(1);
+		config.setBlockWhenExhausted(true);
+		objectPool = new GenericObjectPool<IRODSMidLevelProtocol>(factory, config);
 		log.info("pool initialized");
 
 	}
@@ -139,8 +136,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
 	 */
 	@Override
-	public void returnIRODSProtocol(final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-			throws JargonException {
+	public void returnIRODSProtocol(final IRODSMidLevelProtocol abstractIRODSMidLevelProtocol) throws JargonException {
 
 		try {
 			objectPool.returnObject(abstractIRODSMidLevelProtocol);

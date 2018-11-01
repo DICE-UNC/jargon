@@ -12,7 +12,6 @@
 	<artifactId>data-profile</artifactId>
 	<name>data-profile</name>
 	<properties />
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -94,10 +93,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 </project>

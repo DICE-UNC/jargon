@@ -29,13 +29,13 @@ public class PAMAuth extends AuthMechanism {
 	private boolean needToWrapWithSsl = false;
 
 	@Override
-	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)
+	protected IRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
+			final IRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
 		needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection().getEncryptionType() == EncryptionType.NONE;
 
-		AbstractIRODSMidLevelProtocol irodsMidLevelProtocolToUse = null;
+		IRODSMidLevelProtocol irodsMidLevelProtocolToUse = null;
 		/*
 		 * Save the original commands if we will temporarily use an SSL connection,
 		 * otherwise will remain null. If, through client/server negotiation, we already
@@ -107,66 +107,43 @@ public class PAMAuth extends AuthMechanism {
 
 	}
 
-	/**
-	 * @param irodsCommandsToUse
-	 * @throws JargonException
-	 */
-	private void shutdownSslAndCloseConnection(final AbstractIRODSMidLevelProtocol irodsCommandsToUse)
-			throws JargonException {
-
+	private void shutdownSslAndCloseConnection(final IRODSMidLevelProtocol irodsCommandsToUse) throws JargonException {
 		irodsCommandsToUse.shutdown();
-
 	}
 
-	/**
-	 * @param irodsAccount
-	 * @param irodsCommands
-	 * @return
-	 * @throws JargonException
-	 * @throws AssertionError
-	 */
-	private AbstractIRODSMidLevelProtocol establishSecureConnectionForPamAuth(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException, AssertionError {
+	private IRODSMidLevelProtocol establishSecureConnectionForPamAuth(final IRODSAccount irodsAccount,
+			final IRODSMidLevelProtocol irodsMidLevelProtocol) throws JargonException, AssertionError {
 
-		if (irodsCommands.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
+		if (irodsMidLevelProtocol.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
 			log.info("already ssl enabled");
-			return irodsCommands;
+			return irodsMidLevelProtocol;
 		}
 
 		log.info("not ssl wrapped, use an SSL connection for the pam auth");
 
-		SSLSocket sslSocket = irodsCommands.getIrodsSession().instanceSslConnectionUtilities()
-				.createSslSocketForProtocol(irodsAccount, irodsCommands, true);
+		SSLSocket sslSocket = irodsMidLevelProtocol.getIrodsSession().instanceSslConnectionUtilities()
+				.createSslSocketForProtocol(irodsAccount, irodsMidLevelProtocol, true);
 
 		log.info("creating secure protcol connection layer");
 		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(irodsAccount,
-				irodsCommands.getPipelineConfiguration(), irodsCommands.getIrodsProtocolManager(), sslSocket,
-				irodsCommands.getIrodsSession());
+				irodsMidLevelProtocol.getPipelineConfiguration(), irodsMidLevelProtocol.getIrodsProtocolManager(),
+				sslSocket, irodsMidLevelProtocol.getIrodsSession());
 
 		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(secureConnection,
-				irodsCommands.getIrodsProtocolManager());
+				irodsMidLevelProtocol.getIrodsProtocolManager());
 
-		secureIRODSCommands.setIrodsConnectionNonEncryptedRef(irodsCommands.getIrodsConnection());
+		secureIRODSCommands.setIrodsConnectionNonEncryptedRef(irodsMidLevelProtocol.getIrodsConnection());
 
 		log.info("carrying over startup pack with server info");
-		secureIRODSCommands.setStartupResponseData(irodsCommands.getStartupResponseData());
+		secureIRODSCommands.setStartupResponseData(irodsMidLevelProtocol.getStartupResponseData());
 
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 		return secureIRODSCommands;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication
-	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol,
-	 * org.irods.jargon.core.connection.StartupResponseData)
-	 */
 	@Override
-	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
-			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)
-			throws AuthenticationException, JargonException {
+	protected IRODSMidLevelProtocol processAfterAuthentication(final IRODSMidLevelProtocol irodsMidLevelProtocol,
+			final StartupResponseData startupResponseData) throws AuthenticationException, JargonException {
 
 		/*
 		 * I'm creating a new protocol for PAM, using the newly renegotiated account
@@ -175,7 +152,7 @@ public class PAMAuth extends AuthMechanism {
 		 */
 		AuthResponse originalAuthResponse = irodsMidLevelProtocol.getAuthResponse();
 
-		AbstractIRODSMidLevelProtocol actualProtocol = irodsMidLevelProtocol.getIrodsProtocolManager()
+		IRODSMidLevelProtocol actualProtocol = irodsMidLevelProtocol.getIrodsProtocolManager()
 				.getIrodsMidLevelProtocolFactory().instance(irodsMidLevelProtocol.getIrodsSession(),
 						irodsMidLevelProtocol.getAuthResponse().getAuthenticatedIRODSAccount(),
 						irodsMidLevelProtocol.getIrodsProtocolManager());

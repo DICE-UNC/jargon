@@ -5,8 +5,8 @@ package org.irods.jargon.pool.conncache;
 
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
  * @author mconway
  *
  */
-public class JargonConnectionCache extends GenericKeyedObjectPool<IRODSAccount, AbstractIRODSMidLevelProtocol> {
+public class JargonConnectionCache extends GenericKeyedObjectPool<IRODSAccount, IRODSMidLevelProtocol> {
 
 	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
 
-	public JargonConnectionCache(final KeyedPooledObjectFactory<IRODSAccount, AbstractIRODSMidLevelProtocol> factory,
+	public JargonConnectionCache(final KeyedPooledObjectFactory<IRODSAccount, IRODSMidLevelProtocol> factory,
 			final JargonKeyedPoolConfig config) {
-		super(factory);
+		super(factory, config);
 		setMaxIdlePerKey(config.getMaxIdlePerKey());
 		setMinEvictableIdleTimeMillis(30000);
 		setTimeBetweenEvictionRunsMillis(45000);

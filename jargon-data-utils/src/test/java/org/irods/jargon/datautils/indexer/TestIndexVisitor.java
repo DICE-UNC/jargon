@@ -64,11 +64,11 @@ public class TestIndexVisitor extends AbstractIndexerVisitor {
 
 	@Override
 	public boolean visitLeaveWithMetadata(final HierComposite node, final MetadataRollup metadataRollup,
-			final boolean vistorEntered) {
+			final boolean visitorEntered) {
 		NodeVisitLogEntry entry = new NodeVisitLogEntry();
 		entry.setNodeAbsolutePath(node.getAbsolutePath());
 		entry.setNodeName(node.getName());
-		entry.setResultOfVisit(true);
+		entry.setResultOfVisit(visitorEntered);
 		entry.setVisitType(VisitTypeEnum.LEAVE);
 		List<MetaDataAndDomainData> myMeta = metadataRollup.getMetadata().peek();
 		for (MetaDataAndDomainData meta : myMeta) {
@@ -79,7 +79,7 @@ public class TestIndexVisitor extends AbstractIndexerVisitor {
 			}
 		}
 		nodeVisitLog.add(entry);
-		return true;
+		return visitorEntered;
 	}
 
 	@Override
