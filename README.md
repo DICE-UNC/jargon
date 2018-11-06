@@ -62,3 +62,8 @@ Misc dependency updates via jargon-pom
 Clean up confusing and unnecessary AbstractIRODSMidLevelProtocol -> IRODSMidLevelProtocol relationship,
 working on updating pooling code for commons-pool2, more testing. This is for use in MetaLnx, NSF4J, REST, and GA4GH DOS
 tools.
+
+
+#### expose JargonProperties as JMX MBean #318
+
+JargonProperties are now exposed as a JMXBean and real-time adjustment of properties is now possible via jconsole or other JMX tools

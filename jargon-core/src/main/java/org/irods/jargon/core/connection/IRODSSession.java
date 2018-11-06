@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.connection;
 
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -10,6 +11,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
 import javax.net.ssl.X509TrustManager;
 
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactory;
@@ -283,14 +290,27 @@ public class IRODSSession {
 				// a restart manager is available.
 				restartManager = new MemoryBasedTransferRestartManager();
 			}
-			log.info("setting system prop for TLS...");
-			// java.lang.System.setProperty("jdk.tls.client.protocols",
-			// "TLSv1,TLSv1.1,TLSv1.2");
+
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties", e);
 			throw new JargonRuntimeException("unable to load jargon props", e);
 		}
 		checkInitTrustManager();
+		initializeJmx();
+	}
+
+	private void initializeJmx() {
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		ObjectName name;
+		try {
+			name = new ObjectName("org.irods.jargon.core.connection:type=SettableJargonProperties");
+			SettableJargonPropertiesMBean settableProps = (SettableJargonPropertiesMBean) this.getJargonProperties();
+			mbs.registerMBean(settableProps, name);
+		} catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException
+				| NotCompliantMBeanException e) {
+			log.warn("unable to create an MBean for jargon properties. Will proceed without JMX support", e);
+		}
+
 	}
 
 	private void checkInitTrustManager() {

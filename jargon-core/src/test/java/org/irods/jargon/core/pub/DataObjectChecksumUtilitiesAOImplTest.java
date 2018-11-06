@@ -6,6 +6,7 @@ import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
@@ -37,7 +38,7 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties jargonProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProps = new SettableJargonProperties();
 		// turn off native checksumming
 		jargonProps.setComputeAndVerifyChecksumAfterTransfer(false);
 		jargonProps.setComputeChecksumAfterTransfer(false);
@@ -154,7 +155,7 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties jargonProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProps = new SettableJargonProperties();
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
 		irodsFileSystem.getIrodsSession().getDiscoveredServerPropertiesCache().deleteCachedIRODSServerProperties(
 				irodsAccount.getHost(), irodsAccount.getZone(), DiscoveredServerPropertiesCache.CHECKSUM_TYPE);

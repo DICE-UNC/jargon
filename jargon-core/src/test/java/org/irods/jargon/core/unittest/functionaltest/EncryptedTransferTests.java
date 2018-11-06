@@ -11,6 +11,7 @@ import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotia
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -48,7 +49,7 @@ public class EncryptedTransferTests {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
@@ -89,7 +90,7 @@ public class EncryptedTransferTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -126,7 +127,7 @@ public class EncryptedTransferTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -176,7 +177,7 @@ public class EncryptedTransferTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -220,7 +221,7 @@ public class EncryptedTransferTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildPamIrodsAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		settableJargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
@@ -269,7 +270,7 @@ public class EncryptedTransferTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);

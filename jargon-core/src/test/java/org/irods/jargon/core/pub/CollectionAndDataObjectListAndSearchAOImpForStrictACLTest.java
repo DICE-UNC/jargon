@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.UserGroup;
@@ -69,7 +70,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 			return;
 		}
 
-		SettableJargonProperties newProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean newProps = new SettableJargonProperties();
 		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
 		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
@@ -90,7 +91,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 
 		String rootAndZone = "/" + irodsAccount.getZone();
 
-		SettableJargonProperties newProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean newProps = new SettableJargonProperties();
 		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
 		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
@@ -113,7 +114,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 
 		String workingDir = "/" + irodsAccount.getZone() + "/home";
 
-		SettableJargonProperties newProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean newProps = new SettableJargonProperties();
 		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
 		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
@@ -136,7 +137,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 
 		String workingDir = "/" + irodsAccount.getZone() + "/home";
 
-		SettableJargonProperties newProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean newProps = new SettableJargonProperties();
 		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
 		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem.getIRODSAccessObjectFactory()
@@ -152,7 +153,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 			return;
 		}
 
-		SettableJargonProperties newProps = new SettableJargonProperties();
+		SettableJargonPropertiesMBean newProps = new SettableJargonProperties();
 		newProps.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(newProps);
 

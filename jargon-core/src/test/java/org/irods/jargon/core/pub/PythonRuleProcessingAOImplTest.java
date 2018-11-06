@@ -8,6 +8,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
@@ -41,7 +42,7 @@ public class PythonRuleProcessingAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		jargonOriginalProperties = settableJargonProperties;
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);

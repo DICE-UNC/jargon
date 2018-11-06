@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -26,7 +27,7 @@ public class LocalTarFileArchiverTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);

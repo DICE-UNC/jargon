@@ -18,7 +18,7 @@ import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class SettableJargonProperties implements JargonProperties {
+public class SettableJargonProperties implements SettableJargonPropertiesMBean {
 
 	private boolean useParallelTransfer = true;
 	private final boolean useNIOForParallelTransfers = false;
@@ -242,10 +242,12 @@ public class SettableJargonProperties implements JargonProperties {
 		return transferThreadPoolTimeoutMillis;
 	}
 
+	@Override
 	public synchronized void setMaxFilesAndDirsQueryMax(final int maxFilesAndDirsQueryMax) {
 		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
 	}
 
+	@Override
 	public synchronized void setUseTransferThreadsPool(final boolean useTransferThreadsPool) {
 		this.useTransferThreadsPool = useTransferThreadsPool;
 	}
@@ -259,6 +261,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return allowPutGetResourceRedirects;
 	}
 
+	@Override
 	public synchronized void setAllowPutGetResourceRedirects(final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
 	}
@@ -268,6 +271,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return computeChecksumAfterTransfer;
 	}
 
+	@Override
 	public synchronized void setComputeChecksumAfterTransfer(final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
 	}
@@ -277,11 +281,13 @@ public class SettableJargonProperties implements JargonProperties {
 		return computeAndVerifyChecksumAfterTransfer;
 	}
 
+	@Override
 	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
 
+	@Override
 	public synchronized void setIntraFileStatusCallbacks(final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
@@ -296,6 +302,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return irodsSocketTimeout;
 	}
 
+	@Override
 	public synchronized void setIRODSSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
@@ -305,6 +312,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return irodsParallelSocketTimeout;
 	}
 
+	@Override
 	public synchronized void setIRODSParallelTransferSocketTimeout(final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
@@ -349,39 +357,48 @@ public class SettableJargonProperties implements JargonProperties {
 		return localFileInputStreamBufferSize;
 	}
 
+	@Override
 	public synchronized void setTransferThreadPoolMaxSimultaneousTransfers(
 			final int transferThreadPoolMaxSimultaneousTransfers) {
 		this.transferThreadPoolMaxSimultaneousTransfers = transferThreadPoolMaxSimultaneousTransfers;
 	}
 
+	@Override
 	public synchronized void setInternalInputStreamBufferSize(final int internalInputStreamBufferSize) {
 		this.internalInputStreamBufferSize = internalInputStreamBufferSize;
 	}
 
+	@Override
 	public synchronized void setInternalOutputStreamBufferSize(final int internalOutputStreamBufferSize) {
 		this.internalOutputStreamBufferSize = internalOutputStreamBufferSize;
 	}
 
+	@Override
 	public synchronized void setInternalCacheBufferSize(final int internalCacheBufferSize) {
 		this.internalCacheBufferSize = internalCacheBufferSize;
 	}
 
+	@Override
 	public synchronized void setSendInputStreamBufferSize(final int sendInputStreamBufferSize) {
 		this.sendInputStreamBufferSize = sendInputStreamBufferSize;
 	}
 
+	@Override
 	public synchronized void setLocalFileOutputStreamBufferSize(final int localFileOutputStreamBufferSize) {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
+	@Override
 	public synchronized void setLocalFileInputStreamBufferSize(final int localFileInputStreamBufferSize) {
 		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
+	@Override
 	public synchronized void setIrodsSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
 
+	@Override
 	public synchronized void setIrodsParallelSocketTimeout(final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
@@ -396,14 +413,17 @@ public class SettableJargonProperties implements JargonProperties {
 		return getBufferSize;
 	}
 
+	@Override
 	public synchronized void setPutBufferSize(final int putBufferSize) {
 		this.putBufferSize = putBufferSize;
 	}
 
+	@Override
 	public synchronized void setGetBufferSize(final int getBufferSize) {
 		this.getBufferSize = getBufferSize;
 	}
 
+	@Override
 	public synchronized void setInputToOutputCopyBufferByteSize(final int inputToOutputCopyBufferByteSize) {
 		this.inputToOutputCopyBufferByteSize = inputToOutputCopyBufferByteSize;
 	}
@@ -413,6 +433,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encoding;
 	}
 
+	@Override
 	public synchronized void setEncoding(final String encoding) {
 		if (encoding == null || encoding.isEmpty()) {
 			throw new IllegalArgumentException("encoding is null or empty");
@@ -439,10 +460,12 @@ public class SettableJargonProperties implements JargonProperties {
 		return irodsParallelSocketTimeout;
 	}
 
+	@Override
 	public synchronized void setInstrument(final boolean instrument) {
 		this.instrument = instrument;
 	}
 
+	@Override
 	public synchronized void setReconnect(final boolean reconnect) {
 		this.reconnect = reconnect;
 	}
@@ -452,6 +475,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
+	@Override
 	public synchronized void setDefaultToPublicIfNothingUnderRootWhenListing(
 			final boolean defaultToPublicIfNothingUnderRootWhenListing) {
 		this.defaultToPublicIfNothingUnderRootWhenListing = defaultToPublicIfNothingUnderRootWhenListing;
@@ -462,6 +486,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return reconnectTimeInMillis;
 	}
 
+	@Override
 	public synchronized void setReconnectTimeInMillis(final long reconnectTimeInMillis) {
 		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
@@ -476,6 +501,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return usingSpecificQueryForCollectionListingsWithPermissions;
 	}
 
+	@Override
 	public synchronized void setUsingSpecificQueryForCollectionListingWithPermissions(final boolean useSpecificQuery) {
 		usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
 	}
@@ -485,6 +511,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
+	@Override
 	public synchronized void setUsingSpecQueryForDataObjPermissionsForUserInGroup(
 			final boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
 		this.usingSpecQueryForDataObjPermissionsForUserInGroup = usingSpecQueryForDataObjPermissionsForUserInGroup;
@@ -495,6 +522,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return pamTimeToLive;
 	}
 
+	@Override
 	public synchronized void setPAMTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
 	}
@@ -504,6 +532,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return forcePamFlush;
 	}
 
+	@Override
 	public synchronized void setForcePamFlush(final boolean forcePamFlush) {
 		this.forcePamFlush = forcePamFlush;
 	}
@@ -517,20 +546,24 @@ public class SettableJargonProperties implements JargonProperties {
 		return pamTimeToLive;
 	}
 
+	@Override
 	public synchronized void setPamTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
 	}
 
+	@Override
 	public synchronized void setUsingDiscoveredServerPropertiesCache(
 			final boolean usingDiscoveredServerPropertiesCache) {
 		this.usingDiscoveredServerPropertiesCache = usingDiscoveredServerPropertiesCache;
 	}
 
+	@Override
 	public synchronized void setUsingSpecificQueryForCollectionListingsWithPermissions(
 			final boolean usingSpecificQueryForCollectionListingsWithPermissions) {
 		this.usingSpecificQueryForCollectionListingsWithPermissions = usingSpecificQueryForCollectionListingsWithPermissions;
 	}
 
+	@Override
 	public synchronized void setConnectionFactory(final String connectionFactory) {
 		this.connectionFactory = connectionFactory;
 	}
@@ -540,6 +573,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return checksumEncoding;
 	}
 
+	@Override
 	public synchronized void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
@@ -554,6 +588,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpKeepAlive;
 	}
 
+	@Override
 	public synchronized void setParallelTcpKeepAlive(final boolean parallelTcpKeepAlive) {
 		this.parallelTcpKeepAlive = parallelTcpKeepAlive;
 	}
@@ -563,6 +598,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpSendWindowSize;
 	}
 
+	@Override
 	public synchronized void setParallelTcpSendWindowSize(final int parallelTcpSendWindowSize) {
 		this.parallelTcpSendWindowSize = parallelTcpSendWindowSize;
 	}
@@ -572,6 +608,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpReceiveWindowSize;
 	}
 
+	@Override
 	public synchronized void setParallelTcpReceiveWindowSize(final int parallelTcpReceiveWindowSize) {
 		this.parallelTcpReceiveWindowSize = parallelTcpReceiveWindowSize;
 	}
@@ -581,6 +618,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpPerformancePrefsConnectionTime;
 	}
 
+	@Override
 	public synchronized void setParallelTcpPerformancePrefsConnectionTime(
 			final int parallelTcpPerformancePrefsConnectionTime) {
 		this.parallelTcpPerformancePrefsConnectionTime = parallelTcpPerformancePrefsConnectionTime;
@@ -591,6 +629,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpPerformancePrefsLatency;
 	}
 
+	@Override
 	public synchronized void setParallelTcpPerformancePrefsLatency(final int parallelTcpPerformancePrefsLatency) {
 		this.parallelTcpPerformancePrefsLatency = parallelTcpPerformancePrefsLatency;
 	}
@@ -600,6 +639,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpPerformancePrefsBandwidth;
 	}
 
+	@Override
 	public synchronized void setParallelTcpPerformancePrefsBandwidth(final int parallelTcpPerformancePrefsBandwidth) {
 		this.parallelTcpPerformancePrefsBandwidth = parallelTcpPerformancePrefsBandwidth;
 	}
@@ -609,6 +649,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpKeepAlive;
 	}
 
+	@Override
 	public synchronized void setPrimaryTcpKeepAlive(final boolean primaryTcpKeepAlive) {
 		this.primaryTcpKeepAlive = primaryTcpKeepAlive;
 	}
@@ -618,6 +659,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpSendWindowSize;
 	}
 
+	@Override
 	public synchronized void setPrimaryTcpSendWindowSize(final int primaryTcpSendWindowSize) {
 		this.primaryTcpSendWindowSize = primaryTcpSendWindowSize;
 	}
@@ -627,6 +669,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpReceiveWindowSize;
 	}
 
+	@Override
 	public synchronized void setPrimaryTcpReceiveWindowSize(final int primaryTcpReceiveWindowSize) {
 		this.primaryTcpReceiveWindowSize = primaryTcpReceiveWindowSize;
 	}
@@ -636,6 +679,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpPerformancePrefsConnectionTime;
 	}
 
+	@Override
 	public synchronized void setPrimaryTcpPerformancePrefsConnectionTime(
 			final int primaryTcpPerformancePrefsConnectionTime) {
 		this.primaryTcpPerformancePrefsConnectionTime = primaryTcpPerformancePrefsConnectionTime;
@@ -646,6 +690,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpPerformancePrefsLatency;
 	}
 
+	@Override
 	public synchronized void setPrimaryTcpPerformancePrefsLatency(final int primaryTcpPerformancePrefsLatency) {
 		this.primaryTcpPerformancePrefsLatency = primaryTcpPerformancePrefsLatency;
 	}
@@ -655,6 +700,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpPerformancePrefsBandwidth;
 	}
 
+	@Override
 	public synchronized void setPrimaryTcpPerformancePrefsBandwidth(final int primaryTcpPerformancePrefsBandwidth) {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
@@ -746,6 +792,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return socketRenewalIntervalInSeconds;
 	}
 
+	@Override
 	public synchronized void setSocketRenewalIntervalInSeconds(final int socketRenewalIntervalInSeconds) {
 		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
 	}
@@ -755,6 +802,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return longTransferRestart;
 	}
 
+	@Override
 	public synchronized void setLongTransferRestart(final boolean longFileTransferRestart) {
 		longTransferRestart = longFileTransferRestart;
 	}
@@ -764,6 +812,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelCopyBufferSize;
 	}
 
+	@Override
 	public synchronized void setParallelCopyBufferSize(final int parallelCopyBufferSize) {
 		this.parallelCopyBufferSize = parallelCopyBufferSize;
 	}
@@ -773,6 +822,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return intraFileStatusCallbacksNumberCallsInterval;
 	}
 
+	@Override
 	public synchronized void setIntraFileStatusCallbacksNumberCallsInterval(
 			final int intraFileStatusCallbacksNumberCallsInterval) {
 		this.intraFileStatusCallbacksNumberCallsInterval = intraFileStatusCallbacksNumberCallsInterval;
@@ -783,6 +833,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return intraFileStatusCallbacksTotalBytesInterval;
 	}
 
+	@Override
 	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
 			final long intraFileStatusCallbacksTotalBytesInterval) {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
@@ -793,6 +844,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return negotiationPolicy;
 	}
 
+	@Override
 	public synchronized void setNegotiationPolicy(final SslNegotiationPolicy negotiationPolicy) {
 		if (negotiationPolicy == null) {
 			throw new IllegalArgumentException("null negotiationPolicy");
@@ -805,6 +857,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encryptionAlgorithmEnum;
 	}
 
+	@Override
 	public synchronized void setEncryptionAlgorithmEnum(final EncryptionAlgorithmEnum encryptionAlgorithmEnum) {
 		this.encryptionAlgorithmEnum = encryptionAlgorithmEnum;
 	}
@@ -814,6 +867,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encryptionKeySize;
 	}
 
+	@Override
 	public synchronized void setEncryptionKeySize(final int encryptionKeySize) {
 		this.encryptionKeySize = encryptionKeySize;
 	}
@@ -823,6 +877,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encryptionSaltSize;
 	}
 
+	@Override
 	public synchronized void setEncryptionSaltSize(final int encryptionSaltSize) {
 		this.encryptionSaltSize = encryptionSaltSize;
 	}
@@ -832,6 +887,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encryptionNumberHashRounds;
 	}
 
+	@Override
 	public synchronized void setEncryptionNumberHashRounds(final int encryptionNumberHashRounds) {
 		this.encryptionNumberHashRounds = encryptionNumberHashRounds;
 	}
@@ -841,6 +897,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return bypassSslCertChecks;
 	}
 
+	@Override
 	public synchronized void setBypassSslCertChecks(final boolean bypassSslCertChecks) {
 		this.bypassSslCertChecks = bypassSslCertChecks;
 	}
@@ -850,6 +907,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return defaultIrodsRuleEngineIdentifier;
 	}
 
+	@Override
 	public void setDefaultIrodsRuleEngineIdentifier(final String defaultIrodsRuleEngineIdentifier) {
 		this.defaultIrodsRuleEngineIdentifier = defaultIrodsRuleEngineIdentifier;
 	}
@@ -859,6 +917,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return defaultPythonRuleEngineIdentifier;
 	}
 
+	@Override
 	public void setDefaultPythonRuleEngineIdentifier(final String defaultPythonRuleEngineIdentifier) {
 		this.defaultPythonRuleEngineIdentifier = defaultPythonRuleEngineIdentifier;
 	}
@@ -872,6 +931,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return defaultCppRuleEngineIdentifier;
 	}
 
+	@Override
 	public void setDefaultCppRuleEngineIdentifier(final String defaultCppRuleEngineIdentifier) {
 		this.defaultCppRuleEngineIdentifier = defaultCppRuleEngineIdentifier;
 	}
@@ -881,6 +941,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return rulesSetDestinationWhenAuto;
 	}
 
+	@Override
 	public void setRulesSetDestinationWhenAuto(final boolean rulesSetDestinationWhenAuto) {
 		this.rulesSetDestinationWhenAuto = rulesSetDestinationWhenAuto;
 	}

@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -42,7 +43,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(0);
 		settableJargonProperties.setInternalOutputStreamBufferSize(0);

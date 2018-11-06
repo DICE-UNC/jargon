@@ -19,7 +19,7 @@ public class PAMAuthTest {
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem;
 
-	private static SettableJargonProperties settableJargonProperties;
+	private static SettableJargonPropertiesMBean settableJargonProperties;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -99,7 +99,7 @@ public class PAMAuthTest {
 			return;
 		}
 
-		SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
+		SettableJargonPropertiesMBean testProps = new SettableJargonProperties(settableJargonProperties);
 		testProps.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
@@ -144,7 +144,7 @@ public class PAMAuthTest {
 			return;
 		}
 
-		SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
+		SettableJargonPropertiesMBean testProps = new SettableJargonProperties(settableJargonProperties);
 		testProps.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
@@ -189,7 +189,7 @@ public class PAMAuthTest {
 			return;
 		}
 
-		SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
+		SettableJargonPropertiesMBean testProps = new SettableJargonProperties(settableJargonProperties);
 		testProps.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
@@ -238,7 +238,7 @@ public class PAMAuthTest {
 
 		for (int i = 0; i < times; i++) {
 
-			SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
+			SettableJargonPropertiesMBean testProps = new SettableJargonProperties(settableJargonProperties);
 			testProps.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
 			irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 

@@ -11,6 +11,7 @@ import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -77,7 +78,7 @@ public class FileIOOperationsAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		SettableJargonProperties jargonProps = new SettableJargonProperties(originalJargonProperties);
+		SettableJargonPropertiesMBean jargonProps = new SettableJargonProperties(originalJargonProperties);
 		jargonProps.setComputeChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
 

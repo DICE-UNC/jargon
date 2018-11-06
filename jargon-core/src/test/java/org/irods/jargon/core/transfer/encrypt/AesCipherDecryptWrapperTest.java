@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -20,7 +21,7 @@ public class AesCipherDecryptWrapperTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 
@@ -36,7 +37,7 @@ public class AesCipherDecryptWrapperTest {
 		String begin = "aj;kj;ljlkjfjkdjfiaewjafasdf";
 		byte[] source = begin.getBytes(StandardCharsets.UTF_8);
 
-		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem.getJargonProperties();
+		SettableJargonPropertiesMBean props = (SettableJargonPropertiesMBean) irodsFileSystem.getJargonProperties();
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		props.setEncryptionKeySize(EncryptionAlgorithmEnum.AES_256_CBC.getKeySize());
 		props.setEncryptionNumberHashRounds(8);

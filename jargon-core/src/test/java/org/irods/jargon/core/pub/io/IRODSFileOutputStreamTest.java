@@ -15,6 +15,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -76,7 +77,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testComputeChecksum() throws Exception {
 
-		SettableJargonProperties jargonProps = new SettableJargonProperties(originalJargonProperties);
+		SettableJargonPropertiesMBean jargonProps = new SettableJargonProperties(originalJargonProperties);
 		jargonProps.setComputeChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
 		String testFileName = "testComputeChecksum.csv";
@@ -106,7 +107,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testDontComputeChecksum() throws Exception {
 
-		SettableJargonProperties jargonProps = new SettableJargonProperties(originalJargonProperties);
+		SettableJargonPropertiesMBean jargonProps = new SettableJargonProperties(originalJargonProperties);
 		jargonProps.setComputeChecksumAfterTransfer(false);
 		jargonProps.setComputeAndVerifyChecksumAfterTransfer(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);

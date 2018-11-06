@@ -33,7 +33,7 @@ public class IRODSSessionTest {
 
 	@Test
 	public final void testInitTrustAllTrustManager() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties();
 		settableJargonProperties.setBypassSslCertChecks(true);
 		IRODSSession irodsSession = new IRODSSession(settableJargonProperties);
 		Assert.assertTrue("did't set trust all",
@@ -43,7 +43,7 @@ public class IRODSSessionTest {
 
 	@Test
 	public final void testInitNoTrustAllTrustManager() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties();
 		settableJargonProperties.setBypassSslCertChecks(false);
 		IRODSSession irodsSession = new IRODSSession(settableJargonProperties);
 		Assert.assertNull(irodsSession.getX509TrustManager());
@@ -138,7 +138,7 @@ public class IRODSSessionTest {
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		irodsSession.closeSession();
 
-		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
 
 		irodsSession.setJargonProperties(overrideJargonProperties);
@@ -156,7 +156,7 @@ public class IRODSSessionTest {
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		irodsSession.closeSession();
 
-		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setComputeChecksumAfterTransfer(true);
 
 		irodsSession.setJargonProperties(overrideJargonProperties);
@@ -190,7 +190,7 @@ public class IRODSSessionTest {
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		irodsSession.closeSession();
 
-		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setIntraFileStatusCallbacks(true);
 
 		irodsSession.setJargonProperties(overrideJargonProperties);
@@ -207,7 +207,7 @@ public class IRODSSessionTest {
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		irodsSession.closeSession();
 
-		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setAllowPutGetResourceRedirects(true);
 
 		irodsSession.setJargonProperties(overrideJargonProperties);
@@ -225,7 +225,7 @@ public class IRODSSessionTest {
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		irodsSession.closeSession();
 
-		SettableJargonProperties overrideJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean overrideJargonProperties = new SettableJargonProperties();
 		overrideJargonProperties.setInternalCacheBufferSize(1);
 		overrideJargonProperties.setInternalInputStreamBufferSize(2);
 		overrideJargonProperties.setInternalOutputStreamBufferSize(3);
@@ -261,6 +261,14 @@ public class IRODSSessionTest {
 		Assert.assertEquals("did not set intputToOutputCopyBufferByteSize",
 				overrideJargonProperties.getInputToOutputCopyBufferByteSize(),
 				pipelineConfiguration.getInputToOutputCopyBufferByteSize());
+
+	}
+
+	@Test
+	public void testJmxSetup() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		JargonProperties props = irodsSession.getJargonProperties();
 
 	}
 

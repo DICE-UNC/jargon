@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -84,7 +85,7 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 		irodsAccount.setDefaultStorageResource(
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);
 		jargonProperties.setLongTransferRestart(false);
 		jargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
@@ -135,7 +136,7 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 		irodsAccount.setDefaultStorageResource(
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);
 		jargonProperties.setLongTransferRestart(false);
 		jargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);

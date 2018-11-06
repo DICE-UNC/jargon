@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
-import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -176,7 +176,7 @@ public class StreamOpsLazyWalkTest {
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + fileName);
 		irodsFile.deleteWithForceOption();
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem.getIrodsSession()
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem.getIrodsSession()
 				.getJargonProperties();
 		settableJargonProperties.setPutBufferSize(putGetBufferSizeInProps);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);

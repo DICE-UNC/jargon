@@ -8,7 +8,7 @@ public class PipelineConfigurationTest {
 
 	@Test
 	public void testInstance() throws Exception {
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		jargonProperties.setEncryptionKeySize(123);
 		jargonProperties.setEncryptionNumberHashRounds(456);

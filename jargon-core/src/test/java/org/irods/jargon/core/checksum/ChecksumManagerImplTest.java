@@ -7,6 +7,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -36,7 +37,7 @@ public class ChecksumManagerImplTest {
 		DiscoveredServerPropertiesCache serverPropertiesCache = new DiscoveredServerPropertiesCache();
 		Mockito.when(irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()).thenReturn(serverPropertiesCache);
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setChecksumEncoding(ChecksumEncodingEnum.DEFAULT);
 		Mockito.when(irodsAccessObjectFactory.getJargonProperties()).thenReturn(jargonProperties);
 
@@ -67,7 +68,7 @@ public class ChecksumManagerImplTest {
 		DiscoveredServerPropertiesCache serverPropertiesCache = new DiscoveredServerPropertiesCache();
 		Mockito.when(irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()).thenReturn(serverPropertiesCache);
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setChecksumEncoding(ChecksumEncodingEnum.STRONG);
 		Mockito.when(irodsAccessObjectFactory.getJargonProperties()).thenReturn(jargonProperties);
 
@@ -101,7 +102,7 @@ public class ChecksumManagerImplTest {
 				DiscoveredServerPropertiesCache.CHECKSUM_TYPE, ChecksumEncodingEnum.MD5.toString());
 		Mockito.when(irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()).thenReturn(serverPropertiesCache);
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setChecksumEncoding(ChecksumEncodingEnum.STRONG);
 		Mockito.when(irodsAccessObjectFactory.getJargonProperties()).thenReturn(jargonProperties);
 

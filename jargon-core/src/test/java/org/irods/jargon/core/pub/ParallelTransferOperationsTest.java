@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -61,7 +62,7 @@ public class ParallelTransferOperationsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties();
 		settableJargonProperties.setLongTransferRestart(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 
@@ -94,7 +95,7 @@ public class ParallelTransferOperationsTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);
 		jargonProperties.setLongTransferRestart(false);
 		jargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
@@ -375,7 +376,7 @@ public class ParallelTransferOperationsTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		jargonProperties.setReconnect(true);
 		jargonProperties.setReconnectTimeInMillis(60000);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);

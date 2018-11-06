@@ -55,7 +55,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testStartupPackNoReconn() throws Exception {
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setReconnect(false);
 		IRODSFileSystem testFS = IRODSFileSystem.instance();
 		testFS.getIrodsSession().setJargonProperties(jargonProperties);
@@ -82,7 +82,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	@Test
 	public void testStartupPackWithReconn() throws Exception {
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setReconnect(true);
 		IRODSFileSystem testFS = IRODSFileSystem.instance();
 		testFS.getIrodsSession().setJargonProperties(jargonProperties);

@@ -32,6 +32,7 @@ public class JargonKeyedPoolConfig extends GenericKeyedObjectPoolConfig<IRODSMid
 		super();
 		setMinEvictableIdleTimeMillis(TIME_60_SECONDS);
 		setSoftMinEvictableIdleTimeMillis(TIME_30_SECONDS);
+		this.setMaxIdlePerKey(maxIdlePerKey);
 		setTestOnReturn(true);
 		setTestOnBorrow(true);
 	}

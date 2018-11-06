@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class RuleEngineInstanceChooserTest {
 	@Test
 	public void testPythonRuleSetFromProps() throws Exception {
 		String testInstance = "hithere";
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setDefaultPythonRuleEngineIdentifier(testInstance);
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111111,
 				"rods4.2.1", "d", "testZone");
@@ -32,7 +33,7 @@ public class RuleEngineInstanceChooserTest {
 	@Test
 	public void testIrodsRuleSetFromProps() throws Exception {
 		String testInstance = "hithere";
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setDefaultIrodsRuleEngineIdentifier(testInstance);
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111111,
 				"rods4.2.1", "d", "testZone");
@@ -51,7 +52,7 @@ public class RuleEngineInstanceChooserTest {
 	@Test
 	public void testPythonRuleDontSetFromProps() throws Exception {
 		String testInstance = "hithere";
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setDefaultPythonRuleEngineIdentifier(testInstance);
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 111111,
 				"rods4.2.1", "d", "testZone");

@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.connection.TrustAllX509TrustManager;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
@@ -35,7 +36,7 @@ public class SslNegotiationFunctionalTests {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem = null;
-	private static SettableJargonProperties settableJargonProperties;
+	private static SettableJargonPropertiesMBean settableJargonProperties;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -62,7 +63,7 @@ public class SslNegotiationFunctionalTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -85,7 +86,7 @@ public class SslNegotiationFunctionalTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -114,7 +115,7 @@ public class SslNegotiationFunctionalTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -150,7 +151,7 @@ public class SslNegotiationFunctionalTests {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildPamIrodsAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);

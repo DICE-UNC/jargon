@@ -7,6 +7,7 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
@@ -54,7 +55,7 @@ public class IRODSAccessObjectFactoryImplTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 
-		SettableJargonProperties settableProperties = new SettableJargonProperties(irodsSession.getJargonProperties());
+		SettableJargonPropertiesMBean settableProperties = new SettableJargonProperties(irodsSession.getJargonProperties());
 		settableProperties.setIntraFileStatusCallbacks(true);
 		settableProperties.setIntraFileStatusCallbacksNumberCallsInterval(1);
 		settableProperties.setIntraFileStatusCallbacksTotalBytesInterval(2);
@@ -77,7 +78,7 @@ public class IRODSAccessObjectFactoryImplTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 
-		SettableJargonProperties settableProperties = new SettableJargonProperties(irodsSession.getJargonProperties());
+		SettableJargonPropertiesMBean settableProperties = new SettableJargonProperties(irodsSession.getJargonProperties());
 		settableProperties.setChecksumEncoding(ChecksumEncodingEnum.SHA256);
 		irodsSession.setJargonProperties(settableProperties);
 

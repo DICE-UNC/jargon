@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -32,7 +33,7 @@ public class EncryptionWrapperFactoryTest {
 		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
 			return;
 		}
-		SettableJargonProperties props = new SettableJargonProperties();
+		SettableJargonPropertiesMBean props = new SettableJargonProperties();
 		props.setEncryptionKeySize(256);
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		PipelineConfiguration pipelineConfiguration = PipelineConfiguration.instance(props);
@@ -48,7 +49,7 @@ public class EncryptionWrapperFactoryTest {
 
 	@Test
 	public void testGetAesDecryptFromFactory() throws Exception {
-		SettableJargonProperties props = new SettableJargonProperties();
+		SettableJargonPropertiesMBean props = new SettableJargonProperties();
 		props.setEncryptionKeySize(256);
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		PipelineConfiguration pipelineConfiguration = PipelineConfiguration.instance(props);
@@ -65,7 +66,7 @@ public class EncryptionWrapperFactoryTest {
 
 	@Test(expected = JargonRuntimeException.class)
 	public void testGetAesFromFactoryNoSslNegotiated() throws Exception {
-		SettableJargonProperties props = new SettableJargonProperties();
+		SettableJargonPropertiesMBean props = new SettableJargonProperties();
 		props.setEncryptionKeySize(256);
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		PipelineConfiguration pipelineConfiguration = PipelineConfiguration.instance(props);

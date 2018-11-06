@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -49,7 +50,7 @@ public class DataTransferOperationsImplTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
@@ -363,7 +364,7 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerified() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -401,7 +402,7 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -439,7 +440,7 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testPutOneFileIntraFileCallbacksSpecifiedTransferOptsAndVerified() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(false);
 
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -554,7 +555,7 @@ public class DataTransferOperationsImplTest {
 
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		SettableJargonProperties settableProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean settableProperties = new SettableJargonProperties();
 		settableProperties.setAllowPutGetResourceRedirects(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableProperties);
 
@@ -606,7 +607,7 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getDataTransferOperations(irodsAccount);
 
-		SettableJargonProperties settableProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean settableProperties = new SettableJargonProperties();
 		settableProperties.setAllowPutGetResourceRedirects(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableProperties);
 
@@ -651,7 +652,7 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testGetOneFileWithCallback() throws Exception {
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -700,7 +701,7 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testGetOneFileWithCallbackParallel() throws Exception {
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -757,7 +758,7 @@ public class DataTransferOperationsImplTest {
 		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
 				30 * 1024 * 1024);
 
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -1249,7 +1250,7 @@ public class DataTransferOperationsImplTest {
 	public void testPutMultipleCollectionsMultipleFiles() throws Exception {
 
 		// make sure renewal is off
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setSocketRenewalIntervalInSeconds(0);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String rootCollection = "testPutMultipleCollectionsMultipleFiles";
@@ -1296,7 +1297,7 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutMultipleCollectionsMultipleFilesUnderUserHomeBug262() throws Exception {
 
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setSocketRenewalIntervalInSeconds(0);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String rootCollection = "MultipleFilesUnderUserHomeBug262";
@@ -1340,7 +1341,7 @@ public class DataTransferOperationsImplTest {
 
 		String rootCollection = "testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOn";
 		String returnedCollection = "testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOnReturned";
-		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		SettableJargonPropertiesMBean jargonProperties = new SettableJargonProperties();
 		jargonProperties.setSocketRenewalIntervalInSeconds(30);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String localCollectionAbsolutePath = scratchFileUtils

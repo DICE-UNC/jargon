@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
-import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -124,7 +124,7 @@ public class PackingIrodsOutputStreamTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem.getIrodsSession()
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem.getIrodsSession()
 				.getJargonProperties();
 		settableJargonProperties.setPutBufferSize(32768);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
@@ -175,7 +175,7 @@ public class PackingIrodsOutputStreamTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem.getIrodsSession()
+		SettableJargonPropertiesMBean settableJargonProperties = (SettableJargonPropertiesMBean) irodsFileSystem.getIrodsSession()
 				.getJargonProperties();
 		settableJargonProperties.setPutBufferSize(1024);
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);

@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -31,7 +32,7 @@ public class CollectionListingUtilsTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		jargonOriginalProperties = settableJargonProperties;
 	}
@@ -51,7 +52,7 @@ public class CollectionListingUtilsTest {
 	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHome() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
@@ -70,7 +71,7 @@ public class CollectionListingUtilsTest {
 	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneNameValid() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
@@ -89,7 +90,7 @@ public class CollectionListingUtilsTest {
 	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneAndHome() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
@@ -108,7 +109,7 @@ public class CollectionListingUtilsTest {
 	public void testHandleNoObjStatUnderRootOrHomeByLookingForPublicAndHomeZoneNameInvalid() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setDefaultToPublicIfNothingUnderRootWhenListing(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 

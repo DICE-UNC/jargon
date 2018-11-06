@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -103,7 +104,7 @@ public class IRODSThousandCollectionsTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
 		// props.setMaxFilesAndDirsQueryMax(200);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
@@ -251,7 +252,7 @@ public class IRODSThousandCollectionsTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 

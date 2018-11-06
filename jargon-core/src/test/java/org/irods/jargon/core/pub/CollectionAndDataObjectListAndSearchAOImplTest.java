@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -43,7 +44,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 	}
@@ -80,7 +81,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
@@ -119,7 +120,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
@@ -660,7 +661,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
@@ -723,7 +724,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		SettableJargonProperties props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
 		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
