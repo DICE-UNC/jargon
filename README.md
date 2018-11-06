@@ -67,3 +67,5 @@ tools.
 #### expose JargonProperties as JMX MBean #318
 
 JargonProperties are now exposed as a JMXBean and real-time adjustment of properties is now possible via jconsole or other JMX tools
+
+
