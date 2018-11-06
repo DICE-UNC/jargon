@@ -304,8 +304,11 @@ public class IRODSSession {
 		ObjectName name;
 		try {
 			name = new ObjectName("org.irods.jargon.core.connection:type=SettableJargonProperties");
-			SettableJargonPropertiesMBean settableProps = (SettableJargonPropertiesMBean) this.getJargonProperties();
-			mbs.registerMBean(settableProps, name);
+			if (mbs.isRegistered(name)) {
+				SettableJargonPropertiesMBean settableProps = (SettableJargonPropertiesMBean) this
+						.getJargonProperties();
+				mbs.registerMBean(settableProps, name);
+			}
 		} catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException
 				| NotCompliantMBeanException e) {
 			log.warn("unable to create an MBean for jargon properties. Will proceed without JMX support", e);
@@ -560,21 +563,6 @@ public class IRODSSession {
 	}
 
 	/**
-	 * @return the irodsConnectionManager
-	 */
-	public synchronized IRODSProtocolManager getIrodsConnectionManager() {
-		return irodsProtocolManager;
-	}
-
-	/**
-	 * @param irodsConnectionManager
-	 *            the irodsConnectionManager to set
-	 */
-	public void setIrodsConnectionManager(final IRODSProtocolManager irodsConnectionManager) {
-		irodsProtocolManager = irodsConnectionManager;
-	}
-
-	/**
 	 * Close an iRODS session for the given account
 	 *
 	 * @param irodsAccount
@@ -658,10 +646,23 @@ public class IRODSSession {
 		return sessionMap.get();
 	}
 
+	/**
+	 * Get the {@link IRODSProtocolManager} that will be the source of the
+	 * connections
+	 * 
+	 * @return {@link IRODSProtocolManager}
+	 */
 	public IRODSProtocolManager getIrodsProtocolManager() {
 		return irodsProtocolManager;
 	}
 
+	/**
+	 * Set the {@link IRODSProtocolManager} that will be the source of the actual
+	 * iRODS connections
+	 * 
+	 * @param irodsProtocolManager
+	 *            {@link IRODSProtocolManager}
+	 */
 	public void setIrodsProtocolManager(final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}

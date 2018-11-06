@@ -35,6 +35,7 @@ public class JargonKeyedPoolConfig extends GenericKeyedObjectPoolConfig<IRODSMid
 		this.setMaxIdlePerKey(maxIdlePerKey);
 		setTestOnReturn(true);
 		setTestOnBorrow(true);
+		this.setJmxEnabled(true);
 	}
 
 	@Override
