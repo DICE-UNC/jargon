@@ -35,26 +35,19 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl impleme
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public FileSamplerServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
-	/**
-	 *
-	 */
 	public FileSamplerServiceImpl() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.datautils.filesampler.FileSamplerService#sampleToByteArray
-	 * (java.lang.String, int)
-	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public byte[] sampleToByteArray(final String irodsAbsolutePath, final int sampleSize)
 			throws FileNotFoundException, JargonException {
@@ -97,12 +90,6 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl impleme
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.datautils.filesampler.FileSamplerService#
-	 * convertFileContentsToString(java.lang.String, long)
-	 */
 	@Override
 	public String convertFileContentsToString(final String irodsAbsolutePath, final long maxSizeInKb)
 			throws FileNotFoundException, FileTooLargeException, JargonException {
@@ -172,13 +159,6 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl impleme
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.datautils.filesampler.FileSamplerService#saveStringToFile
-	 * (java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void saveStringToFile(final String data, final String irodsAbsolutePath) throws JargonException {
 

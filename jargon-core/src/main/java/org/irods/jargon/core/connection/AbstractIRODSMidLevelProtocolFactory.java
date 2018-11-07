@@ -66,14 +66,14 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	}
 
 	/**
-	 * @return the irodsConnectionFactory
+	 * @return the {@link IRODSConnectionFactory}
 	 */
 	protected IRODSConnectionFactory getIrodsConnectionFactory() {
 		return irodsConnectionFactory;
 	}
 
 	/**
-	 * @return the authenticationFactory
+	 * @return the {@link AuthenticationFactory}
 	 */
 	protected AuthenticationFactory getAuthenticationFactory() {
 		return authenticationFactory;
@@ -134,8 +134,8 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * @param irodsSession
 	 *            {@link IRODSSession} with information about Jargon and its
 	 *            environment
-	 * @return {@link AbstractIRODSMidLevelProtocol} ready for use. This may or may
-	 *         not be the same protocol implementation passed in to the method
+	 * @return {@link IRODSMidLevelProtocol} ready for use. This may or may not be
+	 *         the same protocol implementation passed in to the method
 	 * @throws JargonException
 	 *             for iRODS error
 	 */

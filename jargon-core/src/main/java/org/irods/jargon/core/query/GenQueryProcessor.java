@@ -28,7 +28,7 @@ public class GenQueryProcessor {
 
 	/**
 	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol}
+	 *            {@link IRODSMidLevelProtocol}
 	 */
 	public GenQueryProcessor(final IRODSMidLevelProtocol irodsCommands) {
 		if (irodsCommands == null) {
@@ -57,7 +57,7 @@ public class GenQueryProcessor {
 	 *            an optional zone for the query
 	 * @return {@link IRODSQueryResultSet}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	public IRODSQueryResultSet executeTranslatedIRODSQuery(final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex, final QueryCloseBehavior queryCloseBehavior,

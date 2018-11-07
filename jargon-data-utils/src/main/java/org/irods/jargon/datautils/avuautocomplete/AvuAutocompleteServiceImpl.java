@@ -30,16 +30,15 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public AvuAutocompleteServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
-	/**
-	 *
-	 */
 	public AvuAutocompleteServiceImpl() {
 	}
 
@@ -109,12 +108,6 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.datautils.avuautocomplete.AvuAutocompleteService#
-	 * gatherAvailableValues(java.lang.String, java.lang.String, int)
-	 */
 	@Override
 	public AvuSearchResult gatherAvailableValues(final String forAttribute, final String prefix, final int offset,
 			final AvuTypeEnum avuTypeEnum) throws JargonException {

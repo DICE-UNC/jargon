@@ -25,8 +25,9 @@ public interface FileSamplerService {
 	 *            <code>MAX_SAMPLE_SIZE</code>
 	 * @return <code>byte[]</code> with the sample of the file
 	 * @throws FileNotFoundException
-	 *             if the file does not exist
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	byte[] sampleToByteArray(String irodsAbsolutePath, int sampleSize) throws FileNotFoundException, JargonException;
 
@@ -42,8 +43,11 @@ public interface FileSamplerService {
 	 * @return <code>String</code> with the file contents. The method does NOT check
 	 *         the file to see if it makes sense to try and return as String data
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws FileTooLargeException
+	 *             {@link FileTooLargeException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	String convertFileContentsToString(String irodsAbsolutePath, long maxSizeInKb)
 			throws FileNotFoundException, FileTooLargeException, JargonException;
@@ -57,6 +61,7 @@ public interface FileSamplerService {
 	 *            <code>String</code> of the absolute path in iRODS where the file
 	 *            should be written.
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	void saveStringToFile(String data, String irodsAbsolutePath) throws JargonException;
 

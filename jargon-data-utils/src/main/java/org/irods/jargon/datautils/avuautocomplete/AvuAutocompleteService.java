@@ -33,6 +33,7 @@ public interface AvuAutocompleteService {
 	 *            {@link AvuTypeEnum} dictating the scope of the search
 	 * @return {@link AvuSearchResult} with the elements and the paging data
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	AvuSearchResult gatherAvailableAttributes(String prefix, int offset, AvuTypeEnum avuTypeEnum)
 			throws JargonException;
@@ -55,6 +56,7 @@ public interface AvuAutocompleteService {
 	 *            {@link AvuTypeEnum} dictating the scope of the search
 	 * @return {@link AvuSearchResult} with the elements and the paging data
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	AvuSearchResult gatherAvailableValues(String forAttribute, String prefix, int offset, AvuTypeEnum avuTypeEnum)
 			throws JargonException;

@@ -73,8 +73,8 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsSession
 	 *            {@link IRODSSession} that will manage this connection and cache
 	 *            information
-	 * @return {@link AbstractIRODSMidLevelProtocol} subclass that represents a
-	 *         mid-level api that talks iRODS protocols
+	 * @return {@link IRODSMidLevelProtocol} subclass that represents a mid-level
+	 *         api that talks iRODS protocols
 	 * @exception AuthenticationException
 	 *                if the irodsAccount is invalid
 	 * @exception JargonException
@@ -92,7 +92,7 @@ public abstract class IRODSProtocolManager {
 	 * behavior.
 	 *
 	 * @param abstractIRODSMidLevelProtocol
-	 *            {@link AbstractIRODSMidLevelProtocol} to return
+	 *            {@link IRODSMidLevelProtocol} to return
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
@@ -111,8 +111,8 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsSession
 	 *            {@link IRODSSession} that will manage this connection and cache
 	 *            information
-	 * @return {@link AbstractIRODSMidLevelProtocol} subclass that represents a
-	 *         mid-level api that talks iRODS protocols
+	 * @return {@link IRODSMidLevelProtocol} subclass that represents a mid-level
+	 *         API that talks iRODS protocols
 	 * @exception AuthenticationException
 	 *                if the irodsAccount is invalid
 	 * @exception JargonException

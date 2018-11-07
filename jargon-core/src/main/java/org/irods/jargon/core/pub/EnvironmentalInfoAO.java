@@ -59,7 +59,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @return {@code List<String>} with the names of the available microservices.
 	 * @throws OperationNotSupportedByThisServerException
 	 *             {@link OperationNotSupportedByThisServerException} if cannot list
-	 *             the msis (for servers < 3.0)
+	 *             the MSIs (for servers prior to 3.0)
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */

@@ -27,8 +27,7 @@ public enum QueryConditionOperators {
 	}
 
 	/**
-	 * Get the query operator from the genQuery friendly string value, (e.g. ">"
-	 * symbol)
+	 * Get the query operator from the genQuery friendly string value
 	 *
 	 * @param stringValue
 	 *            {@code String} with the symbolic value

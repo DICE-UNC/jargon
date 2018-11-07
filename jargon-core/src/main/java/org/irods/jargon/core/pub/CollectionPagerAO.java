@@ -24,7 +24,7 @@ public interface CollectionPagerAO {
 
 	/**
 	 * Start a listing under a path, getting the first page of results.
-	 * <p/>
+	 * <p>
 	 * Inside the {@link PagingAwareCollectionListing} is a POJO containing
 	 * information about the status of the listing (more collections or data objects
 	 * to page, counts, etc). This object may be retained by the client caller and

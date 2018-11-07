@@ -78,13 +78,13 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *
 	 * @return {@code RemoteExecutionService}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
-	public static final RemoteExecutionService instance(final IRODSMidLevelProtocol irodsCommands,
+	public static final RemoteExecutionService instance(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
 			final String executionHost) throws JargonException {
-		return new RemoteExecuteServiceImpl(irodsCommands, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost, "", PathHandlingMode.NONE);
+		return new RemoteExecuteServiceImpl(irodsMidLevelProtocol, commandToExecuteWithoutArguments,
+				argumentsToPassWithCommand, executionHost, "", PathHandlingMode.NONE);
 	}
 
 	/**
@@ -109,14 +109,14 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *            located, and that host can be used to execute the given command.
 	 * @return {@code RemoteExecutionService}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	public static final RemoteExecutionService instanceWhenUsingAbsPathToSetCommandArg(
 			final IRODSMidLevelProtocol irodsMidLevelProtocol, final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn) throws JargonException {
-		return new RemoteExecuteServiceImpl(irodsMidLevelProtocol, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+		return new RemoteExecuteServiceImpl(irodsMidLevelProtocol, commandToExecuteWithoutArguments,
+				argumentsToPassWithCommand, executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT);
 	}
 
@@ -141,13 +141,13 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *            located, and that host can be used to execute the given command.
 	 * @return {@code RemoteExecutionService}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	public static final RemoteExecutionService instanceWhenUsingAbsPathToFindExecutionHost(
-			final IRODSMidLevelProtocol irodsCommands, final String commandToExecuteWithoutArguments,
+			final IRODSMidLevelProtocol irodsMidLevelProtocol, final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn) throws JargonException {
-		return new RemoteExecuteServiceImpl(irodsCommands, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+		return new RemoteExecuteServiceImpl(irodsMidLevelProtocol, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				PathHandlingMode.USE_PATH_TO_FIND_EXECUTING_HOST);
 	}
@@ -178,7 +178,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *            used in the -P and -p equivalent modes, and otherwise is set to
 	 *            {@code NONE}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	private RemoteExecuteServiceImpl(final IRODSMidLevelProtocol irodsCommands,
 			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
@@ -219,11 +219,6 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
-	 */
 	@Override
 	public InputStream execute() throws JargonException {
 		log.info("executing a remote command:{}", toString());
@@ -274,11 +269,6 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
-	 */
 	@Override
 	public InputStream executeAndStream() throws JargonException {
 		log.info("executing a remote command with streaming:{}", toString());

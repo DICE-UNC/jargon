@@ -226,7 +226,7 @@ abstract class AuthMechanism {
 	 * @param startupResponseData
 	 *            {@link StartupResponseData} representing the response from iRODS
 	 *            on initiation of connection
-	 * @return {@link AbstractIRODSMidLevelProtocol} that represents a connected,
+	 * @return {@link IRODSMidLevelProtocol} that represents a connected,
 	 *         authenticated session with an iRODS agent. Note that the protocol
 	 *         returned may not be the one originally provided, based on the auth
 	 *         method.
@@ -277,8 +277,8 @@ abstract class AuthMechanism {
 	 * handler
 	 *
 	 * @param irodsMidLevelProtocol
-	 *            {@link AbstractIRODSMidLevelProtocol} that is already connected,
-	 *            but not authenticated
+	 *            {@link IRODSMidLevelProtocol} that is already connected, but not
+	 *            authenticated
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection as requested
 	 * @param startupResponseData
@@ -312,13 +312,6 @@ abstract class AuthMechanism {
 
 		String startupPackData = startupPack.getParsedTags();
 		log.debug("startupPackData:{}", startupPackData);
-
-		// FIXME: NEG_PI here
-		/*
-		 *
-		 * <CS_NEG_PI><status>1</status> <result>CS_NEG_DONT_CARE</result> </CS_NEG_PI>
-		 */
-
 		try {
 			irodsCommands.sendHeader(RequestTypes.RODS_CONNECT.getRequestType(), startupPackData.length(), 0, 0, 0);
 			irodsCommands.getIrodsConnection().send(startupPackData);

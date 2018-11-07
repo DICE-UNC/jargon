@@ -20,18 +20,17 @@ public class MetadataManifestOperation {
 	 * Create an operation
 	 *
 	 * @param attribute
-	 *            <code>String</code> with the avu attribute
+	 *            {@code String} with the avu attribute
 	 * @param value
-	 *            <code>String</code> with the avu value
+	 *            {@code String} with the avu value
 	 * @param unit
-	 *            <code>String</code> with the avu unit
+	 *            {@code String} with the avu unit
 	 * @param irodsPath
-	 *            <code>String</code> with the target iRODS path. If the containing
-	 *            {@link MetadataManifest} supplies a
-	 *            <code>parentIrodsTargetPath</code> then this path should be
-	 *            relative with no leading / character
+	 *            {@code String} with the target iRODS path. If the containing
+	 *            {@link MetadataManifest} supplies a parentIrodsTargetPath then
+	 *            this path should be relative with no leading / character
 	 * @param action
-	 * @link Action} enum value
+	 *            {@link Action} enum value
 	 */
 	public MetadataManifestOperation(final String attribute, final String value, final String unit,
 			final String irodsPath, final Action action) {

@@ -20,6 +20,7 @@ public class UserGroupAOHelper {
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} to which the selects will be added
 	 * @throws GenQueryBuilderException
+	 *             {@link GenQueryBuilderException}
 	 */
 	public static void buildSelectsByAppendingToBuilder(final IRODSGenQueryBuilder builder)
 			throws GenQueryBuilderException {

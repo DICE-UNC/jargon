@@ -137,7 +137,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param absolutePath
 	 *            {@link String} with iRODS path
 	 * @param openFlags
-	 *            {@link DataObjInp.OpenFlags}
+	 *            {@link org.irods.jargon.core.packinstr.DataObjInp.OpenFlags}
 	 * @param createMode
 	 *            {@code int}
 	 * @return {@code int} with file id
@@ -157,7 +157,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param absolutePath
 	 *            {@link String} with iRODS path
 	 * @param openFlags
-	 *            {@link DataObjInp.OpenFlags}
+	 *            {@link org.irods.jargon.core.packinstr.DataObjInp.OpenFlags}
 	 * @param createMode
 	 *            {@code int}
 	 * @param resource

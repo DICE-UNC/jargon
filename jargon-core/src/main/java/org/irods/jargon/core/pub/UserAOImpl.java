@@ -70,7 +70,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		super(irodsSession, irodsAccount);
 	}
 
-
 	@Override
 	public List<AvuData> listUserMetadataForUserId(final String userId) throws JargonException {
 
@@ -124,7 +123,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		return avuDatas;
 
 	}
-
 
 	@Override
 	public List<AvuData> listUserMetadataForUserName(final String userName) throws JargonException {
@@ -575,17 +573,11 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	}
 
-
 	@Override
 	public String retriveUserDNByUserId(final String userId) throws JargonException {
 		return UserAOHelper.findUserDnIfExists(userId, getGenQueryExecutor());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.UserAO#deleteUser(java.lang.String)
-	 */
 	@Override
 	public void deleteUser(final String userName) throws InvalidUserException, JargonException {
 		if (userName == null || userName.isEmpty()) {
@@ -667,7 +659,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 	}
 
-
 	@Override
 	public String getTemporaryPasswordForConnectedUser() throws JargonException {
 		GetTempPasswordIn getPasswordInPI = GetTempPasswordIn.instance();
@@ -681,7 +672,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		return tempPassword;
 	}
-
 
 	@Override
 	public String getTemporaryPasswordForASpecifiedUser(final String targetUserName) throws JargonException {
@@ -735,7 +725,6 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		getIRODSProtocol().irodsFunction(userAdminIn);
 
 	}
-
 
 	@Override
 	public void changeAUserPasswordByAnAdmin(final String userName, final String newPassword) throws JargonException {

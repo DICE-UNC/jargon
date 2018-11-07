@@ -12,8 +12,9 @@ public interface MetadataManifestProcessor {
 	 *
 	 * @param metadataManifest
 	 *            {@link MetadataManifest}
-	 * @return <code>String</code> containing JSON
+	 * @return {@code String} containing JSON
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	String metadataManifestToJson(MetadataManifest metadataManifest) throws JargonException;
 
@@ -21,9 +22,10 @@ public interface MetadataManifestProcessor {
 	 * Convert a json string to a <code>MetadataManifest</code>
 	 *
 	 * @param jsonString
-	 *            <code>String</code> containing json
+	 *            {@code String} containing json
 	 * @return {@link MetadataManifest}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	MetadataManifest stringJsonToMetadataManifest(String jsonString) throws JargonException;
 
