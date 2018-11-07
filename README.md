@@ -71,3 +71,14 @@ JargonProperties are now exposed as a JMXBean and real-time adjustment of proper
 
 Cleanup of JavaDocs
 
+#### Implement isysmeta functions #319
+
+Added isysmeta functions into DataObjectAO. 
+
+'''Java
+
+List<String> listDataTypes() throws JargonException
+
+'''
+
+

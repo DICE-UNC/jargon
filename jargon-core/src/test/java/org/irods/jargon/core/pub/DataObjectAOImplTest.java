@@ -4971,4 +4971,18 @@ public class DataObjectAOImplTest {
 		Assert.assertFalse(dataObjects.size() >= 1);
 
 	}
+
+	@Test
+	public void testListDataTypes() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory.getDataObjectAO(irodsAccount);
+		List<String> dataTypes = dataObjectAO.listDataTypes();
+		Assert.assertNotNull("no data types returned", dataTypes);
+		Assert.assertFalse("no data types returned", dataTypes.isEmpty());
+	}
+
 }

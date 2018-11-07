@@ -71,7 +71,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             is thrown if the data object does not exist
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 * @throws FileNotFoundException
 	 *             if file missing
 	 */
@@ -89,7 +89,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} with absolute path to the collection
 	 * @return {@link IRODSFileImpl}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	IRODSFile instanceIRODSFileForPath(final String fileAbsolutePath) throws JargonException;
 
@@ -107,7 +107,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param avuData
 	 *            {@link AvuData}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 * @throws OperationNotSupportedForCollectionTypeException
 	 *             when the special collection type does not support this operation
 	 * @throws DataNotFoundException
@@ -141,7 +141,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if file missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAVUMetadata(final String absolutePath, final AvuData avuData) throws DataNotFoundException, JargonException;
 
@@ -171,7 +171,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if avu data missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAVUMetadata(final String irodsCollectionAbsolutePath, final String fileName, final AvuData avuData)
 			throws DataNotFoundException, JargonException;
@@ -196,7 +196,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for error in query
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(final List<AVUQueryElement> avuQuery,
 			final String dataObjectCollectionAbsPath, final String dataObjectFileName)
@@ -228,7 +228,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(List<AVUQueryElement> avuQuery,
 			String dataObjectCollectionAbsPath, String dataObjectFileName, boolean caseInsensitive)
@@ -251,7 +251,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObjectUsingAVUQuery(List<AVUQueryElement> avuQuery,
 			String dataObjectAbsolutePath) throws JargonQueryException, JargonException;
@@ -275,7 +275,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 
 	List<MetaDataAndDomainData> findMetadataValuesForDataObject(final String dataObjectCollectionAbsPath,
@@ -291,7 +291,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(final List<AVUQueryElement> avuQuery)
 			throws JargonQueryException, JargonException;
@@ -309,7 +309,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(final List<AVUQueryElement> avuQuery,
 			final int partialStartIndex) throws JargonQueryException, JargonException;
@@ -333,7 +333,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for an error in query
 	 * @throws JargonException
-	 *             for an iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery, int partialStartIndex,
 			boolean caseInsensitive) throws JargonQueryException, JargonException;
@@ -349,7 +349,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<DataObject> findDomainByMetadataQuery(final List<AVUQueryElement> avuQueryElements)
 			throws JargonQueryException, JargonException;
@@ -368,7 +368,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<DataObject> findDomainByMetadataQuery(final List<AVUQueryElement> avuQueryElements,
 			final int partialStartIndex) throws JargonQueryException, JargonException;
@@ -393,7 +393,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws JargonQueryException
 	 *             for query error
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<DataObject> findDomainByMetadataQuery(List<AVUQueryElement> avuQueryElements, int partialStartIndex,
 			boolean caseInsensitive) throws JargonQueryException, JargonException;
@@ -413,7 +413,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} containing the resource to which the target file
 	 *            should be replicated.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void replicateIrodsDataObject(final String irodsFileAbsolutePath, final String targetResource)
 			throws JargonException;
@@ -430,7 +430,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} containing the name of the target iRODS file.
 	 * @return {@code List} of {@link org.irods.jargon.core.pub.domain.Resource}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<Resource> getResourcesForDataObject(final String dataObjectPath, final String dataObjectName)
 			throws JargonException;
@@ -445,7 +445,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            checksum value will be calculated
 	 * @return {@code String} with the MD5 Checksum value
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	String computeMD5ChecksumOnDataObject(final IRODSFile irodsFile) throws JargonException;
 
@@ -468,7 +468,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            file will be replicated. The replication will be to all members of
 	 *            the resource group.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void replicateIrodsDataObjectToAllResourcesInResourceGroup(final String irodsFileAbsolutePath,
 			final String irodsResourceGroupName) throws JargonException;
@@ -488,7 +488,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the target data object is not found in iRODS
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void deleteAVUMetadata(final String absolutePath, final AvuData avuData)
 			throws DataNotFoundException, JargonException;
@@ -504,7 +504,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            object.
 	 * @return {@link DataObject} with catalog information for the given data object
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 * @throws FileNotFoundException
 	 *             if file is missing
 	 */
@@ -526,7 +526,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermissionRead(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -546,7 +546,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermissionWrite(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -566,7 +566,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermissionOwn(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -586,7 +586,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void removeAccessPermissionsForUser(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -609,7 +609,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@link FilePermissionEnum} value with the permissions for the file
 	 *         and user.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	FilePermissionEnum getPermissionForDataObject(String absolutePath, String userName, String zone)
 			throws JargonException;
@@ -627,7 +627,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of {@link UserFilePermission} with the ACL's for the
 	 *         given file.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<UserFilePermission> listPermissionsForDataObject(String irodsDataObjectAbsolutePath) throws JargonException;
 
@@ -645,7 +645,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObject(IRODSFile irodsFile) throws JargonException;
 
@@ -664,7 +664,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws FileNotFoundException
 	 *             if the data object is missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObject(String dataObjectAbsolutePath)
 			throws FileNotFoundException, JargonException;
@@ -694,7 +694,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the AVU data or collection is not present
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void modifyAvuValueBasedOnGivenAttributeAndUnit(String absolutePath, AvuData avuData)
 			throws DataNotFoundException, JargonException;
@@ -719,7 +719,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the file or AVU was not found
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void modifyAVUMetadata(String dataObjectAbsolutePath, AvuData currentAvuData, AvuData newAvuData)
 			throws DataNotFoundException, JargonException;
@@ -750,7 +750,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the file or AVU was not found
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void modifyAVUMetadata(String irodsCollectionAbsolutePath, String dataName, AvuData currentAvuData,
 			AvuData newAvuData) throws DataNotFoundException, JargonException;
@@ -776,7 +776,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param avuData
 	 *            {@link AvuData} to add
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 * @throws DataNotFoundException
 	 *             when data object is missing
 	 * @throws DuplicateDataException
@@ -803,7 +803,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of {@link UserFilePermission} with the ACL's for the
 	 *         given file.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<UserFilePermission> listPermissionsForDataObject(String irodsCollectionAbsolutePath, String dataName)
 			throws JargonException;
@@ -827,7 +827,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of {@link UserFilePermission} with the ACL's for the
 	 *         given file.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	UserFilePermission getPermissionForDataObjectForUserName(String irodsCollectionAbsolutePath, String dataName,
 			String userName) throws JargonException;
@@ -848,7 +848,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of {@link UserFilePermission} with the ACL's for the
 	 *         given file.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	UserFilePermission getPermissionForDataObjectForUserName(String irodsAbsolutePath, String userName)
 			throws JargonException;
@@ -870,7 +870,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermissionReadInAdminMode(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -891,7 +891,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermissionWriteInAdminMode(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -912,7 +912,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermissionOwnInAdminMode(String zone, String absolutePath, String userName) throws JargonException;
 
@@ -933,7 +933,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param userName
 	 *            {@code String} with the user name whose permissions will be set.
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void removeAccessPermissionsForUserInAdminMode(String zone, String absolutePath, String userName)
 			throws JargonException;
@@ -951,7 +951,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of {@link Resource} that represent the resources in
 	 *         iRODS that have a copy of the file/
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<Resource> listFileResources(String irodsAbsolutePath) throws JargonException;
 
@@ -967,7 +967,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if file missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	DataObject findGivenObjStat(ObjStat objStat) throws DataNotFoundException, JargonException;
 
@@ -996,7 +996,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param filePermission
 	 *            {@link FilePermissionEnum}
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void setAccessPermission(String zone, String absolutePath, String userName, FilePermissionEnum filePermission)
 			throws JargonException;
@@ -1010,7 +1010,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws FileNotFoundException
 	 *             if the id does not exist
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	DataObject findById(int id) throws FileNotFoundException, JargonException;
 
@@ -1027,7 +1027,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @return {@code List} of {@link DataObject} for replicas in the given resource
 	 *         group
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<DataObject> listReplicationsForFileInResGroup(String collectionAbsPath, String fileName,
 			String resourceGroupName) throws JargonException;
@@ -1042,7 +1042,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} with the data object file name
 	 * @return {@code int} with total number of replicas
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	int getTotalNumberOfReplsForDataObject(String collection, String fileName) throws JargonException;
 
@@ -1058,7 +1058,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} with the resource group name
 	 * @return {@code int} with the total number of replicas
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	int getTotalNumberOfReplsInResourceGroupForDataObject(String irodsAbsolutePath, String fileName,
 			String resourceGroupName) throws JargonException;
@@ -1086,7 +1086,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the data object is not found
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void trimDataObjectReplicas(String irodsCollectionAbsolutePath, String fileName, String resourceName,
 			int numberOfCopiesToKeep, int replicaNumberToDelete, boolean asIRODSAdmin)
@@ -1102,7 +1102,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} with the file name of the data object to be trimmed
 	 * @return {@code List} of {@link DataObject} for each replica
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<DataObject> listReplicationsForFile(String collectionAbsPath, String fileName) throws JargonException;
 
@@ -1121,7 +1121,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code int} with the number of minutes to delay the replication,
 	 *            will put on the deferred rule execution queue
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void replicateIrodsDataObjectAsynchronously(String irodsCollectionAbsolutePath, String fileName,
 			String resourceName, int delayInMinutes) throws JargonException;
@@ -1141,7 +1141,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws FileNotFoundException
 	 *             if the data object is missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(String absolutePath, List<AvuData> avuData)
 			throws FileNotFoundException, JargonException;
@@ -1160,7 +1160,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws FileNotFoundException
 	 *             if the data object is missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(String absolutePath, List<AvuData> avuData)
 			throws JargonException;
@@ -1173,7 +1173,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if the data object is not found
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	void deleteAllAVUForDataObject(final String absolutePath) throws DataNotFoundException, JargonException;
 
@@ -1190,7 +1190,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws DataNotFoundException
 	 *             if missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	byte[] computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(final String irodsAbsolutePath)
 			throws DataNotFoundException, JargonException;
@@ -1205,7 +1205,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code int} with the unique key for the AVU attribute
 	 * @return {@link MetaDataAndDomainData} representing that AVU
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 * @throws DataNotFoundException
 	 *             if the AVU is not found
 	 */
@@ -1222,7 +1222,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code int} with the unique key for the AVU attribute
 	 * @return {@link MetaDataAndDomainData} representing that AVU
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 * @throws DataNotFoundException
 	 *             if the AVU is not found
 	 * @throws FileNotFoundException
@@ -1258,9 +1258,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @throws FileNotFoundException
 	 *             if either file is missing
 	 * @throws JargonException
-	 *             for iRODS error
+	 *             {@link JargonException}
 	 */
 	boolean verifyChecksumBetweenLocalAndIrods(final IRODSFile irodsFile, final File localFile)
 			throws FileNotFoundException, JargonException;
+
+	/**
+	 * List all data types (equivalent to isysmeta ldt)
+	 * 
+	 * @return {@code List} of {@code String} with the available data types
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	List<String> listDataTypes() throws JargonException;
 
 }

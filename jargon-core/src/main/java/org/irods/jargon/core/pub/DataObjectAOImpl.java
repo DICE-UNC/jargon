@@ -4123,4 +4123,38 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	private AbstractRestartManager getRestartManager() {
 		return getIRODSSession().getRestartManager();
 	}
+
+	@Override
+	public List<String> listDataTypes() throws JargonException {
+		log.info("listDataTypes()");
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_TOKEN_NAME);
+
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_TOKEN_NAMESPACE, QueryConditionOperators.EQUAL,
+					"data_type");
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+
+			final List<String> types = new ArrayList<>();
+
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				types.add(row.getColumn(0));
+			}
+
+			return types;
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data types", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data types", e);
+		}
+
+	}
 }
