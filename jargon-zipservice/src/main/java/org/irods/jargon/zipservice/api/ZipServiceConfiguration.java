@@ -7,11 +7,11 @@ import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
 
 /**
  * Basic configuration for the zip service.
- * <p/>
+ * <p>
  * <b>Current assumptions for first round of service</b>
  *
  * <ul>
- * <li>Bundles will be subdirectories under the bundleSubdirPath</li> *
+ * <li>Bundles will be subdirectories under the bundleSubdirPath</li>
  * <li>The bundleSubdirPath will be under the logged-in user home</li>
  * <li>A bundle is created as a directory under that bundle path with the
  * bundlePrefix and a time stamp</li>
@@ -19,8 +19,6 @@ import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
  * as the child dir that was bundled up</li>
  *
  * </ul>
- *
- *
  *
  * @author Mike Conway - DICE
  *

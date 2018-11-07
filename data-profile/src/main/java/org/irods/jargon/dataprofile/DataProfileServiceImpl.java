@@ -39,8 +39,14 @@ public class DataProfileServiceImpl extends AbstractJargonService implements Dat
 	private final DataTypeResolutionService dataTypeResolutionService;
 
 	/**
+	 * Constructor with required dependencies
+	 * 
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @param dataTypeResolutionService
+	 *            {@link DataTypeResolutionService}
 	 */
 	public DataProfileServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount, final DataTypeResolutionService dataTypeResolutionService) {
@@ -61,12 +67,6 @@ public class DataProfileServiceImpl extends AbstractJargonService implements Dat
 		dataTypeResolutionService = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.dataprofile.DataProfileService#retrieveDataProfile(java
-	 * .lang.String)
-	 */
 	@Override
 	@SuppressWarnings("rawtypes")
 	public DataProfile retrieveDataProfile(final String irodsAbsolutePath)
@@ -160,7 +160,7 @@ public class DataProfileServiceImpl extends AbstractJargonService implements Dat
 
 	}
 
-	/**
+	/*
 	 * See if this is a shared file or collection
 	 *
 	 * @param dataProfile
@@ -172,7 +172,7 @@ public class DataProfileServiceImpl extends AbstractJargonService implements Dat
 
 	}
 
-	/**
+	/*
 	 * Look for starred in AVUs
 	 *
 	 * @param dataProfile
@@ -184,11 +184,13 @@ public class DataProfileServiceImpl extends AbstractJargonService implements Dat
 		dataProfile.setStarred(starred);
 	}
 
-	/**
+	/*
 	 * Look for a special AVU in the list of retrieved AVUs
 	 *
 	 * @param dataProfile
+	 * 
 	 * @param avuUnit
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -253,13 +255,6 @@ public class DataProfileServiceImpl extends AbstractJargonService implements Dat
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.dataprofile.DataProfileService#getDataTypeResolutionService
-	 * ()
-	 */
 	@Override
 	public DataTypeResolutionService getDataTypeResolutionService() {
 		return dataTypeResolutionService;

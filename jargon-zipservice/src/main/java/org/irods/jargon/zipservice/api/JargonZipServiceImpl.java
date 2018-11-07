@@ -47,9 +47,14 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 	}
 
 	/**
+	 * Constructor with dependencies
+	 * 
 	 * @param zipServiceConfiguration
+	 *            {@link ZipServiceConfiguration}
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public JargonZipServiceImpl(final ZipServiceConfiguration zipServiceConfiguration,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount) {
@@ -62,25 +67,11 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.zipservice.api.JargonZipService#getZipServiceConfiguration
-	 * ()
-	 */
 	@Override
 	public ZipServiceConfiguration getZipServiceConfiguration() {
 		return zipServiceConfiguration;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.zipservice.api.JargonZipService#setZipServiceConfiguration
-	 * (org.irods.jargon.zipservice.api.ZipServiceConfiguration)
-	 */
 	@Override
 	public void setZipServiceConfiguration(final ZipServiceConfiguration zipServiceConfiguration) {
 		this.zipServiceConfiguration = zipServiceConfiguration;
@@ -90,6 +81,7 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 	 * Handy method to verify configuration of this service before any opeerations
 	 *
 	 * @throws ZipServiceConfigurationException
+	 *             {@link ZipServiceConfigurationException}
 	 */
 	protected void validateConfiguration() throws ZipServiceConfigurationException {
 		if (zipServiceConfiguration == null) {
@@ -98,13 +90,6 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#
-	 * obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(java.util.List)
-	 */
-	@SuppressWarnings("resource")
 	@Override
 	public BundleStreamWrapper obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(
 			final List<String> irodsAbsolutePaths) throws ZipServiceException {
@@ -123,12 +108,6 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#
-	 * obtainBundleAsInputStreamGivenPaths(java.util.List)
-	 */
 	@Override
 	public InputStream obtainBundleAsInputStreamGivenPaths(final List<String> irodsAbsolutePaths)
 			throws ZipServiceException {
@@ -146,12 +125,6 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#
-	 * obtainBundleAsIrodsFileGivenPaths(java.util.List)
-	 */
 	@Override
 	public IRODSFile obtainBundleAsIrodsFileGivenPaths(final List<String> irodsAbsolutePaths)
 			throws ZipServiceException {
@@ -222,13 +195,13 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 	 * Copy files from the disparate paths to the bundle dir
 	 *
 	 * @param irodsAbsolutePaths
-	 *            <code>List<String></code> with the paths that will be copied to
-	 *            the bundle directory
+	 *            {@code List} of {@code String} of iRODS paths with the paths that
+	 *            will be copied to the bundle directory
 	 * @param bundleParent
 	 *            <code>String</code> with the absolute path of the bundle directory
 	 * @throws ZipServiceException
 	 *             for any exception that occurs, there are subclasses of this
-	 *             top-level exception that can be discerened
+	 *             top-level exception that can be discerned
 	 */
 	private void copyFilesToBundleDir(final List<String> irodsAbsolutePaths, final IRODSFile bundleParent)
 			throws ZipServiceException {
@@ -278,6 +251,7 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 	 * @return <code>String</code> with the absolute path to the parent for this
 	 *         particular bundle, which will be cleared and created
 	 * @throws ZipServiceException
+	 *             {@link ZipServiceException}
 	 */
 	private IRODSFile createOrReturnBundlePath(final long currentTime, final String parentPath)
 			throws ZipServiceException {
@@ -314,6 +288,7 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 	 *
 	 * @return <code>String</code> with the iRODS absloute path to the bundle parent
 	 * @throws ZipServiceException
+	 *             {@link ZipServiceException}
 	 */
 	private String createOrReturnZipParentPath() throws ZipServiceException {
 		log.info("createOrReturnZipParentPath()");
@@ -341,13 +316,6 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.zipservice.api.JargonZipService#computeBundleSizeInBytes
-	 * (java.util.List)
-	 */
 	@Override
 	public long computeBundleSizeInBytes(final List<String> irodsAbsolutePaths) throws ZipServiceException {
 

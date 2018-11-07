@@ -29,8 +29,11 @@ public interface RuleCompositionService {
 	 *            <code>String</code> with an iRODS absolute path to a rules file
 	 * @return <code>String</code> with the raw rule contents
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws MissingOrInvalidRuleException
+	 *             {@link MissingOrInvalidRuleException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
 			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
@@ -44,8 +47,9 @@ public interface RuleCompositionService {
 	 *            will be stored
 	 * @param rule
 	 *            <code>String</code> with the raw rule text
-	 * @return {@Rule} that was the result of the parsing, as stored in iRODS
+	 * @return {@link Rule} that was the result of the parsing, as stored in iRODS
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule storeRule(String ruleAbsolutePath, String rule) throws JargonException;
 
@@ -57,6 +61,7 @@ public interface RuleCompositionService {
 	 * @return {@link IRODSRuleExecResult} with the output parameters and log from
 	 *         the rule
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	IRODSRuleExecResult executeRuleAsRawString(String rule) throws JargonException;
 
@@ -69,6 +74,7 @@ public interface RuleCompositionService {
 	 *            {@code String} with a valid iRODS rule
 	 * @return {@link Rule} that represents that parsed rule string.
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule parseStringIntoRule(String inputRuleAsString) throws JargonException;
 
@@ -80,10 +86,11 @@ public interface RuleCompositionService {
 	 *            appropriate for 'new format' rules in iRODS.
 	 * @return {@link Rule} that represents the parsed iRODS rule
 	 * @throws FileNotFoundException
-	 *             if the rule file cannot be found
+	 *             {@link FileNotFoundException}
 	 * @throws MissingOrInvalidRuleException
-	 *             if the rule is empty
+	 *             {@link MissingOrInvalidRuleException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule loadRuleFromIrods(String absolutePathToRuleFile)
 			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
@@ -106,6 +113,7 @@ public interface RuleCompositionService {
 	 *            simple string format
 	 * @return {@link Rule} which is the parsed version of the given rule
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule storeRuleFromParts(String ruleAbsolutePath, String ruleBody, List<String> inputParameters,
 			List<String> outputParameters) throws JargonException;
@@ -120,6 +128,7 @@ public interface RuleCompositionService {
 	 *            {@link Rule} to serialize and store
 	 * @return {@link Rule} that has been stored
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule storeRule(String ruleAbsolutePath, Rule rule) throws JargonException;
 
@@ -137,7 +146,9 @@ public interface RuleCompositionService {
 	 *            taken.
 	 * @return {@link Rule} reflecting the state of the rule after any updates.
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule deleteInputParameterFromRule(String ruleAbsolutePath, String parameterToDelete)
 			throws FileNotFoundException, JargonException;
@@ -156,7 +167,9 @@ public interface RuleCompositionService {
 	 *            will be taken.
 	 * @return {@link Rule} reflecting the state of the rule after any updates.
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule deleteOutputParameterFromRule(String ruleAbsolutePath, String parameterToDelete)
 			throws FileNotFoundException, JargonException;
@@ -176,6 +189,7 @@ public interface RuleCompositionService {
 	 * @return {@link IRODSRuleExecResult} with the output parameters from the rule
 	 *         execution
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	IRODSRuleExecResult executeRuleFromParts(String ruleBody, List<String> inputParameters,
 			List<String> outputParameters) throws JargonException;
@@ -199,6 +213,7 @@ public interface RuleCompositionService {
 	 * @return {@link IRODSRuleExecResult} with the output parameters from the rule
 	 *         execution
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	IRODSRuleExecResult executeRuleFromParts(String ruleBody, List<String> inputParameters,
 			List<String> outputParameters, RuleInvocationConfiguration ruleInvocationConfiguration)
@@ -216,10 +231,11 @@ public interface RuleCompositionService {
 	 *            {@code String} with the value for the new parameter
 	 * @return {@link Rule} as updated
 	 * @throws FileNotFoundException
-	 *             if the iRODS rule file is missing
+	 *             {@link FileNotFoundException}
 	 * @throws DuplicateDataException
-	 *             if the parameter already exists
+	 *             {@link DuplicateDataException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule addInputParameterToRule(String ruleAbsolutePath, String parameterName, String parameterValue)
 			throws FileNotFoundException, DuplicateDataException, JargonException;
@@ -234,10 +250,11 @@ public interface RuleCompositionService {
 	 *            {@code String} with the name of the new parameter
 	 * @return {@link Rule} as updated
 	 * @throws FileNotFoundException
-	 *             if the iRODS rule file is missing
+	 *             {@link FileNotFoundException}
 	 * @throws DuplicateDataException
-	 *             if the parameter already exists
+	 *             {@link DuplicateDataException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	Rule addOutputParameterToRule(String ruleAbsolutePath, String parameterName)
 			throws FileNotFoundException, DuplicateDataException, JargonException;

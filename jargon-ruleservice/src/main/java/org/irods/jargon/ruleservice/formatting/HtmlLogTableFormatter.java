@@ -19,6 +19,7 @@ public class HtmlLogTableFormatter {
 	 * bootsrap2
 	 *
 	 * @param exception
+	 *            {@link Exception} with a stacktrace
 	 * @return {@code String} representing an HTML table for bootstrap2
 	 */
 	public static String formatStackTraceAsBootstrap2Table(final Exception exception) {

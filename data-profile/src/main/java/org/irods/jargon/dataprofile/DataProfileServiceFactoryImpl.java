@@ -19,7 +19,9 @@ public class DataProfileServiceFactoryImpl extends AbstractJargonService {
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public DataProfileServiceFactoryImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
@@ -32,6 +34,13 @@ public class DataProfileServiceFactoryImpl extends AbstractJargonService {
 	public DataProfileServiceFactoryImpl() {
 	}
 
+	/**
+	 * Factory method to create a properly provisioned service instance
+	 * 
+	 * @return {@link DataProfileService}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
 	public DataProfileService instanceDataProfileService() throws JargonException {
 
 		DataTypeResolutionService dataTypeResolutionService = new DataTypeResolutionServiceImpl(

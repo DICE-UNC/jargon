@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Service to identify the data type of an iRODS file based on a series of
  * resolution methods
- * <p/>
+ * <p>
  * This should be considered a provisional solution while we work to standardize
  * treatment of MIME types as a standard part of iRODS
  *
@@ -37,13 +37,6 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService impleme
 	public static final String APPLICATION_IRODS_RULE = "application/irods-rule";
 	public static final Logger log = LoggerFactory.getLogger(DataTypeResolutionServiceImpl.class);
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#
-	 * resolveDataTypeWithProvidedAvuAndDataObject
-	 * (org.irods.jargon.core.pub.domain.DataObject, java.util.List)
-	 */
 	@Override
 	public String resolveDataTypeWithProvidedAvuAndDataObject(final DataObject dataObject,
 			final List<MetaDataAndDomainData> metadata) throws JargonException {
@@ -92,12 +85,6 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService impleme
 
 	}
 
-	/**
-	 * Temporary shim for first cloud browser release
-	 *
-	 * @param dataObject
-	 * @return
-	 */
 	private String determimeMimeTypeOfIrodsObjects(final DataObject dataObject) {
 
 		String extension = LocalFileUtils.getFileExtension(dataObject.getDataName());
@@ -114,12 +101,6 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService impleme
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#
-	 * determineMimeTypeViaTika(org.irods.jargon.core.pub.domain.DataObject)
-	 */
 	@Override
 	public String determineMimeTypeViaTika(final DataObject dataObject) throws JargonException {
 		AutoDetectParser parser = new AutoDetectParser();
@@ -146,16 +127,15 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService impleme
 
 	}
 
-	/**
-	 *
-	 */
 	public DataTypeResolutionServiceImpl() {
 		super();
 	}
 
 	/**
 	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 */
 	public DataTypeResolutionServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {

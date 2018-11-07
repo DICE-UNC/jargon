@@ -13,7 +13,9 @@ public interface DataProfileService {
 	 *            collection
 	 * @return {@link DataProfile} with summary data
 	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	public abstract DataProfile retrieveDataProfile(String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
