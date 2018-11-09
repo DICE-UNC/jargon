@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -1271,5 +1272,20 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *             {@link JargonException}
 	 */
 	List<String> listDataTypes() throws JargonException;
+
+	/**
+	 * Modify the data object time (equivalent to isysmeta mod time)
+	 * 
+	 * @param time
+	 *            {@link Date} with the new time
+	 * @param dataObjectAbsolutePath
+	 *            {@code String} with the absolutePath to the iRODS data object
+	 * @throws FileNotFoundException
+	 *             {@link FileNotFoundException}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	void modifyDataObjectSysTime(final Date time, final String dataObjectAbsolutePath)
+			throws FileNotFoundException, JargonException;
 
 }

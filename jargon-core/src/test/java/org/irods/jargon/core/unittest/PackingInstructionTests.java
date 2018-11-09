@@ -19,6 +19,7 @@ import org.irods.jargon.core.packinstr.GeneralAdminInpTest;
 import org.irods.jargon.core.packinstr.GetTempPasswordForOtherTest;
 import org.irods.jargon.core.packinstr.GetTempPasswordInTest;
 import org.irods.jargon.core.packinstr.ModAccessControlInpTest;
+import org.irods.jargon.core.packinstr.ModDataObjMetaInpTest;
 import org.irods.jargon.core.packinstr.OpenedDataObjInpTest;
 import org.irods.jargon.core.packinstr.PamAuthRequestInpTest;
 import org.irods.jargon.core.packinstr.ReconnMsgTest;
@@ -42,7 +43,7 @@ import org.junit.runners.Suite;
 		TransferOptionsTest.class, DataObjInpForObjStatTest.class, GetTempPasswordForOtherTest.class,
 		DataObjInpForRegTest.class, DataObjInpForUnregisterTest.class, DataObjInpForMcollTest.class,
 		DataObjInpForUnmountTest.class, ReconnMsgTest.class, SpecificQueryInpTest.class, PamAuthRequestInpTest.class,
-		SSLStartInpTest.class, SSLEndInpTest.class, AuthReqPluginRequestInpTest.class })
+		SSLStartInpTest.class, SSLEndInpTest.class, AuthReqPluginRequestInpTest.class, ModDataObjMetaInpTest.class })
 public class PackingInstructionTests {
 
 }

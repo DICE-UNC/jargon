@@ -75,6 +75,11 @@ public class Tag implements Cloneable {
 		}
 	}
 
+	public Tag(String tagName, double value) {
+		this.tagName = tagName;
+		this.value = String.valueOf(value);
+	}
+
 	public void setTagName(final String tagName) {
 		this.tagName = tagName;
 	}

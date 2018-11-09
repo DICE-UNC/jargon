@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
@@ -4155,6 +4156,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			log.error("query exception for query", e);
 			throw new JargonException("error in query for data types", e);
 		}
+
+	}
+
+	@Override
+	public void modifyDataObjectSysTime(Date time, String dataObjectAbsolutePath)
+			throws FileNotFoundException, JargonException {
+		log.info("modifyDataObjectSysTime()");
+		if (time == null) {
+			throw new IllegalArgumentException("time is null");
+		}
+
+		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataObjectAbsolutePath");
+		}
+
+		log.info("time:{}", time);
+		log.info("dataObjectAbsolutePath:{}", dataObjectAbsolutePath);
+		throw new UnsupportedOperationException("not yet implemented");
 
 	}
 }
