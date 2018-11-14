@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
+import org.irods.jargon.core.packinstr.ModDataObjMetaInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -4162,6 +4164,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	@Override
 	public void modifyDataObjectSysTime(Date time, String dataObjectAbsolutePath)
 			throws FileNotFoundException, JargonException {
+
 		log.info("modifyDataObjectSysTime()");
 		if (time == null) {
 			throw new IllegalArgumentException("time is null");
@@ -4173,7 +4176,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		log.info("time:{}", time);
 		log.info("dataObjectAbsolutePath:{}", dataObjectAbsolutePath);
-		throw new UnsupportedOperationException("not yet implemented");
+
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String strDate = sdfDate.format(time);
+		ModDataObjMetaInp modDataObjMetaInp = ModDataObjMetaInp.instanceForModExpDate(dataObjectAbsolutePath, strDate);
+		getIRODSProtocol().irodsFunction(modDataObjMetaInp);
+		log.info("complete!");
 
 	}
 }

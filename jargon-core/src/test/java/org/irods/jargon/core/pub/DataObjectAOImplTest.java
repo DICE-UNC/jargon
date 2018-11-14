@@ -3,6 +3,7 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -52,6 +53,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class DataObjectAOImplTest {
 
@@ -4983,6 +4986,33 @@ public class DataObjectAOImplTest {
 		List<String> dataTypes = dataObjectAO.listDataTypes();
 		Assert.assertNotNull("no data types returned", dataTypes);
 		Assert.assertFalse("no data types returned", dataTypes.isEmpty());
+	}
+
+	@Ignore // FIXME: pending https://github.com/DICE-UNC/jargon/issues/319
+	public void testSysmetaModifyExpireDate() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testSysmetaModifyExpireDate.dat";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+
+		dto.putOperation(localFileName, targetIrodsFile, "", null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		Date dateNow = new Date();
+		dataObjectAO.modifyDataObjectSysTime(dateNow, targetIrodsFile);
+
+		// FIXME: need to look up and do assertion
+
+		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFile);
+		TestCase.assertNotNull("no data object found", dataObject);
+
 	}
 
 }

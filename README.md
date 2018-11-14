@@ -75,10 +75,14 @@ Cleanup of JavaDocs
 
 Added isysmeta functions into DataObjectAO. 
 
-'''Java
+```Java
 
 List<String> listDataTypes() throws JargonException
 
-'''
+```
+
+#### python rule engine errors in iRODS 4.2.4 #320
+
+Updated test python rules to conform to new requirement to include a main() in client-submitted rules
 
 
