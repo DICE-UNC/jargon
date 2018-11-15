@@ -67,6 +67,47 @@ public enum FilePermissionEnum {
 	}
 
 	/**
+	 * Translate a lower case text representation of a permission (as found in
+	 * r_token_main)
+	 * 
+	 * @param textPermission
+	 *            {@code String} with the permission token
+	 * @return {@link FilePermissionEnum} value
+	 */
+	public static FilePermissionEnum enumValueFromSpecificQueryTextPermission(final String textPermission) {
+		if (textPermission == null || textPermission.isEmpty()) {
+			throw new IllegalArgumentException("null or empty textPermission");
+		}
+
+		if (textPermission.equals("own")) {
+			return OWN;
+		}
+
+		if (textPermission.equals("read")) {
+			return READ;
+		}
+
+		if (textPermission.equals("read object")) {
+			return READ;
+		}
+
+		if (textPermission.equals("write")) {
+			return WRITE;
+		}
+
+		if (textPermission.equals("modify object")) {
+			return WRITE;
+		}
+
+		if (textPermission.equals("none")) {
+			return NONE;
+		}
+
+		return NONE;
+
+	}
+
+	/**
 	 * Handy method to get all enum values as a list, good for building select boxes
 	 * and the like
 	 *

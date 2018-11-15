@@ -68,6 +68,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements CollectionAO {
 
+	public static final String SHOW_COLL_ACLS = "ShowCollAcls";
 	public static final String ERROR_IN_COLECTION_QUERY = "An error occurred in the query for the collection";
 	private final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(getIRODSSession(), getIRODSAccount());
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(getIRODSSession(),
@@ -1885,46 +1886,93 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
-				.getIRODSGenQueryExecutor(getIRODSAccount());
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
-
-		IRODSQueryResultSet resultSet;
-		UserAO userAO = getIRODSAccessObjectFactory().getUserAO(getIRODSAccount());
-
 		/*
-		 * There appears to be a gen query limitation on grabbing user type by a
-		 * straight query, so, unfortunately, we need to do another query per user.
+		 * See if the ShowCollAcls specific query is available and use this
 		 */
 
-		User user = null;
-		try {
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory().getSpecificQueryAO(getIRODSAccount());
+		boolean queryViaSpecific = false;
 
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zoneName);
-
-			UserFilePermission userFilePermission = null;
-
-			for (IRODSQueryResultRow row : resultSet.getResults()) {
-
-				user = userAO.findByIdInZone(row.getColumn(2), zoneName);
-				userFilePermission = new UserFilePermission(row.getColumn(0), row.getColumn(2),
-						FilePermissionEnum
-								.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(3))),
-						user.getUserType(), row.getColumn(1));
-				log.debug("loaded filePermission:{}", userFilePermission);
-				userFilePermissions.add(userFilePermission);
+		if (specificQueryAO.isSupportsSpecificQuery()) {
+			log.info("specific query supported looking for ShowCollAcls");
+			try {
+				specificQueryAO.findSpecificQueryByAlias(SHOW_COLL_ACLS, zoneName);
+				queryViaSpecific = true;
+			} catch (DataNotFoundException e) {
+				log.info("specific query not found, will use genquery approach");
 			}
 
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query", e);
-			throw new JargonException("error in query loading user file permissions for collection", e);
-		} catch (GenQueryBuilderException e) {
-			log.error("query exception for  query", e);
-			throw new JargonException("error in query loading user file permissions for collection", e);
+		}
+
+		if (queryViaSpecific) {
+			log.info("querying via specific query");
+
+			SpecificQuery specificQuery = SpecificQuery.instanceWithOneArgument(SHOW_COLL_ACLS, absPath, 0, zoneName);
+
+			try {
+				SpecificQueryResultSet specificQueryResultSet = specificQueryAO.executeSpecificQueryUsingAlias(
+						specificQuery, getJargonProperties().getMaxFilesAndDirsQueryMax());
+
+				UserFilePermission userFilePermission = null;
+
+				for (IRODSQueryResultRow row : specificQueryResultSet.getResults()) {
+
+					userFilePermission = new UserFilePermission(row.getColumn(0), "",
+							FilePermissionEnum.enumValueFromSpecificQueryTextPermission(row.getColumn(2)),
+							UserTypeEnum.findTypeByString(row.getColumn(3)), row.getColumn(1));
+					log.debug("loaded filePermission:{}", userFilePermission);
+					userFilePermissions.add(userFilePermission);
+				}
+
+			} catch (JargonQueryException e) {
+				log.error("query exception for  query", e);
+				throw new JargonException("error in query loading user file permissions for collection", e);
+			}
+
+		} else {
+			log.info("querying via genQuery");
+			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
+			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+
+			CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
+
+			IRODSQueryResultSet resultSet;
+			UserAO userAO = getIRODSAccessObjectFactory().getUserAO(getIRODSAccount());
+
+			/*
+			 * There appears to be a gen query limitation on grabbing user type by a
+			 * straight query, so, unfortunately, we need to do another query per user.
+			 */
+
+			User user = null;
+			try {
+				IRODSGenQueryFromBuilder irodsQuery = builder
+						.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+
+				resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zoneName);
+
+				UserFilePermission userFilePermission = null;
+
+				for (IRODSQueryResultRow row : resultSet.getResults()) {
+
+					user = userAO.findByIdInZone(row.getColumn(2), zoneName);
+					userFilePermission = new UserFilePermission(row.getColumn(0), row.getColumn(2),
+							FilePermissionEnum
+									.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(3))),
+							user.getUserType(), row.getColumn(1));
+					log.debug("loaded filePermission:{}", userFilePermission);
+					userFilePermissions.add(userFilePermission);
+				}
+
+			} catch (JargonQueryException e) {
+				log.error("query exception for  query", e);
+				throw new JargonException("error in query loading user file permissions for collection", e);
+			} catch (GenQueryBuilderException e) {
+				log.error("query exception for  query", e);
+				throw new JargonException("error in query loading user file permissions for collection", e);
+			}
+
 		}
 
 		return userFilePermissions;

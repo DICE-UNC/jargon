@@ -86,3 +86,8 @@ List<String> listDataTypes() throws JargonException
 Updated test python rules to conform to new requirement to include a main() in client-submitted rules
 
 
+#### UserFilePermissions issue #253
+
+Added specific query based ACL listing if available on the target iRODS grid
+
+
