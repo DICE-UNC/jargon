@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.pub.io;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
@@ -572,6 +570,8 @@ public class IRODSFileImplTest {
 
 	/**
 	 * See https://github.com/DICE-UNC/jargon/issues/170 referred to iRODS
+	 * 
+	 * NB: tested with iRODS 4.2.4 and issue persists
 	 *
 	 * @throws Exception
 	 */
@@ -1067,11 +1067,11 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * See https://github.com/DICE-UNC/jargon/issues/216
+	 * See https://github.com/DICE-UNC/jargon/issues/216, resolved in 4.2.4
 	 *
 	 * @throws Exception
 	 */
-	@Ignore // FIXME: revisit before release
+	@Test
 	public final void testDeleteCollWithForceBug216() throws Exception {
 		String testCollectionName = "testDeleteCollWithForceBug216";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -1080,6 +1080,16 @@ public class IRODSFileImplTest {
 				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+
+		// test finally passes in 4.2.4, ignore in prior versions
+		if (!environmentalInfoAO.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.4")) {
+			return;
+
+		}
 
 		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -1333,33 +1343,6 @@ public class IRODSFileImplTest {
 		irodsSession.closeSession();
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection,
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#getTotalSpace()}.
-	 */
-	@Ignore
-	public final void testGetTotalSpace() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#getFreeSpace()}.
-	 */
-	@Ignore
-	public final void testGetFreeSpace() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#getUsableSpace()}.
-	 */
-	@Ignore
-	public final void testGetUsableSpace() {
-		fail("Not yet implemented");
 	}
 
 	@Test
