@@ -304,6 +304,15 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	}
 
 	@Override
+	public List<String> listAvailableRuleEngines() throws JargonException {
+		log.info("listAvailableRuleEngines()");
+		ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instanceForListAvailableRuleEngines();
+		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
+		log.debug("response from rule exec: {}", response.parseTag());
+		return null;
+	}
+
+	@Override
 	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
 			final List<IRODSRuleParameter> inputParameterOverrides,
 			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {

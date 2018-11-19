@@ -52,6 +52,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	private final String host;
 	private final int port;
 	private final String zone;
+	private boolean listAvailableRuleEnginesMode = false;
 
 	private static final Logger log = LoggerFactory.getLogger(ExecMyRuleInp.class);
 
@@ -87,6 +88,23 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static final ExecMyRuleInp instance(final IRODSRule irodsRule) throws JargonException {
 		return new ExecMyRuleInp(irodsRule, "", 0, "");
+	}
+
+	public static final ExecMyRuleInp instanceForListAvailableRuleEngines() throws JargonException {
+		return new ExecMyRuleInp();
+	}
+
+	/**
+	 * No values constructor when executing for list available rule engines, allows
+	 * no {@code irodsRule} to be provided, and sets mode to list available rule
+	 * engines when generating the tag.
+	 */
+	private ExecMyRuleInp() {
+		this.irodsRule = null;
+		this.host = "";
+		this.port = 0;
+		this.zone = "";
+		this.listAvailableRuleEnginesMode = true;
 	}
 
 	/**
@@ -142,6 +160,11 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
+		if (this.listAvailableRuleEnginesMode) {
+			log.info("generating tag for list all available");
+			return getTagValueForListAllAvailable();
+		}
+
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		if (!irodsRule.getRuleInvocationConfiguration().getRuleEngineSpecifier().isEmpty()) {
 			log.debug("adding rule engine instance:{}",
@@ -179,6 +202,22 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		message.addTag(paramArray);
 
 		return message;
+	}
+
+	/*
+	 * Abbreviated tag when asking for available rule engines
+	 */
+	private Tag getTagValueForListAllAvailable() throws JargonException {
+		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+
+		kvps.add(KeyValuePair.instance("available", "true"));
+		final Tag message = new Tag(PI_TAG,
+				new Tag[] {
+						new Tag(MY_RULE, ""), new Tag(RHOSTADDR_PI, new Tag[] { new Tag(HOST_ADDR, host),
+								new Tag(RODS_ZONE, zone), new Tag(PORT, port), new Tag(DUMMY_INT, 0), }),
+						createKeyValueTag(kvps) });
+		return message;
+
 	}
 
 	private Tag getMsParamArrayTagForInputParameter(final IRODSRuleParameter irodsRuleInputParameter) {
