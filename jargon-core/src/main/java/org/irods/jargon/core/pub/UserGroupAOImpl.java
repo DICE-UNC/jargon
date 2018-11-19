@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Access operations for IRODS user groups.
+ * Operations for IRODS user groups.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -417,54 +417,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 	@Override
 	public List<UserGroup> findUserGroups(final String userGroupName) throws JargonException {
 
-		log.info("findUserGroups()");
-
-		if (userGroupName == null) {
-			throw new IllegalArgumentException("null userGroupName");
-		}
-
-		log.info("for user group name:{}", userGroupName);
-
-		List<UserGroup> userGroups = new ArrayList<UserGroup>();
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
-
-		try {
-			UserGroupAOHelper.buildSelectsByAppendingToBuilder(builder);
-		} catch (GenQueryBuilderException e) {
-			log.error("query builder exception building user group query", e);
-			throw new JargonException("unable to build user group query", e);
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(userGroupName.trim());
-		sb.append('%');
-
-		builder
-
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
-						sb.toString())
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL, RODS_GROUP);
-		IRODSQueryResultSet resultSet = null;
-		try {
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-
-		} catch (JargonQueryException e) {
-			log.error("query exception for query", e);
-			throw new JargonException("error in query for data object", e);
-		} catch (GenQueryBuilderException e) {
-			log.error("query exception for query", e);
-			throw new JargonException("error in query for data object", e);
-		}
-
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			userGroups.add(buildUserGroupFromResultSet(row));
-		}
-
-		return userGroups;
+		/*
+		 * Delegate to case-sensitive search method to preserve prior API
+		 */
+		return findUserGroups(userGroupName, false);
 	}
 
 	@Override
@@ -678,6 +634,111 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		return irodsGenQueryExecutor;
 
+	}
+
+	@Override
+	public List<UserGroup> findUserGroups(String userGroupName, boolean caseInsensitive) throws JargonException {
+		log.info("findUserGroups()");
+
+		if (userGroupName == null) {
+			throw new IllegalArgumentException("null userGroupName");
+		}
+
+		log.info("caseInsensitive:{}", caseInsensitive);
+
+		log.info("for user group name:{}", userGroupName);
+
+		List<UserGroup> userGroups = new ArrayList<UserGroup>();
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
+
+		try {
+			UserGroupAOHelper.buildSelectsByAppendingToBuilder(builder);
+		} catch (GenQueryBuilderException e) {
+			log.error("query builder exception building user group query", e);
+			throw new JargonException("unable to build user group query", e);
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(userGroupName.trim());
+		sb.append('%');
+
+		builder
+
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
+						sb.toString())
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL, RODS_GROUP);
+		IRODSQueryResultSet resultSet = null;
+		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data object", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data object", e);
+		}
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			userGroups.add(buildUserGroupFromResultSet(row));
+		}
+
+		return userGroups;
+	}
+
+	@Override
+	public List<String> findUserGroupNames(String userGroupName, boolean caseInsensitive) throws JargonException {
+		log.info("findUserGroups()");
+
+		if (userGroupName == null) {
+			throw new IllegalArgumentException("null userGroupName");
+		}
+
+		log.info("caseInsensitive:{}", caseInsensitive);
+
+		log.info("for user group name:{}", userGroupName);
+
+		List<String> userGroups = new ArrayList<String>();
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME);
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("query builder error", e);
+		}
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(userGroupName.trim());
+		sb.append('%');
+
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
+				sb.toString())
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL, RODS_GROUP);
+		IRODSQueryResultSet resultSet = null;
+		try {
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data object", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for data object", e);
+		}
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			userGroups.add(row.getColumn(0));
+		}
+
+		return userGroups;
 	}
 
 }

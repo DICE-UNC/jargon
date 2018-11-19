@@ -90,4 +90,12 @@ Updated test python rules to conform to new requirement to include a main() in c
 
 Added specific query based ACL listing if available on the target iRODS grid
 
+#### Jargon Core tests fail when trying to delete a collection #305
 
+Deleting a collection that contains data with the 'no force' option no longer causes an error in iRODS 4.2.4, therefore this 
+unit test is reactivated and is applied in target iRODS servers 4.2.4 and greater. The testDeleteACollectionWithAmpInTheNameBug170
+unit test still fails and this is being followed up as an iRODS bug.
+
+#### Support for ILIKE case insensitive where classes #254
+
+UserAO and UserGroupAO now provide search by name signatures that can support case-insensitive queries

@@ -667,6 +667,33 @@ public class UserAOTest {
 	}
 
 	@Test
+	public void testFindUserNameCaseInsensitive() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String testUser = "TestFindUserNameCaseInsensitive";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		try {
+			userAO.deleteUser(testUser);
+		} catch (Exception e) {
+			// ignore exception, user may not exist
+		}
+
+		User addedUser = new User();
+		addedUser.setName(testUser);
+		addedUser.setUserType(UserTypeEnum.RODS_USER);
+		userAO.addUser(addedUser);
+
+		List<String> userNames = userAO.findUserNameLike(testUser.toUpperCase(), true);
+		Assert.assertFalse("no users found", userNames.isEmpty());
+		Assert.assertEquals(testUser + "#" + irodsAccount.getZone(), userNames.get(0));
+	}
+
+	@Test
 	public void testDeleteUser() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1039,6 +1066,19 @@ public class UserAOTest {
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		List<String> users = userAO.findUserNameLike("t");
+		Assert.assertTrue("no users returned", users.size() > 0);
+
+	}
+
+	@Test
+	public void testFindUserNameWhereUserNameLikeCaseInsensitive() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		List<User> users = userAO.findUsersLike("T", true);
 		Assert.assertTrue("no users returned", users.size() > 0);
 
 	}
