@@ -989,7 +989,7 @@ public class IRODSMidLevelProtocol {
 		// previous will have returned or thrown exception
 
 		if (errorLength != 0) {
-			processMessageErrorNotEqualZero(errorLength);
+			return processMessageErrorNotEqualZero(errorLength);
 		}
 
 		if (bytesLength != 0 || info > 0) {
@@ -1382,7 +1382,7 @@ public class IRODSMidLevelProtocol {
 		}
 	}
 
-	void processMessageErrorNotEqualZero(final int errorLength) throws JargonException {
+	Tag processMessageErrorNotEqualZero(final int errorLength) throws JargonException {
 		log.debug("error length is not zero, process error");
 		byte[] errorMessage = new byte[errorLength];
 		try {
@@ -1421,7 +1421,9 @@ public class IRODSMidLevelProtocol {
 		int statusVal = status.getIntValue();
 		if (statusVal == 0) {
 			log.debug("error status of 0 indicates normal operation, ignored");
-			return;
+			String errorText = errorTag.getTag(RErrMsg.PI_TAG).getTag(IRodsPI.MESSAGE_TAG).getStringValue();
+			log.info("error tag contents:{}", errorText);
+			return errorPITag;
 		}
 
 		String errorText = errorTag.getTag(RErrMsg.PI_TAG).getTag(IRodsPI.MESSAGE_TAG).getStringValue();

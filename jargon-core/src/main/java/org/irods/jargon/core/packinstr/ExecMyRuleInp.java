@@ -105,6 +105,8 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		this.port = 0;
 		this.zone = "";
 		this.listAvailableRuleEnginesMode = true;
+		setApiNumber(RULE_API_NBR);
+
 	}
 
 	/**
@@ -212,10 +214,12 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 		kvps.add(KeyValuePair.instance("available", "true"));
 		final Tag message = new Tag(PI_TAG,
-				new Tag[] {
-						new Tag(MY_RULE, ""), new Tag(RHOSTADDR_PI, new Tag[] { new Tag(HOST_ADDR, host),
-								new Tag(RODS_ZONE, zone), new Tag(PORT, port), new Tag(DUMMY_INT, 0), }),
-						createKeyValueTag(kvps) });
+				new Tag[] { new Tag(MY_RULE, ""),
+						new Tag(RHOSTADDR_PI,
+								new Tag[] { new Tag(HOST_ADDR, host), new Tag(RODS_ZONE, zone), new Tag(PORT, port),
+										new Tag(DUMMY_INT, 0), }),
+						createKeyValueTag(kvps), new Tag(OUT_PARAM_DESC, ""),
+						new Tag(MS_PARAM_ARRAY_PI, new Tag[] { new Tag(PARAM_LEN, 0), new Tag(OPR_TYPE, 0) }) });
 		return message;
 
 	}

@@ -76,6 +76,24 @@ public class RuleProcessingAOImplTest {
 	}
 
 	@Test
+	public void testListAvailableRuleEngines() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
+
+		if (!environmentalInfoAO.getIRODSServerProperties().isAtLeastIrods420()) {
+			return;
+		}
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
+		List<String> ruleEngines = ruleProcessingAO.listAvailableRuleEngines();
+		Assert.assertNotNull("ruleEngines is null", ruleEngines);
+		Assert.assertFalse("no rule engines returned", ruleEngines.isEmpty());
+
+	}
+
+	@Test
 	public void testExecuteRule() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 

@@ -24,9 +24,11 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	}
 
 	/**
+	 * List the available rule engines (python, classic, etc)
 	 * 
-	 * @return
+	 * @return {@code List} of {@code String} with each configured rule engine
 	 * @throws JargonException
+	 *             {@link JargonException}
 	 */
 	List<String> listAvailableRuleEngines() throws JargonException;
 

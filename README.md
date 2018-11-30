@@ -85,7 +85,6 @@ List<String> listDataTypes() throws JargonException
 
 Updated test python rules to conform to new requirement to include a main() in client-submitted rules
 
-
 #### UserFilePermissions issue #253
 
 Added specific query based ACL listing if available on the target iRODS grid
@@ -99,3 +98,8 @@ unit test still fails and this is being followed up as an iRODS bug.
 #### Support for ILIKE case insensitive where classes #254
 
 UserAO and UserGroupAO now provide search by name signatures that can support case-insensitive queries
+
+#### add candidate rule engine listing #264
+
+Added the ability to list available rule engines to RuleProcessingAO to support irule -a functionality. This lists the configured rule 
+engines on the target iRODS server
