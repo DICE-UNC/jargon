@@ -25,7 +25,7 @@ public class IRODSGenQueryTranslator {
 
 	public static final String[] operatorStrings = { "<>", "<=", ">=", "not in", "not between", "not like",
 			"sounds like", "sounds not like", "TABLE", "num<", "num>", "num<=", "num>=", "=", "<", ">", "in", "between",
-			"like" };
+			"like", "IS NULL" };
 
 	public static final String ORDER_BY = "ORDER BY";
 	private static final String GROUP_BY = "GROUP BY";

@@ -26,14 +26,16 @@ public enum AVUQueryOperatorEnum {
 																					11,
 																					OperatorClass.VALUE), SOUNDS_LIKE(
 																							"SOUNDS_LIKE", 11,
-																							OperatorClass.VALUE);
+																							OperatorClass.VALUE), IS_NULL(
+																									"IS NULL", 11,
+																									OperatorClass.OPERATOR_ONLY_VALUE);
 
 	private String operatorValue;
 	private int operatorNumericValue;
 	private OperatorClass operatorClass;
 
 	private enum OperatorClass {
-		VALUE, VALUE_RANGE, VALUE_IN_ARRAY, VALUE_BY_METADATA_TABLE
+		VALUE, VALUE_RANGE, VALUE_IN_ARRAY, VALUE_BY_METADATA_TABLE, OPERATOR_ONLY_VALUE
 	}
 
 	AVUQueryOperatorEnum(final String operatorValue, final int operatorNumericValue,

@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -744,8 +745,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		List<String> resourceNames = new ArrayList<String>();
 
 		AbstractIRODSQueryResultSet resultSet = null;
+		IRODSGenQueryBuilder builder = null;
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+
 		try {
-			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+			builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME, OrderByType.ASC);
 
@@ -754,11 +759,39 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 						"");
 			}
 
-			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
-					.getIRODSGenQueryExecutor(getIRODSAccount());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(builder.exportIRODSQueryFromBuilder(
+					getIRODSAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax()), 0);
+
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+
+				resourceNames.add(row.getColumn(0));
+
+			}
+
+			/*
+			 * for constency across iCAT database servers, also look for null in parent and
+			 * incorporate see issue ResourceAOImpl.listResourceNames() returns an empty
+			 * list from Oracle #308
+			 */
+
+			builder = new IRODSGenQueryBuilder(true, null);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME, OrderByType.ASC);
+
+			if (getIRODSServerProperties().isAtLeastIrods410()) {
+				builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_RESC_PARENT, QueryConditionOperators.IS_NULL,
+						"");
+			}
 
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(builder.exportIRODSQueryFromBuilder(
 					getIRODSAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax()), 0);
+
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+
+				resourceNames.add(row.getColumn(0));
+
+			}
+
 		} catch (JargonQueryException e) {
 			log.error("jargon query exception getting results", e);
 			throw new JargonException(e);
@@ -767,11 +800,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException(e);
 		}
 
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-
-			resourceNames.add(row.getColumn(0));
-
-		}
+		Collections.sort(resourceNames);
 
 		return resourceNames;
 
@@ -1073,6 +1102,18 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		log.debug("metadata removed");
+	}
+
+	public void addResourceListingSpecificQuery() throws JargonException {
+		log.info("addResourceListingSpecificQuery()");
+
+		if (!this.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(getIRODSAccount()).isAbleToRunSpecificQuery()) {
+			log.error("version of iRODS does not support specific query");
+			throw new UnsupportedOperationException("iRODS does not support specific query");
+		}
+
+		// add the specific query in an idempotent way, ignore a duplicate
+
 	}
 
 }

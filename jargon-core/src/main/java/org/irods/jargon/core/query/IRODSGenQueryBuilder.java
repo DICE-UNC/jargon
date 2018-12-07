@@ -35,30 +35,6 @@ public class IRODSGenQueryBuilder {
 	 */
 	private final boolean computeTotalRowCount;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n\t distinct? ");
-		sb.append(distinct);
-		sb.append("\n\t  upperCase? ");
-		sb.append(upperCase);
-		sb.append("\n\t computeTotalRowCount? ");
-		sb.append(computeTotalRowCount);
-		sb.append("IRODSGenQueryBuilder");
-		sb.append("\n\t  selects:");
-		sb.append(selectFields);
-		sb.append("\n\t conditions:");
-		sb.append(conditions);
-		sb.append("\n\t  orderByFields:");
-		sb.append(orderByFields);
-		return sb.toString();
-	}
-
 	/**
 	 * Constructor takes an optional {@code ExtensibleMetadataMapping} if extensible
 	 * metadata is to be used in the query processing.
@@ -330,6 +306,13 @@ public class IRODSGenQueryBuilder {
 					String.valueOf(rodsGenQueryEnumValue.getNumericValue()), operator, value);
 
 			conditions.add(genQueryBuilderCondition);
+		} else if (operator == QueryConditionOperators.IS_NULL) {
+
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition.instance(
+					rodsGenQueryEnumValue.getName(), SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()), operator, "");
+
+			conditions.add(genQueryBuilderCondition);
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append("'");
@@ -473,6 +456,28 @@ public class IRODSGenQueryBuilder {
 	 */
 	public boolean isComputeTotalRowCount() {
 		return computeTotalRowCount;
+	}
+
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSGenQueryBuilder [");
+		if (selectFields != null) {
+			builder.append("selectFields=").append(selectFields.subList(0, Math.min(selectFields.size(), maxLen)))
+					.append(", ");
+		}
+		if (conditions != null) {
+			builder.append("conditions=").append(conditions.subList(0, Math.min(conditions.size(), maxLen)))
+					.append(", ");
+		}
+		if (orderByFields != null) {
+			builder.append("orderByFields=").append(orderByFields.subList(0, Math.min(orderByFields.size(), maxLen)))
+					.append(", ");
+		}
+		builder.append("distinct=").append(distinct).append(", upperCase=").append(upperCase)
+				.append(", computeTotalRowCount=").append(computeTotalRowCount).append("]");
+		return builder.toString();
 	}
 
 }

@@ -261,27 +261,6 @@ public class TranslatedIRODSGenQuery {
 		return distinct;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("translatedIRODSQuery:");
-		sb.append("\n   selectFields:");
-		sb.append(selectFields);
-		sb.append("\n   translatedQueryConditions:");
-		sb.append(translatedQueryConditions);
-		sb.append("\n   orderByFields:");
-		sb.append(orderByFields);
-		sb.append("\n   irodsQuery:");
-		sb.append(irodsQuery);
-		sb.append("\n   distinct:");
-		sb.append(distinct);
-		sb.append("\n   upperCase:");
-		sb.append(upperCase);
-		sb.append("\n   computeTotalRowCount:");
-		sb.append(computeTotalRowCount);
-		return sb.toString();
-	}
-
 	/**
 	 * @return the orderByFields
 	 */
@@ -300,6 +279,32 @@ public class TranslatedIRODSGenQuery {
 
 	public boolean isComputeTotalRowCount() {
 		return computeTotalRowCount;
+	}
+
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("TranslatedIRODSGenQuery [");
+		if (selectFields != null) {
+			builder.append("selectFields=").append(selectFields.subList(0, Math.min(selectFields.size(), maxLen)))
+					.append(", ");
+		}
+		if (translatedQueryConditions != null) {
+			builder.append("translatedQueryConditions=")
+					.append(translatedQueryConditions.subList(0, Math.min(translatedQueryConditions.size(), maxLen)))
+					.append(", ");
+		}
+		if (orderByFields != null) {
+			builder.append("orderByFields=").append(orderByFields.subList(0, Math.min(orderByFields.size(), maxLen)))
+					.append(", ");
+		}
+		if (irodsQuery != null) {
+			builder.append("irodsQuery=").append(irodsQuery).append(", ");
+		}
+		builder.append("distinct=").append(distinct).append(", upperCase=").append(upperCase)
+				.append(", computeTotalRowCount=").append(computeTotalRowCount).append("]");
+		return builder.toString();
 	}
 
 }

@@ -103,3 +103,8 @@ UserAO and UserGroupAO now provide search by name signatures that can support ca
 
 Added the ability to list available rule engines to RuleProcessingAO to support irule -a functionality. This lists the configured rule 
 engines on the target iRODS server
+
+#### ResourceAOImpl.listResourceNames() returns an empty list from Oracle #308
+
+Added IS NULL support for GenQuery and merge resources with parent of "" and parent of NULL together to account for inconsistancies between
+Oracle ad Postgres iCAT when querying top level resources

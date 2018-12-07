@@ -167,39 +167,6 @@ public class TranslatedGenQueryCondition {
 
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder b = new StringBuilder();
-		String tabOver = "    ";
-		char cr = '\n';
-		b.append("translated query element:");
-		b.append(cr);
-
-		b.append(tabOver);
-		b.append("columnName:");
-		b.append(columnName);
-
-		b.append(cr);
-		b.append(tabOver);
-		b.append("fieldSource:");
-		b.append(fieldSource);
-
-		b.append(cr);
-		b.append(tabOver);
-		b.append("fieldTranslation:");
-		b.append(columnNumericTranslation);
-
-		b.append(cr);
-		b.append(tabOver);
-		b.append("Operator:");
-		b.append(operator);
-		b.append(cr);
-		b.append(tabOver);
-		b.append("Value:");
-		b.append(value);
-		return b.toString();
-	}
-
 	public String getColumnName() {
 		return columnName;
 	}
@@ -218,6 +185,29 @@ public class TranslatedGenQueryCondition {
 
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TranslatedGenQueryCondition [");
+		if (columnName != null) {
+			builder.append("columnName=").append(columnName).append(", ");
+		}
+		if (fieldSource != null) {
+			builder.append("fieldSource=").append(fieldSource).append(", ");
+		}
+		if (columnNumericTranslation != null) {
+			builder.append("columnNumericTranslation=").append(columnNumericTranslation).append(", ");
+		}
+		if (operator != null) {
+			builder.append("operator=").append(operator).append(", ");
+		}
+		if (value != null) {
+			builder.append("value=").append(value);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }
