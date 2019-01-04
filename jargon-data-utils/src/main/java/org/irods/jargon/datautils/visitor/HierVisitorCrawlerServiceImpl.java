@@ -49,7 +49,7 @@ public class HierVisitorCrawlerServiceImpl extends AbstractJargonService {
 			throw new IllegalArgumentException("null visitor");
 		}
 
-		log.info("beginning the crawl...east to west...north to south...");
+		log.info("beginning the crawl...");
 
 		IRODSFileImpl startingPoint = (IRODSFileImpl) getIrodsAccessObjectFactory()
 				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(startingCollectionPath);
