@@ -181,6 +181,23 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 	}
 
 	@Test
+	public final void testQueryWithIsNull() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSGenQueryBuilder queryBuilder = new IRODSGenQueryBuilder(true, false, true, null);
+		queryBuilder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_RESC_PARENT, QueryConditionOperators.IS_NULL, "");
+		IRODSGenQueryFromBuilder query = queryBuilder.exportIRODSQueryFromBuilder(1000);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor.executeIRODSQuery(query, 0);
+		Assert.assertTrue("no result", resultSet.getResults().size() > 0);
+
+	}
+
+	@Test
 	public final void testQueryCollectionPathWithLike() throws Exception {
 		String testFileName = "testQueryCollectionPathWithLike";
 

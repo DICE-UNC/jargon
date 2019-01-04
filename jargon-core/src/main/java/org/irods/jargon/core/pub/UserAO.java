@@ -272,6 +272,26 @@ public interface UserAO extends IRODSAccessObject {
 	List<String> findUserNameLike(String userName) throws JargonException;
 
 	/**
+	 * For a given partial user name, return the user names that are like that one.
+	 * This is handy for creating auto-complete data entry components that need to
+	 * do quick user name lookups. If actual {@code User} domain objects are needed,
+	 * the {@code findWhere()} method provides an easy shortcut for obtaining
+	 * extended user data. This method will do a 'LIKE' query and add a '%' wild
+	 * card to the provided term. This variant of the method does a case-insensitive
+	 * search
+	 *
+	 * @param userName
+	 *            {@code String} with search pattern, % will be added
+	 * @param caseInsensitive
+	 *            {@code boolean} that will do a case-insensitive search if true
+	 * @return {@code List<String>} that are the user names that match the partial
+	 *         query
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	List<String> findUserNameLike(String userName, boolean caseInsensitive) throws JargonException;
+
+	/**
 	 * Generate a temporary password for the connected user. Password validity times
 	 * and number of connections will be set by the iRODS server.
 	 *
@@ -378,5 +398,20 @@ public interface UserAO extends IRODSAccessObject {
 	 *             {@link JargonException}
 	 */
 	void deleteUser(String userName) throws InvalidUserException, JargonException;
+
+	/**
+	 * Find users using a like query with a given name. Blank queries will return
+	 * all users. This variant uses a case insensitive search if the
+	 * {@code caseInsensitive} flag is true
+	 *
+	 * @param userName
+	 *            {@code String} with a partial search
+	 * @param caseInsensitive
+	 *            {@code boolean} indicating case-insensitive search if true
+	 * @return <code>List</code> of {@link User}
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	List<User> findUsersLike(String userName, boolean caseInsensitive) throws JargonException;
 
 }

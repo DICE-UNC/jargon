@@ -17,6 +17,7 @@ import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
+import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -2011,6 +2012,36 @@ public class CollectionAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 
+		// add a group that has test3 and test for the group and not for test3 if
+		// specific query is used
+		SpecificQueryAO specificQueryAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(irodsAccount);
+
+		boolean queryViaSpecific = false;
+
+		if (specificQueryAO.isSupportsSpecificQuery()) {
+			try {
+				specificQueryAO.findSpecificQueryByAlias(CollectionAOImpl.SHOW_COLL_ACLS, "");
+				queryViaSpecific = true;
+			} catch (DataNotFoundException e) {
+			}
+		}
+
+		String testGroupName = "testGetPermissionsForCollection";
+
+		if (queryViaSpecific) {
+			UserGroupAO userGroupAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserGroupAO(irodsAccount);
+			UserGroup group = new UserGroup();
+			group.setUserGroupName(testGroupName);
+			group.setZone(irodsAccount.getZone());
+			userGroupAO.removeUserGroup(testGroupName);
+			userGroupAO.addUserGroup(group);
+			userGroupAO.addUserToGroup(testGroupName,
+					testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_USER_KEY), "");
+			collectionAO.setAccessPermissionRead("", targetIrodsCollection, testGroupName, true);
+
+		}
+
 		collectionAO.setAccessPermissionRead("", targetIrodsCollection,
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
@@ -2020,6 +2051,8 @@ public class CollectionAOImplTest {
 		Assert.assertTrue("did not find the two permissions", userFilePermissions.size() >= 2);
 
 		boolean secondaryUserFound = false;
+		boolean tertiaryUserFound = false;
+		boolean groupFound = true;
 		for (UserFilePermission permission : userFilePermissions) {
 			if (permission.getUserName().equalsIgnoreCase(
 					testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY))) {
@@ -2027,10 +2060,26 @@ public class CollectionAOImplTest {
 				Assert.assertEquals("should have normal zone", irodsAccount.getZone(), permission.getUserZone());
 				Assert.assertEquals("should have read permissions", FilePermissionEnum.READ,
 						permission.getFilePermissionEnum());
+			} else if (permission.getUserName()
+					.equalsIgnoreCase(testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_USER_KEY))) {
+				tertiaryUserFound = true;
+				Assert.assertEquals("tertiary user should have read permissions", FilePermissionEnum.READ,
+						permission.getFilePermissionEnum());
+			} else if (permission.getUserName().equalsIgnoreCase(testGroupName)) {
+				groupFound = true;
+				Assert.assertEquals("group should have read permissions", FilePermissionEnum.READ,
+						permission.getFilePermissionEnum());
 			}
+
 		}
 
 		Assert.assertTrue("did not find secondary user", secondaryUserFound);
+
+		if (queryViaSpecific) {
+			Assert.assertTrue("did not find group", groupFound);
+			Assert.assertFalse("should not find user3 via specific query, just group", tertiaryUserFound);
+
+		}
 
 	}
 

@@ -10,11 +10,10 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class TrashOperationsAOImplTest {
 
@@ -294,6 +293,14 @@ public class TrashOperationsAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 		irodsAccount.setDefaultStorageResource("");
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+
+		if (!environmentalInfoAO.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods.4.2.4")) {
+			return; // don't test prior to 4.2.4 as previously it casued an irods related error
+		}
 
 		File sourceFile = new File(absPath + testFileName);
 		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)

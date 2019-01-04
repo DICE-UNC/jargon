@@ -190,10 +190,10 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Given a search term, find user groups like that term. A blank term will find
-	 * all
+	 * all. This default version does a case-sensitive search.
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> with
+	 *            {@code String} with search term
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 * @return {@code List} of {@link UserGroup}
@@ -202,32 +202,60 @@ public interface UserGroupAO extends IRODSAccessObject {
 	List<UserGroup> findUserGroups(String userGroupName) throws JargonException;
 
 	/**
-	 * Add a user group as a user with groupadmin privilages
+	 * Given a search term, find user groups like that term. A blank term will find
+	 * all. This default version does a case-sensitive search.
+	 *
+	 * @param userGroupName
+	 *            {@code String} with search term
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 * @return {@code List} of {@link UserGroup}
+	 * 
+	 */
+	List<String> findUserGroupNames(String userGroupName, boolean caseInsensitive) throws JargonException;
+
+	/**
+	 * Given a search term, find user groups like that term. A blank term will find
+	 * all. This variant can do a case-insensitive search
+	 *
+	 * @param userGroupName
+	 *            {@code String} with search term
+	 * @param caseInsensitive
+	 *            {@code boolean} that will do a case-insensitive search if true
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 * @return {@code List} of {@link UserGroup}
+	 * 
+	 */
+	List<UserGroup> findUserGroups(String userGroupName, boolean caseInsensitive) throws JargonException;
+
+	/**
+	 * Add a user group as a user with group admin privileges
 	 *
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @throws DuplicateDataException
-	 *             for duplicate user in group
+	 *             {@link DuplicateDataException}
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */
 	void addUserGroupAsGroupAdmin(final UserGroup userGroup) throws DuplicateDataException, JargonException;
 
 	/**
-	 * Add the given user to the group as a user with groupadmin privilages
+	 * Add the given user to the group as a user with group admin privileges
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> of the group to which the user will be added
+	 *            {@code String} of the group to which the user will be added
 	 * @param userName
-	 *            <code>String</code> with the user name
+	 *            {@code String} with the user name
 	 * @param zoneName
-	 *            <code>String</code> with the zone to which the user will be added
+	 *            {@code String} with the zone to which the user will be added
 	 * @throws DuplicateDataException
-	 *             for already existing user
+	 *             {@link DuplicateDataException}
 	 * @throws InvalidGroupException
-	 *             for invalid group
+	 *             {@link InvalidGroupException}
 	 * @throws InvalidUserException
-	 *             for invalid user
+	 *             {@link InvalidUserException}
 	 * @throws JargonException
 	 *             {@link JargonException}
 	 */

@@ -187,4 +187,26 @@ class IRODSGenQueryBuilderQueryData {
 		return computeTotalRowCount;
 	}
 
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSGenQueryBuilderQueryData [");
+		if (selectFields != null) {
+			builder.append("selectFields=").append(selectFields.subList(0, Math.min(selectFields.size(), maxLen)))
+					.append(", ");
+		}
+		if (conditions != null) {
+			builder.append("conditions=").append(conditions.subList(0, Math.min(conditions.size(), maxLen)))
+					.append(", ");
+		}
+		if (orderByFields != null) {
+			builder.append("orderByFields=").append(orderByFields.subList(0, Math.min(orderByFields.size(), maxLen)))
+					.append(", ");
+		}
+		builder.append("distinct=").append(distinct).append(", upperCase=").append(upperCase)
+				.append(", computeTotalRowCount=").append(computeTotalRowCount).append("]");
+		return builder.toString();
+	}
+
 }

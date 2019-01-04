@@ -1,6 +1,7 @@
 package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.connection.IrodsVersionTest;
+import org.irods.jargon.core.protovalues.FilePermissionEnumTest;
 import org.irods.jargon.core.query.IRODSGenQueryTest;
 import org.irods.jargon.core.query.IRODSGenQueryTranslatorTest;
 import org.irods.jargon.core.query.TranslatedIRODSQueryTest;
@@ -26,7 +27,8 @@ import org.junit.runners.Suite;
 		IRODSUriUserInfoTest.class, MiscIRODSUtilsTest.class, AuthTests.class, ChecksumTests.class,
 		TransferRestartTests.class, RandomUtilsTest.class, IrodsVersionTest.class, CyberduckProfileBuilderTest.class,
 
-		SslNegotiationFunctionalTests.class, EncryptedTransferTests.class, ClientHintsTransformTest.class })
+		SslNegotiationFunctionalTests.class, EncryptedTransferTests.class, ClientHintsTransformTest.class,
+		FilePermissionEnumTest.class })
 
 /**
  * Suite to run all tests (except long running and functional), further refined

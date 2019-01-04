@@ -5,6 +5,7 @@ import org.irods.jargon.core.query.GenQueryField;
 import org.irods.jargon.core.query.GenQueryOrderByField;
 import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.GenQuerySelectField;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.TranslatedGenQueryCondition;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.irods.jargon.core.utils.IRODSConstants;
@@ -285,8 +286,14 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 			}
 			for (TranslatedGenQueryCondition queryCondition : translatedIRODSQuery.getTranslatedQueryConditions()) {
 				// New for loop because they have to be in a certain order...
-				subTags[j] = new Tag(SVALUE,
-						" " + queryCondition.getOperator() + " " + queryCondition.getValue() + " ");
+				// overhead for IS NULL is a bit ugly and one day let's clean up and redo this
+				// genquery mess
+				if (queryCondition.getOperator().equals(QueryConditionOperators.IS_NULL.getOperatorAsString())) {
+					subTags[j] = new Tag(SVALUE, queryCondition.getOperator());
+				} else {
+					subTags[j] = new Tag(SVALUE,
+							" " + queryCondition.getOperator() + " " + queryCondition.getValue() + " ");
+				}
 				j++;
 			}
 			message.addTag(new Tag(INX_VAL_PAIR_PI, subTags));

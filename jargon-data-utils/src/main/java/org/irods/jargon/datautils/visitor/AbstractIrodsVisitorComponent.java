@@ -52,7 +52,7 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 	@Override
 	public abstract boolean visit(HierLeaf node);
 
-	@Override
-	public abstract void launch(final String startingCollectionPath);
+	// @Override
+	// public abstract void launch(final String startingCollectionPath);
 
 }

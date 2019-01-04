@@ -47,10 +47,6 @@ public class UserFilePermission {
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		if (userId == null || userId.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userId");
-		}
-
 		if (filePermissionEnum == null) {
 			throw new IllegalArgumentException("null filePermissionEnum");
 		}

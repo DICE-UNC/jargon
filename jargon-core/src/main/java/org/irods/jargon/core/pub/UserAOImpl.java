@@ -477,64 +477,24 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@Override
 	public List<String> findUserNameLike(final String userName) throws JargonException {
 
-		if (userName == null) {
-			throw new IllegalArgumentException("null userName");
-		}
-
-		log.info("findUserNameLike {}", userName);
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		StringBuilder userQuery = new StringBuilder();
-		userQuery.append(userName.trim());
-		userQuery.append("%");
-
-		IRODSQueryResultSet resultSet = null;
-		try {
-			UserAOHelper.addUserSelectsToBuilder(builder);
-			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
-					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.NOT_EQUAL,
-							RODS_GROUP)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.LIKE,
-							userQuery.toString().trim());
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
-			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(irodsQuery, 0);
-
-		} catch (JargonQueryException e) {
-			log.error("query exception for query", e);
-			throw new JargonException("error in query for user", e);
-		} catch (GenQueryBuilderException e) {
-			log.error("query exception for query", e);
-			throw new JargonException("error in query for user", e);
-		}
-
-		List<String> results = new ArrayList<String>();
-		StringBuilder name = new StringBuilder();
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			name = new StringBuilder();
-			name.append(row.getColumn(1));
-			name.append('#');
-			name.append(row.getColumn(0));
-			results.add(name.toString());
-		}
-
-		log.debug("user list:{}", results);
-		return results;
+		/*
+		 * Delegates to case insensitive search
+		 */
+		return findUserNameLike(userName, false);
 
 	}
 
 	@Override
-	public List<User> findUsersLike(final String userName) throws JargonException {
+	public List<User> findUsersLike(final String userName, final boolean caseInsensitive) throws JargonException {
 
 		if (userName == null) {
 			throw new IllegalArgumentException("null userName");
 		}
 
 		log.info("findUserNameLike {}", userName);
+		log.info("case insensitive?:{}", caseInsensitive);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
 
 		StringBuilder userQuery = new StringBuilder();
 		userQuery.append(userName.trim());
@@ -570,6 +530,16 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 
 		return users;
+
+	}
+
+	@Override
+	public List<User> findUsersLike(final String userName) throws JargonException {
+
+		/*
+		 * Delegates to the case insensitive query, kept to avoid API changes
+		 */
+		return findUsersLike(userName, false);
 
 	}
 
@@ -1009,6 +979,56 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		return irodsGenQueryExecutor;
 
+	}
+
+	@Override
+	public List<String> findUserNameLike(String userName, boolean caseInsensitive) throws JargonException {
+		if (userName == null) {
+			throw new IllegalArgumentException("null userName");
+		}
+
+		log.info("findUserNameLike {}", userName);
+		log.info("caseInsensitive:{}", caseInsensitive);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, caseInsensitive, null);
+
+		StringBuilder userQuery = new StringBuilder();
+		userQuery.append(userName.trim());
+		userQuery.append("%");
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			UserAOHelper.addUserSelectsToBuilder(builder);
+			builder.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_NAME, OrderByType.ASC)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.NOT_EQUAL,
+							RODS_GROUP)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.LIKE,
+							userQuery.toString().trim());
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query for user", e);
+		}
+
+		List<String> results = new ArrayList<String>();
+		StringBuilder name = new StringBuilder();
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			name = new StringBuilder();
+			name.append(row.getColumn(1));
+			name.append('#');
+			name.append(row.getColumn(0));
+			results.add(name.toString());
+		}
+
+		log.debug("user list:{}", results);
+		return results;
 	}
 
 }

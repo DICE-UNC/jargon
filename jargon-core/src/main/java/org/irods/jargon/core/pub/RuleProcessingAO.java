@@ -13,7 +13,7 @@ import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 public interface RuleProcessingAO extends IRODSAccessObject {
 
 	/**
-	 * Type of rule invocation, primarily involving special handlng of iRODS old
+	 * Type of rule invocation, primarily involving special handling of iRODS old
 	 * style rules. For other rule languages DEFAULT is the usual setting.
 	 *
 	 * @author conwaymc
@@ -22,6 +22,15 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	public enum RuleProcessingType {
 		INTERNAL, EXTERNAL, CLASSIC, DEFAULT
 	}
+
+	/**
+	 * List the available rule engines (python, classic, etc)
+	 * 
+	 * @return {@code List} of {@code String} with each configured rule engine
+	 * @throws JargonException
+	 *             {@link JargonException}
+	 */
+	List<String> listAvailableRuleEngines() throws JargonException;
 
 	/**
 	 * Submit a user-defined rule for processing (analogous to running irule). Note

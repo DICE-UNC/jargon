@@ -116,4 +116,15 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSGenQueryFromBuilder [");
+		if (irodsGenQueryBuilderData != null) {
+			builder.append("irodsGenQueryBuilderData=").append(irodsGenQueryBuilderData);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

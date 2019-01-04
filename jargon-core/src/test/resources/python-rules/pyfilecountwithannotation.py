@@ -1,5 +1,10 @@
 # @RuleEngine="PYTHON"
 @external
+
+def main(rule_args, callback, rei):
+    myTestRule(rule_args,callback,rei)
+
+
 def myTestRule(rule_args, callback, rei):
     dest = global_vars['*dest'][1:-1]
     src = global_vars['*source'][1:-1]

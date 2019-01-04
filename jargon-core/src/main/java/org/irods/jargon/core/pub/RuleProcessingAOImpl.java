@@ -21,6 +21,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.ExecMyRuleInp;
 import org.irods.jargon.core.packinstr.RuleExecDelInp;
 import org.irods.jargon.core.packinstr.Tag;
@@ -301,6 +302,46 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		}
 
 		return executeRule(irodsRuleAsString, null, ruleInvocationConfiguration);
+	}
+
+	@Override
+	public List<String> listAvailableRuleEngines() throws JargonException, UnsupportedOperationException {
+		log.info("listAvailableRuleEngines()");
+		EnvironmentalInfoAO environmentalInfoAO = this.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(this.getIRODSAccount());
+
+		if (!environmentalInfoAO.getIRODSServerProperties().isAtLeastIrods420()) {
+			log.info("cannot support this operation based on current version");
+			throw new UnsupportedOperationException("cannot support multiple rule engines");
+		}
+
+		ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instanceForListAvailableRuleEngines();
+		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
+		log.debug("response from rule exec: {}", response.parseTag());
+		/*
+		 * For some reason this operation returns the list of rule engines as an error
+		 * response, so that tag is shoved back into the response and I will need to
+		 * parse it here
+		 */
+		if (!response.getName().equals("RErrMsg_PI")) {
+			log.error("did not get RErrMsg_PI from list rule engines");
+			throw new JargonRuntimeException("unexpected protocol response encountered when listing rule engines");
+		}
+
+		String message = response.getTag("msg").getStringValue();
+		log.info("rule listing tag response:{}", message);
+		List<String> ruleEngines = new ArrayList<String>();
+
+		String[] split = message.split("\n");
+
+		if (split.length > 1) {
+			for (int i = 1; i < split.length; i++) {
+				ruleEngines.add(split[i].trim());
+			}
+		}
+
+		log.info("rule engines:{}", ruleEngines);
+		return ruleEngines;
 	}
 
 	@Override

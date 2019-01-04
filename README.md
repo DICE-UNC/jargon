@@ -75,10 +75,36 @@ Cleanup of JavaDocs
 
 Added isysmeta functions into DataObjectAO. 
 
-'''Java
+```Java
 
 List<String> listDataTypes() throws JargonException
 
-'''
+```
 
+#### python rule engine errors in iRODS 4.2.4 #320
 
+Updated test python rules to conform to new requirement to include a main() in client-submitted rules
+
+#### UserFilePermissions issue #253
+
+Added specific query based ACL listing if available on the target iRODS grid
+
+#### Jargon Core tests fail when trying to delete a collection #305
+
+Deleting a collection that contains data with the 'no force' option no longer causes an error in iRODS 4.2.4, therefore this 
+unit test is reactivated and is applied in target iRODS servers 4.2.4 and greater. The testDeleteACollectionWithAmpInTheNameBug170
+unit test still fails and this is being followed up as an iRODS bug.
+
+#### Support for ILIKE case insensitive where classes #254
+
+UserAO and UserGroupAO now provide search by name signatures that can support case-insensitive queries
+
+#### add candidate rule engine listing #264
+
+Added the ability to list available rule engines to RuleProcessingAO to support irule -a functionality. This lists the configured rule 
+engines on the target iRODS server
+
+#### ResourceAOImpl.listResourceNames() returns an empty list from Oracle #308
+
+Added IS NULL support for GenQuery and merge resources with parent of "" and parent of NULL together to account for inconsistancies between
+Oracle ad Postgres iCAT when querying top level resources
