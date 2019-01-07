@@ -3,6 +3,9 @@
  */
 package org.irods.jargon.core.checksum;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -201,6 +204,34 @@ public class ChecksumManagerImpl implements ChecksumManager {
 		checksumValue.setChecksumEncoding(checksumEncodingEnum);
 		checksumValue.setChecksumStringValue(checksumData);
 		checksumValue.setChecksumTransmissionFormat(irodsChecksumValue);
+		byte[] digest = new byte[0];
+
+		/*
+		 * add additional representations based on the checksum type
+		 */
+
+		if (checksumEncodingEnum == ChecksumEncodingEnum.MD5) {
+			log.debug("adding variants of checksum for md5");
+			try {
+				digest = Hex.decodeHex(checksumData);
+			} catch (DecoderException e) {
+				log.error("error decoding a hex value:{}", checksumData, e);
+				throw new JargonRuntimeException(e);
+			}
+
+		} else if (checksumEncodingEnum == ChecksumEncodingEnum.SHA256) {
+			log.debug("adding variants of checksum for sha256");
+			digest = Base64.decodeBase64(checksumData);
+
+		} else {
+			log.error("unable to find an encoder for: {}", checksumEncodingEnum);
+			throw new ChecksumMethodUnavailableException("cannot find encoding method for checksum");
+		}
+
+		checksumValue.setBinaryChecksumValue(digest);
+		checksumValue.setBase64ChecksumValue(Base64.encodeBase64String(digest));
+		checksumValue.setHexChecksumValue(Hex.encodeHexString(digest));
+
 		log.info("checksumValue from iRODS:{}", checksumValue);
 		return checksumValue;
 

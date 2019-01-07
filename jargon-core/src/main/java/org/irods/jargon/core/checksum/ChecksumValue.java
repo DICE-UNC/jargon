@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.checksum;
 
+import java.util.Arrays;
+
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
@@ -19,11 +21,25 @@ public class ChecksumValue {
 	 */
 	private String checksumTransmissionFormat = "";
 	/**
-	 * Stringified representation of the checksum digest in the format expected by
-	 * the packing instruction
+	 * Actual checksum value as stored in iRODS in the default representation, this
+	 * may vary based on the implementation
 	 */
 	private String checksumStringValue = "";
 
+	/**
+	 * Checksum represented as a hex string
+	 */
+	private String hexChecksumValue = "";
+
+	/**
+	 * Checksum represented as a base64 string
+	 */
+	private String base64ChecksumValue = "";
+
+	/**
+	 * byte array representation of the checksum value
+	 */
+	private byte[] binaryChecksumValue = new byte[0];
 	/**
 	 * Encoding used for the checksum
 	 */
@@ -80,28 +96,31 @@ public class ChecksumValue {
 		this.checksumTransmissionFormat = checksumTransmissionFormat;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
+		final int maxLen = 10;
 		StringBuilder builder = new StringBuilder();
 		builder.append("ChecksumValue [");
 		if (checksumTransmissionFormat != null) {
-			builder.append("checksumTransmissionFormat=");
-			builder.append(checksumTransmissionFormat);
-			builder.append(", ");
+			builder.append("checksumTransmissionFormat=").append(checksumTransmissionFormat).append(", ");
 		}
 		if (checksumStringValue != null) {
-			builder.append("checksumStringValue=");
-			builder.append(checksumStringValue);
-			builder.append(", ");
+			builder.append("checksumStringValue=").append(checksumStringValue).append(", ");
+		}
+		if (hexChecksumValue != null) {
+			builder.append("hexChecksumValue=").append(hexChecksumValue).append(", ");
+		}
+		if (base64ChecksumValue != null) {
+			builder.append("base64ChecksumValue=").append(base64ChecksumValue).append(", ");
+		}
+		if (binaryChecksumValue != null) {
+			builder.append("binaryChecksumValue=")
+					.append(Arrays
+							.toString(Arrays.copyOf(binaryChecksumValue, Math.min(binaryChecksumValue.length, maxLen))))
+					.append(", ");
 		}
 		if (checksumEncoding != null) {
-			builder.append("checksumEncoding=");
-			builder.append(checksumEncoding);
+			builder.append("checksumEncoding=").append(checksumEncoding);
 		}
 		builder.append("]");
 		return builder.toString();
@@ -157,6 +176,30 @@ public class ChecksumValue {
 			return false;
 		}
 		return true;
+	}
+
+	public String getHexChecksumValue() {
+		return hexChecksumValue;
+	}
+
+	public void setHexChecksumValue(String hexChecksumValue) {
+		this.hexChecksumValue = hexChecksumValue;
+	}
+
+	public String getBase64ChecksumValue() {
+		return base64ChecksumValue;
+	}
+
+	public void setBase64ChecksumValue(String base64ChecksumValue) {
+		this.base64ChecksumValue = base64ChecksumValue;
+	}
+
+	public byte[] getBinaryChecksumValue() {
+		return binaryChecksumValue;
+	}
+
+	public void setBinaryChecksumValue(byte[] binaryChecksumValue) {
+		this.binaryChecksumValue = binaryChecksumValue;
 	}
 
 }

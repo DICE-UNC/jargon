@@ -126,42 +126,6 @@ public class ChecksumManagerImplTest {
 
 	}
 
-	@Test
-	public void testGetEncodingFromIrodsWhenSHA2() throws Exception {
-		String irodsString = "sha2:blah949204902";
-
-		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
-
-		ChecksumManager checksumManager = new ChecksumManagerImpl(account, irodsAccessObjectFactory);
-
-		ChecksumValue checksumValue = checksumManager.determineChecksumEncodingFromIrodsData(irodsString);
-
-		ChecksumEncodingEnum checksumEncodingEnum = checksumValue.getChecksumEncoding();
-		Assert.assertEquals("should have picked sha2", ChecksumEncodingEnum.SHA256, checksumEncodingEnum);
-		Assert.assertEquals("blah949204902", checksumValue.getChecksumStringValue());
-		Assert.assertEquals(irodsString, checksumValue.getChecksumTransmissionFormat());
-
-	}
-
-	@Test
-	public void testGetEncodingFromIrodsWhenMD5() throws Exception {
-		String md5String = "blah949204902";
-
-		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
-
-		ChecksumManager checksumManager = new ChecksumManagerImpl(account, irodsAccessObjectFactory);
-
-		ChecksumValue checksumValue = checksumManager.determineChecksumEncodingFromIrodsData(md5String);
-
-		ChecksumEncodingEnum checksumEncodingEnum = checksumValue.getChecksumEncoding();
-		Assert.assertEquals("should have picked md5", ChecksumEncodingEnum.MD5, checksumEncodingEnum);
-		Assert.assertEquals(md5String, checksumValue.getChecksumStringValue());
-		Assert.assertEquals(md5String, checksumValue.getChecksumTransmissionFormat());
-
-	}
-
 	@Test(expected = ChecksumMethodUnavailableException.class)
 	public void testGetEncodingFromIrodsWhenBogus() throws Exception {
 		String md5String = "bogus:blah949204902";
