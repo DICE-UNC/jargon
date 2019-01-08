@@ -2,6 +2,7 @@ package org.irods.jargon.core.checksum;
 
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Hex;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -10,6 +11,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class MD5LocalChecksumComputerStrategyTest {
 
@@ -44,6 +47,11 @@ public class MD5LocalChecksumComputerStrategyTest {
 		Assert.assertEquals("did not compute md5 checksum and string encode it", expectedAsString,
 				actual.getChecksumStringValue());
 		Assert.assertEquals("transmission value improper", expectedAsString, actual.getChecksumTransmissionFormat());
+		Assert.assertTrue("no binary data", actual.getBinaryChecksumValue().length > 0);
+		Assert.assertEquals("did not correctly compute hex value", actual.getHexChecksumValue(),
+				Hex.encodeHexString(actual.getBinaryChecksumValue()));
+		Assert.assertEquals("did no correctly compute base64 value", actual.getBase64ChecksumValue(),
+				Base64.encode(actual.getBinaryChecksumValue()));
 
 	}
 

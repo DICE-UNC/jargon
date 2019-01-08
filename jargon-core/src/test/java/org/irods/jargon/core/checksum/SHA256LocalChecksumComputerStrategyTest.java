@@ -3,6 +3,7 @@ package org.irods.jargon.core.checksum;
 import java.util.Properties;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -45,6 +46,12 @@ public class SHA256LocalChecksumComputerStrategyTest {
 				actual.getChecksumStringValue());
 		Assert.assertEquals("transmission value improper", "sha2:" + expectedAsString,
 				actual.getChecksumTransmissionFormat());
+		Assert.assertTrue("no binary data", actual.getBinaryChecksumValue().length > 0);
+		Assert.assertEquals("did not correctly compute hex value", actual.getHexChecksumValue(),
+				Hex.encodeHexString(actual.getBinaryChecksumValue()));
+
+		String base64TestValue = Base64.encodeBase64String(actual.getBinaryChecksumValue());
+		Assert.assertEquals("did no correctly compute base64 value", actual.getBase64ChecksumValue(), base64TestValue);
 	}
 
 }

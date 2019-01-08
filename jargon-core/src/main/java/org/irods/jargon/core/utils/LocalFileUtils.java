@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.RuleProcessingAOImpl;
 import org.slf4j.Logger;
@@ -48,9 +49,12 @@ public class LocalFileUtils {
 	/**
 	 * Write the string to a file
 	 *
-	 * @param file {@link File}
-	 * @param string {@code String}
-	 * @throws IOException {@link IOException}
+	 * @param file
+	 *            {@link File}
+	 * @param string
+	 *            {@code String}
+	 * @throws IOException
+	 *             {@link IOException}
 	 */
 	public static void stringToFile(final File file, final String string) throws IOException {
 		if (file == null) {
@@ -74,7 +78,8 @@ public class LocalFileUtils {
 	 * @param file
 	 *            {@link File} to read
 	 * @return <code>String</code> with the file contents
-	 * @throws IOException {@link IOException}
+	 * @throws IOException
+	 *             {@link IOException}
 	 */
 	public static String fileContentsAsString(final File file) throws IOException {
 		if (file == null) {
@@ -98,8 +103,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff after the
-	 * last '.' character to treat as the file extension
+	 * Parse a file name to get the stuff after the last '.' character to treat as
+	 * the file extension
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
@@ -423,18 +428,7 @@ public class LocalFileUtils {
 	 * @return {@code String} in hex that represents this checkSum
 	 */
 	public static String digestByteArrayToString(final byte[] digestAsByteArray) {
-
-		if (digestAsByteArray == null) {
-			throw new IllegalArgumentException("unknown format, not recognized as an MD5 checksum in a byte array");
-		}
-
-		final StringBuilder sb = new StringBuilder();
-
-		for (final byte element : digestAsByteArray) {
-			sb.append(String.format("%02x", element));
-		}
-
-		return sb.toString();
+		return Hex.toHexString(digestAsByteArray);
 	}
 
 	/**

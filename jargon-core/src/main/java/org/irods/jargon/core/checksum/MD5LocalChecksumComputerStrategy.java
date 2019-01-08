@@ -5,6 +5,8 @@ package org.irods.jargon.core.checksum;
 
 import java.io.FileNotFoundException;
 
+import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.util.encoders.Hex;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.LocalFileUtils;
@@ -38,9 +40,14 @@ public class MD5LocalChecksumComputerStrategy extends AbstractChecksumComputeStr
 
 		byte[] digest = LocalFileUtils.computeMD5FileCheckSumViaAbsolutePath(localFileAbsolutePath);
 		ChecksumValue value = new ChecksumValue();
+		value.setBinaryChecksumValue(digest);
+
+		value.setBase64ChecksumValue(Base64.encodeBase64String(digest).trim());
+
 		value.setChecksumEncoding(ChecksumEncodingEnum.MD5);
 		value.setChecksumStringValue(LocalFileUtils.digestByteArrayToString(digest));
 		value.setChecksumTransmissionFormat(value.getChecksumStringValue());
+		value.setHexChecksumValue(Hex.toHexString(digest));
 		return value;
 
 	}

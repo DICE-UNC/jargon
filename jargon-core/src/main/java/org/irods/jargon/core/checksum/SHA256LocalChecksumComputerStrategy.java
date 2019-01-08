@@ -6,6 +6,7 @@ package org.irods.jargon.core.checksum;
 import java.io.FileNotFoundException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.util.encoders.Hex;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.LocalFileUtils;
@@ -42,6 +43,10 @@ public class SHA256LocalChecksumComputerStrategy extends AbstractChecksumCompute
 		ChecksumValue value = new ChecksumValue();
 		value.setChecksumEncoding(ChecksumEncodingEnum.SHA256);
 		value.setChecksumStringValue(Base64.encodeBase64String(digest).trim());
+		value.setBinaryChecksumValue(digest);
+		value.setHexChecksumValue(Hex.toHexString(digest));
+		value.setBase64ChecksumValue(value.getChecksumStringValue());
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("sha2:");
 		sb.append(value.getChecksumStringValue());

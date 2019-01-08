@@ -108,3 +108,9 @@ engines on the target iRODS server
 
 Added IS NULL support for GenQuery and merge resources with parent of "" and parent of NULL together to account for inconsistancies between
 Oracle ad Postgres iCAT when querying top level resources
+
+
+#### checksum enhancements #324
+
+Added enhanced values in ChecksumValue so that binary, Base64, and Hex String representations of a checksum are always available in the
+value object.
