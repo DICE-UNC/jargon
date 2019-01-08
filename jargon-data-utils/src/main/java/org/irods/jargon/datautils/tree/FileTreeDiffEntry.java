@@ -5,7 +5,7 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 /**
  * Entry that describes a collection or data object (local or in iRODS) that is
  * a difference between two trees. The object contains a description of the data
- * object or collection, and whether it is
+ * object or collection, and whether it is out of synch with a reference tree.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
