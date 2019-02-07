@@ -4,11 +4,13 @@ import org.irods.jargon.core.protovalues.AuditActionEnumTest;
 import org.irods.jargon.core.protovalues.UserTypeEnumTest;
 import org.irods.jargon.core.pub.domain.AvuDataTest;
 import org.irods.jargon.core.pub.domain.CollectionTest;
+import org.irods.jargon.core.query.MetaDataAndDomainDataTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ AvuDataTest.class, UserTypeEnumTest.class, CollectionTest.class, AuditActionEnumTest.class })
+@Suite.SuiteClasses({ AvuDataTest.class, UserTypeEnumTest.class, CollectionTest.class, AuditActionEnumTest.class,
+		MetaDataAndDomainDataTest.class })
 public class DomainTests {
 
 }
