@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
-import org.bouncycastle.util.encoders.Hex;
+import org.apache.commons.codec.binary.Hex;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.RuleProcessingAOImpl;
 import org.slf4j.Logger;
@@ -428,7 +428,7 @@ public class LocalFileUtils {
 	 * @return {@code String} in hex that represents this checkSum
 	 */
 	public static String digestByteArrayToString(final byte[] digestAsByteArray) {
-		return Hex.toHexString(digestAsByteArray);
+		return Hex.encodeHexString(digestAsByteArray);
 	}
 
 	/**
