@@ -43,8 +43,8 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	private boolean aborted = false;
 
 	/**
-	 * Filter for deciding whether to index a collection or file. Maybe be
-	 * left <code>null</code> for no filtering
+	 * Filter for deciding whether to index a collection or file. Maybe be left
+	 * <code>null</code> for no filtering
 	 */
 	private ConfigurableIndexerFilter indexerFilter = null;
 
@@ -239,7 +239,14 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 
 	}
 
-	@Override
+	/**
+	 * Base launch method will start the visitor process. This is most likely
+	 * implemented outside of the visitor itself for a particular application.
+	 * 
+	 * @param startingCollectionPath
+	 *            {@code String} with the starting absolute path of a parent
+	 *            collection.
+	 */
 	public void launch(final String startingCollectionPath) {
 		log.info("launch");
 		if (startingCollectionPath == null || startingCollectionPath.isEmpty()) {

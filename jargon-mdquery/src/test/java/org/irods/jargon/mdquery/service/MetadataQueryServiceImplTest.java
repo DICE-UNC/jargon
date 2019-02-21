@@ -84,7 +84,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -153,7 +152,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -245,7 +243,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -263,7 +260,6 @@ public class MetadataQueryServiceImplTest {
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName2);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals2 = new ArrayList<String>() {
 			/**
 			 *
@@ -281,7 +277,6 @@ public class MetadataQueryServiceImplTest {
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName3);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals3 = new ArrayList<String>() {
 			/**
 			 *
@@ -370,7 +365,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -388,7 +382,6 @@ public class MetadataQueryServiceImplTest {
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName2);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals2 = new ArrayList<String>() {
 			/**
 			 *
@@ -406,7 +399,6 @@ public class MetadataQueryServiceImplTest {
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName3);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals3 = new ArrayList<String>() {
 			/**
 			 *
@@ -490,7 +482,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -546,7 +537,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -635,7 +625,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -753,7 +742,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -877,7 +865,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.EQUAL);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
@@ -972,7 +959,6 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(QueryConditionOperators.GREATER_THAN);
-		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			/**
 			 *
