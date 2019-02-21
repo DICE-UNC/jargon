@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
 /**
@@ -256,5 +257,14 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 			throw new JargonRuntimeException("exception during clone()", e);
 		}
 
+	}
+
+	/**
+	 * Convenience method to return this information as an {@link AvuData} object.
+	 * 
+	 * @return {@link AvuData} equivalent
+	 */
+	public AvuData asAvu() {
+		return AvuData.instance(this.avuAttribute, this.avuValue, this.avuUnit);
 	}
 }

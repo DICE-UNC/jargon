@@ -114,3 +114,7 @@ Oracle ad Postgres iCAT when querying top level resources
 
 Added enhanced values in ChecksumValue so that binary, Base64, and Hex String representations of a checksum are always available in the
 value object.
+
+#### add asAvuData() method to MetaDataAndDomainData #326
+
+Add convenience method to convert to AvuData object.
