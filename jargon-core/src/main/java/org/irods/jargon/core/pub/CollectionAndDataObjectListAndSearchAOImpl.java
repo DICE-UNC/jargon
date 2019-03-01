@@ -198,8 +198,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 			log.info(
 					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
-			entries = collectionListingUtils
-					.handleNoListingUnderRootOrHome(absolutePathToParent);
+			entries = collectionListingUtils.handleNoListingUnderRootOrHome(absolutePathToParent);
 			pagingAwareCollectionListing.setCollectionAndDataObjectListingEntries(entries);
 
 			descriptor.setCollectionsComplete(true);
@@ -495,8 +494,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		final ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 
 		if (!objStat.isSomeTypeOfCollection()) {
-			log.info("not a collection, return 1");
-			return 1;
+			log.info("not a collection, return size of target data object");
+			return objStat.getObjSize();
 		}
 
 		/*

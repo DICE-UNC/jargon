@@ -4177,9 +4177,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		log.info("time:{}", time);
 		log.info("dataObjectAbsolutePath:{}", dataObjectAbsolutePath);
 
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 		String strDate = sdfDate.format(time);
+		// ModDataObjMetaInp modDataObjMetaInp =
+		// ModDataObjMetaInp.instanceForModExpDate(dataObjectAbsolutePath,
+		// "1260550980");
 		ModDataObjMetaInp modDataObjMetaInp = ModDataObjMetaInp.instanceForModExpDate(dataObjectAbsolutePath, strDate);
+
 		getIRODSProtocol().irodsFunction(modDataObjMetaInp);
 		log.info("complete!");
 
