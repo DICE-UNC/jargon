@@ -23,7 +23,7 @@ class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 	protected AbstractConnection instance(final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager) throws JargonException {
 
-		log.info("instance()");
+		log.debug("instance()");
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");

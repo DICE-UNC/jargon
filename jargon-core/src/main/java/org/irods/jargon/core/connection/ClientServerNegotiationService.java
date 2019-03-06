@@ -41,8 +41,8 @@ class ClientServerNegotiationService {
 	 * Default constructor takes the mid level protocol object that represents the
 	 * iRODS agent connection for which transport negotiation will be done
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link AbstractIRODSMidLevelProtocol} for negotiation
+	 * @param irodsMidLevelProtocol {@link AbstractIRODSMidLevelProtocol} for
+	 *                              negotiation
 	 */
 	ClientServerNegotiationService(final IRODSMidLevelProtocol irodsMidLevelProtocol) {
 		super();
@@ -93,13 +93,12 @@ class ClientServerNegotiationService {
 	 *
 	 * @return {@link NegotiatedClientServerConfiguration} with the negotiated
 	 *         result
-	 * @throws ClientServerNegotiationException
-	 *             if the negotiation fails
+	 * @throws ClientServerNegotiationException if the negotiation fails
 	 * @throws JargonException
 	 */
 	StartupResponseData negotiate(final ClientServerNegotiationStructInitNegotiation struct)
 			throws ClientServerNegotiationException, JargonException {
-		log.info("negotiate()");
+		log.debug("negotiate()");
 
 		if (struct == null) {
 			throw new IllegalArgumentException("null struct");
@@ -109,9 +108,9 @@ class ClientServerNegotiationService {
 
 	private StartupResponseData negotiateUsingServerProtocol(final ClientServerNegotiationStructInitNegotiation struct)
 			throws ClientServerNegotiationException, JargonException {
-		log.info("negotiateUsingServerProtocol()");
-		log.info("negotiation over response from server:{}", struct);
-		log.info("client policy:{}", referToNegotiationPolicy());
+		log.debug("negotiateUsingServerProtocol()");
+		log.debug("negotiation over response from server:{}", struct);
+		log.debug("client policy:{}", referToNegotiationPolicy());
 
 		/*
 		 * Analogous to irods_client_negotiation.cpp ~ line 250:
@@ -123,7 +122,7 @@ class ClientServerNegotiationService {
 
 		Outcome negotiatedOutcome = negotiationTable[referToNegotiationPolicy().getSslNegotiationPolicy()
 				.ordinal()][struct.getSslNegotiationPolicy().ordinal()];
-		log.info("negotiatedOutcome:{}", negotiatedOutcome);
+		log.debug("negotiatedOutcome:{}", negotiatedOutcome);
 
 		if (negotiatedOutcome == Outcome.CS_NEG_FAILURE) {
 			log.error(
@@ -132,7 +131,7 @@ class ClientServerNegotiationService {
 			throw new ClientServerNegotiationException("failure in client server negotiation");
 		}
 
-		log.info("was a success, return choice to server");
+		log.debug("was a success, return choice to server");
 		StartupResponseData startupResponseData = notifyServerOfNegotiationSuccess(negotiatedOutcome);
 		irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
 		return startupResponseData;
@@ -165,7 +164,7 @@ class ClientServerNegotiationService {
 		startupResponse.setNegotiatedClientServerConfiguration(
 				new NegotiatedClientServerConfiguration(negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
 
-		log.info("startupResponse captured:{}", startupResponse);
+		log.debug("startupResponse captured:{}", startupResponse);
 
 		wrapConnectionInSslIfConfigured(startupResponse);
 
@@ -175,18 +174,18 @@ class ClientServerNegotiationService {
 
 	private void wrapConnectionInSslIfConfigured(final StartupResponseData startupResponse)
 			throws JargonException, AssertionError {
-		log.info("wrapConnectionInSsl()");
+		log.debug("wrapConnectionInSsl()");
 		// some sanity checking
 		if (startupResponse.getNegotiatedClientServerConfiguration() == null) {
 			throw new IllegalArgumentException("null negotiatedClientServerConfiguration in startup response");
 		}
 
 		if (!startupResponse.getNegotiatedClientServerConfiguration().isSslConnection()) {
-			log.info("no ssl");
+			log.debug("no ssl");
 			return;
 		}
 
-		log.info("wrapping in ssl connection");
+		log.debug("wrapping in ssl connection");
 		SslConnectionUtilities sslConnectionUtilities = new SslConnectionUtilities(
 				getIrodsMidLevelProtocol().getIrodsSession());
 		getIrodsMidLevelProtocol().setIrodsConnectionNonEncryptedRef(getIrodsMidLevelProtocol().getIrodsConnection());
@@ -196,7 +195,7 @@ class ClientServerNegotiationService {
 		configureParametersForParallelTransfer(startupResponse);
 
 		getIrodsMidLevelProtocol().setStartupResponseData(startupResponse);
-		log.info("connection now wrapped in ssl socket!");
+		log.debug("connection now wrapped in ssl socket!");
 
 	}
 
@@ -208,13 +207,14 @@ class ClientServerNegotiationService {
 	 */
 	private void configureParametersForParallelTransfer(final StartupResponseData startupResponse)
 			throws JargonException {
-		log.info("configureParametersForParallelTransfer()");
+		log.debug("configureParametersForParallelTransfer()");
 		PipelineConfiguration myProps = PipelineConfiguration
 				.instance(getIrodsMidLevelProtocol().getIrodsSession().getJargonProperties());
-		log.info("setting up secret key");
-		log.info("creating secret key for parallel transfer encryption using:{}", myProps.getEncryptionAlgorithmEnum());
+		log.debug("setting up secret key");
+		log.debug("creating secret key for parallel transfer encryption using:{}",
+				myProps.getEncryptionAlgorithmEnum());
 		if (myProps.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
-			log.info("AES key selected");
+			log.debug("AES key selected");
 			AbstractKeyGenerator generator = new AESKeyGenerator(myProps,
 					startupResponse.getNegotiatedClientServerConfiguration());
 			startupResponse.getNegotiatedClientServerConfiguration().setSecretKey(generator.generateKey());
@@ -228,12 +228,12 @@ class ClientServerNegotiationService {
 		 */
 
 		try {
-			log.info("sending header with encryption cues");
+			log.debug("sending header with encryption cues");
 			getIrodsMidLevelProtocol().sendHeader(myProps.getEncryptionAlgorithmEnum().getTextValue(),
 					myProps.getEncryptionKeySize(), myProps.getEncryptionSaltSize(),
 					myProps.getEncryptionNumberHashRounds(), 0);
 			getIrodsMidLevelProtocol().getIrodsConnection().flush();
-			log.info("now write the shared secret to iRODS");
+			log.debug("now write the shared secret to iRODS");
 			getIrodsMidLevelProtocol().irodsFunctionUnidirectional(NEGOTIATION_SHARED_SECRET,
 					startupResponse.getNegotiatedClientServerConfiguration().getSecretKey().getEncoded(), null, 0, 0,
 					null, 0, 0, 0);

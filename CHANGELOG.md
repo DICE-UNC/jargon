@@ -77,6 +77,13 @@ Added IS NULL support for GenQuery and merge resources with parent of "" and par
 Oracle ad Postgres iCAT when querying top level resources
 
 
+#### Quiet some repetative logging by migrating from info to debug #327
+
+Migrated lots of repetative low-level log messages about auth and low level communications into debug log level versus info. This cleans up repetative, low-value information when attempting to 
+trace method calls at the info level. In Jargon, info log level should represent the chain of method calls and the parameters for each call and have relatively little cruft about low level packing 
+instructions or handshakes, life cycle in the way.
+
+
 ### Removed
 
 #### Remove user profile subproject and migrate over to jargon-extensions #315
