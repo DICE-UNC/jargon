@@ -168,15 +168,14 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		specificQueryDefinition.setArgumentCount(countArgumentsInQuery(specificQueryDefinition.getSql()));
 		specificQueryDefinition.setColumnNames(parseColumnNamesFromQuery(specificQueryDefinition.getSql()));
 
-		log.info("query definition:{}", specificQueryDefinition);
+		log.debug("query definition:{}", specificQueryDefinition);
 		return specificQueryDefinition;
 	}
 
 	/**
 	 * Given an sql query, parse out the column names and return as a list
 	 *
-	 * @param sql
-	 *            {@code String} with the sql
+	 * @param sql {@code String} with the sql
 	 * @return {@code List<String>} of column names. These will appear as lower case
 	 */
 	public static List<String> parseColumnNamesFromQuery(final String sql) {
@@ -233,8 +232,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 	/**
 	 * Given a query string, count the number of arguments expected
 	 *
-	 * @param sql
-	 *            {@code String} with the actual sql used in the specific query
+	 * @param sql {@code String} with the actual sql used in the specific query
 	 * @return {@code int} with the expected number of arguments
 	 */
 	public static int countArgumentsInQuery(final String sql) {
@@ -255,6 +253,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 	public void addSpecificQuery(final SpecificQueryDefinition specificQuery)
 			throws JargonException, DuplicateDataException {
 
+		log.info("addSpecificQuery()");
+
 		checkSupportForSpecificQuery();
 
 		GeneralAdminInpForSQ queryPI;
@@ -263,7 +263,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			throw new IllegalArgumentException("cannot create specific query with null SpecificQueryDefinition object");
 		}
 
-		log.info("creating specific query: {}", specificQuery);
+		log.debug("creating specific query: {}", specificQuery);
 
 		queryPI = GeneralAdminInpForSQ.instanceForAddSpecificQuery(specificQuery);
 
@@ -280,18 +280,12 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			}
 		}
 
-		log.info("added specific query");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.accessobject.SpecificQueryAO#removeSpecificQuery
-	 * (org.irods.jargon.core .domain.SpecificQuery)
-	 */
 	@Override
 	public void removeSpecificQuery(final SpecificQueryDefinition specificQuery) throws JargonException {
 
+		log.info("removeSpecificQuery()");
 		checkSupportForSpecificQuery();
 
 		GeneralAdminInpForSQ queryPI;
@@ -300,24 +294,18 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			throw new IllegalArgumentException("cannot remove specific query with null SpecificQueryDefinition object");
 		}
 
-		log.info("removing specific query: {}", specificQuery);
+		log.debug("removing specific query: {}", specificQuery);
 		queryPI = GeneralAdminInpForSQ.instanceForRemoveSpecificQuery(specificQuery);
 		log.info(EXECUTING_SQUERY_PI);
 		getIRODSProtocol().irodsFunction(queryPI);
-		log.info("removed specific query");
+		log.debug("removed specific query");
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.accessobject.SpecificQueryAO#removeSpecificQueryByAlias
-	 * (String)
-	 */
 	@Override
 	public void removeSpecificQueryByAlias(final String alias) throws JargonException, DuplicateDataException {
 
+		log.info("removeSpecificQueryByAlias()");
 		checkSupportForSpecificQuery();
 
 		GeneralAdminInpForSQ queryPI;
@@ -326,11 +314,11 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			throw new IllegalArgumentException("cannot remove specific query with null alias");
 		}
 
-		log.info("removing specific query by alias: {}", alias);
+		log.debug("removing specific query by alias: {}", alias);
 		queryPI = GeneralAdminInpForSQ.instanceForRemoveSpecificQueryByAlias(alias);
 		log.info(EXECUTING_SQUERY_PI);
 		getIRODSProtocol().irodsFunction(queryPI);
-		log.info("removed specific query");
+		log.debug("removed specific query");
 
 	}
 
@@ -351,11 +339,11 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			throw new IllegalArgumentException("cannot remove specific query with null SQL query");
 		}
 
-		log.info("removing all specific queries by sql query: {}", sqlQuery);
+		log.debug("removing all specific queries by sql query: {}", sqlQuery);
 		queryPI = GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL(sqlQuery);
-		log.info(EXECUTING_SQUERY_PI);
+		log.debug(EXECUTING_SQUERY_PI);
 		getIRODSProtocol().irodsFunction(queryPI);
-		log.info("removed specific query");
+		log.debug("removed specific query");
 
 	}
 
@@ -366,11 +354,11 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 	 *
 	 * @param specificQuery
 	 * @param maxRows
-	 * @param justTryWithoutSupportCheck
-	 *            {@code boolean} that indicates that checks for support for
-	 *            specific query should be bypassed. This is used to test support by
-	 *            trying, which is an overhead because eIRODS version numbers are
-	 *            off
+	 * @param justTryWithoutSupportCheck {@code boolean} that indicates that checks
+	 *                                   for support for specific query should be
+	 *                                   bypassed. This is used to test support by
+	 *                                   trying, which is an overhead because eIRODS
+	 *                                   version numbers are off
 	 * @return
 	 * @throws DataNotFoundException
 	 * @throws JargonException
@@ -452,7 +440,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 
 		SpecificQueryDefinition specificQueryDefinition = findSpecificQueryByAlias(specificQuery.getQueryString());
 
-		log.info("found specific query definition by alias");
+		log.debug("found specific query definition by alias");
 
 		if (specificQuery.getArguments().size() != specificQueryDefinition.getArgumentCount()) {
 			log.error("number of parameters in query does not match number of parameters provided");
@@ -466,12 +454,13 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 	 * @param specificQuery
 	 * @param maxRows
 	 * @param specificQueryDefinition
-	 * @param userDefinedOffset
-	 *            {@code int} that represents an offset to use in the returned
-	 *            record counts that is enforced within the sql itself. This is used
-	 *            because users often use LIMIT and OFFSET statements inside the
-	 *            actual SQL to accomplish custom paging. This allows the result set
-	 *            to reflect any user supplied offsets
+	 * @param userDefinedOffset       {@code int} that represents an offset to use
+	 *                                in the returned record counts that is enforced
+	 *                                within the sql itself. This is used because
+	 *                                users often use LIMIT and OFFSET statements
+	 *                                inside the actual SQL to accomplish custom
+	 *                                paging. This allows the result set to reflect
+	 *                                any user supplied offsets
 	 * @return
 	 * @throws JargonException
 	 */
@@ -492,7 +481,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		try {
 			response = getIRODSProtocol().irodsFunction(specificQueryInp);
 		} catch (DataNotFoundException e) {
-			log.info("no results from iRODS, return as an empty result set");
+			log.debug("no results from iRODS, return as an empty result set");
 
 			return new SpecificQueryResultSet(specificQuery, specificQueryDefinition.getColumnNames());
 		}
@@ -513,7 +502,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		SpecificQueryResultSet results = new SpecificQueryResultSet(specificQuery, resultRows,
 				specificQueryDefinition.getColumnNames(), hasMoreRecords, continuation);
 
-		log.info("doing a close for this page...");
+		log.debug("doing a close for this page...");
 		closeResultSet(results);
 		return results;
 
@@ -578,7 +567,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		SpecificQueryResultSet results = new SpecificQueryResultSet(specificQuery, resultRows, columnNames,
 				hasMoreRecords, continuation);
 
-		log.info("doing a close for this page...");
+		log.debug("doing a close for this page...");
 		closeResultSet(results);
 		return results;
 
@@ -604,14 +593,14 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		}
 
 		if (specificQueryResultSet.getContinuationIndex() == 0) {
-			log.info("continuation is zero, no need to close...silently ignored");
+			log.debug("continuation is zero, no need to close...silently ignored");
 			return;
 		}
 
 		SpecificQueryInp specificQueryInp = SpecificQueryInp.instanceForClose(specificQueryResultSet);
 
 		getIRODSProtocol().irodsFunction(specificQueryInp);
-		log.info("specific query closed");
+		log.debug("specific query closed");
 
 	}
 
@@ -644,7 +633,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		 */
 
 		if (getIRODSServerProperties().isSupportsSpecificQuery()) {
-			log.info("by version number I know I support specific query");
+			log.debug("by version number I know I support specific query");
 			return false;
 
 		} else {

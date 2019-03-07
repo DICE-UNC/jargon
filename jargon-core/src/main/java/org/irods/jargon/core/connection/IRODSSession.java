@@ -251,7 +251,7 @@ public class IRODSSession {
 		final Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
-			log.warn("closing session that is already closed, silently ignore");
+			log.debug("closing session that is already closed, silently ignore");
 			return;
 		}
 
