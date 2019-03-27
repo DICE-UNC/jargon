@@ -78,12 +78,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	/**
 	 * Default constructor
 	 *
-	 * @param irodsSession
-	 *            {@link IRODSSession}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsSession {@link IRODSSession}
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @throws JargonException for iRODS error
 	 */
 	protected CollectionAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -600,8 +597,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 					.add(AvuData.instance(metadata.getAvuAttribute(), metadata.getAvuValue(), metadata.getAvuUnit()));
 		}
 
-		deleteBulkAVUMetadataFromCollection(objStat.getAbsolutePath(), avusToDelete);
-		log.debug("metadata removed");
+		if (avusToDelete.isEmpty()) {
+			log.debug("no metadata to delete");
+		} else {
+			deleteBulkAVUMetadataFromCollection(objStat.getAbsolutePath(), avusToDelete);
+			log.debug("metadata removed");
+		}
 	}
 
 	/*
@@ -1641,8 +1642,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	 * @param absolutePath
 	 * @param recursive
 	 * @return
-	 * @throws FileNotFoundException
-	 *             if the underlying file is not found by the absolute path
+	 * @throws FileNotFoundException if the underlying file is not found by the
+	 *                               absolute path
 	 * @throws JargonException
 	 */
 	private boolean adjustRecursiveOption(final String absolutePath, final boolean recursive)
