@@ -58,13 +58,13 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	@Override
 	public AuthResponse authenticateIRODSAccount(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
-		log.info("authenticateIRODSAccount()");
+		log.debug("authenticateIRODSAccount()");
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		log.info("any existing session will be closed, or at least handed back to a pool/cache");
+		log.debug("any existing session will be closed, or at least handed back to a pool/cache");
 		irodsSession.closeSession(irodsAccount);
 
 		/*
@@ -74,7 +74,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 		 */
 		AuthResponse authResponse = irodsSession.currentConnection(irodsAccount).getAuthResponse();
 
-		log.info("authResponse:{}", authResponse);
+		log.debug("authResponse:{}", authResponse);
 		return authResponse;
 
 	}
@@ -89,7 +89,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	@Override
 	public AuthResponse authenticateIRODSAccountUtilizingCachedConnectionIfPresent(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
-		log.info("authenticateIRODSAccountUtilizingCachedConnectionIfPresent()");
+		log.debug("authenticateIRODSAccountUtilizingCachedConnectionIfPresent()");
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -100,15 +100,14 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 		 * cause the authentication process and cache the response.
 		 */
 		AuthResponse authResponse = irodsSession.currentConnection(irodsAccount).getAuthResponse();
-		log.info("authResponse:{}", authResponse);
+		log.debug("authResponse:{}", authResponse);
 		return authResponse;
 	}
 
 	/**
 	 * Construct an instance with the given {@code IRODSSession}
 	 *
-	 * @param irodsSession
-	 *            {@link IRODSSession}
+	 * @param irodsSession {@link IRODSSession}
 	 */
 	public IRODSAccessObjectFactoryImpl(final IRODSSession irodsSession) {
 		this.irodsSession = irodsSession;
@@ -206,12 +205,11 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/**
 	 * Creates an instance of this access object factory.
 	 *
-	 * @param irodsSession
-	 *            {@link org.irods.jargon.core.connection.IRODSSession} that is
-	 *            capable of creating connections to iRODS on demand.
+	 * @param irodsSession {@link org.irods.jargon.core.connection.IRODSSession}
+	 *                     that is capable of creating connections to iRODS on
+	 *                     demand.
 	 * @return {@link IRODSAccessObjectFactory}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static IRODSAccessObjectFactory instance(final IRODSSession irodsSession) throws JargonException {
 		if (irodsSession == null) {
@@ -586,7 +584,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 			if (getIrodsSession().getDiscoveredServerPropertiesCache().retrieveValue(irodsAccount.getHost(),
 					irodsAccount.getZone(), DiscoveredServerPropertiesCache.EIRODS) == null) {
 
-				log.info("need to cache and update isEirods");
+				log.debug("need to cache and update isEirods");
 				getEnvironmentalInfoAO(irodsAccount);
 			}
 		}

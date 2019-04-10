@@ -42,12 +42,10 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * protocol handler, therefore an authentication factory is also required,
 	 * allowing a level of plug-ability to the authentication layer.
 	 *
-	 * @param irodsConnectionFactory
-	 *            {@link IRODSConnectionFactory} implementation that can provide a
-	 *            low-level networking layer
-	 * @param authenticationFactory
-	 *            {@link AuthenticationFactory} that can provide authentication
-	 *            implementations
+	 * @param irodsConnectionFactory {@link IRODSConnectionFactory} implementation
+	 *                               that can provide a low-level networking layer
+	 * @param authenticationFactory  {@link AuthenticationFactory} that can provide
+	 *                               authentication implementations
 	 */
 	protected AbstractIRODSMidLevelProtocolFactory(final IRODSConnectionFactory irodsConnectionFactory,
 			final AuthenticationFactory authenticationFactory) {
@@ -82,9 +80,9 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected IRODSMidLevelProtocol instance(final IRODSSession irodsSession, final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsProtocolManager) throws AuthenticationException, JargonException {
 
-		log.info("instance() method...calling connection life cycle");
+		log.debug("instance() method...calling connection life cycle");
 
-		log.info("create connection....");
+		log.debug("create connection....");
 		AbstractConnection connection = irodsConnectionFactory.instance(irodsAccount, irodsSession,
 				irodsProtocolManager);
 
@@ -93,9 +91,9 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			// add a session reference to the protocol.
 			protocol.setIrodsSession(irodsSession);
 
-			log.info("...have connection, now authenticate given the auth scheme in the iRODS account...");
+			log.debug("...have connection, now authenticate given the auth scheme in the iRODS account...");
 			protocol = authenticate(protocol, irodsAccount, irodsSession, irodsProtocolManager);
-			log.info("..authenticated...now decorate and return...");
+			log.debug("..authenticated...now decorate and return...");
 			return decorate(protocol, irodsAccount, irodsSession);
 		} catch (AuthenticationException e) {
 			log.warn("auth failure, be sure to abandon agent)", e);
@@ -109,12 +107,10 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * Initial creation step gives individual factories a hook to insert their own
 	 * subclass of the iRODS protocol layer
 	 *
-	 * @param connection
-	 *            {@link AbstractConnection} to iRODS
+	 * @param connection           {@link AbstractConnection} to iRODS
 	 *
-	 * @param irodsProtocolManager
-	 *            {@link IRODSProtocolManager} that may have connected this session,
-	 *            may be null
+	 * @param irodsProtocolManager {@link IRODSProtocolManager} that may have
+	 *                             connected this session, may be null
 	 * @return {@link IRODSMidLevelProtocol} that is not yet initialized, but of the
 	 *         right base class
 	 */
@@ -126,23 +122,20 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * additional information or processing. At the end of this phase the protocol
 	 * level connection is ready for use by higher-level API functions
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            connected {@link IRODSMidLevelProtocol} that has been
-	 *            authenticated
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection as requested
-	 * @param irodsSession
-	 *            {@link IRODSSession} with information about Jargon and its
-	 *            environment
+	 * @param irodsMidLevelProtocol connected {@link IRODSMidLevelProtocol} that has
+	 *                              been authenticated
+	 * @param irodsAccount          {@link IRODSAccount} that defines the connection
+	 *                              as requested
+	 * @param irodsSession          {@link IRODSSession} with information about
+	 *                              Jargon and its environment
 	 * @return {@link IRODSMidLevelProtocol} ready for use. This may or may not be
 	 *         the same protocol implementation passed in to the method
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	protected IRODSMidLevelProtocol decorate(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession) throws JargonException {
 
-		log.info("decorate()");
+		log.debug("decorate()");
 
 		if (irodsMidLevelProtocol == null) {
 			throw new IllegalArgumentException("null irodsMidLevelProtocol");
@@ -164,7 +157,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 
 		}
 
-		log.info(irodsMidLevelProtocol.getIrodsServerProperties().toString());
+		log.debug(irodsMidLevelProtocol.getIrodsServerProperties().toString());
 
 		return irodsMidLevelProtocol;
 
@@ -175,30 +168,26 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * produce an authenticated mid level protocol handler that wraps a live
 	 * connection
 	 *
-	 * @param protocol
-	 *            {@link AbstractConnection} to iRODS
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the instance and principal
-	 *            information
-	 * @param irodsSession
-	 *            {@link IRODSSession} that contains common services and information
-	 * @param irodsProtocolManager
-	 *            {@link IRODSProtocolManager} that may have connected this session,
-	 *            may be null
+	 * @param protocol             {@link AbstractConnection} to iRODS
+	 * @param irodsAccount         {@link IRODSAccount} that defines the instance
+	 *                             and principal information
+	 * @param irodsSession         {@link IRODSSession} that contains common
+	 *                             services and information
+	 * @param irodsProtocolManager {@link IRODSProtocolManager} that may have
+	 *                             connected this session, may be null
 	 * @return {@link IRODSMidLevelProtocol} that is connected and authenticated.
 	 *         This may be decorated with additional information in later steps in
 	 *         the creating life-cycle.
-	 * @throws AuthenticationException
-	 *             if the authentication failed for invalid credentials
-	 * @throws JargonException
-	 *             for general errors
+	 * @throws AuthenticationException if the authentication failed for invalid
+	 *                                 credentials
+	 * @throws JargonException         for general errors
 	 */
 
 	protected IRODSMidLevelProtocol authenticate(final IRODSMidLevelProtocol protocol, final IRODSAccount irodsAccount,
 			final IRODSSession irodsSession, final IRODSProtocolManager irodsProtocolManager)
 			throws AuthenticationException, JargonException {
 
-		log.info("authenticate()");
+		log.debug("authenticate()");
 
 		if (protocol == null) {
 			throw new IllegalArgumentException("null connection");
@@ -212,12 +201,12 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 
-		log.info("get auth mechanism");
+		log.debug("get auth mechanism");
 		AuthMechanism authMechanism = getAuthenticationFactory().instanceAuthMechanism(irodsAccount);
 
 		protocol.setIrodsSession(irodsSession);
 
-		log.info("authenticate...");
+		log.debug("authenticate...");
 		IRODSMidLevelProtocol authenticatedProtocol = null;
 		try {
 			authenticatedProtocol = authMechanism.authenticate(protocol, irodsAccount);

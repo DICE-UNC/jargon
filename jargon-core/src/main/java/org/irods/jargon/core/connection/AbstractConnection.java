@@ -92,19 +92,18 @@ public abstract class AbstractConnection {
 	 * introduction of negotiation and seems a bit too involved for its own good. We
 	 * need to simplify this (MCC)
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection
-	 * @param pipelineConfiguration
-	 *            {@link PipelineConfiguration} that defines the low level
-	 *            connection and networking configuration
-	 * @param irodsProtocolManager
-	 *            {@link irodsProtocolManager} that requested this connection
-	 * @param socket
-	 *            {@link Socket} being wrapped in this connection, this allows an
-	 *            arbitrary connected socket to be wrapped in low level jargon
-	 *            communication semantics.
-	 * @param IRODSession
-	 *            {@link IRODSSession} associated with this connection
+	 * @param irodsAccount          {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration {@link PipelineConfiguration} that defines the
+	 *                              low level connection and networking
+	 *                              configuration
+	 * @param irodsProtocolManager  {@link irodsProtocolManager} that requested this
+	 *                              connection
+	 * @param socket                {@link Socket} being wrapped in this connection,
+	 *                              this allows an arbitrary connected socket to be
+	 *                              wrapped in low level jargon communication
+	 *                              semantics.
+	 * @param IRODSession           {@link IRODSSession} associated with this
+	 *                              connection
 	 * @throws JargonException
 	 */
 	AbstractConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
@@ -152,23 +151,21 @@ public abstract class AbstractConnection {
 	 * Constructor with account info to set up socket and information about
 	 * buffering and other networking details
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection
-	 * @param pipelineConfiguration
-	 *            {@link PipelineConfiguration} that defines the low level
-	 *            connection and networking configuration
-	 * @param irodsProtocolManager
-	 *            {@link IRODSProtocolManager} that requested this connection
+	 * @param irodsAccount          {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration {@link PipelineConfiguration} that defines the
+	 *                              low level connection and networking
+	 *                              configuration
+	 * @param irodsProtocolManager  {@link IRODSProtocolManager} that requested this
+	 *                              connection
 	 *
-	 * @param irodsSession
-	 *            {@link IRODSSession} that is associated with this connection
-	 * @throws JargonException
-	 *             on creation of the connection
+	 * @param irodsSession          {@link IRODSSession} that is associated with
+	 *                              this connection
+	 * @throws JargonException on creation of the connection
 	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager, final IRODSSession irodsSession) throws JargonException {
 
-		log.info("AbstractConnection()");
+		log.debug("AbstractConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -186,14 +183,14 @@ public abstract class AbstractConnection {
 		this.irodsSession = irodsSession;
 
 		if (irodsAccount.getClientServerNegotiationPolicy() != null) {
-			log.info("using override negotiation policy from IRODSAccount:{}",
+			log.debug("using override negotiation policy from IRODSAccount:{}",
 					irodsAccount.getClientServerNegotiationPolicy());
 			operativeClientServerNegotiationPolicy = irodsAccount.getClientServerNegotiationPolicy();
 		} else {
 			ClientServerNegotationPolicyFromPropertiesBuilder builder = new ClientServerNegotationPolicyFromPropertiesBuilder(
 					irodsSession);
 			operativeClientServerNegotiationPolicy = builder.buildClientServerNegotiationPolicyFromJargonProperties();
-			log.info("using default negotiation policy:{}", operativeClientServerNegotiationPolicy);
+			log.debug("using default negotiation policy:{}", operativeClientServerNegotiationPolicy);
 		}
 
 		initInternalBufferIfNeeded(pipelineConfiguration);
@@ -208,7 +205,7 @@ public abstract class AbstractConnection {
 		 */
 
 		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
-			log.info("using internal cache buffer of size:{}", pipelineConfiguration.getInternalCacheBufferSize());
+			log.debug("using internal cache buffer of size:{}", pipelineConfiguration.getInternalCacheBufferSize());
 			outputBuffer = new byte[pipelineConfiguration.getInternalCacheBufferSize()];
 		}
 	}
@@ -230,7 +227,7 @@ public abstract class AbstractConnection {
 			throw new JargonException("null irods connection manager");
 		}
 
-		log.info("opening irods socket");
+		log.debug("opening irods socket");
 
 		connect(irodsAccount);
 		setConnected(true);
@@ -257,10 +254,9 @@ public abstract class AbstractConnection {
 	 * At the successful completion of this method, the networking is created,
 	 * though the handshake and authentication steps remain
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that contains information on host/port
-	 * @throws JargonException
-	 *             general exception
+	 * @param irodsAccount {@link IRODSAccount} that contains information on
+	 *                     host/port
+	 * @throws JargonException general exception
 	 */
 	protected abstract void connect(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -280,19 +276,16 @@ public abstract class AbstractConnection {
 	/**
 	 * Writes value.length bytes to this output stream.
 	 *
-	 * @param value
-	 *            value to be sent
-	 * @throws NullPointerException
-	 *             Send buffer is empty
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @param value value to be sent
+	 * @throws NullPointerException Send buffer is empty
+	 * @throws IOException          If an IOException occurs
 	 */
 	public void send(final byte[] value) throws IOException {
 
 		try {
 			// packing instructions may be null, in which case nothing is sent
 			if (value == null) {
-				log.info("no value, so do not do the send, this may be ok depending on the operation");
+				log.debug("no value, so do not do the send, this may be ok depending on the operation");
 				return;
 			}
 
@@ -327,14 +320,10 @@ public abstract class AbstractConnection {
 	 * output stream, by converting the value to a byte array and calling send(
 	 * byte[] value ).
 	 *
-	 * @param value
-	 *            value to be sent
-	 * @param offset
-	 *            offset into array
-	 * @param length
-	 *            number of bytes to read
-	 * @throws IOException
-	 *             if an IOException occurs
+	 * @param value  value to be sent
+	 * @param offset offset into array
+	 * @param length number of bytes to read
+	 * @throws IOException if an IOException occurs
 	 */
 	public void send(final byte[] value, final int offset, final int length) throws IOException {
 
@@ -372,10 +361,8 @@ public abstract class AbstractConnection {
 	/**
 	 * Writes value.length bytes to this output stream.
 	 *
-	 * @param value
-	 *            value to be sent
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @param value value to be sent
+	 * @throws IOException If an IOException occurs
 	 */
 	public void send(final String value) throws IOException {
 		if (value == null) {
@@ -390,10 +377,8 @@ public abstract class AbstractConnection {
 	 * Writes an int to the output stream as four bytes, network order (high byte
 	 * first).
 	 *
-	 * @param value
-	 *            value to be sent
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @param value value to be sent
+	 * @throws IOException If an IOException occurs
 	 */
 	protected void sendInNetworkOrder(final int value) throws IOException {
 		byte bytes[] = new byte[INT_LENGTH];
@@ -407,12 +392,9 @@ public abstract class AbstractConnection {
 	 * Writes an int to the output stream as four bytes, network order (high byte
 	 * first). This will optionally add a flush()
 	 *
-	 * @param value
-	 *            value to be sent
-	 * @param flush
-	 *            {@code boolean} that will add a flush() if {@code true}
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @param value value to be sent
+	 * @param flush {@code boolean} that will add a flush() if {@code true}
+	 * @throws IOException If an IOException occurs
 	 */
 	protected void sendInNetworkOrder(final int value, final boolean flush) throws IOException {
 		sendInNetworkOrder(value);
@@ -425,18 +407,20 @@ public abstract class AbstractConnection {
 	 * Writes the given input stream content, for the given length, to the iRODS
 	 * agent
 	 *
-	 * @param source
-	 *            {@code InputStream} to the data to be written. This stream will
-	 *            have been buffered by the caller, no buffering is done here.
-	 * @param length
-	 *            {@code long} with the length of data to send
-	 * @param connectionProgressStatusListener
-	 *            {link ConnectionProgressStatusListener} or {@code null} if no
-	 *            listener desired. This listener can then receive call-backs of
-	 *            instantaneous byte counts.
+	 * @param source                           {@code InputStream} to the data to be
+	 *                                         written. This stream will have been
+	 *                                         buffered by the caller, no buffering
+	 *                                         is done here.
+	 * @param length                           {@code long} with the length of data
+	 *                                         to send
+	 * @param connectionProgressStatusListener {link
+	 *                                         ConnectionProgressStatusListener} or
+	 *                                         {@code null} if no listener desired.
+	 *                                         This listener can then receive
+	 *                                         call-backs of instantaneous byte
+	 *                                         counts.
 	 * @return <code>long</code> with the length written
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @throws IOException If an IOException occurs
 	 */
 	protected long send(final InputStream source, long length,
 			final ConnectionProgressStatusListener connectionProgressStatusListener) throws IOException {
@@ -467,7 +451,7 @@ public abstract class AbstractConnection {
 			lenThisRead = source.read(temp);
 
 			if (lenThisRead == -1) {
-				log.info("done with stream");
+				log.debug("done with stream");
 				break;
 			}
 
@@ -486,7 +470,7 @@ public abstract class AbstractConnection {
 		log.debug("final flush of data sent");
 		flush();
 
-		log.info("total sent:{}", dataSent);
+		log.debug("total sent:{}", dataSent);
 		return dataSent;
 
 	}
@@ -494,10 +478,8 @@ public abstract class AbstractConnection {
 	/**
 	 * Flushes all data in the output stream and sends it to the server.
 	 *
-	 * @throws NullPointerException
-	 *             Send buffer empty
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @throws NullPointerException Send buffer empty
+	 * @throws IOException          If an IOException occurs
 	 *
 	 */
 	public void flush() throws IOException {
@@ -523,8 +505,7 @@ public abstract class AbstractConnection {
 	 *
 	 * @return <code>byte</code> with the byte read
 	 *
-	 * @throws IOException
-	 *             If an IOException occurs
+	 * @throws IOException If an IOException occurs
 	 */
 	protected byte read() throws IOException {
 		return (byte) irodsInputStream.read();
@@ -534,11 +515,9 @@ public abstract class AbstractConnection {
 	/**
 	 * Reads an int from the server
 	 *
-	 * @param value
-	 *            {@code byte[]} which will contain the read value
+	 * @param value {@code byte[]} which will contain the read value
 	 * @return {@code int} with number of bytes read
-	 * @throws IOException
-	 *             for read error
+	 * @throws IOException for read error
 	 */
 	protected int read(final byte[] value) throws IOException {
 		return read(value, 0, value.length);
@@ -548,12 +527,10 @@ public abstract class AbstractConnection {
 	/**
 	 * Read into the given output stream
 	 *
-	 * @param destination
-	 *            {@link OutputStream} with the value read from the connection
-	 * @param length
-	 *            {@code long} with the data to read
-	 * @throws IOException
-	 *             on read error
+	 * @param destination {@link OutputStream} with the value read from the
+	 *                    connection
+	 * @param length      {@code long} with the data to read
+	 * @throws IOException on read error
 	 */
 	void read(final OutputStream destination, final long length) throws IOException {
 		read(destination, length, null);
@@ -563,18 +540,16 @@ public abstract class AbstractConnection {
 	 * Read from the iRODS connection for a given length, and write what is read
 	 * from iRODS to the given {@code OutputStream}.
 	 *
-	 * @param destination
-	 *            {@code OutputStream} to which data will be streamed from iRODS.
-	 *            Note that this method will wrap the output stream with a buffered
-	 *            stream for you.
-	 * @param length
-	 *            {@code long} with the length of data to be read from iRODS and
-	 *            pushed to the stream.
-	 * @param intraFileStatusListener
-	 *            {@link ConnectionProgressStatusListener} that will receive
-	 *            progress on the streaming, or {@code null} for no such call-backs.
-	 * @throws IOException
-	 *             on read error
+	 * @param destination             {@code OutputStream} to which data will be
+	 *                                streamed from iRODS. Note that this method
+	 *                                will wrap the output stream with a buffered
+	 *                                stream for you.
+	 * @param length                  {@code long} with the length of data to be
+	 *                                read from iRODS and pushed to the stream.
+	 * @param intraFileStatusListener {@link ConnectionProgressStatusListener} that
+	 *                                will receive progress on the streaming, or
+	 *                                {@code null} for no such call-backs.
+	 * @throws IOException on read error
 	 */
 	public void read(final OutputStream destination, long length,
 			final ConnectionProgressStatusListener intraFileStatusListener) throws IOException {
@@ -637,24 +612,17 @@ public abstract class AbstractConnection {
 	 * Reads a byte array from the server. Blocks until {@code length} number of
 	 * bytes are read.
 	 *
-	 * @param value
-	 *            {code byte[]} with the value that was read
-	 * @param length
-	 *            length of byte array to be read
-	 * @param offset
-	 *            {@code int} with the offset into the value array to place the read
-	 *            data
+	 * @param value  {code byte[]} with the value that was read
+	 * @param length length of byte array to be read
+	 * @param offset {@code int} with the offset into the value array to place the
+	 *               read data
 	 * @return byte[] bytes read from the server
-	 * @throws OutOfMemoryError
-	 *             Read buffer overflow
-	 * @throws ClosedChannelException
-	 *             if the connection is closed
-	 * @throws NullPointerException
-	 *             Read buffer empty
-	 * @throws IOException
-	 *             If an IOException occurs if the connection is closed
-	 * @throws InterruptedIOException
-	 *             if IO interrupted
+	 * @throws OutOfMemoryError       Read buffer overflow
+	 * @throws ClosedChannelException if the connection is closed
+	 * @throws NullPointerException   Read buffer empty
+	 * @throws IOException            If an IOException occurs if the connection is
+	 *                                closed
+	 * @throws InterruptedIOException if IO interrupted
 	 */
 	protected int read(final byte[] value, final int offset, final int length)
 			throws ClosedChannelException, InterruptedIOException, IOException {
@@ -720,8 +688,7 @@ public abstract class AbstractConnection {
 	}
 
 	/**
-	 * @param irodsSession
-	 *            the irodsSession that created this connection
+	 * @param irodsSession the irodsSession that created this connection
 	 */
 	protected void setIrodsSession(final IRODSSession irodsSession) {
 		this.irodsSession = irodsSession;
@@ -755,8 +722,7 @@ public abstract class AbstractConnection {
 	}
 
 	/**
-	 * @param irodsProtocolManager
-	 *            the irodsProtocolManager to set
+	 * @param irodsProtocolManager the irodsProtocolManager to set
 	 */
 	public void setIrodsProtocolManager(final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
@@ -798,8 +764,7 @@ public abstract class AbstractConnection {
 	 * <p>
 	 * For general usage, this method should not called.
 	 *
-	 * @param connected
-	 *            the connected to set
+	 * @param connected the connected to set
 	 */
 	protected void setConnected(final boolean connected) {
 		this.connected = connected;
@@ -808,8 +773,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Close down the actual network connection
 	 *
-	 * @throws JargonException
-	 *             on shutdown error
+	 * @throws JargonException on shutdown error
 	 */
 	protected abstract void shutdown() throws JargonException;
 
@@ -834,8 +798,7 @@ public abstract class AbstractConnection {
 	}
 
 	/**
-	 * @param encryptionType
-	 *            the encryptionType to set
+	 * @param encryptionType the encryptionType to set
 	 */
 	protected void setEncryptionType(final EncryptionType encryptionType) {
 		this.encryptionType = encryptionType;

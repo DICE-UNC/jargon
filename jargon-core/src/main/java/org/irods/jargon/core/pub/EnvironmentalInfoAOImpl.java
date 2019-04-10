@@ -105,10 +105,10 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 	@Override
 	public ClientHints retrieveClientHints(final boolean refresh) throws JargonException {
-		log.info("retrieveClientHints()");
+		log.debug("retrieveClientHints()");
 		ClientHints clientHints = null;
 
-		log.info("first look in cache if not a refresh");
+		log.debug("first look in cache if not a refresh");
 		if (!refresh) {
 			clientHints = getIRODSSession().getDiscoveredServerPropertiesCache()
 					.retrieveClientHints(getIRODSAccount().getHost(), getIRODSAccount().getZone());

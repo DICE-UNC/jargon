@@ -65,10 +65,10 @@ public class DiscoveredServerPropertiesCache {
 	 * If an {@code IRODSServerProperties} was already cached, then just return it,
 	 * if not cached, this method will return null
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
+	 * @param host     {@code String} with the name of the iRODS host this applies
+	 *                 to
+	 * @param zoneName {@code String} with the name of the iRODS zone this applies
+	 *                 to
 	 * @return {@link IRODSServerProperties} or {@code null} if not cached
 	 */
 	public IRODSServerProperties retrieveIRODSServerProperties(final String host, final String zoneName) {
@@ -82,7 +82,7 @@ public class DiscoveredServerPropertiesCache {
 			myZone = "";
 		}
 
-		log.info("now retriving server properties from cache with zone:{}", myZone);
+		log.debug("now retriving server properties from cache with zone:{}", myZone);
 
 		return getIRODSServerPropertiesForHostAndZone(host, myZone);
 	}
@@ -92,10 +92,10 @@ public class DiscoveredServerPropertiesCache {
 	 * If an {@code IRODSServerProperties} was already cached, then just return it,
 	 * if not cached, this method will return null
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
+	 * @param host     {@code String} with the name of the iRODS host this applies
+	 *                 to
+	 * @param zoneName {@code String} with the name of the iRODS zone this applies
+	 *                 to
 	 * @return {@link IRODSServerProperties} or {@code null} if not cached
 	 */
 	public ClientHints retrieveClientHints(final String host, final String zoneName) {
@@ -109,7 +109,7 @@ public class DiscoveredServerPropertiesCache {
 			myZone = "";
 		}
 
-		log.info("now retriving clientHints from cache with zone:{}", myZone);
+		log.debug("now retriving clientHints from cache with zone:{}", myZone);
 
 		String cacheKey = buildHostPlusZone(host, myZone);
 		return cacheOfClientHints.get(cacheKey);
@@ -143,12 +143,11 @@ public class DiscoveredServerPropertiesCache {
 	 * exist in the cache, or if the property does not exist in the zone cache, a
 	 * {@code null} will be returned.
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
-	 * @param propertyName
-	 *            {@code String} with the property value to be retrieved
+	 * @param host         {@code String} with the name of the iRODS host this
+	 *                     applies to
+	 * @param zoneName     {@code String} with the name of the iRODS zone this
+	 *                     applies to
+	 * @param propertyName {@code String} with the property value to be retrieved
 	 * @return {@code String} with the value for the given property, or {@code null}
 	 *         if no such value exists
 	 */
@@ -182,10 +181,8 @@ public class DiscoveredServerPropertiesCache {
 	 * Delete the {@code IRODSServerProperties} If the zone has no cache, silently
 	 * ignore
 	 *
-	 * @param host
-	 *            {@link String} with the hostname
-	 * @param zoneName
-	 *            {@link String} with the zone name
+	 * @param host     {@link String} with the hostname
+	 * @param zoneName {@link String} with the zone name
 	 *
 	 */
 	public void deleteCachedClientHints(final String host, final String zoneName) {
@@ -209,12 +206,9 @@ public class DiscoveredServerPropertiesCache {
 	 * Delete the {@code IRODSServerProperties} If the zone has no cache, silently
 	 * ignore
 	 *
-	 * @param host
-	 *            {@code String} with host name
-	 * @param zoneName
-	 *            {@code String} with zone name
-	 * @param propertyName
-	 *            {@code String} with property name
+	 * @param host         {@code String} with host name
+	 * @param zoneName     {@code String} with zone name
+	 * @param propertyName {@code String} with property name
 	 */
 
 	public void deleteCachedIRODSServerProperties(final String host, final String zoneName, final String propertyName) {
@@ -238,12 +232,9 @@ public class DiscoveredServerPropertiesCache {
 	 * Delete the property from the cache if it exists. If the zone has no cache, or
 	 * the property itself is not cached, silently ignore
 	 *
-	 * @param host
-	 *            {@link String} with the hostname
-	 * @param zoneName
-	 *            {@link String} with the zone name
-	 * @param propertyName
-	 *            {@link String} with the property name
+	 * @param host         {@link String} with the hostname
+	 * @param zoneName     {@link String} with the zone name
+	 * @param propertyName {@link String} with the property name
 	 */
 	public void deleteCachedProperty(final String host, final String zoneName, final String propertyName) {
 
@@ -271,10 +262,8 @@ public class DiscoveredServerPropertiesCache {
 	 * Delete all cached props for the host and zone. If there is no zone cache,
 	 * ignore the request
 	 *
-	 * @param host
-	 *            {@link String} with hostname
-	 * @param zoneName
-	 *            {@link String} with zone name
+	 * @param host     {@link String} with hostname
+	 * @param zoneName {@link String} with zone name
 	 */
 	public void deleteCache(final String host, final String zoneName) {
 
@@ -296,12 +285,11 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Add an {@code ClientHints} to the cache
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
-	 * @param clientHints
-	 *            {@link ClientHints} to cache
+	 * @param host        {@code String} with the name of the iRODS host this
+	 *                    applies to
+	 * @param zoneName    {@code String} with the name of the iRODS zone this
+	 *                    applies to
+	 * @param clientHints {@link ClientHints} to cache
 	 */
 	public void cacheClientHints(final String host, final String zoneName, final ClientHints clientHints) {
 		if (host == null || host.isEmpty()) {
@@ -326,12 +314,11 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Add an {@code IRODSServerProperties} to the cache
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
-	 * @param irodsServerProperties
-	 *            {@link IRODSServerProperties} to cache
+	 * @param host                  {@code String} with the name of the iRODS host
+	 *                              this applies to
+	 * @param zoneName              {@code String} with the name of the iRODS zone
+	 *                              this applies to
+	 * @param irodsServerProperties {@link IRODSServerProperties} to cache
 	 */
 	public void cacheIRODSServerProperties(final String host, final String zoneName,
 			final IRODSServerProperties irodsServerProperties) {
@@ -357,15 +344,13 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Cache a property for the given host and zone.
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
-	 * @param propertyName
-	 *            {@code String} with the property to set
-	 * @param value
-	 *            {@code String} with a non-null value to set. For consistency, set
-	 *            to blank if a property has no value.
+	 * @param host         {@code String} with the name of the iRODS host this
+	 *                     applies to
+	 * @param zoneName     {@code String} with the name of the iRODS zone this
+	 *                     applies to
+	 * @param propertyName {@code String} with the property to set
+	 * @param value        {@code String} with a non-null value to set. For
+	 *                     consistency, set to blank if a property has no value.
 	 */
 	public void cacheAProperty(final String host, final String zoneName, final String propertyName,
 			final String value) {
@@ -396,11 +381,10 @@ public class DiscoveredServerPropertiesCache {
 	 * Look for a properties map for the given host and zone, add to the main cache
 	 * if it doesn't exist
 	 *
-	 * @param host
-	 *            {@code String} with the name of the iRODS host this applies to
-	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this applies to
-	 *            return
+	 * @param host     {@code String} with the name of the iRODS host this applies
+	 *                 to
+	 * @param zoneName {@code String} with the name of the iRODS zone this applies
+	 *                 to return
 	 *
 	 * @return {@code Map} with the cache for the host and zone
 	 */

@@ -49,6 +49,10 @@ public class IRODSThousandFilesTest {
 	private static final String testFileSuffix = ".txt";
 	private static String localAbsPath = "";
 
+	public static final String avu1Attrib = "testavu1";
+	public static final String avu1Value = "testavu1value";
+	public static final String avu2Attrib = "testavu2";
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -126,10 +130,6 @@ public class IRODSThousandFilesTest {
 
 	public static final void addAVUsToEachFile() throws Exception {
 
-		String avu1Attrib = "avu1";
-		String avu1Value = "avu1value";
-		String avu2Attrib = "avu2";
-
 		IRODSAccount account = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(account).instanceIRODSFile(
@@ -157,7 +157,6 @@ public class IRODSThousandFilesTest {
 
 	@Test
 	public void testSearchForAvuFiles() throws Exception {
-		String avu1Attrib = "avu1";
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();

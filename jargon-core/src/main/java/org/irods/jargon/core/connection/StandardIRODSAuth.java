@@ -27,19 +27,16 @@ public class StandardIRODSAuth extends AuthMechanism {
 	/**
 	 * Do the normal iRODS password challenge/response sequence
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol}
+	 * @param irodsAccount          {@link IRODSAccount}
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol}
 	 * @return {@code String} with the iRODS challenge value, which will be returned
 	 *         in the Auth response
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	private String sendStandardPassword(final IRODSAccount irodsAccount,
 			final IRODSMidLevelProtocol irodsMidLevelProtocol) throws JargonException {
 
-		log.info("sending standard irods password");
+		log.debug("sending standard irods password");
 
 		cachedChallenge = sendAuthRequestAndGetChallenge(irodsMidLevelProtocol);
 
@@ -116,16 +113,16 @@ public class StandardIRODSAuth extends AuthMechanism {
 	protected IRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
 			final IRODSMidLevelProtocol irodsCommands, final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
-		log.info("authenticate");
+		log.debug("authenticate");
 		String challengeValue = sendStandardPassword(irodsAccount, irodsCommands);
-		log.info("auth was successful");
+		log.debug("auth was successful");
 		AuthResponse authResponse = new AuthResponse();
 		authResponse.setAuthenticatedIRODSAccount(irodsAccount);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse.setChallengeValue(challengeValue);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
-		log.info("auth response was:{}", authResponse);
+		log.debug("auth response was:{}", authResponse);
 		irodsCommands.setAuthResponse(authResponse);
 		irodsCommands.setIrodsAccount(irodsAccount);
 		return irodsCommands;

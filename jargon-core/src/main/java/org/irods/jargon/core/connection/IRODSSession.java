@@ -112,16 +112,17 @@ public class IRODSSession {
 	}
 
 	/**
-	 * @param x509TrustManager
-	 *            the x509TrustManager to set, this may be left {@code null}, in
-	 *            which case a default trust manager is used. this allows users to
-	 *            inject their own certificate trust manager. Note as well that
-	 *            {@link JargonProperties} can also specifiy that a 'trust all'
-	 *            trust manager should be used, in which case the
-	 *            {@link TrustAllX509TrustManager} will be created and put here.
-	 *            This creation is only done when constructing iRODS session using
-	 *            the constructor that takes a {@code JargonProperties} parameter,
-	 *            with the bypassSslCet
+	 * @param x509TrustManager the x509TrustManager to set, this may be left
+	 *                         {@code null}, in which case a default trust manager
+	 *                         is used. this allows users to inject their own
+	 *                         certificate trust manager. Note as well that
+	 *                         {@link JargonProperties} can also specifiy that a
+	 *                         'trust all' trust manager should be used, in which
+	 *                         case the {@link TrustAllX509TrustManager} will be
+	 *                         created and put here. This creation is only done when
+	 *                         constructing iRODS session using the constructor that
+	 *                         takes a {@code JargonProperties} parameter, with the
+	 *                         bypassSslCet
 	 */
 	public synchronized void setX509TrustManager(final X509TrustManager x509TrustManager) {
 		this.x509TrustManager = x509TrustManager;
@@ -181,8 +182,7 @@ public class IRODSSession {
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
@@ -244,15 +244,14 @@ public class IRODSSession {
 	 * safely called by multiple threads, as the connections are in a
 	 * {@code ThreadLocal}
 	 *
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public void closeSession() throws JargonException {
 		log.debug("closing all irods sessions");
 		final Map<String, IRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
-			log.warn("closing session that is already closed, silently ignore");
+			log.debug("closing session that is already closed, silently ignore");
 			return;
 		}
 
@@ -269,7 +268,7 @@ public class IRODSSession {
 	}
 
 	public IRODSSession(final JargonProperties jargonProperties) {
-		log.info("IRODSSession(jargonProperties) with properties of: {}", jargonProperties);
+		log.debug("IRODSSession(jargonProperties) with properties of: {}", jargonProperties);
 		if (jargonProperties == null) {
 			throw new IllegalArgumentException("null jargonProperties");
 		}
@@ -317,7 +316,7 @@ public class IRODSSession {
 	}
 
 	private void checkInitTrustManager() {
-		log.info("checkInitTrustManager()");
+		log.debug("checkInitTrustManager()");
 		if (getJargonProperties().isBypassSslCertChecks()) {
 			log.warn(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			log.warn("setting trustAllX509TrustManager, not recommended for production!!!");
@@ -329,11 +328,9 @@ public class IRODSSession {
 	/**
 	 * Create a session with an object that will hand out connections.
 	 *
-	 * @param irodsConnectionManager
-	 *            {@link IRODSProtocolManager} that is in charge of handing out
-	 *            connections
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsConnectionManager {@link IRODSProtocolManager} that is in charge
+	 *                               of handing out connections
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSSession(final IRODSProtocolManager irodsConnectionManager) throws JargonException {
 
@@ -351,11 +348,10 @@ public class IRODSSession {
 	 * methods and a default constructor to make it easer to wire with dependency
 	 * injection. Look to see this deprecated.
 	 *
-	 * @param irodsProtocolHandler
-	 *            {@link IRODSProtocolManager} to create connections in the session
+	 * @param irodsProtocolHandler {@link IRODSProtocolManager} to create
+	 *                             connections in the session
 	 * @return {@link IRODSSession}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 
 	public static IRODSSession instance(final IRODSProtocolManager irodsProtocolHandler) throws JargonException {
@@ -368,13 +364,12 @@ public class IRODSSession {
 	 * cached connection, it is not visible from here, and must be properly closed
 	 * on that Thread.
 	 *
-	 * @param irodsAccount
-	 *            {@code IRODSAccount} that describes this connection to iRODS.
+	 * @param irodsAccount {@code IRODSAccount} that describes this connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} that
 	 *         represents protocol level (above the socket level) communications to
 	 *         iRODS.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSMidLevelProtocol currentConnection(final IRODSAccount irodsAccount) throws JargonException {
 
@@ -428,32 +423,30 @@ public class IRODSSession {
 	 * during operations 'under the covers', for operations like long running
 	 * transfers that may time out.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
+	 * @param irodsAccount {@link IRODSAccount}
 	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} with a
 	 *         renewed connection
-	 * @throws AuthenticationException
-	 *             {@link AuthenticationException} for auth error
-	 * @throws JargonException
-	 *             {@link JargonException} for iRODS error
+	 * @throws AuthenticationException {@link AuthenticationException} for auth
+	 *                                 error
+	 * @throws JargonException         {@link JargonException} for iRODS error
 	 */
 	public IRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
 
-		log.info("renewConnection()");
+		log.debug("renewConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
 		IRODSMidLevelProtocol irodsMidLevelProtocol = currentConnection(irodsAccount);
 
-		log.info("evaluate conn for renewal:{}", irodsAccount);
+		log.debug("evaluate conn for renewal:{}", irodsAccount);
 
 		boolean shutdown = evaluateConnectionForRenewal(irodsMidLevelProtocol);
 		if (!shutdown) {
 			return irodsMidLevelProtocol;
 		} else {
-			log.info("return a refreshed connection");
+			log.debug("return a refreshed connection");
 			return currentConnection(irodsAccount);
 		}
 
@@ -463,13 +456,10 @@ public class IRODSSession {
 	 * Based on the configured properties, evaluate the age of the current
 	 * connection and potentially renew the connection if necessary.
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol}
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol}
 	 * @return {@code boolean} that will be {@code true} if the conn was shut down
-	 * @throws AuthenticationException
-	 *             {@link AuthenticationException}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws AuthenticationException {@link AuthenticationException}
+	 * @throws JargonException         {@link JargonException}
 	 */
 	private boolean evaluateConnectionForRenewal(final IRODSMidLevelProtocol irodsMidLevelProtocol)
 			throws AuthenticationException, JargonException {
@@ -565,12 +555,10 @@ public class IRODSSession {
 	/**
 	 * Close an iRODS session for the given account
 	 *
-	 * @param irodsAccount
-	 *            {@code IRODSAccount} that describes the connection that should be
-	 *            closed.
-	 * @throws JargonException
-	 *             if an error occurs on the close. If the connection does not exist
-	 *             it is logged and ignored.
+	 * @param irodsAccount {@code IRODSAccount} that describes the connection that
+	 *                     should be closed.
+	 * @throws JargonException if an error occurs on the close. If the connection
+	 *                         does not exist it is logged and ignored.
 	 */
 	public void closeSession(final IRODSAccount irodsAccount) throws JargonException {
 
@@ -608,8 +596,7 @@ public class IRODSSession {
 	 * Signal to the {@code IRODSSession} that a connection has been forcefully
 	 * terminated due to errors, and should be removed from the cache.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that maps the connection
+	 * @param irodsAccount {@link IRODSAccount} that maps the connection
 	 *
 	 */
 	public void discardSessionForErrors(final IRODSAccount irodsAccount) {
@@ -660,8 +647,7 @@ public class IRODSSession {
 	 * Set the {@link IRODSProtocolManager} that will be the source of the actual
 	 * iRODS connections
 	 * 
-	 * @param irodsProtocolManager
-	 *            {@link IRODSProtocolManager}
+	 * @param irodsProtocolManager {@link IRODSProtocolManager}
 	 */
 	public void setIrodsProtocolManager(final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
@@ -678,8 +664,7 @@ public class IRODSSession {
 	 * @return {@link ExecutorService} that is the pool of threads for the paralllel
 	 *         transfers, or {@code null} if the pool is not configured in the
 	 *         jargon properties.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public ExecutorService getParallelTransferThreadPool() throws JargonException {
 		log.debug("getting the ParallelTransferThreadPool");
@@ -716,8 +701,7 @@ public class IRODSSession {
 	/**
 	 * Set the Jargon properties
 	 *
-	 * @param jargonProperties
-	 *            the jargonProperties to set
+	 * @param jargonProperties the jargonProperties to set
 	 */
 	public void setJargonProperties(final JargonProperties jargonProperties) {
 		synchronized (this) {

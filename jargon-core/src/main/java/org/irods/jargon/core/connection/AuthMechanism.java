@@ -37,8 +37,7 @@ abstract class AuthMechanism {
 	/**
 	 * Optional method that will be called before any startup pack is sent
 	 *
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	protected void preConnectionStartup() throws JargonException {
 
@@ -48,8 +47,7 @@ abstract class AuthMechanism {
 	 * Optional method that will be called after the startup pack is sent but before
 	 * the actual authentication attempt, and before client/server negotiation
 	 *
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	protected void postConnectionStartupPreAuthentication() throws JargonException {
 
@@ -59,28 +57,25 @@ abstract class AuthMechanism {
 	 * After startup pack, the client/server negotiation commences here, based on
 	 * configuration and the settings in the {@code IRODSAccount} visible here.
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol}
+	 * @param irodsAccount          {@link IRODSAccount}
 	 * @return {@link StartupResponseData}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	protected StartupResponseData clientServerNegotiationHook(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws JargonException {
-		log.info("clientServerNegotiationHook()");
+		log.debug("clientServerNegotiationHook()");
 		StartupResponseData startupResponseData = null;
 		if (irodsMidLevelProtocol.getIrodsConnection().getOperativeClientServerNegotiationPolicy()
 				.getSslNegotiationPolicy() != SslNegotiationPolicy.NO_NEGOTIATION) {
-			log.info("negotiation is required");
+			log.debug("negotiation is required");
 			startupResponseData = clientServerNegotiation(irodsMidLevelProtocol, irodsAccount);
 		} else {
 			Tag versionPI = irodsMidLevelProtocol.readMessage();
 			startupResponseData = buldStartupResponseFromVersionPI(versionPI);
 		}
 
-		log.info("startup response:{}", startupResponseData);
+		log.debug("startup response:{}", startupResponseData);
 		irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
 
 		return startupResponseData;
@@ -91,8 +86,7 @@ abstract class AuthMechanism {
 	 * Handy method to build startup response data from a VersionPI tag response
 	 * from iRODS
 	 *
-	 * @param versionPI
-	 *            {@link Tag} protocol representation of version info
+	 * @param versionPI {@link Tag} protocol representation of version info
 	 * @return {@link StartupResponseData} with the result of the send of the
 	 *         startup pack
 	 *
@@ -110,17 +104,15 @@ abstract class AuthMechanism {
 	 * After startup pack send, do a client server negotiation, analogous to
 	 * irods/lib/core/src/sockComm.cpp line 845
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol}
+	 * @param irodsAccount          {@link IRODSAccount}
 	 * @return {@link StartupResponseData} with the result of the startup process
 	 * @throws JargonException
 	 */
 	private StartupResponseData clientServerNegotiation(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws JargonException {
 
-		log.info("clientServerNegotiation()");
+		log.debug("clientServerNegotiation()");
 
 		/*
 		 * I expect to read in a cd_neg_t structure
@@ -135,7 +127,7 @@ abstract class AuthMechanism {
 		 */
 
 		if (negResultPI.getName().equals(VERSION_PI_TAG)) {
-			log.info("got version pi back instead of negotiation status, so treat as no SSL");
+			log.debug("got version pi back instead of negotiation status, so treat as no SSL");
 			return buldStartupResponseFromVersionPI(negResultPI);
 		} else if (negResultPI.getName().equals(ClientServerNegotiationStructInitNegotiation.NEG_PI)) {
 
@@ -151,7 +143,7 @@ abstract class AuthMechanism {
 				throw new ClientServerNegotiationException("unsuccesful client-server negotiation");
 			}
 
-			log.info("have a server negotiation response:{}", struct.toString());
+			log.debug("have a server negotiation response:{}", struct.toString());
 
 			/*
 			 * Do the actual negotiation...The struct should have the response from the
@@ -164,7 +156,7 @@ abstract class AuthMechanism {
 					irodsMidLevelProtocol);
 
 			StartupResponseData startupResponseData = clientServerNegotiationService.negotiate(struct);
-			log.info("negotiated configuration:{}", startupResponseData);
+			log.debug("negotiated configuration:{}", startupResponseData);
 			return startupResponseData;
 
 		} else {
@@ -182,20 +174,17 @@ abstract class AuthMechanism {
 	 * then call the authentication method of the actual auth mechanism
 	 * implementation.
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol} that is already connected, but not
-	 *            authenticated
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol} that is already
+	 *                              connected, but not authenticated
+	 * @param irodsAccount          {@link IRODSAccount} that defines the connection
+	 *                              as requested
 	 * @return {@link IRODSMidLevelProtocol} that represents a connected,
 	 *         authenticated session with an iRODS agent. Note that the protocol
 	 *         returned may not be the one originally provided, based on the auth
 	 *         method.
 	 *
-	 * @throws AuthenticationException
-	 *             for error in authentication
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws AuthenticationException for error in authentication
+	 * @throws JargonException         for iRODS error
 	 */
 	protected IRODSMidLevelProtocol authenticate(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException, JargonException {
@@ -220,21 +209,17 @@ abstract class AuthMechanism {
 	 * Note that the protocol contains a reference to the {@link AuthResponse} that
 	 * details the authenticating and authenticated accounts and identities.
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol} that is already connected, but not
-	 *            authenticated
-	 * @param startupResponseData
-	 *            {@link StartupResponseData} representing the response from iRODS
-	 *            on initiation of connection
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol} that is already
+	 *                              connected, but not authenticated
+	 * @param startupResponseData   {@link StartupResponseData} representing the
+	 *                              response from iRODS on initiation of connection
 	 * @return {@link IRODSMidLevelProtocol} that represents a connected,
 	 *         authenticated session with an iRODS agent. Note that the protocol
 	 *         returned may not be the one originally provided, based on the auth
 	 *         method.
 	 *
-	 * @throws AuthenticationException
-	 *             for auth error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws AuthenticationException for auth error
+	 * @throws JargonException         for iRODS error
 	 */
 	protected IRODSMidLevelProtocol processAfterAuthentication(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData) throws AuthenticationException, JargonException {
@@ -276,19 +261,15 @@ abstract class AuthMechanism {
 	 * This abstract method should be implemented in a subclass authentication
 	 * handler
 	 *
-	 * @param irodsMidLevelProtocol
-	 *            {@link IRODSMidLevelProtocol} that is already connected, but not
-	 *            authenticated
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection as requested
-	 * @param startupResponseData
-	 *            {@link StartupResponseData} with information from the handshake
-	 *            process
+	 * @param irodsMidLevelProtocol {@link IRODSMidLevelProtocol} that is already
+	 *                              connected, but not authenticated
+	 * @param irodsAccount          {@link IRODSAccount} that defines the connection
+	 *                              as requested
+	 * @param startupResponseData   {@link StartupResponseData} with information
+	 *                              from the handshake process
 	 * @return {@link IRODSMidLevelProtocol}
-	 * @throws AuthenticationException
-	 *             for auth error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws AuthenticationException for auth error
+	 * @throws JargonException         for iRODS error
 	 */
 	protected abstract IRODSMidLevelProtocol processAuthenticationAfterStartup(IRODSAccount irodsAccount,
 			IRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)
@@ -297,7 +278,7 @@ abstract class AuthMechanism {
 	protected void sendStartupPacket(final IRODSAccount irodsAccount, final IRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
-		log.info("sendStartupPacket()");
+		log.debug("sendStartupPacket()");
 
 		String myOption;
 		if (irodsCommands.getIrodsConnection().getOperativeClientServerNegotiationPolicy()

@@ -37,11 +37,10 @@ public class EnvironmentalInfoAccessor {
 	 * a caching optimization.
 	 *
 	 * @return {@link IRODSServerProperties}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSServerProperties getIRODSServerProperties() throws JargonException {
-		log.info("getting irods server properties");
+		log.debug("getting irods server properties");
 
 		log.debug("checking for cached properties...");
 
@@ -51,13 +50,13 @@ public class EnvironmentalInfoAccessor {
 							irodsProtocol.getIrodsAccount().getZone());
 
 			if (cached != null) {
-				log.info("returning cached props:{}", cached);
+				log.debug("returning cached props:{}", cached);
 				return cached;
 			}
 		}
 
 		Tag response = irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ, "", MiscSvrInfo.API_NBR);
-		log.info("server response obtained");
+		log.debug("server response obtained");
 		int serverType = response.getTag(MiscSvrInfo.SERVER_TYPE_TAG).getIntValue();
 
 		IRODSServerProperties.IcatEnabled icatEnabled = null;

@@ -19,7 +19,7 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 	public AuthMechanism instanceAuthMechanism(final IRODSAccount irodsAccount)
 			throws AuthUnavailableException, JargonException {
 
-		log.info("instanceAuthMechanism()");
+		log.debug("instanceAuthMechanism()");
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null or blank irodsAccount");
@@ -28,22 +28,22 @@ public class AuthenticationFactoryImpl implements AuthenticationFactory {
 		AuthScheme authScheme;
 
 		if (irodsAccount.getUserName().equals(IRODSAccount.PUBLIC_USERNAME)) {
-			log.info("account is anonymous, use default auth scheme");
+			log.debug("account is anonymous, use default auth scheme");
 			authScheme = AuthScheme.STANDARD;
 		} else {
 			authScheme = irodsAccount.getAuthenticationScheme();
 		}
 
-		log.info("authScheme:{}", authScheme);
+		log.debug("authScheme:{}", authScheme);
 
 		if (authScheme.equals(AuthScheme.STANDARD)) {
-			log.info("using standard auth");
+			log.debug("using standard auth");
 			return new StandardIRODSAuth();
 		} else if (authScheme.equals(AuthScheme.PAM)) {
-			log.info("using PAM auth");
+			log.debug("using PAM auth");
 			return new PAMAuth();
 		} else if (authScheme.equals(AuthScheme.GSI)) {
-			log.info("using standard auth");
+			log.debug("using standard auth");
 			return new GSIAuth();
 		} else {
 			throw new AuthUnavailableException("auth method not avaialble for:" + authScheme);
