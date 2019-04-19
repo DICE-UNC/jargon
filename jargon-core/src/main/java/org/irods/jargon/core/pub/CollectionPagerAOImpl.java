@@ -50,30 +50,14 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 
 		log.info("retrieveNextPage()");
 
-		if (lastListingDescriptor == null) {
-			throw new IllegalArgumentException("null lastListingDescriptor");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
-		log.info("next page based on descriptor:{}", lastListingDescriptor);
+		final PagingAwareCollectionListing pagingAwareCollectionListing = this
+				.obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(irodsAbsolutePath);
 
-		if (!lastListingDescriptor.isCollectionsComplete()) {
-			log.info("more collections to page..");
-			final PagingAwareCollectionListing listing = pageForwardInCollections(lastListingDescriptor);
-			// if I've paged out of collections add the first page of data
-			// objects
-			if (listing.getPagingAwareCollectionListingDescriptor().isCollectionsComplete()) {
-				log.info("colletions complete, page into data objects");
-				addDataObjectsToExistingListing(listing);
-			}
-			return listing;
-
-		} else if (!lastListingDescriptor.isDataObjectsComplete()) {
-			log.info("more data objects to page...");
-			return pageForwardInDataObjects(lastListingDescriptor);
-		} else {
-			log.error("no more listings to page for:{}", lastListingDescriptor);
-			throw new NoMoreDataException("no more listings, cannot page forward");
-		}
+		return null;
 
 	}
 
