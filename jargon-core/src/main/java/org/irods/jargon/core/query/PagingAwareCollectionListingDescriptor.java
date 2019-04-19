@@ -82,15 +82,11 @@ public class PagingAwareCollectionListingDescriptor {
 	 * Reflects the page size
 	 */
 	private int pageSizeUtilized;
-
 	/**
-	 * Are there more colls or data objects to return?
-	 *
-	 * @return {@code boolean} if more results to return
+	 * {@code boolean} indicating whether more records are available; // TODO: add
+	 * setting
 	 */
-	public boolean hasMore() {
-		return !(dataObjectsComplete && collectionsComplete);
-	}
+	private boolean hasMore;
 
 	/**
 	 * Return an {@code int} that is the absolute offset across both collections and
@@ -106,15 +102,6 @@ public class PagingAwareCollectionListingDescriptor {
 	 */
 	public int computeAbsoluteNextOffset() {
 		return count + dataObjectsCount;
-	}
-
-	/**
-	 * Return the total records for both collections and data objects together.
-	 *
-	 * @return {@code int} with the total size of the set
-	 */
-	public int computeAbsoluteTotalSize() {
-		return totalRecords + dataObjectsTotalRecords;
 	}
 
 	public PagingAwareCollectionListingDescriptor() {
@@ -227,16 +214,36 @@ public class PagingAwareCollectionListingDescriptor {
 	@Override
 	public String toString() {
 		final int maxLen = 10;
-		return "PagingAwareCollectionListingDescriptor [" + (objStat != null ? "objStat=" + objStat + ", " : "")
-				+ (parentAbsolutePath != null ? "parentAbsolutePath=" + parentAbsolutePath + ", " : "")
-				+ (pathComponents != null
-						? "pathComponents=" + pathComponents.subList(0, Math.min(pathComponents.size(), maxLen)) + ", "
-						: "")
-				+ (pagingStyle != null ? "pagingStyle=" + pagingStyle + ", " : "") + "offset=" + offset
-				+ ", dataObjectsOffset=" + dataObjectsOffset + ", count=" + count + ", totalRecords=" + totalRecords
-				+ ", dataObjectsCount=" + dataObjectsCount + ", dataObjectsTotalRecords=" + dataObjectsTotalRecords
-				+ ", collectionsComplete=" + collectionsComplete + ", dataObjectsComplete=" + dataObjectsComplete
-				+ ", pageSizeUtilized=" + pageSizeUtilized + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("PagingAwareCollectionListingDescriptor [");
+		if (objStat != null) {
+			builder.append("objStat=").append(objStat).append(", ");
+		}
+		if (parentAbsolutePath != null) {
+			builder.append("parentAbsolutePath=").append(parentAbsolutePath).append(", ");
+		}
+		if (pathComponents != null) {
+			builder.append("pathComponents=").append(pathComponents.subList(0, Math.min(pathComponents.size(), maxLen)))
+					.append(", ");
+		}
+		if (pagingStyle != null) {
+			builder.append("pagingStyle=").append(pagingStyle).append(", ");
+		}
+		builder.append("offset=").append(offset).append(", dataObjectsOffset=").append(dataObjectsOffset)
+				.append(", count=").append(count).append(", totalRecords=").append(totalRecords)
+				.append(", dataObjectsCount=").append(dataObjectsCount).append(", dataObjectsTotalRecords=")
+				.append(dataObjectsTotalRecords).append(", collectionsComplete=").append(collectionsComplete)
+				.append(", dataObjectsComplete=").append(dataObjectsComplete).append(", pageSizeUtilized=")
+				.append(pageSizeUtilized).append(", hasMore=").append(hasMore).append("]");
+		return builder.toString();
+	}
+
+	public boolean isHasMore() {
+		return hasMore;
+	}
+
+	public void setHasMore(boolean hasMore) {
+		this.hasMore = hasMore;
 	}
 
 }

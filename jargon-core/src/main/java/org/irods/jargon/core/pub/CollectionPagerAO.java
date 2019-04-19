@@ -36,41 +36,44 @@ public interface CollectionPagerAO {
 	 *
 	 *
 	 *
-	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the iRODS absolute path of the parent
-	 *            collection
+	 * @param irodsAbsolutePath <code>String</code> with the iRODS absolute path of
+	 *                          the parent collection
 	 * @return {@link PagingAwareCollectionListing} with the list of children and a
 	 *         block of data about position and paging
-	 * @throws FileNotFoundException
-	 *             {@code FileNotFoundException}
-	 * @throws NoMoreDataException
-	 *             {@code NoMoreDataException}
-	 * @throws JargonException
-	 *             {@code JargonException}
+	 * @throws FileNotFoundException {@code FileNotFoundException}
+	 * @throws NoMoreDataException   {@code NoMoreDataException}
+	 * @throws JargonException       {@code JargonException}
 	 */
 	public abstract PagingAwareCollectionListing retrieveFirstPageUnderParent(String irodsAbsolutePath)
 			throws FileNotFoundException, NoMoreDataException, JargonException;
 
 	/**
-	 * Given my current location, as depicted in the
-	 * <code>PagingAwareCollectionListingDescriptor</code>, page forwards. This will
-	 * give the next page of whatever (collections, data objects) are available, and
-	 * if need be page across the Collections/Data Objects boundary.
-	 *
-	 * @param lastListingDescriptor
-	 *            {@link PagingAwareCollectionListingDescriptor} from the previous
-	 *            page, as retained by the client. This keeps state of the position
-	 *            in the collection
-	 * @return {@link PagingAwareCollectionListing} with the next page of data
-	 * @throws FileNotFoundException
-	 *             {@code FileNotFoundException}
-	 * @throws NoMoreDataException
-	 *             {@code NoMoreDataException}
-	 * @throws JargonException
-	 *             {@code JargonException}
+	 * Retrieve the next page of data given minimal coordinates describing the
+	 * paging state
+	 * 
+	 * @param irodsAbsolutePath <code>String</code> with the iRODS absolute path of
+	 *                          the parent collection
+	 * @param inCollections     {@code boolean} that will be {@code true} if the
+	 *                          current page is displaying collections. A value of
+	 *                          {@false} indicates that data objects are currently
+	 *                          displayed. If the current view is not 'split' into
+	 *                          files and collections, the parameter is ignored.
+	 * @param offset            {@code int} with the next offset. This will be an
+	 *                          offset within the current type (file or collection)
+	 *                          in a split view, or the offset into the entire
+	 *                          result set otherwise. Note that this offset can be
+	 *                          used by referring to the current count in the
+	 *                          {@link PagingAwareCollectionListing} from a previous
+	 *                          call
+	 * @param pageSize          {@code int} with the desired page size. Note this is
+	 *                          currently not supported and will be ignored, but in
+	 *                          later iterations will have an effect}
+	 * @return {@link PagingAwareCollectionListing}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws NoMoreDataException   {@link NoMoreDataException}
+	 * @throws JargonException       {@link JargonException}
 	 */
-	public abstract PagingAwareCollectionListing retrieveNextPage(
-			final PagingAwareCollectionListingDescriptor lastListingDescriptor)
-			throws FileNotFoundException, NoMoreDataException, JargonException;
+	PagingAwareCollectionListing retrieveNextPage(String irodsAbsolutePath, boolean inCollections, int offset,
+			long pageSize) throws FileNotFoundException, NoMoreDataException, JargonException;
 
 }

@@ -28,6 +28,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	private final IRODSSession irodsSession;
 	private final IRODSAccount irodsAccount;
 	private final boolean instrumented;
+	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
 	private static final Logger log = LoggerFactory.getLogger(IRODSGenericAO.class);
 
@@ -36,15 +37,12 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * connection information, as well as the session manager that controls
 	 * connections.
 	 *
-	 * @param irodsSession
-	 *            {@link org.irods.jargon.core.connection.IRODSSession} that will
-	 *            manage connecting to iRODS.
-	 * @param irodsAccount
-	 *            (@link org.irods.jargon.core.connection.IRODSAccount} that
-	 *            contains the connection information used to get a connection from
-	 *            the {@code irodsSession}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsSession {@link org.irods.jargon.core.connection.IRODSSession}
+	 *                     that will manage connecting to iRODS.
+	 * @param irodsAccount (@link org.irods.jargon.core.connection.IRODSAccount}
+	 *                     that contains the connection information used to get a
+	 *                     connection from the {@code irodsSession}
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSGenericAO(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		if (irodsSession == null) {
@@ -144,7 +142,10 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException {
-		return IRODSAccessObjectFactoryImpl.instance(irodsSession);
+		if (this.irodsAccessObjectFactory == null) {
+			this.irodsAccessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
+		}
+		return this.irodsAccessObjectFactory;
 	}
 
 	/*
@@ -225,6 +226,17 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 			log.warn("error encountered closing session, ignored", e);
 		}
 
+	}
+
+	/**
+	 * This method serves as a shim to inject an {@link IRODSAccessObjectFactory}
+	 * when testing. While this is a code smell, it is a small one. The use of this
+	 * method is unnecessary in normal circumstances.
+	 * 
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory}
+	 */
+	public void setIrodsAccessObjectFactory(IRODSAccessObjectFactory irodsAccessObjectFactory) {
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
 }

@@ -28,24 +28,25 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 
 	public static final Logger log = LoggerFactory.getLogger(CollectionPagerAOImpl.class);
 
-	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
+	private CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
+
+	/**
+	 * Default page size will be initialized with the jargon properties files and
+	 * dirs query max.
+	 */
+	private final int defaultPageSize;
 
 	public CollectionPagerAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
 		super(irodsSession, irodsAccount);
-
-		getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-
-		getIRODSAccessObjectFactory().getDataObjectAO(getIRODSAccount());
-		getIRODSAccessObjectFactory().getCollectionAO(getIRODSAccount());
-		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
+		this.collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		this.defaultPageSize = irodsSession.getJargonProperties().getMaxFilesAndDirsQueryMax();
 	}
 
 	@Override
-	public PagingAwareCollectionListing retrieveNextPage(
-			final PagingAwareCollectionListingDescriptor lastListingDescriptor)
-			throws FileNotFoundException, NoMoreDataException, JargonException {
+	public PagingAwareCollectionListing retrieveNextPage(final String irodsAbsolutePath, final boolean inCollections,
+			final int offset, final long pageSize) throws FileNotFoundException, NoMoreDataException, JargonException {
 
 		log.info("retrieveNextPage()");
 
@@ -166,15 +167,23 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 				.setOffset(listAndCount.getOffsetStart());
 		pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor()
 				.setCollectionsComplete(listAndCount.isEndOfRecords());
+		pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().setPageSizeUtilized(defaultPageSize);
 
 		pagingAwareCollectionListing
 				.setCollectionAndDataObjectListingEntries(listAndCount.getCollectionAndDataObjectListingEntries());
 
-		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()
-				|| listAndCount.getCountThisPage() + 1 < getJargonProperties().getMaxFilesAndDirsQueryMax()) {
-			log.info("collections are empty or less then max, so get data objects");
-
+		if (listAndCount.isEndOfRecords() && listAndCount.getCountThisPage() < pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().getPageSizeUtilized()) {
+			log.info("adding data objects to incomplete listing");
 			addDataObjectsToExistingListing(pagingAwareCollectionListing);
+		}
+
+		if (pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().isCollectionsComplete()
+				&& pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().isDataObjectsComplete()) {
+			pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().setHasMore(false);
+		} else {
+			pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor().setHasMore(true);
+
 		}
 
 		return pagingAwareCollectionListing;
@@ -283,7 +292,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 		final int lastEntryIdx = listAndCount.getCollectionAndDataObjectListingEntries().size() - 1;
 		final CollectionAndDataObjectListingEntry lastEntry = listAndCount.getCollectionAndDataObjectListingEntries()
 				.get(lastEntryIdx);
-		listAndCount.setCountThisPage(lastEntry.getCount());
+		listAndCount.setCountThisPage(lastEntry.getCount() - 1); // entry record index is 1 based for a probably not
+																	// good reason
 		listAndCount.setEndOfRecords(lastEntry.isLastResult());
 		listAndCount.setOffsetStart(listAndCount.getCollectionAndDataObjectListingEntries().get(0).getCount());
 
@@ -323,7 +333,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 		final int lastEntryIdx = listAndCount.getCollectionAndDataObjectListingEntries().size() - 1;
 		final CollectionAndDataObjectListingEntry lastEntry = listAndCount.getCollectionAndDataObjectListingEntries()
 				.get(lastEntryIdx);
-		listAndCount.setCountThisPage(lastEntry.getCount());
+		listAndCount.setCountThisPage(lastEntry.getCount() - 1); // entry record index is 1 based for some forgotten
+																	// reason
 		listAndCount.setEndOfRecords(lastEntry.isLastResult());
 		listAndCount.setOffsetStart(listAndCount.getCollectionAndDataObjectListingEntries().get(0).getCount());
 
@@ -339,6 +350,18 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 		listAndCount.setCountTotal(count);
 		return listAndCount;
 
+	}
+
+	/**
+	 * Optional impl level hook for injection to support testing of complex
+	 * behavior.
+	 * 
+	 * @param collectionAndDataObjectListAndSearchAO {@link CollectionAndDataObjectListAndSearchAO}
+	 *                                               that can override the default.
+	 */
+	public void setCollectionAndDataObjectListAndSearchAO(
+			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO) {
+		this.collectionAndDataObjectListAndSearchAO = collectionAndDataObjectListAndSearchAO;
 	}
 
 }
