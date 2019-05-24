@@ -96,8 +96,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	/**
-	 * @param dir
-	 *            Used to determine if the path is absolute.
+	 * @param dir Used to determine if the path is absolute.
 	 */
 
 	private void makePathCanonical(String dir) {
@@ -202,8 +201,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/**
 	 * Set the directory.
 	 *
-	 * @param dir
-	 *            The directory path, need not be absolute.
+	 * @param dir The directory path, need not be absolute.
 	 */
 	private void setDirectory(String dir) {
 		if (directory == null) {
@@ -245,8 +243,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/**
 	 * Set the file name.
 	 *
-	 * @param filePath
-	 *            The file name or fileName plus some or all of the directory path.
+	 * @param filePath The file name or fileName plus some or all of the directory
+	 *                 path.
 	 */
 	private void setFileName(String filePath) {
 
@@ -344,8 +342,9 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized boolean createNewFile() throws IOException {
 		try {
-			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE,
-					DataObjInp.DEFAULT_CREATE_MODE);
+			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE, 0600); // FIXME:
+																														// kory
+																														// test
 
 			log.debug("file descriptor from new file create: {}", fileDescriptor);
 
@@ -1225,8 +1224,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/**
 	 * Set the iRODS file descriptor value. This will be set internally by Jargon.
 	 *
-	 * @param fileDescriptor
-	 *            {@code int} for the file descriptor
+	 * @param fileDescriptor {@code int} for the file descriptor
 	 */
 	protected synchronized void setFileDescriptor(final int fileDescriptor) {
 		this.fileDescriptor = fileDescriptor;
@@ -1419,8 +1417,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	/**
-	 * @param openFlags
-	 *            the openFlags to set
+	 * @param openFlags the openFlags to set
 	 */
 	@Override
 	public void setOpenFlags(final OpenFlags openFlags) {

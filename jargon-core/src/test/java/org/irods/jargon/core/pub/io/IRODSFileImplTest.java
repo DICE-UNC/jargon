@@ -901,6 +901,7 @@ public class IRODSFileImplTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		boolean success = irodsFile.createNewFile();
+		Assert.assertTrue("irodsFile does not exist after create", irodsFile.exists());
 
 		irodsSession.closeSession();
 
