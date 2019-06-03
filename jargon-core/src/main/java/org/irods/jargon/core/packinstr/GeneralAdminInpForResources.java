@@ -209,6 +209,34 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	}
 
+	
+
+    /**
+     * Generate the packing instruction suitable for rebalancing a {@code Resource}
+     *
+     * @param resource
+     *            {@link Resource} to rebalance.
+     * @return {@link GeneralAdminInp}
+     * @throws JargonException
+     *             for iRODS error
+     */
+    public static final GeneralAdminInpForResources instanceForRebalanceResource(final Resource resource) throws JargonException {
+
+        if (resource == null) {
+            throw new IllegalArgumentException("null resource");
+        }
+
+        if (resource.getName() == null || resource.getName().isEmpty()) {
+            throw new IllegalArgumentException("resource name is null or empty");
+        }
+
+   
+        return new GeneralAdminInpForResources("modify", "resource", resource.getName(), "rebalance", BLANK, BLANK, BLANK,
+                BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+    }
+	
+	
 	private GeneralAdminInpForResources(final String arg0, final String arg1, final String arg2, final String arg3,
 			final String arg4, final String arg5, final String arg6, final String arg7, final String arg8,
 			final String arg9, final int apiNumber) throws JargonException {
