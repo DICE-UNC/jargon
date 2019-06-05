@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 
+#### Adding a function for rebalancing a resource #332
+
+A pull request from jerem-m (thanks!) adds a capability to rebalance a resource
+
 ### Changed
 
 
