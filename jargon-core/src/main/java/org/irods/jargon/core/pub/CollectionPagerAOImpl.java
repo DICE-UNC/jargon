@@ -19,7 +19,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Improved facility to list under a parent collection in a manner that supports
- * paging by clients
+ * paging by clients. This implementation is meant to be a lower level interface
+ * to paging, returning a detailed view of the paging status.
+ * <p/>
+ * This interface focuses on paging via offsets, and handles paging across
+ * collections and data objects, which are treated as distinct data sources.
  *
  * @author Mike Conway - DICE
  *
@@ -45,7 +49,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	}
 
 	@Override
-	public PagingAwareCollectionListing retrieveNextPage(final String irodsAbsolutePath, final boolean inCollections,
+	public PagingAwareCollectionListing retrieveNextOffset(final String irodsAbsolutePath, final boolean inCollections,
 			final int offset, final long pageSize) throws FileNotFoundException, NoMoreDataException, JargonException {
 
 		log.info("retrieveNextPage()");
@@ -54,8 +58,18 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("offset:{}", offset);
+		log.info("pageSize:{}", pageSize);
+
 		final PagingAwareCollectionListing pagingAwareCollectionListing = this
 				.obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(irodsAbsolutePath);
+
+		if (inCollections) {
+			log.info("paging into collections to offset:{}", offset);
+		} else {
+			log.info("paging into data objects to offset:{}", offset);
+		}
 
 		return null;
 
@@ -120,14 +134,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent
-	 * (java.lang.String)
-	 */
 	@Override
-	public PagingAwareCollectionListing retrieveFirstPageUnderParent(final String irodsAbsolutePath)
+	public PagingAwareCollectionListing retrieveFirstResultUnderParent(final String irodsAbsolutePath)
 			throws FileNotFoundException, NoMoreDataException, JargonException {
 
 		log.info("retrieveFirstPageUnderParent()");

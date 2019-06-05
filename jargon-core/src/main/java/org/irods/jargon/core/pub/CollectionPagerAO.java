@@ -44,7 +44,7 @@ public interface CollectionPagerAO {
 	 * @throws NoMoreDataException   {@code NoMoreDataException}
 	 * @throws JargonException       {@code JargonException}
 	 */
-	public abstract PagingAwareCollectionListing retrieveFirstPageUnderParent(String irodsAbsolutePath)
+	public abstract PagingAwareCollectionListing retrieveFirstResultUnderParent(String irodsAbsolutePath)
 			throws FileNotFoundException, NoMoreDataException, JargonException;
 
 	/**
@@ -73,7 +73,7 @@ public interface CollectionPagerAO {
 	 * @throws NoMoreDataException   {@link NoMoreDataException}
 	 * @throws JargonException       {@link JargonException}
 	 */
-	PagingAwareCollectionListing retrieveNextPage(String irodsAbsolutePath, boolean inCollections, int offset,
+	PagingAwareCollectionListing retrieveNextOffset(String irodsAbsolutePath, boolean inCollections, int offset,
 			long pageSize) throws FileNotFoundException, NoMoreDataException, JargonException;
 
 }
