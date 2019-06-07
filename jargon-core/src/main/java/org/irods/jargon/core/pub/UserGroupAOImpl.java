@@ -45,12 +45,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 	private IRODSGenQueryExecutor irodsGenQueryExecutor = null;
 
 	/**
-	 * @param irodsSession
-	 *            {@link IRODSSession}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsSession {@link IRODSSession}
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @throws JargonException for iRODS error
 	 */
 	protected UserGroupAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);

@@ -69,13 +69,11 @@ class CollectionListingUtils {
 	 *
 	 *
 	 *
-	 * @param absolutePathToParent
-	 *            {@code String} with the current parent
+	 * @param absolutePathToParent {@code String} with the current parent
 	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry} that has
 	 *         the children under the parent. These children may be simulated per
 	 *         the given rules
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHome(final String absolutePathToParent)
 			throws FileNotFoundException, JargonException {
@@ -163,13 +161,10 @@ class CollectionListingUtils {
 	 * Heuristic processing allows ObjStats to be returned (though fake) at points
 	 * in the hierarchy were strict ACLs would otherwise preclude
 	 *
-	 * @param irodsAbsolutePath
-	 *            {@code String} with the iRODS path
+	 * @param irodsAbsolutePath {@code String} with the iRODS path
 	 * @return {@link ObjStat}
-	 * @throws FileNotFoundException
-	 *             {@link FileNotFoundException}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws JargonException       {@link JargonException}
 	 */
 	ObjStat handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
@@ -430,16 +425,12 @@ class CollectionListingUtils {
 	 * <p>
 	 * Works with soft links
 	 *
-	 * @param objStat
-	 *            {@link ObjStat} from iRODS that details the nature of the
-	 *            collection
-	 * @param partialStartIndex
-	 *            {@code int} with an offset
+	 * @param objStat           {@link ObjStat} from iRODS that details the nature
+	 *                          of the collection
+	 * @param partialStartIndex {@code int} with an offset
 	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
-	 * @throws FileNotFoundException
-	 *             {@link FileNotFoundException}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws JargonException       {@link JargonException}
 	 *
 	 *
 	 */
@@ -707,13 +698,10 @@ class CollectionListingUtils {
 	 * List the data objects underneath the given path given an already obtained
 	 * {@code ObjStat}
 	 *
-	 * @param objStat
-	 *            {@link ObjStat} describing the collection
-	 * @param partialStartIndex
-	 *            {@code int} wiht an offset
+	 * @param objStat           {@link ObjStat} describing the collection
+	 * @param partialStartIndex {@code int} wiht an offset
 	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(final ObjStat objStat,
 			final int partialStartIndex) throws JargonException {
@@ -795,22 +783,25 @@ class CollectionListingUtils {
 	 * Use the data in the objStat, in the case of special collections, to augment
 	 * the entry for a collection
 	 *
-	 * @param objStat
-	 *            {@link ObjStat} retreived for the parent directory
-	 * @param effectiveAbsolutePath
-	 *            {@code String} with the path used to query, this will be the
-	 *            canonical path for the parent collection, and should correspond to
-	 *            the absolute path information in the given {@code entry}.
-	 * @param entry
-	 *            {@link CollectionAndDataObjectListingEntry} which is the raw data
-	 *            returned from querying the iCat based on the
-	 *            {@code effectiveAbsolutePath}. This information is from the
-	 *            perspective of the canonical path, and the given method will
-	 *            reframe the {@code entry} from the perspective of the requested
-	 *            path This means that a query on children of a soft link carry the
-	 *            data from the perspective of the soft linked directory, even
-	 *            though the iCAT carries the information based on the 'source path'
-	 *            of the soft link. This gets pretty confusing otherwise.
+	 * @param objStat               {@link ObjStat} retreived for the parent
+	 *                              directory
+	 * @param effectiveAbsolutePath {@code String} with the path used to query, this
+	 *                              will be the canonical path for the parent
+	 *                              collection, and should correspond to the
+	 *                              absolute path information in the given
+	 *                              {@code entry}.
+	 * @param entry                 {@link CollectionAndDataObjectListingEntry}
+	 *                              which is the raw data returned from querying the
+	 *                              iCat based on the {@code effectiveAbsolutePath}.
+	 *                              This information is from the perspective of the
+	 *                              canonical path, and the given method will
+	 *                              reframe the {@code entry} from the perspective
+	 *                              of the requested path This means that a query on
+	 *                              children of a soft link carry the data from the
+	 *                              perspective of the soft linked directory, even
+	 *                              though the iCAT carries the information based on
+	 *                              the 'source path' of the soft link. This gets
+	 *                              pretty confusing otherwise.
 	 */
 	void augmentCollectionEntryForSpecialCollections(final ObjStat objStat, final String effectiveAbsolutePath,
 			final CollectionAndDataObjectListingEntry entry) {
@@ -927,13 +918,10 @@ class CollectionListingUtils {
 	/**
 	 * Given an objStat, get the count of collections under the path
 	 *
-	 * @param objStat
-	 *            {@link ObjStat}
+	 * @param objStat {@link ObjStat}
 	 * @return <code>int</code> with the total collections under a given path
-	 * @throws FileNotFoundException
-	 *             {@link FileNotFoundException}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws JargonException       {@link JargonException}
 	 */
 	int countCollectionsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException {
 
@@ -1028,12 +1016,9 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @param irodsAccount             {@link IRODSAccount}
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory}
+	 * @throws JargonException {@link JargonException}
 	 */
 	CollectionListingUtils(final IRODSAccount irodsAccount, final IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
@@ -1055,15 +1040,14 @@ class CollectionListingUtils {
 	/**
 	 * Retrieve an iRODS ObjStat object for the given iRODS path
 	 *
-	 * @param irodsAbsolutePath
-	 *            <code>String</code> with an absolute path to an irods object
+	 * @param irodsAbsolutePath <code>String</code> with an absolute path to an
+	 *                          irods object
 	 * @return {@link ObjStat} from iRODS
-	 * @throws FileNotFoundException
-	 *             if the file does not exist
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws FileNotFoundException if the file does not exist
+	 * @throws JargonException       {@link JargonException}
 	 */
-	ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
+	public ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException("irodsAbsolutePath is null or empty");

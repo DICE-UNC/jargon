@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.3.1.0-RELEASE] -
 ### Added
 
+#### Adding a function for rebalancing a resource #332
+
 
 #### Adding a function for rebalancing a resource #332
 
