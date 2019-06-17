@@ -104,6 +104,40 @@ public class CollectionAOImplForSoftLinkTest {
 
 	}
 
+	/*
+	 * Test for issue Creation of symbolic links #333
+	 */
+	@Test
+	public final void testCreateSoftLinkCollExistsIssue333() throws Exception {
+		String sourceCollectionName = "testCreateSoftLinkCollExistsIssue333Source";
+		String targetCollectionName = "testCreateSoftLinkCollExistsIssue333Target";
+
+		String sourceIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + sourceCollectionName);
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + targetCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile targetFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetFile.mkdirs();
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getMountedCollectionAO(irodsAccount);
+
+		// set up source collection
+		IRODSFile sourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(sourceIrodsCollection);
+		sourceFile.mkdirs();
+
+		// create the soft link
+		mountedCollectionAO.createASoftLink(sourceIrodsCollection, targetIrodsCollection);
+
+	}
+
 	/**
 	 * This method tests out the independence of AVU metadata between a canonical
 	 * path, and a soft linked path and shows that iRODS treats these things as
