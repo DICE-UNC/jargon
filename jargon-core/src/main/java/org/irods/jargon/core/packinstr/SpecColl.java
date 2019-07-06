@@ -19,7 +19,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	private String collection = "";
 	private String objPath = "";
 	private String resource = "";
-	private String rescHeir = "";
+	private String rescHier = "";
 	private String phyPath = "";
 	private String cacheDir = "";
 	private int cacheDirty = 0;
@@ -29,7 +29,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	public static final String COLLECTION = "collection";
 	public static final String COLL_CLASS = "collClass";
 	public static final String RESOURCE = "resource";
-	public static final String RESC_HEIR = "rescHier";
+	public static final String RESC_HIER = "rescHier";
 	public static final String CACHE_DIR = "cacheDir";
 	public static final String CACHE_DIRTY = "cacheDirty";
 	public static final String REPL_NUM = "replNum";
@@ -59,7 +59,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(COLL_CLASS, getCollClass()),
 				new Tag(COLLECTION, getCollection()), new Tag(OBJ_PATH, getObjPath()), new Tag(RESOURCE, getResource()),
-				new Tag(RESC_HEIR, getRescHeir()), new Tag(PHY_PATH, getPhyPath()), new Tag(CACHE_DIR, getCacheDir()),
+				new Tag(RESC_HIER, getRescHier()), new Tag(PHY_PATH, getPhyPath()), new Tag(CACHE_DIR, getCacheDir()),
 				new Tag(CACHE_DIRTY, getCacheDirty()), new Tag(REPL_NUM, getReplNum()) });
 		return message;
 	}
@@ -104,12 +104,12 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		this.resource = resource;
 	}
 
-	public String getRescHeir() {
-		return rescHeir;
+	public String getRescHier() {
+		return rescHier;
 	}
 
-	public void setRescHeir(final String rescHeir) {
-		this.rescHeir = rescHeir;
+	public void setRescHier(final String rescHier) {
+		this.rescHier = rescHier;
 	}
 
 	public String getPhyPath() {
@@ -157,8 +157,8 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		if (resource != null) {
 			builder.append("resource=").append(resource).append(", ");
 		}
-		if (rescHeir != null) {
-			builder.append("rescHeir=").append(rescHeir).append(", ");
+		if (rescHier != null) {
+			builder.append("rescHier=").append(rescHier).append(", ");
 		}
 		if (phyPath != null) {
 			builder.append("phyPath=").append(phyPath).append(", ");
