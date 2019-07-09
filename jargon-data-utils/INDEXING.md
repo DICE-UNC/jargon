@@ -59,7 +59,7 @@ public abstract class AbstractIrodsVisitorComponent extends AbstractJargonServic
 
 This pattern is used in the indexer package to create a visitor implementation that can support basic indexing operations. The AbstractIndexerVisitor component is
 a subclass of the AbstractIrodsVisitorComponent with the addition of metadata gathering. This specialized visitor will maintain a stack of AVU from the current location up the 
-heirarchy to the initial parent folder. This means that at each visit event all parent metadata is available. These can be accessed using the 'withMetadata' variants
+hierarchy to the initial parent folder. This means that at each visit event all parent metadata is available. These can be accessed using the 'withMetadata' variants
 of the visitor pattern, such as
 
 ```Java

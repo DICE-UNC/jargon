@@ -21,7 +21,7 @@ public class DataObjInfo extends AbstractIRODSPackingInstruction {
 
 	private String objPath = "";
 	private String rescName = "";
-	private String rescHeir = "";
+	private String rescHier = "";
 	private String dataType = "";
 	private double dataSize = 0d;
 	private String checksum = "";
@@ -71,7 +71,7 @@ public class DataObjInfo extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 		Tag message = new Tag(DataObjInfo.PI_TAG,
-				new Tag[] { new Tag("objPath", objPath), new Tag("rescName", rescName), new Tag("rescHeir", rescHeir),
+				new Tag[] { new Tag("objPath", objPath), new Tag("rescName", rescName), new Tag("rescHier", rescHier),
 						new Tag("dataType", dataType), new Tag("dataSize", dataSize), new Tag("chksum", checksum),
 						new Tag("version", version), new Tag("filePath", filePath),
 						new Tag("dataOwnerName", dataOwnerName), new Tag("dataOwnerZone", dataOwnerZone),
@@ -108,8 +108,8 @@ public class DataObjInfo extends AbstractIRODSPackingInstruction {
 		if (rescName != null) {
 			builder.append("rescName=").append(rescName).append(", ");
 		}
-		if (rescHeir != null) {
-			builder.append("rescHeir=").append(rescHeir).append(", ");
+		if (rescHier != null) {
+			builder.append("rescHier=").append(rescHier).append(", ");
 		}
 		if (dataType != null) {
 			builder.append("dataType=").append(dataType).append(", ");
@@ -191,12 +191,12 @@ public class DataObjInfo extends AbstractIRODSPackingInstruction {
 		this.rescName = rescName;
 	}
 
-	public String getRescHeir() {
-		return rescHeir;
+	public String getRescHier() {
+		return rescHier;
 	}
 
-	public void setRescHeir(String rescHeir) {
-		this.rescHeir = rescHeir;
+	public void setRescHier(String rescHier) {
+		this.rescHier = rescHier;
 	}
 
 	public String getDataType() {

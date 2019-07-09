@@ -12,7 +12,7 @@ package org.irods.jargon.core.packinstr;
 public class SpecColInfo {
 
 	/**
-	 * Flag that indicates whether resource heirarchy is included in sending data to
+	 * Flag that indicates whether resource hierarchy is included in sending data to
 	 * iRODS, to accomodate protocol differences in 4.x
 	 */
 	private boolean useResourceHierarchy = false;
