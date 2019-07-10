@@ -93,12 +93,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	private static final Object DEST_RESC_NAME = "rescName";
 
 	/**
-	 * @param irodsSession
-	 *            {@link IRODSSession}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsSession {@link IRODSSession}
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @throws JargonException for iRODS error
 	 */
 	protected RuleProcessingAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -627,17 +624,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * Process a response from a rule invocation, accumulate any output parameters
 	 * encountered, then
 	 *
-	 * @param rulesTag
-	 *            {@link Tag} with rule
-	 * @param parametersLength
-	 *            {@code int}
-	 * @param irodsRuleOutputParameters
-	 *            {@code Map} of {@link IRODSRuleExecResultOutputParameter} with
-	 *            overrides
+	 * @param rulesTag                  {@link Tag} with rule
+	 * @param parametersLength          {@code int}
+	 * @param irodsRuleOutputParameters {@code Map} of
+	 *                                  {@link IRODSRuleExecResultOutputParameter}
+	 *                                  with overrides
 	 * @return {@code boolean} if the param is a client action (like a client-side
 	 *         get or put)
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	private boolean processIndividualParameters(final Tag rulesTag, final int parametersLength,
 			final Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters) throws JargonException {
@@ -884,6 +878,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		irodsFile.setResource(resourceName);
 		log.info("performing get of file");
 		TransferOptions transferOptions = buildTransferOptionsBasedOnJargonProperties();
+		transferOptions.setClientSideRuleAction(true);
 		if (force) {
 			transferOptions.setForceOption(ForceOption.USE_FORCE);
 		} else {

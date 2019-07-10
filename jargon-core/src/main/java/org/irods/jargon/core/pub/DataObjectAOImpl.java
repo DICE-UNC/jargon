@@ -1366,7 +1366,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		final long lengthFromIrodsResponse = temp.getLongValue();
 
-		log.info("transfer length is:", lengthFromIrodsResponse);
+		log.info("transfer length is:{}", lengthFromIrodsResponse);
 
 		// get the L1_DESC_INX for the return value
 		temp = message.getTag(IRODSConstants.L1_DESC_INX);
@@ -1392,12 +1392,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 							thisFileTransferOptions, message, lengthFromIrodsResponse, irodsFileLength,
 							transferControlBlock, transferStatusCallbackListener, clientSideAction);
 
-					// if
-					// (!getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.6"))
-					// {
-					getIRODSProtocol().operationComplete(l1descInx);
+					if (!getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.6")) {
+						getIRODSProtocol().operationComplete(l1descInx);
+					} else if (thisFileTransferOptions.isClientSideRuleAction()) {
+						log.debug("sending operComplete for client side rule action");
+						getIRODSProtocol().operationComplete(l1descInx);
 
-					// }
+					}
 
 					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(RestartType.GET,
 							irodsFileToGet.getAbsolutePath());
