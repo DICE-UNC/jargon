@@ -251,14 +251,4 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *             if data missing
 	 */
 	List<Resource> listResourcesForIrodsFile(final IRODSFile irodsFile) throws JargonException, DataNotFoundException;
-	
-	/**
-	 * Rebalance the given resource.
-	 * 
-     * @param resource
-     *            {@link Resource} to be rebalance
-     * @throws JargonException
-     *             for iRODS error                      
-	 */
-	 void rebalanceResource(final Resource resource) throws JargonException;
 }
