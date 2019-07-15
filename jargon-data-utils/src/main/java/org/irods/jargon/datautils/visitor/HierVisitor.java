@@ -61,12 +61,4 @@ public interface HierVisitor {
 	 */
 	public boolean visit(HierLeaf node);
 
-	/**
-	 * Launch the operation
-	 *
-	 * @param startingCollectionPath
-	 *            {@code String} with the crawl start path
-	 */
-	public void launch(final String startingCollectionPath);
-
 }

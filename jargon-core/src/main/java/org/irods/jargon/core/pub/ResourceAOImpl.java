@@ -1116,4 +1116,50 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	}
 
+	
+	/*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.irods.jargon.core.pub.ResourceAO#rebalanceResource(org.irods.jargon.core
+     * .pub.domain.Resource)
+     */
+    @Override
+    public void rebalanceResource(final Resource resource) throws JargonException {
+        log.info("rebalanceResource()");
+        if (resource == null) {
+            throw new IllegalArgumentException("null resource");
+        }
+
+        log.info("resource:{}", resource);
+
+        if (!getIRODSServerProperties().isAtLeastIrods410()) {
+            log.error("does not work pre iRODS 4.1");
+            throw new UnsupportedOperationException("add resource only works for 4.1+");
+        }
+
+        /*
+         * arg0 modify
+         *
+         * generalAdminInp->arg1, "resource"
+         *
+         * std::string resc_name( _generalAdminInp->arg2 );
+         *
+         * sgeneralAdminInp->arg3, "rebalance"
+         *       
+         *
+         * examples
+         *
+         * "iadmin modresc resc_name rebalance",
+         */
+
+        GeneralAdminInpForResources adminPI = GeneralAdminInpForResources.instanceForRebalanceResource(resource);
+        log.debug("executing admin PI");
+        getIRODSProtocol().irodsFunction(adminPI);
+        getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+
+        log.info("complete");
+    }
+
+	
 }

@@ -1,11 +1,11 @@
 # Project: Jargon-core API
-### Date: 04/15/2019
-### Release Version: 4.3.0.3-SNAPSHOT
-### git tag: 
+### Date:
+### Release Version: 4.3.1.0-SNAPSHOT
+### git tag:
 
 ## News
 
-https://github.com/DICE-UNC/jargon/milestone/26
+https://github.com/DICE-UNC/jargon/milestone/24
 
 This is a maintenance and feature development release to support Metalnx, REST2, iDrop, NFS4J, and other efforts
 
