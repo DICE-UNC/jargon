@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### Allow setting of proxy user/zone in IRODSAccount #338
+
+Convenience method for creating IRODSAccount proxy user settings
+
+
 #### When invoking a rule via jargon the microservice msiDataObjGet doesn't end #337
 
 Added overhead code for client-side rule actions to send an oprComplete after a parallel get
