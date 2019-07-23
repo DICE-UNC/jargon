@@ -69,8 +69,8 @@ public class IRODSAccount implements Serializable {
 	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
 			final String homeDirectory, final String zone, final String defaultStorageResource,
 			final ClientServerNegotiationPolicy clientServerNegotiationPolicy) throws JargonException {
-		return new IRODSAccount(host, port, userName, password, homeDirectory, zone, defaultStorageResource, userName,
-				zone, null, clientServerNegotiationPolicy);
+		return new IRODSAccount(host, port, userName, password, homeDirectory, zone, defaultStorageResource, "", "",
+				null, clientServerNegotiationPolicy);
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class IRODSAccount implements Serializable {
 	 */
 	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
 			final String homeDirectory, final String zone, final String defaultStorageResource) throws JargonException {
-		return new IRODSAccount(host, port, userName, password, homeDirectory, zone, defaultStorageResource, userName,
-				zone, null, null);
+		return new IRODSAccount(host, port, userName, password, homeDirectory, zone, defaultStorageResource, "", "",
+				null, null);
 	}
 
 	/**
@@ -205,19 +205,29 @@ public class IRODSAccount implements Serializable {
 	/**
 	 * Creates an object to hold iRODS account information for a proxied user. All
 	 * parameters need to be initialized to use this initializer.
+	 * <p>
+	 * For usage, consult the {@code ProxyUserFunctionalTest} in the unit test suite
 	 *
 	 * @param host                          {@link String} the iRODS server domain
 	 *                                      name
 	 * @param port                          {@code int} the port on the iRODS server
-	 * @param userName                      {@link String} the user name
-	 * @param password                      {@link String} the password
+	 * @param userName                      {@link String} the user name. For use
+	 *                                      with the proxy feature, this would be
+	 *                                      the user that the given
+	 *                                      <code>proxyUser</code> will treat as the
+	 *                                      identity doing the operation.
+	 * @param password                      {@link String} the password. For use in
+	 *                                      proxy operations, this is the password
+	 *                                      of the <code>proxyUser</code>
 	 * @param homeDirectory                 {@link String} home directory on the
 	 *                                      iRODS
 	 * @param userZone                      {@link String} the IRODS zone of the
 	 *                                      user
 	 * @param defaultStorageResource        {@link String} default storage resource
 	 * @param proxyName                     {@link String} the name of the user's
-	 *                                      proxy
+	 *                                      proxy. This is the rodsadmin level
+	 *                                      account that will log and act as the
+	 *                                      given <code>userName</code>
 	 * @param proxyZone                     {@link String} the zone where the proxy
 	 *                                      is authenticated
 	 * @param authScheme                    {@link AuthScheme} to use
@@ -274,11 +284,11 @@ public class IRODSAccount implements Serializable {
 		this.port = port;
 		this.userName = userName;
 
-		proxyName = userName;
+		proxyName = "";
 		this.password = password;
 		this.homeDirectory = homeDirectory;
 		this.userZone = userZone;
-		proxyZone = userZone;
+		proxyZone = "";
 		this.defaultStorageResource = defaultStorageResource;
 	}
 
@@ -290,8 +300,14 @@ public class IRODSAccount implements Serializable {
 	 * @param host                          {@link String} the iRODS server domain
 	 *                                      name
 	 * @param port                          the port on the iRODS server
-	 * @param userName                      {@link String} the user name
-	 * @param password                      {@link String} the password
+	 * @param userName                      {@link String} the user name. For use
+	 *                                      with the proxy feature, this would be
+	 *                                      the user that the given
+	 *                                      <code>proxyUser</code> will treat as the
+	 *                                      identity doing the operation.
+	 * @param password                      {@link String} the password. For use in
+	 *                                      proxy operations, this is the password
+	 *                                      of the <code>proxyUser</code>
 	 * @param homeDirectory                 {@link String} home directory on the
 	 *                                      iRODS
 	 * @param userZone                      {@link String} the IRODS zone of the
@@ -301,7 +317,9 @@ public class IRODSAccount implements Serializable {
 	 *                                      object describing overrides from the
 	 *                                      default policy
 	 * @param proxyName                     {@link String} the name of the user's
-	 *                                      proxy
+	 *                                      proxy. This is the rodsadmin level
+	 *                                      account that will log and act as the
+	 *                                      given <code>userName</code>
 	 * @param proxyZone                     {@link String} the zone where the proxy
 	 *                                      is authenticated
 	 * @param authScheme                    {@link String} {@link AuthScheme}
@@ -322,8 +340,8 @@ public class IRODSAccount implements Serializable {
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-		if (proxyName == null || proxyName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty proxy name");
+		if (proxyName == null) {
+			throw new IllegalArgumentException("null proxy name");
 		}
 		if (password == null) {
 			throw new IllegalArgumentException("password is null");
@@ -334,8 +352,8 @@ public class IRODSAccount implements Serializable {
 		if (userZone == null || userZone.isEmpty()) {
 			throw new IllegalArgumentException("user zone is null or empty");
 		}
-		if (proxyZone == null || proxyZone.isEmpty()) {
-			throw new IllegalArgumentException("proxy zone is null or empty");
+		if (proxyZone == null) {
+			throw new IllegalArgumentException("proxy zone is null");
 		}
 		if (defaultStorageResource == null) {
 			throw new IllegalArgumentException("defaultStorageResource is null");
@@ -412,6 +430,12 @@ public class IRODSAccount implements Serializable {
 			if (!getUserName().equals(temp.getUserName())) {
 				return false;
 			}
+			if (!getProxyName().equals(temp.getProxyName())) {
+				return false;
+			}
+			if (!getProxyZone().equals(temp.getProxyZone())) {
+				return false;
+			}
 
 			return true;
 		} catch (ClassCastException e) {
@@ -435,7 +459,14 @@ public class IRODSAccount implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("irods://");
+
 		sb.append(getUserName());
+		if (!getProxyName().isEmpty()) {
+			sb.append("(proxy:");
+			sb.append(getProxyName());
+			sb.append(")");
+		}
+
 		sb.append("@");
 		sb.append(getHost());
 		sb.append(":");
@@ -590,9 +621,9 @@ public class IRODSAccount implements Serializable {
 	}
 
 	private boolean proxied() {
-		if (!(getUserName().equals(getProxyName()))) {
+		if (!getProxyName().isEmpty()) {
 			return true;
-		} else if (!(getZone().equals(getProxyZone()))) {
+		} else if (!getProxyZone().isEmpty()) {
 			return true;
 		} else {
 			return false;

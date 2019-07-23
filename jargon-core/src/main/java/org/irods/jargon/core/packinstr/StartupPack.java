@@ -36,9 +36,24 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
+
+		String proxyUser;
+		String proxyZone;
+
+		if (irodsAccount.getProxyName().isEmpty()) {
+			proxyUser = irodsAccount.getUserName();
+		} else {
+			proxyUser = irodsAccount.getProxyName();
+		}
+
+		if (irodsAccount.getProxyZone().isEmpty()) {
+			proxyZone = irodsAccount.getZone();
+		} else {
+			proxyZone = irodsAccount.getProxyZone();
+		}
+
 		Tag startupPacket = new Tag(PI_TAG, new Tag[] { new Tag("irodsProt", "1"), new Tag("reconnFlag", reconnFlag),
-				new Tag("connectCnt", connectCnt), new Tag("proxyUser", irodsAccount.getProxyName()),
-				new Tag("proxyRcatZone", irodsAccount.getProxyZone()),
+				new Tag("connectCnt", connectCnt), new Tag("proxyUser", proxyUser), new Tag("proxyRcatZone", proxyZone),
 				new Tag("clientUser", irodsAccount.getUserName()), new Tag("clientRcatZone", irodsAccount.getZone()),
 				new Tag("relVersion", IRODSAccount.IRODS_JARGON_RELEASE_NUMBER),
 				new Tag("apiVersion", IRODSAccount.IRODS_API_VERSION),

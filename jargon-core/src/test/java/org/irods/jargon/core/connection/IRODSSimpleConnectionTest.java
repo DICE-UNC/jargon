@@ -40,6 +40,17 @@ public class IRODSSimpleConnectionTest {
 		Assert.assertFalse("connection should not be connected", connection.isConnected());
 	}
 
+	@Test
+	public void testOpenAndCloseSimpleConnectionNonAdminUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
+		connection.disconnect();
+
+		Assert.assertFalse("connection should not be connected", connection.isConnected());
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testOpenAndCloseSimpleConnectionNullSession() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
