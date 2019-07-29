@@ -29,3 +29,4 @@ JargonVersion.java
 **/*.*~
 *.*~
 .dbeaver*
+data-profile/src/test/java/META-INF
