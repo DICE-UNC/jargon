@@ -40,8 +40,15 @@ public class StandardIRODSAuth extends AuthMechanism {
 
 		cachedChallenge = sendAuthRequestAndGetChallenge(irodsMidLevelProtocol);
 
+		AuthResponseInp authResponse_PI;
 		String response = challengeResponse(cachedChallenge, irodsAccount.getPassword(), irodsMidLevelProtocol);
-		AuthResponseInp authResponse_PI = new AuthResponseInp(irodsAccount.getProxyName(), response);
+		if (irodsAccount.getProxyName().isEmpty()) {
+			authResponse_PI = new AuthResponseInp(irodsAccount.getUserName(), response);
+
+		} else {
+			authResponse_PI = new AuthResponseInp(irodsAccount.getProxyName(), response);
+
+		}
 
 		// should be a header with no body if successful
 		irodsMidLevelProtocol.irodsFunction(IRODSConstants.RODS_API_REQ, authResponse_PI.getParsedTags(),

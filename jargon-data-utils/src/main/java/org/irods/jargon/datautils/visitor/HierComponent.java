@@ -6,7 +6,7 @@ package org.irods.jargon.datautils.visitor;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Interface for the 'Component' in the Heirarchical Visitor pattern. This is
+ * Interface for the 'Component' in the Hierarchical Visitor pattern. This is
  * the file or directory (leaf or composite) that is accessed by the crawler
  *
  * @author conwaymc

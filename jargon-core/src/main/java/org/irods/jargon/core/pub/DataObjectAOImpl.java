@@ -1266,7 +1266,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	}
 
-	/**
+	/*
 	 * The resource to use for the get operation has been determined. Note that the
 	 * state of the resource determination is important due to the fact that finding
 	 * such state information requires a GenQuery. There are certain occasions where
@@ -1275,35 +1275,43 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * multi-step protocol. For this reason, callers of this method can be assured
 	 * that no queries will be issued to iRODS while processing the get. An occasion
 	 * where this has been problematic has been the processing of client-side get
-	 * actions as the result of rule execution.
-	 * <p>
-	 * Note that an iRODS file length is passed here. This avoids any query from an
-	 * {@code IRODSFile.length()} operation. The length is passed in, as there are
-	 * some occasions where the multi-step protocol can show a zero file length,
-	 * such as when iRODS is preparing to treat a get operation as a parallel file
-	 * transfer. There are cases where iRODS responds with a zero length, indicating
-	 * a parallel transfer, but a policy rule in place in iRODS may 'turn off' such
-	 * parallel transfers. In that case, the length usually referred to returns as a
-	 * zero, and the number of threads will be zero. This must be handled.
+	 * actions as the result of rule execution. <p> Note that an iRODS file length
+	 * is passed here. This avoids any query from an {@code IRODSFile.length()}
+	 * operation. The length is passed in, as there are some occasions where the
+	 * multi-step protocol can show a zero file length, such as when iRODS is
+	 * preparing to treat a get operation as a parallel file transfer. There are
+	 * cases where iRODS responds with a zero length, indicating a parallel
+	 * transfer, but a policy rule in place in iRODS may 'turn off' such parallel
+	 * transfers. In that case, the length usually referred to returns as a zero,
+	 * and the number of threads will be zero. This must be handled.
 	 *
 	 *
-	 * @param irodsFileToGet
-	 * @param localFileToHoldData
+	 * @param irodsFileToGet {@link IRODSFile} that will be obtained
+	 * 
+	 * @param localFileToHoldData {@link File} that will hold the data
+	 * 
 	 * @param dataObjInp
+	 * 
 	 * @param thisFileTransferOptions
-	 * @param irodsFileLength                actual length of file from iRODS. This
-	 *                                       is passed in as there are occasions
-	 *                                       where the protocol exchange results in
-	 *                                       a zero file length. See the note above.
+	 * 
+	 * @param irodsFileLength actual length of file from iRODS. This is passed in as
+	 * there are occasions where the protocol exchange results in a zero file
+	 * length. See the note above.
+	 * 
 	 * @param transferStatusCallbackListener
+	 * 
 	 * @param transferControlBlock
-	 * @param clientSideAction               {@code boolean} that is {@code true} if
-	 *                                       this is a client-side action in rule
-	 *                                       processing
+	 * 
+	 * @param clientSideAction {@code boolean} that is {@code true} if this is a
+	 * client-side action in rule processing
+	 * 
 	 * @return {@code int} that is the file handle (l1descInx) that iRODS uses for
-	 *         this file
+	 * this file
+	 * 
 	 * @throws JargonException
+	 * 
 	 * @throws DataNotFoundException
+	 * 
 	 * @throws UnsupportedOperationException
 	 */
 	private int processGetAfterResourceDetermined(final IRODSFile irodsFileToGet, final File localFileToHoldData,
@@ -1358,7 +1366,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		final long lengthFromIrodsResponse = temp.getLongValue();
 
-		log.info("transfer length is:", lengthFromIrodsResponse);
+		log.info("transfer length is:{}", lengthFromIrodsResponse);
 
 		// get the L1_DESC_INX for the return value
 		temp = message.getTag(IRODSConstants.L1_DESC_INX);
@@ -1373,13 +1381,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		// if length == zero, check for multiple thread copy, may still process
 		// as a standard txfr if 0 threads specified
 		try {
-			if (lengthFromIrodsResponse == 0) {
+			if (lengthFromIrodsResponse == 0 || lengthFromIrodsResponse > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+				log.debug("process as a parallel transfer operation due to length of iRODS file");
+				/*
+				 * test added here for https://github.com/DICE-UNC/jargon/issues/337 When
+				 * invoking a rule via jargon the microservice msiDataObjGet doesn't end #337
+				 */
 				try {
 					checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(irodsFileToGet, localFileToHoldData,
 							thisFileTransferOptions, message, lengthFromIrodsResponse, irodsFileLength,
 							transferControlBlock, transferStatusCallbackListener, clientSideAction);
 
 					if (!getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.6")) {
+						getIRODSProtocol().operationComplete(l1descInx);
+					} else if (thisFileTransferOptions.isClientSideRuleAction()) {
+						log.debug("sending operComplete for client side rule action");
 						getIRODSProtocol().operationComplete(l1descInx);
 
 					}
@@ -1410,6 +1426,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 				}
 			} else {
+				log.debug("process as a single-buffer transfer based on the advertised iRODS length");
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData, lengthFromIrodsResponse, getIRODSProtocol(),
 						thisFileTransferOptions, transferControlBlock, transferStatusCallbackListener);
 			}

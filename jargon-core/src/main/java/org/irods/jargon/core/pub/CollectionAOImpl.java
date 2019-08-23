@@ -1921,6 +1921,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 					userFilePermission = new UserFilePermission(row.getColumn(0), "",
 							FilePermissionEnum.enumValueFromSpecificQueryTextPermission(row.getColumn(2)),
 							UserTypeEnum.findTypeByString(row.getColumn(3)), row.getColumn(1));
+
+					/*
+					 * LL Patch code userFilePermission = new UserFilePermission(row.getColumn(0),
+					 * "",
+					 * FilePermissionEnum.enumValueFromSpecificQueryTextPermission(row.getColumn(2))
+					 * , UserTypeEnum.RODS_USER, row.getColumn(1));
+					 */
+
 					log.debug("loaded filePermission:{}", userFilePermission);
 					userFilePermissions.add(userFilePermission);
 				}

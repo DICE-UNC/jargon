@@ -1062,7 +1062,7 @@ public class RuleProcessingAOImplTest {
 		String testFileGetName = "testExecuteRequestClientActionGetFileClientParallel.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String scratchFileAbsolutePath = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				32 * 1024 * 1024);
+				33 * 1024 * 1024);
 
 		File getTargetFile = new File(absPath, testFileGetName);
 		getTargetFile.delete();

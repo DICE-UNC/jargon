@@ -69,54 +69,37 @@ public class TransferOptions {
 	 * verify even if both values are {@code true}
 	 */
 	private boolean computeAndVerifyChecksumAfterTransfer = false;
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
+	/**
+	 * Special flag signalling that this transfer operation is the result of a
+	 * client side rule action (get or put). Typically this is left to false, but is
+	 * used as a signal from the Jargon rule processing code.
 	 */
+	private boolean clientSideRuleAction = false;
+
 	@Override
 	public synchronized String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("TransferOptions [maxThreads=");
-		builder.append(maxThreads);
-		builder.append(", udpSendRate=");
-		builder.append(udpSendRate);
-		builder.append(", udpPacketSize=");
-		builder.append(udpPacketSize);
-		builder.append(", allowPutGetResourceRedirects=");
-		builder.append(allowPutGetResourceRedirects);
-		builder.append(", intraFileStatusCallbacks=");
-		builder.append(intraFileStatusCallbacks);
-		builder.append(", ");
+		builder.append("TransferOptions [maxThreads=").append(maxThreads).append(", udpSendRate=").append(udpSendRate)
+				.append(", udpPacketSize=").append(udpPacketSize).append(", allowPutGetResourceRedirects=")
+				.append(allowPutGetResourceRedirects).append(", intraFileStatusCallbacks=")
+				.append(intraFileStatusCallbacks).append(", ");
 		if (forceOption != null) {
-			builder.append("forceOption=");
-			builder.append(forceOption);
-			builder.append(", ");
+			builder.append("forceOption=").append(forceOption).append(", ");
 		}
-		builder.append("useParallelTransfer=");
-		builder.append(useParallelTransfer);
-		builder.append(", ");
+		builder.append("useParallelTransfer=").append(useParallelTransfer).append(", ");
 		if (checksumEncoding != null) {
-			builder.append("checksumEncoding=");
-			builder.append(checksumEncoding);
-			builder.append(", ");
+			builder.append("checksumEncoding=").append(checksumEncoding).append(", ");
 		}
-		builder.append("intraFileStatusCallbacksNumberCallsInterval=");
-		builder.append(intraFileStatusCallbacksNumberCallsInterval);
-		builder.append(", intraFileStatusCallbacksTotalBytesInterval=");
-		builder.append(intraFileStatusCallbacksTotalBytesInterval);
-		builder.append(", ");
+		builder.append("intraFileStatusCallbacksNumberCallsInterval=")
+				.append(intraFileStatusCallbacksNumberCallsInterval)
+				.append(", intraFileStatusCallbacksTotalBytesInterval=")
+				.append(intraFileStatusCallbacksTotalBytesInterval).append(", ");
 		if (putOption != null) {
-			builder.append("putOption=");
-			builder.append(putOption);
-			builder.append(", ");
+			builder.append("putOption=").append(putOption).append(", ");
 		}
-		builder.append("computeChecksumAfterTransfer=");
-		builder.append(computeChecksumAfterTransfer);
-		builder.append(", computeAndVerifyChecksumAfterTransfer=");
-		builder.append(computeAndVerifyChecksumAfterTransfer);
-		builder.append("]");
+		builder.append("computeChecksumAfterTransfer=").append(computeChecksumAfterTransfer)
+				.append(", computeAndVerifyChecksumAfterTransfer=").append(computeAndVerifyChecksumAfterTransfer)
+				.append(", clientSideRuleAction=").append(clientSideRuleAction).append("]");
 		return builder.toString();
 	}
 
@@ -125,8 +108,7 @@ public class TransferOptions {
 	 * version. This is done so that the options may be safely passed between
 	 * transfer methods that may update the transfer options.
 	 *
-	 * @param transferOptions
-	 *            {@code TransferOptions}
+	 * @param transferOptions {@code TransferOptions}
 	 */
 	public TransferOptions(final TransferOptions transferOptions) {
 		this();
@@ -144,6 +126,7 @@ public class TransferOptions {
 				setUseParallelTransfer(transferOptions.isUseParallelTransfer());
 				setPutOption(transferOptions.getPutOption());
 				setChecksumEncoding(transferOptions.getChecksumEncoding());
+				setClientSideRuleAction(transferOptions.isClientSideRuleAction());
 				setIntraFileStatusCallbacksNumberCallsInterval(
 						transferOptions.getIntraFileStatusCallbacksNumberCallsInterval());
 				setIntraFileStatusCallbacksTotalBytesInterval(
@@ -172,9 +155,8 @@ public class TransferOptions {
 	/**
 	 * Set the desired max threads value for parallel transfers.
 	 *
-	 * @param maxThreads
-	 *            {@code int} with the maximum desired parallel transfer threads, 0
-	 *            means use the default in iRODS.
+	 * @param maxThreads {@code int} with the maximum desired parallel transfer
+	 *                   threads, 0 means use the default in iRODS.
 	 */
 	public synchronized void setMaxThreads(final int maxThreads) {
 		this.maxThreads = maxThreads;
@@ -192,8 +174,7 @@ public class TransferOptions {
 	/**
 	 * Set the UDP send rate if UDP transfers in use.
 	 *
-	 * @param udpSendRate
-	 *            {@code int} with the desired UDP send rate.
+	 * @param udpSendRate {@code int} with the desired UDP send rate.
 	 */
 	public synchronized void setUdpSendRate(final int udpSendRate) {
 		this.udpSendRate = udpSendRate;
@@ -211,8 +192,7 @@ public class TransferOptions {
 	/**
 	 * Set the desired UDP packet size if UDP transfers are in use.
 	 *
-	 * @param udpPacketSize
-	 *            {@code int}
+	 * @param udpPacketSize {@code int}
 	 */
 	public synchronized void setUdpPacketSize(final int udpPacketSize) {
 		this.udpPacketSize = udpPacketSize;
@@ -233,16 +213,14 @@ public class TransferOptions {
 	 * Should puts/gets redirect to the resource server that holds the data?
 	 * (equivalent to the -I in iput/iget)
 	 *
-	 * @param allowPutGetResourceRedirects
-	 *            the allowPutGetResourceRedirects to set
+	 * @param allowPutGetResourceRedirects the allowPutGetResourceRedirects to set
 	 */
 	public synchronized void setAllowPutGetResourceRedirects(final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
 	}
 
 	/**
-	 * @param computeChecksumAfterTransfer
-	 *            the computeChecksumAfterTransfer to set
+	 * @param computeChecksumAfterTransfer the computeChecksumAfterTransfer to set
 	 */
 	public synchronized void setComputeChecksumAfterTransfer(final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
@@ -256,8 +234,9 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @param computeAndVerifyChecksumAfterTransfer
-	 *            the computeAndVerifyChecksumAfterTransfer to set
+	 * @param computeAndVerifyChecksumAfterTransfer the
+	 *                                              computeAndVerifyChecksumAfterTransfer
+	 *                                              to set
 	 */
 	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
@@ -280,11 +259,12 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @param intraFileStatusCallbacks
-	 *            {@code boolean} with the intraFileStatusCallbacks behavior
-	 *            desired. If {@code true} and a call-back listener is provided,
-	 *            then within-file status call-backs will be generated during
-	 *            transfers. This has a slight performance penalty.
+	 * @param intraFileStatusCallbacks {@code boolean} with the
+	 *                                 intraFileStatusCallbacks behavior desired. If
+	 *                                 {@code true} and a call-back listener is
+	 *                                 provided, then within-file status call-backs
+	 *                                 will be generated during transfers. This has
+	 *                                 a slight performance penalty.
 	 */
 	public synchronized void setIntraFileStatusCallbacks(final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
@@ -302,8 +282,7 @@ public class TransferOptions {
 	/**
 	 * Set the prevailing force option for this transfer.
 	 *
-	 * @param forceOption
-	 *            {@link ForceOption} enum value
+	 * @param forceOption {@link ForceOption} enum value
 	 */
 	public synchronized void setForceOption(final ForceOption forceOption) {
 		this.forceOption = forceOption;
@@ -322,8 +301,8 @@ public class TransferOptions {
 	/**
 	 * Set whether parallel transfers can be used
 	 *
-	 * @param useParallelTransfer
-	 *            {@code boolean} with the useParallelTransfer option
+	 * @param useParallelTransfer {@code boolean} with the useParallelTransfer
+	 *                            option
 	 */
 	public synchronized void setUseParallelTransfer(final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
@@ -337,8 +316,7 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @param putOption
-	 *            the putOption to set
+	 * @param putOption the putOption to set
 	 */
 	public synchronized void setPutOption(final PutOptions putOption) {
 		this.putOption = putOption;
@@ -352,8 +330,7 @@ public class TransferOptions {
 	 * Set the type of checksum to use for iRODS. The default is MD5, and for
 	 * versions of iRODS 3.3.1 and higher SHA256 is available
 	 *
-	 * @param checksumEncoding
-	 *            {@link ChecksumEncodingEnum}
+	 * @param checksumEncoding {@link ChecksumEncodingEnum}
 	 */
 	public synchronized void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
 
@@ -373,8 +350,9 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @param intraFileStatusCallbacksNumberCallsInterval
-	 *            the intraFileStatusCallbacksNumberCallsInterval to set
+	 * @param intraFileStatusCallbacksNumberCallsInterval the
+	 *                                                    intraFileStatusCallbacksNumberCallsInterval
+	 *                                                    to set
 	 */
 	public synchronized void setIntraFileStatusCallbacksNumberCallsInterval(
 			final int intraFileStatusCallbacksNumberCallsInterval) {
@@ -389,11 +367,20 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @param intraFileStatusCallbacksTotalBytesInterval
-	 *            the intraFileStatusCallbacksTotalBytesInterval to set
+	 * @param intraFileStatusCallbacksTotalBytesInterval the
+	 *                                                   intraFileStatusCallbacksTotalBytesInterval
+	 *                                                   to set
 	 */
 	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
 			final long intraFileStatusCallbacksTotalBytesInterval) {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
+	}
+
+	public synchronized boolean isClientSideRuleAction() {
+		return clientSideRuleAction;
+	}
+
+	public synchronized void setClientSideRuleAction(boolean clientSideRuleAction) {
+		this.clientSideRuleAction = clientSideRuleAction;
 	}
 }
