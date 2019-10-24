@@ -11,9 +11,27 @@ package org.irods.jargon.core.pub.domain;
  *
  */
 public class UserGroup extends IRODSDomainObject {
+	/**
+	 * iCat unique id for the group
+	 */
 	private String userGroupId = "";
+	/**
+	 * group name (sans the # zone decoration for groups originating in a federated
+	 * zone)
+	 */
 	private String userGroupName = "";
+	/**
+	 * Zone of the user that comprises the 'user#zone' format. This denotes a user
+	 * in a foreign zone who has been granted access in this icat zone.
+	 */
 	private String zone = "";
+	/**
+	 * Denotes the zone perspective of this user group. This is not the same as the
+	 * {@code zone} in this same structure. The {@code icatZone} gives the zone that
+	 * was queried to get the user. This allows for groups to be brought together by
+	 * querying multiple zones.
+	 */
+	private String icatZone = "";
 
 	public UserGroup() {
 
@@ -37,28 +55,38 @@ public class UserGroup extends IRODSDomainObject {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("user group\n");
-		sb.append("    id:");
-		sb.append(userGroupId);
-		sb.append("\n    name:");
-		sb.append(userGroupName);
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserGroup [");
+		if (userGroupId != null) {
+			builder.append("userGroupId=").append(userGroupId).append(", ");
+		}
+		if (userGroupName != null) {
+			builder.append("userGroupName=").append(userGroupName).append(", ");
+		}
+		if (zone != null) {
+			builder.append("zone=").append(zone).append(", ");
+		}
+		if (icatZone != null) {
+			builder.append("icatZone=").append(icatZone);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
-	/**
-	 * @return the zone
-	 */
 	public String getZone() {
 		return zone;
 	}
 
-	/**
-	 * @param zone
-	 *            the zone to set
-	 */
 	public void setZone(final String zone) {
 		this.zone = zone;
+	}
+
+	public String getIcatZone() {
+		return icatZone;
+	}
+
+	public void setIcatZone(String icatZone) {
+		this.icatZone = icatZone;
 	}
 
 }

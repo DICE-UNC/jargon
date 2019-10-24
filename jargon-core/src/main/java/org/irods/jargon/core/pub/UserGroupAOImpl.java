@@ -413,7 +413,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	@Override
 	public List<UserGroup> findUserGroups(final String userGroupName) throws JargonException {
-
 		/*
 		 * Delegate to case-sensitive search method to preserve prior API
 		 */
@@ -515,6 +514,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 	}
 
+// FIXME: handle user#zone into group#zone?
 	@Override
 	public void addUserToGroup(final String userGroupName, final String userName, final String zoneName)
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
@@ -614,6 +614,19 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
 		return query.toString();
+	}
+
+	/**
+	 * Get a builder with the expected column values for building user groups
+	 * 
+	 * @return {@link IRODSGenQueryBuilder}
+	 * @throws GenQueryBuilderException {@link GenQueryBuilderException}
+	 */
+	private IRODSGenQueryBuilder buildUserGroupSelectsAsBuilder() throws GenQueryBuilderException {
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
+		return builder;
 	}
 
 	private UserGroup buildUserGroupFromResultSet(final IRODSQueryResultRow row) throws JargonException {
