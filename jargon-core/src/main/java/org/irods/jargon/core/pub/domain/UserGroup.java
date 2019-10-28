@@ -89,4 +89,21 @@ public class UserGroup extends IRODSDomainObject {
 		this.icatZone = icatZone;
 	}
 
+	/**
+	 * return a concatenated group and zone name
+	 * 
+	 * @return {@code String} with a concatenated group and zone name
+	 */
+	public String getNameWithZone() {
+		if (getZone().isEmpty()) {
+			return getUserGroupName();
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(getUserGroupName());
+			sb.append('#');
+			sb.append(getZone());
+			return sb.toString();
+		}
+	}
+
 }

@@ -9,6 +9,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 /**
  * Interface for an access object dealing with iRODS user groups. Includes
@@ -216,5 +217,24 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 */
 	void addUserToGroupAsGroupAdmin(String userGroupName, String userName, String zoneName)
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException;
+
+	/**
+	 * Handy util method to split up a user group name into group name and optional
+	 * zone
+	 * 
+	 * @param userGroupName {@code String} with the name of the user group
+	 * @return {@link UserGroup} containing the broke-out name
+	 */
+	public static UserGroup splitGroupIntoNameAndZone(final String userGroupName) {
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("userGroupName is null or empty");
+		}
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(MiscIRODSUtils.getUserInUserName(userGroupName));
+		userGroup.setZone(MiscIRODSUtils.getZoneInUserName(userGroupName));
+		return userGroup;
+
+	}
 
 }
