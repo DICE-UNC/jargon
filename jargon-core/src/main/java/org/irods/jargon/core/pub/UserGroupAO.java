@@ -66,7 +66,8 @@ public interface UserGroupAO extends IRODSAccessObject {
 	List<UserGroup> findUserGroupsForUser(String userName) throws JargonException;
 
 	/**
-	 * Add the given user group to iRODS
+	 * Add the given user group to iRODS. NB a group can only be in the same zone as
+	 * the logged in server.
 	 *
 	 * @param userGroup {@link UserGroup} to add
 	 * @throws DuplicateDataException if user already exists
@@ -76,7 +77,8 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Remove the given user group from iRODS. Note that if the user group is not
-	 * found, a warning is logged, and the exception is ignored.
+	 * found, a warning is logged, and the exception is ignored. NB you cannot
+	 * remove a group from a zone other than the logged-in zone.
 	 *
 	 * @param userGroup {@link UserGroup} to remove
 	 * @throws JargonException {@link JargonException}

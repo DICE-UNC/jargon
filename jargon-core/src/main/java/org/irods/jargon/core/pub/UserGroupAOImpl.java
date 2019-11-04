@@ -72,6 +72,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		log.info("user group:{}", userGroup);
 
+		if (!userGroup.getZone().equals(this.getIRODSAccount().getZone())) {
+			log.error("cannot create a group with a different zone");
+			throw new JargonException("cannot create a cross-zone group");
+		}
+
 		try {
 			GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserGroup(userGroup);
 			log.debug("executing admin PI");
@@ -103,6 +108,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		log.info("user group:{}", userGroup);
 
+		if (!userGroup.getZone().equals(this.getIRODSAccount().getZone())) {
+			log.error("cannot create a group with a different zone");
+			throw new JargonException("cannot create a cross-zone group");
+		}
+
 		try {
 
 			UserAdminInp adminPI = UserAdminInp.instanceForAddUserGroup(userGroup);
@@ -120,8 +130,13 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 	public void removeUserGroup(final String userGroupName) throws JargonException {
 
 		log.info("removeUserGroup()");
+
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty user group name");
+		}
+
+		if (userGroupName.contains("#")) {
+			throw new IllegalArgumentException("cannot remove cross-zone group");
 		}
 
 		log.info("userGroupName:{}", userGroupName);
@@ -149,6 +164,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		if (userGroup.getZone() == null || userGroup.getZone().isEmpty()) {
 			userGroup.setZone(getIRODSAccount().getZone());
+		}
+
+		if (!userGroup.getZone().equals(this.getIRODSAccount().getZone())) {
+			log.error("cannot remove a group with a different zone");
+			throw new JargonException("cannot remove a cross-zone group");
 		}
 
 		log.info("user group:{}", userGroup);
@@ -613,6 +633,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
 		return query.toString();
 	}
 
@@ -633,7 +655,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		UserGroup userGroup = new UserGroup();
 		userGroup.setUserGroupId(row.getColumn(1));
 		userGroup.setUserGroupName(row.getColumn(0));
-
+		userGroup.setZone(row.getColumn(2));
 		return userGroup;
 	}
 
@@ -674,10 +696,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		sb.append(userGroupName.trim());
 		sb.append('%');
 
-		builder
-
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
-						sb.toString())
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
+				sb.toString())
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL, RODS_GROUP);
 		IRODSQueryResultSet resultSet = null;
 		try {
