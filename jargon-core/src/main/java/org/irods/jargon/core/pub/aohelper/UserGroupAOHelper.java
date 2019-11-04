@@ -17,15 +17,15 @@ public class UserGroupAOHelper {
 	 * Add appropriate select statements to the provided builder to query the user
 	 * group data in the iCAT
 	 *
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} to which the selects will be added
-	 * @throws GenQueryBuilderException
-	 *             {@link GenQueryBuilderException}
+	 * @param builder {@link IRODSGenQueryBuilder} to which the selects will be
+	 *                added
+	 * @throws GenQueryBuilderException {@link GenQueryBuilderException}
 	 */
 	public static void buildSelectsByAppendingToBuilder(final IRODSGenQueryBuilder builder)
 			throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE);
 
 	}
 
