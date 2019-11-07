@@ -634,8 +634,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_USER_ZONE.getName());
 		return query.toString();
 	}
 
@@ -656,7 +654,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		UserGroup userGroup = new UserGroup();
 		userGroup.setUserGroupId(row.getColumn(1));
 		userGroup.setUserGroupName(row.getColumn(0));
-		userGroup.setZone(row.getColumn(2));
+		userGroup.setZone(this.getIRODSAccount().getZone());
 		return userGroup;
 	}
 
