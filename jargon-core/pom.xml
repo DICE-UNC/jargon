@@ -119,7 +119,6 @@
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
-									test.option.eirods=${test.option.eirods}
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
 									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}
 									test.option.exercise.filesystem.mount=${jargon.test.option.exercise.filesystem.mount}

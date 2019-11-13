@@ -214,7 +214,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 			int posCloseParen = name.indexOf(")");
 			if (posCloseParen > -1) {
 				// trim off parens
-				int posOpenParen = colNames.indexOf("(");
+				int posOpenParen = name.indexOf("(");
 				if (posOpenParen > -1) {
 					name = name.substring(posOpenParen + 1, posCloseParen);
 				} else {

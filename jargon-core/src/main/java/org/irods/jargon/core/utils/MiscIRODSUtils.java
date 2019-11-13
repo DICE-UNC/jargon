@@ -108,6 +108,24 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Build the proper /zonename/home path given the zone
+	 * 
+	 * @param zoneName {@code String} with the zone name
+	 * @return {@code String} with the path /zoneName/home
+	 */
+	public static String buildPathZoneAndHome(final String zoneName) {
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty zoneName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(zoneName);
+		sb.append("/home");
+		return sb.toString();
+	}
+
+	/**
 	 * Build the path to the trash orphan collection in the given zone
 	 *
 	 * @param zoneName zoneName <code>String</code> with the zone name

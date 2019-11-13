@@ -72,6 +72,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		log.info("user group:{}", userGroup);
 
+		if (!userGroup.getZone().equals(this.getIRODSAccount().getZone())) {
+			log.error("cannot create a group with a different zone");
+			throw new JargonException("cannot create a cross-zone group");
+		}
+
 		try {
 			GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserGroup(userGroup);
 			log.debug("executing admin PI");
@@ -103,6 +108,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		log.info("user group:{}", userGroup);
 
+		if (!userGroup.getZone().equals(this.getIRODSAccount().getZone())) {
+			log.error("cannot create a group with a different zone");
+			throw new JargonException("cannot create a cross-zone group");
+		}
+
 		try {
 
 			UserAdminInp adminPI = UserAdminInp.instanceForAddUserGroup(userGroup);
@@ -120,8 +130,13 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 	public void removeUserGroup(final String userGroupName) throws JargonException {
 
 		log.info("removeUserGroup()");
+
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty user group name");
+		}
+
+		if (userGroupName.contains("#")) {
+			throw new IllegalArgumentException("cannot remove cross-zone group");
 		}
 
 		log.info("userGroupName:{}", userGroupName);
@@ -149,6 +164,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		if (userGroup.getZone() == null || userGroup.getZone().isEmpty()) {
 			userGroup.setZone(getIRODSAccount().getZone());
+		}
+
+		if (!userGroup.getZone().equals(this.getIRODSAccount().getZone())) {
+			log.error("cannot remove a group with a different zone");
+			throw new JargonException("cannot remove a cross-zone group");
 		}
 
 		log.info("user group:{}", userGroup);
@@ -288,7 +308,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID).addConditionAsGenQueryField(
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE).addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.EQUAL, userGroupName.trim());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
@@ -413,7 +434,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	@Override
 	public List<UserGroup> findUserGroups(final String userGroupName) throws JargonException {
-
 		/*
 		 * Delegate to case-sensitive search method to preserve prior API
 		 */
@@ -515,6 +535,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 	}
 
+// FIXME: handle user#zone into group#zone?
 	@Override
 	public void addUserToGroup(final String userGroupName, final String userName, final String zoneName)
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
@@ -616,11 +637,24 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		return query.toString();
 	}
 
+	/**
+	 * Get a builder with the expected column values for building user groups
+	 * 
+	 * @return {@link IRODSGenQueryBuilder}
+	 * @throws GenQueryBuilderException {@link GenQueryBuilderException}
+	 */
+	private IRODSGenQueryBuilder buildUserGroupSelectsAsBuilder() throws GenQueryBuilderException {
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
+		return builder;
+	}
+
 	private UserGroup buildUserGroupFromResultSet(final IRODSQueryResultRow row) throws JargonException {
 		UserGroup userGroup = new UserGroup();
 		userGroup.setUserGroupId(row.getColumn(1));
 		userGroup.setUserGroupName(row.getColumn(0));
-
+		userGroup.setZone(this.getIRODSAccount().getZone());
 		return userGroup;
 	}
 
@@ -661,10 +695,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		sb.append(userGroupName.trim());
 		sb.append('%');
 
-		builder
-
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
-						sb.toString())
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
+				sb.toString())
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL, RODS_GROUP);
 		IRODSQueryResultSet resultSet = null;
 		try {
