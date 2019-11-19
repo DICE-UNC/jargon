@@ -19,6 +19,9 @@ Convenience method for creating IRODSAccount proxy user settings
 
 Added functional tests and clarified setting of proxyUser and proxyZone in IRODSAccount.
 
+#### cleanups and additions to groupAO and userAO handling for groups in metalnx #344
+
+Clarified UserAO and GroupAO methods, fixed issues where users were appearing in GroupAO findXXX methods. Transitioned queries to builder model in GroupAO.
 
 
 #### When invoking a rule via jargon the microservice msiDataObjGet doesn't end #337

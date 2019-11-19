@@ -13,7 +13,6 @@ import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
-import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -164,26 +163,6 @@ public class UserGroupAOImplTest {
 		UserGroup userGroup = userGroupAO.findByName("i dont exist here");
 		Assert.assertNull("user group returned, there should not be one", userGroup);
 
-	}
-
-	@Test
-	public final void testFindWhere() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
-		UserGroupAO userGroupAO = accessObjectFactory.getUserGroupAO(irodsAccount);
-
-		StringBuilder query = new StringBuilder();
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
-		query.append(" = '");
-		query.append(testingProperties.get(TestingPropertiesHelper.IRODS_USER_GROUP_KEY));
-		query.append("'");
-
-		List<UserGroup> userGroup = userGroupAO.findWhere(query.toString());
-		irodsSession.closeSession();
-		Assert.assertNotNull("no user group returned", userGroup);
-		Assert.assertTrue("no user group returned for query", userGroup.size() == 1);
 	}
 
 	@Test
@@ -369,8 +348,8 @@ public class UserGroupAOImplTest {
 			}
 		}
 
-		//userGroupAO.removeUserGroup(userGroup);
-		//Assert.assertTrue("did not find user I just added", foundMine);
+		// userGroupAO.removeUserGroup(userGroup);
+		// Assert.assertTrue("did not find user I just added", foundMine);
 	}
 
 	/**
@@ -382,7 +361,7 @@ public class UserGroupAOImplTest {
 	public final void testAddUserToGroupGroupDoesNotExist() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		String testUserGroup = "testAddUserToGroup";
+		String testUserGroup = "testAddUserToGroupGroupDoesNotExist";
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		UserGroupAO userGroupAO = accessObjectFactory.getUserGroupAO(irodsAccount);
