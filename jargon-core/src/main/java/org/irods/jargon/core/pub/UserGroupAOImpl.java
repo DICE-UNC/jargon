@@ -222,8 +222,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_ID, QueryConditionOperators.EQUAL,
 				userGroupId.trim());
-		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL,
-				UserTypeEnum.RODS_GROUP.getTextValue());
 		IRODSGenQueryFromBuilder irodsQuery = null;
 		try {
 			irodsQuery = builder.exportIRODSQueryFromBuilder(5000);
