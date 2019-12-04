@@ -8,7 +8,6 @@ import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
-import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 /**
@@ -38,22 +37,6 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonException {@link JargonException}
 	 */
 	UserGroup findByName(final String userGroupName) throws JargonException;
-
-	/**
-	 * Provides a convenient way to query for {@code UserGroup}s using the provided
-	 * 'WHERE" clause. In usage, provide an iquest compatable condition omitting the
-	 * proceeding 'Where" statement. An empty {@code List} will be returned if no
-	 * matches were found.
-	 *
-	 * @param whereClause {@code String} containing the iquest compatable condition,
-	 *                    omitting the "WHERE" token.
-	 * @return {@code List<UserGroup>} containing the UserGroups that match the
-	 *         given query
-	 * @throws JargonException      {@link JargonException}
-	 * @throws JargonQueryException indicates some syntax exception in the provided
-	 *                              where clause
-	 */
-	List<UserGroup> findWhere(String whereClause) throws JargonException, JargonQueryException;
 
 	/**
 	 * Given a user name, return the user groups that the given user belongs to, or

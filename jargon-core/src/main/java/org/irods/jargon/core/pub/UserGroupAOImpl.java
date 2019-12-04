@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.UserAdminInp;
+import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.aohelper.UserGroupAOHelper;
 import org.irods.jargon.core.pub.domain.User;
@@ -212,25 +213,28 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		log.info("finding user group with id: {}", userGroupId);
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
-		StringBuilder query = new StringBuilder();
-
-		query.append(buildUserGroupSelects());
-		query.append(" where ");
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
-		query.append(" = '");
-		query.append(userGroupId.trim());
-		query.append("'");
-
-		String queryString = query.toString();
-		log.info("query string: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		try {
+			this.buildUserGroupSelects(builder);
+		} catch (GenQueryBuilderException e) {
+			log.error("query builder exception for query:{}", builder, e);
+			throw new JargonException("error building query", e);
+		}
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_ID, QueryConditionOperators.EQUAL,
+				userGroupId.trim());
+		IRODSGenQueryFromBuilder irodsQuery = null;
+		try {
+			irodsQuery = builder.exportIRODSQueryFromBuilder(5000);
+		} catch (GenQueryBuilderException e1) {
+			log.error("query builder exception for query:{}", irodsQuery, e1);
+			throw new JargonException("error building query", e1);
+		}
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
+			log.error("query exception for user query:" + irodsQuery, e);
 			throw new JargonException("error in user group query");
 		}
 
@@ -270,20 +274,29 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		log.info("findAll()");
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
-		StringBuilder query = new StringBuilder();
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		try {
+			this.buildUserGroupSelects(builder);
+		} catch (GenQueryBuilderException e) {
+			log.error("query builder exception for query:{}", builder, e);
+			throw new JargonException("error building query", e);
+		}
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL,
+				UserTypeEnum.RODS_GROUP.getTextValue());
 
-		query.append(buildUserGroupSelects());
-
-		String queryString = query.toString();
-		log.info("query string: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
+		IRODSGenQueryFromBuilder irodsQuery = null;
+		try {
+			irodsQuery = builder.exportIRODSQueryFromBuilder(5000);
+		} catch (GenQueryBuilderException e1) {
+			log.error("query builder exception for query:{}", irodsQuery, e1);
+			throw new JargonException("error building query", e1);
+		}
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
+			log.error("query exception for user query:{}", irodsQuery, e);
 			throw new JargonException("error in user group query");
 		}
 
@@ -339,45 +352,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 		return buildUserGroupFromResultSet(row);
 
-	}
-
-	@Override
-	public List<UserGroup> findWhere(final String whereClause) throws JargonException, JargonQueryException {
-
-		if (whereClause == null || whereClause.length() == 0) {
-			throw new JargonException("null or missing where clause");
-		}
-
-		log.info("find user group with provided where clause: {}", whereClause);
-
-		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
-
-		StringBuilder query = new StringBuilder();
-
-		query.append(buildUserGroupSelects());
-		query.append(" where ");
-		query.append(whereClause);
-
-		String queryString = query.toString();
-		log.info("query string: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
-			throw new JargonException("error in user group query");
-		}
-
-		List<UserGroup> userGroups = new ArrayList<>();
-
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			userGroups.add(buildUserGroupFromResultSet(row));
-		}
-
-		return userGroups;
 	}
 
 	@Override
@@ -450,24 +424,28 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
 
-		StringBuilder query = new StringBuilder();
-
-		query.append(buildUserGroupSelects());
-		query.append(" WHERE ");
-		query.append(RodsGenQueryEnum.COL_USER_NAME.getName());
-		query.append(" = '");
-		query.append(userName.trim());
-		query.append("'");
-		String queryString = query.toString();
-		log.info("query string: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.EQUAL,
+				userName.trim());
+		IRODSGenQueryFromBuilder irodsQuery = null;
+		try {
+			this.buildUserGroupSelects(builder);
+		} catch (GenQueryBuilderException e) {
+			log.error("query builder exception for query:{}", builder, e);
+			throw new JargonException("error building query", e);
+		}
+		try {
+			irodsQuery = builder.exportIRODSQueryFromBuilder(5000);
+		} catch (GenQueryBuilderException e1) {
+			log.error("query builder exception for query:{}", irodsQuery, e1);
+			throw new JargonException("error building query", e1);
+		}
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
+			log.error("query exception for user query:{}", irodsQuery, e);
 			throw new JargonException("error in user group query");
 		}
 
@@ -628,13 +606,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	}
 
-	private String buildUserGroupSelects() {
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_ID.getName());
-		return query.toString();
+	private IRODSGenQueryBuilder buildUserGroupSelects(final IRODSGenQueryBuilder builder)
+			throws GenQueryBuilderException {
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
+		return builder;
 	}
 
 	/**
