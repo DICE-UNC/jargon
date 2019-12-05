@@ -13,6 +13,8 @@ import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Support for PAM (plug-able authentication module) contributed by Chris Smith
@@ -28,11 +30,14 @@ public class PAMAuth extends AuthMechanism {
 
 	private boolean needToWrapWithSsl = false;
 
+	public static final Logger log = LoggerFactory.getLogger(PAMAuth.class);
+
 	@Override
 	protected IRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
 			final IRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
+		log.debug("processAuthenticationAfterStartup()");
 		needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection().getEncryptionType() == EncryptionType.NONE;
 
 		IRODSMidLevelProtocol irodsMidLevelProtocolToUse = null;
@@ -42,12 +47,11 @@ public class PAMAuth extends AuthMechanism {
 		 * have an SSL connection, then no need to wrap the PAM auth in SSL.
 		 */
 		if (needToWrapWithSsl) {
-			log.info("will wrap commands with ssl");
+			log.debug("will wrap commands with ssl");
 			irodsMidLevelProtocolToUse = establishSecureConnectionForPamAuth(irodsAccount, irodsMidLevelProtocol);
 		} else {
-			log.info("no need to SSL tunnel for PAM");
+			log.debug("no need to SSL tunnel for PAM");
 			irodsMidLevelProtocolToUse = irodsMidLevelProtocol;
-
 		}
 
 		// send pam auth request
@@ -58,13 +62,13 @@ public class PAMAuth extends AuthMechanism {
 
 		if (startupResponseData.checkIs410OrLater()) {
 			log.info("using pluggable pam auth request");
-			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(irodsAccount.getProxyName(),
+			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(irodsAccount.getUserName(),
 					MiscIRODSUtils.escapePasswordChars(irodsAccount.getPassword()), pamTimeToLive, startupResponseData);
 			response = irodsMidLevelProtocolToUse.irodsFunction(pi);
 
 		} else {
 			log.info("using normal irods pam auth request");
-			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(irodsAccount.getProxyName(),
+			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(irodsAccount.getUserName(),
 					irodsAccount.getPassword(), pamTimeToLive);
 			response = irodsMidLevelProtocolToUse.irodsFunction(pamAuthRequestInp);
 		}
