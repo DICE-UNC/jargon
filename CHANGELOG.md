@@ -25,3 +25,7 @@ Clarified UserAO and GroupAO methods, fixed issues where users were appearing in
 
 Added overhead code for client-side rule actions to send an oprComplete after a parallel get
 operation. This prevents 'stuck' rules. Fix for user-reported issue.
+
+#### fix use of proxy in pam auth #347
+
+Fixed PAMAuth so that username is propogated from IRODSAccount into the packing instruction. This had been set to proxyName().

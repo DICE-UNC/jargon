@@ -188,6 +188,8 @@ abstract class AuthMechanism {
 	 */
 	protected IRODSMidLevelProtocol authenticate(final IRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException, JargonException {
+		log.debug("authenticate()");
+		log.debug("irodsAccount:{}", irodsAccount);
 		irodsMidLevelProtocol.setIrodsAccount(irodsAccount);
 		preConnectionStartup();
 		sendStartupPacket(irodsAccount, irodsMidLevelProtocol);
@@ -196,6 +198,7 @@ abstract class AuthMechanism {
 		IRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(irodsAccount,
 				irodsMidLevelProtocol, startupResponseData);
 		authenticatedProtocol = processAfterAuthentication(authenticatedProtocol, startupResponseData);
+		log.debug("authenticated...");
 
 		return authenticatedProtocol;
 	}
