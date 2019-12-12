@@ -204,6 +204,37 @@ public interface UserGroupAO extends IRODSAccessObject {
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException;
 
 	/**
+	 * Find the user groups to which the given user is a member. This can be used to
+	 * find user membership in a different zone
+	 * 
+	 * @param userName   {@code String} with the user name. The user name must be
+	 *                   supplied in 'user#zone' format if the user is a federated
+	 *                   user.
+	 * @param targetZone {@code String} with the zone of interest to be queried.
+	 *                   Note if the target zone is set to blank (it cannot be null)
+	 *                   then it will operate as the within zone form
+	 * @return {@code List} of {@link UserGroup}
+	 * @throws JargonException {@link JargonException}
+	 */
+	List<UserGroup> findUserGroupsForUserInZone(final String userName, final String targetZone) throws JargonException;
+
+	/**
+	 * List the members of the given user group. This query can look for user groups
+	 * in a federated zone through the {@code targetZone} parameter
+	 * 
+	 * @param userGroupName {@code String} with the user group name to be searched
+	 *                      to obtain membership. The user name must be supplied in
+	 *                      'user#zone' format if the user is a federated user.
+	 * @param targetZone    {@code String} with the zone to query to list group
+	 *                      members. Note that if the zone is blank (it cannot be
+	 *                      null) the method will proceed with the no-zone method
+	 *                      variant
+	 * @return {@code List} of {@link User} for the users in the given zone
+	 * @throws JargonException {@link JargonException}
+	 */
+	List<User> listUserGroupMembers(final String userGroupName, final String targetZone) throws JargonException;
+
+	/**
 	 * Handy util method to split up a user group name into group name and optional
 	 * zone
 	 * 

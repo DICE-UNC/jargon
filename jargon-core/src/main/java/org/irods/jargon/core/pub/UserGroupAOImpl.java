@@ -14,13 +14,11 @@ import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
 import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
-import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.aohelper.UserGroupAOHelper;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryBuilderException;
-import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -29,6 +27,8 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -359,11 +359,21 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		log.info("listUserGroupMembers()");
 
+		return listUserGroupMembers(userGroupName, "");
+	}
+
+	@Override
+	public List<User> listUserGroupMembers(final String userGroupName, final String targetZone) throws JargonException {
+
+		log.info("listUserGroupMembers()");
+
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userGroupName");
 		}
 
-		log.info("for user group name:{}", userGroupName);
+		if (targetZone == null) {
+			throw new IllegalArgumentException("null or empty targetZone");
+		}
 
 		List<User> users = new ArrayList<>();
 
@@ -371,39 +381,57 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
 
-		StringBuilder query = new StringBuilder();
-
-		query.append(UserAOHelper.buildUserSelects());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
-		query.append(" where ");
-		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
-		query.append(" = '");
-		query.append(userGroupName.trim());
-		query.append("'");
-
-		String queryString = query.toString();
-		log.info("query string: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 5000);
-
-		IRODSQueryResultSetInterface resultSet;
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for user query:" + queryString, e);
-			throw new JargonException("error in user group query");
-		}
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME).addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.EQUAL, userGroupName.trim());
 
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			// build user, do not retrieve the user DN (too expensive)
-			if (row.getColumn(1).equals(userGroupName)) {
-				continue;
+			IRODSQueryResultSet resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(
+					builder.exportIRODSQueryFromBuilder(
+							getIRODSAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax()),
+					0, targetZone);
+
+			for (IRODSQueryResultRow row : resultSet.getResults()) {
+				// build user, do not retrieve the user DN (too expensive)
+				if (row.getColumn(3).equals(userGroupName)) {
+					continue;
+				}
+				users.add(buildUserFromGroupMembersResultSet(row, irodsGenQueryExecutor));
 			}
-			users.add(UserAOHelper.buildUserFromResultSet(row, irodsGenQueryExecutor, false));
+		} catch (GenQueryBuilderException | JargonQueryException e) {
+			log.error("error querying for groups", e);
+			throw new JargonException("error in group query", e);
 		}
 
 		return users;
+	}
+
+	private User buildUserFromGroupMembersResultSet(IRODSQueryResultRow row,
+			IRODSGenQueryExecutor irodsGenQueryExecutor) throws JargonException {
+		User user = new User();
+		user.setCount(row.getRecordCount());
+		user.setLastResult(row.isLastResult());
+		user.setId(row.getColumn(2));
+		user.setName(row.getColumn(3));
+		user.setZone(row.getColumn(4));
+
+		user.setUserType(UserTypeEnum.findTypeByString(row.getColumn(5)));
+
+		user.setInfo(row.getColumn(6));
+		user.setComment(row.getColumn(7));
+		user.setCreateTime(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(8)));
+		user.setModifyTime(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(9)));
+		log.info("user built:{}", user);
+		return user;
 	}
 
 	@Override
@@ -412,6 +440,83 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		 * Delegate to case-sensitive search method to preserve prior API
 		 */
 		return findUserGroups(userGroupName, false);
+	}
+
+	@Override
+	public List<UserGroup> findUserGroupsForUserInZone(final String userName, final String targetZone)
+			throws JargonException {
+
+		log.info("findUserGroupsForUserInZone()");
+
+		if (userName == null || userName.length() == 0) {
+			throw new JargonException("null or missing userName");
+		}
+
+		if (targetZone == null) {
+			throw new IllegalArgumentException("null targetZone");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("targetZone:{}", targetZone);
+
+		if (targetZone.isEmpty()) {
+			return findUserGroups(userName);
+		}
+
+		String zoneFromUserName = MiscIRODSUtils.getZoneInUserName(userName);
+		String userFromUserName = MiscIRODSUtils.getUserInUserName(userName);
+
+		log.debug("zoneFromUserName:{}", zoneFromUserName);
+		log.debug("userFromUserName:{}", userFromUserName);
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getGenQueryExecutor();
+
+		/*
+		 * If user is entered in user#zone format separate out into distinct query
+		 * elements as user name and zone are different database fields
+		 */
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.EQUAL,
+				userFromUserName);
+		if (!zoneFromUserName.isEmpty()) {
+			log.debug("adding zone to query");
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, QueryConditionOperators.EQUAL,
+					zoneFromUserName);
+		}
+		IRODSGenQueryFromBuilder irodsQuery = null;
+
+		try {
+			this.buildUserGroupSelects(builder);
+		} catch (GenQueryBuilderException e) {
+			log.error("query builder exception for query:{}", builder, e);
+			throw new JargonException("error building query", e);
+		}
+		try {
+			irodsQuery = builder.exportIRODSQueryFromBuilder(5000);
+		} catch (GenQueryBuilderException e1) {
+			log.error("query builder exception for query:{}", irodsQuery, e1);
+			throw new JargonException("error building query", e1);
+		}
+
+		IRODSQueryResultSetInterface resultSet;
+		try {
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, targetZone);
+		} catch (JargonQueryException e) {
+			log.error("query exception for user query:{}", irodsQuery, e);
+			throw new JargonException("error in user group query");
+		}
+
+		List<UserGroup> userGroups = new ArrayList<>();
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			if (row.getColumn(0).equals(userName)) {
+				continue;
+			}
+			userGroups.add(buildUserGroupFromResultSet(row));
+		}
+
+		return userGroups;
 	}
 
 	@Override
@@ -513,7 +618,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 	}
 
-// FIXME: handle user#zone into group#zone?
 	@Override
 	public void addUserToGroup(final String userGroupName, final String userName, final String zoneName)
 			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
@@ -608,19 +712,6 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 
 	private IRODSGenQueryBuilder buildUserGroupSelects(final IRODSGenQueryBuilder builder)
 			throws GenQueryBuilderException {
-		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
-		return builder;
-	}
-
-	/**
-	 * Get a builder with the expected column values for building user groups
-	 * 
-	 * @return {@link IRODSGenQueryBuilder}
-	 * @throws GenQueryBuilderException {@link GenQueryBuilderException}
-	 */
-	private IRODSGenQueryBuilder buildUserGroupSelectsAsBuilder() throws GenQueryBuilderException {
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
 		return builder;

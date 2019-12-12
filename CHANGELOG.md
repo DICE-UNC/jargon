@@ -32,3 +32,7 @@ operation. This prevents 'stuck' rules. Fix for user-reported issue.
 #### fix use of proxy in pam auth #347
 
 Fixed PAMAuth so that username is propogated from IRODSAccount into the packing instruction. This had been set to proxyName().
+
+#### Cross zone group methods added to GroupAO #348
+
+ Improved cross-zone behavior of UserGroup queries to support query of group membership in federated zones. 

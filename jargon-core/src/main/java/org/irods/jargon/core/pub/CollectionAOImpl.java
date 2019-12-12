@@ -1736,6 +1736,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			final String absPath) throws JargonException {
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
+		log.info("userName:{}", userName);
+		log.info("zone:{}", zone);
+		log.info("absPath:{}", absPath);
+
 		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(absPath);
 
 		SpecificQueryAO specificQueryAO = getIRODSAccessObjectFactory().getSpecificQueryAO(getIRODSAccount());
@@ -1875,11 +1879,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	public List<UserFilePermission> listPermissionsForCollection(final String irodsCollectionAbsolutePath)
 			throws FileNotFoundException, JargonException {
 
+		log.info("listPermissionsForCollection: {}", irodsCollectionAbsolutePath);
+
 		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty collectionAbsolutePath");
 		}
-
-		log.info("listPermissionsForCollection: {}", irodsCollectionAbsolutePath);
 
 		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);

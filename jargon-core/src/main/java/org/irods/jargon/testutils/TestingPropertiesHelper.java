@@ -71,13 +71,10 @@ public class TestingPropertiesHelper {
 	/**
 	 * Return the given property (by key) as an int
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
-	 * @param key
-	 *            {@code String}
+	 * @param testingProperties {@link Properties}
+	 * @param key               {@code String}
 	 * @return {@code int} with the prop value
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public int getPropertyValueAsInt(final Properties testingProperties, final String key)
 			throws TestConfigurationException {
@@ -101,11 +98,9 @@ public class TestingPropertiesHelper {
 	/**
 	 * Get the standard iRODS test server port from the testing properties
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return {@code int} with the port
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public int getPortAsInt(final Properties testingProperties) throws TestConfigurationException {
 		return getPropertyValueAsInt(testingProperties, TestingPropertiesHelper.IRODS_PORT_KEY);
@@ -116,8 +111,7 @@ public class TestingPropertiesHelper {
 	 * file on the code path
 	 *
 	 * @return {@link Properties} class with the test values
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 *
 	 */
 	public Properties getTestProperties() throws TestConfigurationException {
@@ -163,15 +157,14 @@ public class TestingPropertiesHelper {
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} file with the standard names defined in
+	 * @param testingProperties {@link Properties} file with the standard names
+	 *                          defined in
 	 *
-	 * @param fileName
-	 *            {@link String} with the path (no leading '/') below the user
-	 *            scratch directory as defined in testing.properties
+	 * @param fileName          {@link String} with the path (no leading '/') below
+	 *                          the user scratch directory as defined in
+	 *                          testing.properties
 	 * @return {@link URI}
-	 * @throws URISyntaxException
-	 *             {@link URISyntaxException}
+	 * @throws URISyntaxException {@link URISyntaxException}
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDir(final Properties testingProperties, final String fileName)
 			throws URISyntaxException {
@@ -224,15 +217,14 @@ public class TestingPropertiesHelper {
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} file with the standard names defined in
+	 * @param testingProperties {@link Properties} file with the standard names
+	 *                          defined in
 	 *
-	 * @param fileName
-	 *            {@link String} with the path (no leading '/') below the user
-	 *            scratch directory as defined in testing.properties
+	 * @param fileName          {@link String} with the path (no leading '/') below
+	 *                          the user scratch directory as defined in
+	 *                          testing.properties
 	 * @return {@link URI}
-	 * @throws URISyntaxException
-	 *             {@link URISyntaxException}
+	 * @throws URISyntaxException {@link URISyntaxException}
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDirNoPasswordOrZone(final Properties testingProperties,
 			final String fileName) throws URISyntaxException {
@@ -266,15 +258,14 @@ public class TestingPropertiesHelper {
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} file with the standard names defined in
+	 * @param testingProperties {@link Properties} file with the standard names
+	 *                          defined in
 	 *
-	 * @param fileName
-	 *            {@link String} with the path (no leading '/') below the user
-	 *            scratch directory as defined in testing.properties
+	 * @param fileName          {@link String} with the path (no leading '/') below
+	 *                          the user scratch directory as defined in
+	 *                          testing.properties
 	 * @return {@link URI}
-	 * @throws URISyntaxException
-	 *             {@link URISyntaxException}
+	 * @throws URISyntaxException {@link URISyntaxException}
 	 */
 	public URI buildUriFromTestPropertiesForFileNoUserInfo(final Properties testingProperties, final String fileName)
 			throws URISyntaxException {
@@ -303,16 +294,15 @@ public class TestingPropertiesHelper {
 	 * peroperties, as well as a relative path (no leading '/') underneath the users
 	 * local scratch directory as defined in testing.properties.
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} defined in the testing.properties file
-	 * @param fileName
-	 *            {@code String} containing the relative path (no leading '/')
-	 *            underneath the local scratch directory. Note that the
-	 *            subdirectories will be created if they do not aleady exist.
+	 * @param testingProperties {@link Properties} defined in the testing.properties
+	 *                          file
+	 * @param fileName          {@code String} containing the relative path (no
+	 *                          leading '/') underneath the local scratch directory.
+	 *                          Note that the subdirectories will be created if they
+	 *                          do not aleady exist.
 	 * @return {@code URI} to a local file in a format that can be used with an
 	 *         {@code IRODSFileImpl}
-	 * @throws URISyntaxException
-	 *             {@link URISyntaxException}
+	 * @throws URISyntaxException {@link URISyntaxException}
 	 */
 	public URI buildUriFromTestPropertiesForFileInLocalScratchDir(final Properties testingProperties,
 			final String fileName) throws URISyntaxException {
@@ -334,14 +324,13 @@ public class TestingPropertiesHelper {
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} file with the standard names defined in
-	 * @param fileName
-	 *            {@link String} with the path (no leading '/') below the user
-	 *            scratch directory as defined in testing.properties
+	 * @param testingProperties {@link Properties} file with the standard names
+	 *                          defined in
+	 * @param fileName          {@link String} with the path (no leading '/') below
+	 *                          the user scratch directory as defined in
+	 *                          testing.properties
 	 * @return {@link URI}
-	 * @throws URISyntaxException
-	 *             {@link URISyntaxException}
+	 * @throws URISyntaxException {@link URISyntaxException}
 	 */
 	public URI buildUriFromTestPropertiesForFileInSecondaryUserDir(final Properties testingProperties,
 			final String fileName) throws URISyntaxException {
@@ -370,8 +359,7 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAdminAccountFromTestProperties(final Properties testingProperties) {
@@ -394,8 +382,7 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountFromTestPropertiesForRemoteResource(final Properties testingProperties) {
@@ -418,8 +405,7 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountFromTestProperties(final Properties testingProperties) {
@@ -442,11 +428,9 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount} for anonymous access
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	public IRODSAccount buildAnonymousIRODSAccountFromTestProperties(final Properties testingProperties)
 			throws JargonException {
@@ -459,11 +443,41 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * Build the user#zone form of the admin user in zone1 as represented in zone2
+	 * (eg rods#zone1)
+	 * 
+	 * @param testingProperties {@link Properties}
+	 * @return {@code String} in user#zone format representing the admin user in the
+	 *         first zone represented on the second federated zone
+	 */
+	public String buildUserNameForRodsUserInFederatedZone(final Properties testingProperties) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(testingProperties.getProperty(IRODS_ADMIN_USER_KEY));
+		sb.append('#');
+		sb.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		return sb.toString();
+	}
+
+	/**
+	 * Build the user#zone form of the non-admin user in zone1 as represented in
+	 * zone2 (eg user#zone1)
+	 * 
+	 * @param testingProperties {@link Properties}
+	 * @return {@code String} in user#zone format representing the non-admin user in
+	 *         the first zone represented on the second federated zone
+	 */
+	public String buildUserNameForNonAdminUserInFederatedZone(final Properties testingProperties) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(testingProperties.getProperty(IRODS_USER_KEY));
+		sb.append('#');
+		sb.append(testingProperties.getProperty(IRODS_ZONE_KEY));
+		return sb.toString();
+	}
+
+	/**
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount} for anonymous access
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	public IRODSAccount buildPamIrodsAccountFromTestProperties(final Properties testingProperties)
 			throws JargonException {
@@ -482,8 +496,7 @@ public class TestingPropertiesHelper {
 	 * Build an {@code IRODSAccount} object for connecting to the federated zone as
 	 * defined in the testing.properties file.
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountForFederatedZoneFromTestProperties(final Properties testingProperties) {
@@ -509,8 +522,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Build a test account where the default resource will be set to blank
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountFromTestPropertiesWithBlankResource(final Properties testingProperties) {
@@ -532,13 +544,12 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
-	 * @param userName
-	 *            {@link String} user name which will be used for the account (will
-	 *            not automatically set the user from testing properties).
-	 * @param password
-	 *            {@link String} with the password to be used for the account.
+	 * @param testingProperties {@link Properties} file
+	 * @param userName          {@link String} user name which will be used for the
+	 *                          account (will not automatically set the user from
+	 *                          testing properties).
+	 * @param password          {@link String} with the password to be used for the
+	 *                          account.
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(final Properties testingProperties,
@@ -561,8 +572,7 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountFromSecondaryTestProperties(final Properties testingProperties) {
@@ -586,8 +596,7 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * @param testingProperties
-	 *            {@link Properties} file
+	 * @param testingProperties {@link Properties} file
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount buildIRODSAccountFromTertiaryTestProperties(final Properties testingProperties) {
@@ -614,15 +623,14 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a given
 	 * collection in the IRODS test scratch area on IRODS
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromTestProperties(final Properties testingProperties,
 			final String collectionPathBelowScratch) throws TestConfigurationException {
@@ -647,15 +655,14 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a given
 	 * collection in the IRODS test scratch area on IRODS for the rods user
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromTestPropertiesForRods(final Properties testingProperties,
 			final String collectionPathBelowScratch) throws TestConfigurationException {
@@ -681,15 +688,14 @@ public class TestingPropertiesHelper {
 	 * collection in the IRODS test scratch area on IRODS on the configured
 	 * federated zone.
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 			final Properties testingProperties, final String collectionPathBelowScratch)
@@ -717,15 +723,14 @@ public class TestingPropertiesHelper {
 	 * his home collection in federated zone zone2, the path returned would be
 	 * /zone2/home/user1#zone1 plus the extra path info
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
 			final Properties testingProperties, final String collectionPathBelowScratch)
@@ -751,15 +756,14 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a given
 	 * collection in the IRODS test scratch area on IRODS
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(final Properties testingProperties,
 			final String collectionPathBelowScratch) throws TestConfigurationException {
@@ -784,15 +788,14 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a given
 	 * collection in the IRODS test scratch area on IRODS
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromPamTestProperties(final Properties testingProperties,
 			final String collectionPathBelowScratch) throws TestConfigurationException {
@@ -817,11 +820,11 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a relative path under
 	 * the home directory for the described user
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
 	 */
@@ -837,8 +840,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional distributed resources are to be tested
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> if distributed resource testing was done
 	 */
 	public boolean isTestDistributedResources(final Properties testingProperties) {
@@ -853,10 +855,8 @@ public class TestingPropertiesHelper {
 	/**
 	 * Get the given property as a boolean
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
-	 * @param key
-	 *            {@code String}
+	 * @param testingProperties {@link Properties}
+	 * @param key               {@code String}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean getPropertyValueAsBoolean(final Properties testingProperties, final String key) {
@@ -871,8 +871,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional kerberos testing to be done
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestKerberos(final Properties testingProperties) {
@@ -887,8 +886,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional workflow testing to be done
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestWorkflow(final Properties testingProperties) {
@@ -903,8 +901,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional python rule engine tests are on
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestPythonRules(final Properties testingProperties) {
@@ -920,8 +917,7 @@ public class TestingPropertiesHelper {
 	 * Check if optional registration functions that test imcoll operations on
 	 * physical file systems are supported
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestFileSystemMount(final Properties testingProperties) {
@@ -937,8 +933,7 @@ public class TestingPropertiesHelper {
 	 * Check if optional registration functions that test imcoll operations on
 	 * physical file systems are running on the same machine as the irods
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestFileSystemMountLocal(final Properties testingProperties) {
@@ -954,8 +949,7 @@ public class TestingPropertiesHelper {
 	 * Check if optional registration functions are to be tested (tests must be
 	 * running on a resource server)
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestRegistration(final Properties testingProperties) {
@@ -970,8 +964,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional remote stream execution is to be tested
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestRemoteExecStream(final Properties testingProperties) {
@@ -986,8 +979,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional audit system is to be tested
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestAudit(final Properties testingProperties) {
@@ -1002,8 +994,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional ticket system is to be tested
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestTickets(final Properties testingProperties) {
@@ -1018,8 +1009,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional gsi auth system is to be tested
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestGSI(final Properties testingProperties) {
@@ -1034,8 +1024,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional pam auth system is to be tested
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestPAM(final Properties testingProperties) {
@@ -1050,8 +1039,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional ssl is assumed to be configured
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestSsl(final Properties testingProperties) {
@@ -1068,8 +1056,7 @@ public class TestingPropertiesHelper {
 	 * zone must be configured as described in the test-scripts/fedTestSetup.txt
 	 * file.
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return {@code true} if the federated zone testing should occur
 	 */
 	public boolean isTestFederatedZone(final Properties testingProperties) {
@@ -1086,8 +1073,7 @@ public class TestingPropertiesHelper {
 	 * configuration of the iRODS core.re for strictACL, as well as the provisioning
 	 * of a /zone/home/public directory with anonymous rights
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return {@code true} if strict ACL testing should occur
 	 */
 	public boolean isTestStrictACL(final Properties testingProperties) {
@@ -1102,8 +1088,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Are we testing eirods?
 	 *
-	 * @param testingProperties
-	 *            {@link Properties}
+	 * @param testingProperties {@link Properties}
 	 * @return <code>boolean</code> with option
 	 */
 	public boolean isTestEirods(final Properties testingProperties) {
@@ -1120,15 +1105,14 @@ public class TestingPropertiesHelper {
 	 * collection in the IRODS test scratch area on IRODS on the configured
 	 * federated zone enabled for writing cross-zone.
 	 *
-	 * @param testingProperties
-	 *            {@link Properties} that define test behavior
-	 * @param collectionPathBelowScratch
-	 *            {@code String} with no leading '/' that defines the desired path
-	 *            underneath the IRODS scratch directory
+	 * @param testingProperties          {@link Properties} that define test
+	 *                                   behavior
+	 * @param collectionPathBelowScratch {@code String} with no leading '/' that
+	 *                                   defines the desired path underneath the
+	 *                                   IRODS scratch directory
 	 * @return {@code String} with trailing '/' that gives the absolute path for an
 	 *         IRODS collection
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
 			final Properties testingProperties, final String collectionPathBelowScratch)
@@ -1154,8 +1138,7 @@ public class TestingPropertiesHelper {
 	 * Just build any old IRODSAccount when it's not important what it contains
 	 *
 	 * @return {@link IRODSAccount} with basic fake data
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static IRODSAccount buildBogusIrodsAccount() throws JargonException {
 		return IRODSAccount.instance("host", 1247, "userName", "password", "", "zone", "");
