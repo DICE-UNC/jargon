@@ -52,6 +52,55 @@ public class FederatedDataObjectAOImplTest {
 	}
 
 	@Test
+	public void testCanReadDataObjectCrossZone() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+		// generate a local scratch file
+		String testFileName = "testFindByCollectionPathAndDataNameCrossZone.dat";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
+		File sourceFile = new File(localFileName);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+
+		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		IRODSFile targetColl = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
+		targetColl.deleteWithForceOption();
+		targetColl.mkdirs();
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+
+		dto.putOperation(sourceFile, destFile, null, null);
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionRead(
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY), true);
+
+		dataObjectAO.setAccessPermissionRead(
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				destFile.getAbsolutePath(),
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY));
+
+		IRODSAccount fedZoneAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(fedZoneAccount)
+				.instanceIRODSFile(destFile.getAbsolutePath());
+		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
+
+	}
+
+	@Test
 	public void testFindByCollectionPathAndDataNameCrossZone() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
@@ -76,8 +125,11 @@ public class FederatedDataObjectAOImplTest {
 
 		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getDataTransferOperations(irodsAccount);
+		IRODSFile targetColl = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
+		targetColl.deleteWithForceOption();
+		targetColl.mkdirs();
 		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-		destFile.deleteWithForceOption();
+
 		dto.putOperation(sourceFile, destFile, null, null);
 
 		IRODSAccount localZoneAccount = testingPropertiesHelper

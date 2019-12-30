@@ -53,11 +53,9 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * <p>
 	 * Note that a soft-linked path will behave normally.
 	 *
-	 * @param collectionPath
-	 *            {@code String} with absolute path to the collection
+	 * @param collectionPath {@code String} with absolute path to the collection
 	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileImpl}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	IRODSFile instanceIRODSFileForCollectionPath(String collectionPath) throws JargonException;
 
@@ -65,15 +63,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Given a set of metadata query parameters, return a list of IRODS Collections
 	 * that match the metadata query
 	 *
-	 * @param avuQueryElements
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
+	 * @param avuQueryElements {@code List} of {@link AVUQueryElement} with the
+	 *                         query specification
 	 * @return {@code List} of org.irods.jargon.core.pub.domain.Collection} with
 	 *         domain objects that satisfy the query.
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<Collection> findDomainByMetadataQuery(List<AVUQueryElement> avuQueryElements)
 			throws JargonQueryException, JargonException;
@@ -85,20 +80,15 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * This version of the method allows specification of a case-insensitive AVU
 	 * query
 	 *
-	 * @param avuQueryElements
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
-	 * @param caseInsensitive
-	 *            {@code boolean} that will cause the AVU query to be
-	 *            case-insensitive
-	 * @param partialStartIndex
-	 *            {@code int} with 0 or an offset
+	 * @param avuQueryElements  {@code List} of {@link AVUQueryElement} with the
+	 *                          query specification
+	 * @param caseInsensitive   {@code boolean} that will cause the AVU query to be
+	 *                          case-insensitive
+	 * @param partialStartIndex {@code int} with 0 or an offset
 	 * @return {@code List} of org.irods.jargon.core.pub.domain.Collection} with
 	 *         domain objects that satisfy the query.
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<Collection> findDomainByMetadataQuery(List<AVUQueryElement> avuQueryElements, int partialStartIndex,
 			boolean caseInsensitive) throws JargonQueryException, JargonException;
@@ -107,17 +97,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Get a set of AVU metadata, and the iRODS objects to which the metadata is
 	 * attached, based on a metadata query
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
-	 * @param offset
-	 *            {@code int} with a paging offset
+	 * @param avuQuery {@code List} of {@link AVUQueryElement} with the query
+	 *                 specification
+	 * @param offset   {@code int} with a paging offset
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery, int offset)
 			throws JargonQueryException, JargonException;
@@ -126,15 +112,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Get a summary list of collections and data objects and AVU metadata based on
 	 * a metadata query
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
+	 * @param avuQuery {@code List} of {@link AVUQueryElement} with the query
+	 *                 specification
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery)
 			throws JargonQueryException, JargonException;
@@ -145,18 +128,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * <p>
 	 *
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
-	 * @param caseInsensitive
-	 *            {@code boolean} that, when {@code true} will do case insensitive
-	 *            avu queries
+	 * @param avuQuery        {@code List} of {@link AVUQueryElement} with the query
+	 *                        specification
+	 * @param caseInsensitive {@code boolean} that, when {@code true} will do case
+	 *                        insensitive avu queries
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery,
 			boolean caseInsensitive) throws JargonQueryException, JargonException;
@@ -166,20 +145,15 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * query. This version allows both an offset and specification of case
 	 * insensitivity
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
-	 * @param offset
-	 *            {@code int} with a paging offset
-	 * @param caseInsensitive
-	 *            {@code boolean} of {@code true} which allows case-insensitive AVU
-	 *            queries
+	 * @param avuQuery        {@code List} of {@link AVUQueryElement} with the query
+	 *                        specification
+	 * @param offset          {@code int} with a paging offset
+	 * @param caseInsensitive {@code boolean} of {@code true} which allows
+	 *                        case-insensitive AVU queries
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery, int offset,
 			boolean caseInsensitive) throws JargonQueryException, JargonException;
@@ -193,18 +167,15 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * <p>
 	 * The new set method in this class may be preferable for later implementations.
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the target collection
-	 * @param avuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws FileNotFoundException
-	 *             when collection object is missing
-	 * @throws DuplicateDataException
-	 *             when an AVU already exists. Note that iRODS (at least at 2.5) is
-	 *             inconsistent, where a duplicate will only be detected if units
-	 *             are not blank
+	 * @param absolutePath {@code String} with the absolute path to the target
+	 *                     collection
+	 * @param avuData      {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException        for iRODS error
+	 * @throws FileNotFoundException  when collection object is missing
+	 * @throws DuplicateDataException when an AVU already exists. Note that iRODS
+	 *                                (at least at 2.5) is inconsistent, where a
+	 *                                duplicate will only be detected if units are
+	 *                                not blank
 	 */
 	void addAVUMetadata(final String absolutePath, final AvuData avuData)
 			throws FileNotFoundException, DuplicateDataException, JargonException;
@@ -220,14 +191,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * (row) is modified with the new values, reducing the database overhead (unused
 	 * rows).
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the target collection
-	 * @param avuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
-	 * @throws FileNotFoundException
-	 *             when file missing
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param absolutePath {@code String} with the absolute path to the target
+	 *                     collection
+	 * @param avuData      {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws FileNotFoundException when file missing
+	 * @throws JargonException       for iRODS error
 	 */
 	void setAVUMetadata(final String absolutePath, final AvuData avuData) throws FileNotFoundException, JargonException;
 
@@ -238,14 +206,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * that path, and is separate from metadata associated with the canonical file
 	 * path
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the target collection
-	 * @param avuData
-	 *            {@link AvuData}
-	 * @throws FileNotFoundException
-	 *             if the target iRODS collection is missing
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param absolutePath {@code String} with the absolute path to the target
+	 *                     collection
+	 * @param avuData      {@link AvuData}
+	 * @throws FileNotFoundException if the target iRODS collection is missing
+	 * @throws JargonException       for iRODS error
 	 */
 	void deleteAVUMetadata(final String absolutePath, final AvuData avuData)
 			throws FileNotFoundException, JargonException;
@@ -262,19 +227,16 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * soft link and a canonical path may each have different AVU metadata. This
 	 * method takes the path as given and finds that metadata.
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} that defines the metadata
-	 *            query
-	 * @param collectionAbsolutePath
-	 *            {@code String} with the absolute path of the collection of
-	 *            interest. If this path is left blank, then the query will not add
-	 *            absolute path to the 'where' clause.
+	 * @param avuQuery               {@code List} of {@link AVUQueryElement} that
+	 *                               defines the metadata query
+	 * @param collectionAbsolutePath {@code String} with the absolute path of the
+	 *                               collection of interest. If this path is left
+	 *                               blank, then the query will not add absolute
+	 *                               path to the 'where' clause.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath) throws JargonQueryException, JargonException;
@@ -293,25 +255,21 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * <p>
 	 * This method allows request for case-insensitive AVU queries
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} that defines the metadata
-	 *            query
-	 * @param collectionAbsolutePath
-	 *            {@code String} with the absolute path of the collection of
-	 *            interest. If this path is left blank, then the query will not add
-	 *            absolute path to the 'where' clause.
-	 * @param partialStartIndex
-	 *            {@code int} with the partial start index start point
-	 * @param caseInsensitive
-	 *            {@code boolean} indicates that this is a case-insensitive query.
+	 * @param avuQuery               {@code List} of {@link AVUQueryElement} that
+	 *                               defines the metadata query
+	 * @param collectionAbsolutePath {@code String} with the absolute path of the
+	 *                               collection of interest. If this path is left
+	 *                               blank, then the query will not add absolute
+	 *                               path to the 'where' clause.
+	 * @param partialStartIndex      {@code int} with the partial start index start
+	 *                               point
+	 * @param caseInsensitive        {@code boolean} indicates that this is a
+	 *                               case-insensitive query.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws FileNotFoundException
-	 *             if the collection cannot be found
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws FileNotFoundException if the collection cannot be found
+	 * @throws JargonQueryException  for query error
+	 * @throws JargonException       for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(List<AVUQueryElement> avuQuery,
 			String collectionAbsolutePath, int partialStartIndex, boolean caseInsensitive)
@@ -328,21 +286,18 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * soft link and a canonical path may each have different AVU metadata. This
 	 * method takes the path as given and finds that metadata.
 	 *
-	 * @param collectionAbsolutePath
-	 *            {@code String} with the absolute path of a collection in iRODS
-	 * @param partialStartIndex
-	 *            {@code int} with an offset into the results for display paging.
-	 *            Set to 0 if no paging offset is desired.
+	 * @param collectionAbsolutePath {@code String} with the absolute path of a
+	 *                               collection in iRODS
+	 * @param partialStartIndex      {@code int} with an offset into the results for
+	 *                               display paging. Set to 0 if no paging offset is
+	 *                               desired.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData} with AVU
 	 *         values and other values that identify the collection the AVU applies
 	 *         to.
-	 * @throws FileNotFoundException
-	 *             if the collection could not be found
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws JargonQueryException
-	 *             for query error
+	 * @throws FileNotFoundException if the collection could not be found
+	 * @throws JargonException       for iRODS error
+	 * @throws JargonQueryException  for query error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForCollection(final String collectionAbsolutePath,
 			final int partialStartIndex) throws FileNotFoundException, JargonException, JargonQueryException;
@@ -354,16 +309,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * soft link and a canonical path may each have different AVU metadata. This
 	 * method takes the path as given and finds that metadata.
 	 *
-	 * @param collectionAbsolutePath
-	 *            {@code String} with the absolute path of a collection in iRODS
+	 * @param collectionAbsolutePath {@code String} with the absolute path of a
+	 *                               collection in iRODS
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData} with AVU
 	 *         values and other values that identify the collection the AVU applies
 	 *         to.
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws JargonQueryException
-	 *             for Query error
+	 * @throws JargonException      for iRODS error
+	 * @throws JargonQueryException for Query error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForCollection(final String collectionAbsolutePath)
 			throws JargonException, JargonQueryException;
@@ -373,16 +326,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * that match the metadata query. This query method allows a partial start as an
 	 * offset into the result set to get paging behaviors.
 	 *
-	 * @param avuQueryElements
-	 *            {@code List} of {@link AVUQueryElement} with the query
-	 *            specification
-	 * @param partialStartIndex
-	 *            {@code int} that has the partial start offset into the result set
+	 * @param avuQueryElements  {@code List} of {@link AVUQueryElement} with the
+	 *                          query specification
+	 * @param partialStartIndex {@code int} that has the partial start offset into
+	 *                          the result set
 	 * @return List of {@link Collection}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<Collection> findDomainByMetadataQuery(final List<AVUQueryElement> avuQueryElements,
 			final int partialStartIndex) throws JargonQueryException, JargonException;
@@ -392,13 +342,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * <p>
 	 * Note that this method will work correctly with soft linked collection names
 	 *
-	 * @param irodsCollectionAbsolutePath
-	 *            {@code String} with the absolute path to the collection
+	 * @param irodsCollectionAbsolutePath {@code String} with the absolute path to
+	 *                                    the collection
 	 * @return {@link Collection} or null if no collection found
-	 * @throws DataNotFoundException
-	 *             if collection does not exist
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws DataNotFoundException if collection does not exist
+	 * @throws JargonException       for iRODS error
 	 */
 	Collection findByAbsolutePath(final String irodsCollectionAbsolutePath)
 			throws DataNotFoundException, JargonException;
@@ -411,20 +359,16 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * that path, and is separate from metadata associated with the canonical file
 	 * path
 	 *
-	 * @param avuQuery
-	 *            {@code List} of {@link AVUQueryElement} that defines the metadata
-	 *            query
-	 * @param collectionAbsolutePath
-	 *            {@code String} with the absolute path of the collection of
-	 *            interest. If this path is left blank, then the query will not add
-	 *            absolute path to the 'where' clause.
-	 * @param partialStartIndex
-	 *            {@code int} with 0 or an offset
+	 * @param avuQuery               {@code List} of {@link AVUQueryElement} that
+	 *                               defines the metadata query
+	 * @param collectionAbsolutePath {@code String} with the absolute path of the
+	 *                               collection of interest. If this path is left
+	 *                               blank, then the query will not add absolute
+	 *                               path to the 'where' clause.
+	 * @param partialStartIndex      {@code int} with 0 or an offset
 	 * @return {@code List} of {@link MetaDataAndDomainData}
-	 * @throws JargonQueryException
-	 *             for query error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonQueryException for query error
+	 * @throws JargonException      for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath, final int partialStartIndex)
@@ -437,14 +381,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * <p>
 	 * Note that this method will work if a soft-linked collection name is supplied
 	 *
-	 * @param irodsCollectionAbsolutePath
-	 *            {@code String} with the absolute path to the iRODS collection to
-	 *            count
+	 * @param irodsCollectionAbsolutePath {@code String} with the absolute path to
+	 *                                    the iRODS collection to count
 	 * @return {@code int} with the total count of files, recursively counted.
-	 * @throws FileNotFoundException
-	 *             if the collection absolute path is not found in iRODS
-	 * @throws JargonException
-	 *             for an iRODS error
+	 * @throws FileNotFoundException if the collection absolute path is not found in
+	 *                               iRODS
+	 * @throws JargonException       for an iRODS error
 	 */
 	int countAllFilesUnderneathTheGivenCollection(final String irodsCollectionAbsolutePath)
 			throws FileNotFoundException, JargonException;
@@ -457,18 +399,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionRead(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -481,18 +419,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionWrite(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -505,18 +439,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionOwn(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -529,18 +459,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void removeAccessPermissionForUser(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -552,16 +478,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionInherit(String zone, String absolutePath, boolean recursive) throws JargonException;
 
@@ -574,13 +496,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
 	 * @return {@code boolean}
-	 * @throws FileNotFoundException
-	 *             if the collection does not exist
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws FileNotFoundException if the collection does not exist
+	 * @throws JargonException       for iRODS error
 	 */
 	boolean isCollectionSetForPermissionInheritance(String absolutePath) throws FileNotFoundException, JargonException;
 
@@ -592,16 +511,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionToNotInherit(String zone, String absolutePath, boolean recursive) throws JargonException;
 
@@ -612,19 +527,19 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param irodsAbsolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
+	 * @param irodsAbsolutePath {@code String} with the absolute path to the
+	 *                          collection.
+	 * @param userName          {@code String} with the user name whose permissions
+	 *                          will be set.
+	 * @param zone              {@code String} with an optional zone for the file.
+	 *                          Leave blank if not used, it is not required. This is
+	 *                          the zone in which the permission is set, so user x
+	 *                          asking for the permission in zone y will be queried
+	 *                          as x#y form
 	 * @return {@link FilePermissionEnum} value with the permission level for the
 	 *         given user.
-	 * @throws FileNotFoundException
-	 *             if the collection path is not found
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws FileNotFoundException if the collection path is not found
+	 * @throws JargonException       for iRODS error
 	 */
 	FilePermissionEnum getPermissionForCollection(String irodsAbsolutePath, String userName, String zone)
 			throws FileNotFoundException, JargonException;
@@ -636,14 +551,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param irodsCollectionAbsolutePath
-	 *            {@code String} with the absolute path to the iRODS collection for
-	 *            which permissions will be retrieved.
+	 * @param irodsCollectionAbsolutePath {@code String} with the absolute path to
+	 *                                    the iRODS collection for which permissions
+	 *                                    will be retrieved.
 	 * @return {@code List} of {@link FilePermissionEnum}
-	 * @throws FileNotFoundException
-	 *             if file is not located
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws FileNotFoundException if file is not located
+	 * @throws JargonException       for iRODS error
 	 */
 	List<UserFilePermission> listPermissionsForCollection(String irodsCollectionAbsolutePath)
 			throws FileNotFoundException, JargonException;
@@ -658,18 +571,15 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * The new set method in this class may be preferable for later implementations.
 	 *
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the target collection
-	 * @param currentAvuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the
-	 *            current avu. This will be looked up by attribute + value
-	 * @param newAvuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the
-	 *            desired state of the avu
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws DataNotFoundException
-	 *             if the AVU is not present
+	 * @param absolutePath   {@code String} with the absolute path to the target
+	 *                       collection
+	 * @param currentAvuData {@link org.irods.jargon.core.pub.domain.AvuData}
+	 *                       describing the current avu. This will be looked up by
+	 *                       attribute + value
+	 * @param newAvuData     {@link org.irods.jargon.core.pub.domain.AvuData}
+	 *                       describing the desired state of the avu
+	 * @throws JargonException       for iRODS error
+	 * @throws DataNotFoundException if the AVU is not present
 	 */
 	void modifyAVUMetadata(String absolutePath, AvuData currentAvuData, AvuData newAvuData)
 			throws DataNotFoundException, JargonException;
@@ -690,15 +600,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * The new set method in this class may be preferable for later implementations.
 	 *
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the target collection
-	 * @param avuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the
-	 *            existing Avu name and unit, with the desired new value
-	 * @throws DataNotFoundException
-	 *             if the AVU data is not present
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param absolutePath {@code String} with the absolute path to the target
+	 *                     collection
+	 * @param avuData      {@link org.irods.jargon.core.pub.domain.AvuData}
+	 *                     describing the existing Avu name and unit, with the
+	 *                     desired new value
+	 * @throws DataNotFoundException if the AVU data is not present
+	 * @throws JargonException       for iRODS error
 	 */
 	void modifyAvuValueBasedOnGivenAttributeAndUnit(String absolutePath, AvuData avuData)
 			throws DataNotFoundException, JargonException;
@@ -707,13 +615,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Retrieve the permission for the given user for the given collection. Note
 	 * that the method will return null if no ACL currently exists.
 	 *
-	 * @param irodsCollectionAbsolutePath
-	 *            {@code String} with the absolute path to the target collection
-	 * @param userName
-	 *            - {@code String} with the name of the user
+	 * @param irodsCollectionAbsolutePath {@code String} with the absolute path to
+	 *                                    the target collection
+	 * @param userName                    - {@code String} with the name of the
+	 *                                    user, can be in user#zone form
 	 * @return {@link UserFilePermission} or {@code null} if no permission is found
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	UserFilePermission getPermissionForUserName(String irodsCollectionAbsolutePath, String userName)
 			throws JargonException;
@@ -726,21 +633,17 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 *            <p>
-	 *            This method is equivalent to runnign the ichmod icommand with the
-	 *            -M flag.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 *                     <p>
+	 *                     This method is equivalent to runnign the ichmod icommand
+	 *                     with the -M flag.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionReadAsAdmin(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -753,21 +656,17 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 *            <p>
-	 *            This method is equivalent to runnign the ichmod icommand with the
-	 *            -M flag.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 *                     <p>
+	 *                     This method is equivalent to runnign the ichmod icommand
+	 *                     with the -M flag.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionWriteAsAdmin(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -780,21 +679,17 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 *            <p>
-	 *            This method is equivalent to runnign the ichmod icommand with the
-	 *            -M flag.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 *                     <p>
+	 *                     This method is equivalent to runnign the ichmod icommand
+	 *                     with the -M flag.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionOwnAsAdmin(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -807,22 +702,18 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 *            <p>
-	 *            This method is equivalent to runnign the ichmod icommand with the
-	 *            -M flag.
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 *                     <p>
+	 *                     This method is equivalent to runnign the ichmod icommand
+	 *                     with the -M flag.
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param userName
-	 *            {@code String} with the user name whose permissions will be set.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param userName     {@code String} with the user name whose permissions will
+	 *                     be set.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void removeAccessPermissionForUserAsAdmin(String zone, String absolutePath, String userName, boolean recursive)
 			throws JargonException;
@@ -831,13 +722,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Given an {@code ObjStat} object, return a {@code Collection} object
 	 * representing the collection data in the iCAT
 	 *
-	 * @param objStat
-	 *            {@link ObjStat} for the given collection
+	 * @param objStat {@link ObjStat} for the given collection
 	 * @return {@link Collection} representing the collection in iRODS
-	 * @throws DataNotFoundException
-	 *             for data missing
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws DataNotFoundException for data missing
+	 * @throws JargonException       for iRODS error
 	 */
 	Collection findGivenObjStat(ObjStat objStat) throws DataNotFoundException, JargonException;
 
@@ -854,20 +742,17 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * may be relaxed in the future. Also note that NONE is supported, and actually
 	 * causes the access permission to be removed.
 	 *
-	 * @param zone
-	 *            {@code String} with the zone for the user. This method will work
-	 *            cross-zone if appropriate permissions are in place
-	 * @param absolutePath
-	 *            {@code String} with the absolute path for the collection
-	 * @param userName
-	 *            {@code userName} (just the name, no name#zone format) for the user
-	 * @param recursive
-	 *            {@code boolean} to indicate that the permission must be
-	 *            recursively applied to subdirectories
-	 * @param filePermission
-	 *            {@link FilePermissionEnum}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone           {@code String} with the zone for the user. This method
+	 *                       will work cross-zone if appropriate permissions are in
+	 *                       place
+	 * @param absolutePath   {@code String} with the absolute path for the
+	 *                       collection
+	 * @param userName       {@code userName} (just the name, no name#zone format)
+	 *                       for the user
+	 * @param recursive      {@code boolean} to indicate that the permission must be
+	 *                       recursively applied to subdirectories
+	 * @param filePermission {@link FilePermissionEnum}
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermission(String zone, String absolutePath, String userName, boolean recursive,
 			FilePermissionEnum filePermission) throws JargonException;
@@ -875,28 +760,23 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Find the iRODS {@code Collection} with the given primary key in the ICAT
 	 *
-	 * @param id
-	 *            {@code int} with the iRODS primary key
+	 * @param id {@code int} with the iRODS primary key
 	 * @return {@link Collection} with the given primary key
-	 * @throws DataNotFoundException
-	 *             if the collection is not found
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws DataNotFoundException if the collection is not found
+	 * @throws JargonException       for iRODS error
 	 */
 	Collection findById(int id) throws DataNotFoundException, JargonException;
 
 	/**
 	 * Replicate the given collection asynchronously (via delayed exec rule).
 	 *
-	 * @param irodsCollectionAbsolutePath
-	 *            {@code String} with the absolute path for the collection
-	 * @param resourceName
-	 *            {@code String} with the resource to which the data will be
-	 *            replicated
-	 * @param delayInMinutes
-	 *            {@code int} with the number of minutes to delay the execution
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsCollectionAbsolutePath {@code String} with the absolute path for
+	 *                                    the collection
+	 * @param resourceName                {@code String} with the resource to which
+	 *                                    the data will be replicated
+	 * @param delayInMinutes              {@code int} with the number of minutes to
+	 *                                    delay the execution
+	 * @throws JargonException for iRODS error
 	 */
 	void replicateCollectionAsynchronously(String irodsCollectionAbsolutePath, String resourceName, int delayInMinutes)
 			throws JargonException;
@@ -909,17 +789,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * This method will return a collection of individual success or failure for
 	 * each AVU.
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path for the collection
-	 * @param avuData
-	 *            {@code List} of {@link AvuData} with the AVU values to be added to
-	 *            the collection
+	 * @param absolutePath {@code String} with the absolute path for the collection
+	 * @param avuData      {@code List} of {@link AvuData} with the AVU values to be
+	 *                     added to the collection
 	 * @return {@code List} of {@link BulkAVUOperationResponse}
-	 * @throws FileNotFoundException
-	 *             if file is missing
-	 * @throws JargonException
-	 *             if an unexpected exception not anticipated by the bulk AVU
-	 *             process occurs
+	 * @throws FileNotFoundException if file is missing
+	 * @throws JargonException       if an unexpected exception not anticipated by
+	 *                               the bulk AVU process occurs
 	 */
 	List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(String absolutePath, List<AvuData> avuData)
 			throws FileNotFoundException, JargonException;
@@ -932,15 +808,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * This method will return a collection of individual success or failure for
 	 * each AVU.
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path for the collection
-	 * @param avuData
-	 *            {@code List} of {@link org.irods.jargon.core.pub.domain.AvuData}
-	 *            with the AVU values to be deleted from the collection
+	 * @param absolutePath {@code String} with the absolute path for the collection
+	 * @param avuData      {@code List} of
+	 *                     {@link org.irods.jargon.core.pub.domain.AvuData} with the
+	 *                     AVU values to be deleted from the collection
 	 * @return {@code List} of {@link BulkAVUOperationResponse}
-	 * @throws JargonException
-	 *             if an unexpected exception not anticipated by the bulk AVU
-	 *             process occurs
+	 * @throws JargonException if an unexpected exception not anticipated by the
+	 *                         bulk AVU process occurs
 	 */
 	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromCollection(String absolutePath, List<AvuData> avuData)
 			throws JargonException;
@@ -948,12 +822,9 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Do a buld delete of all AVUs associated with the collection
 	 *
-	 * @param absolutePath
-	 *            {@code String} with the absolute path for the collection
-	 * @throws DataNotFoundException
-	 *             if the collection is missing
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param absolutePath {@code String} with the absolute path for the collection
+	 * @throws DataNotFoundException if the collection is missing
+	 * @throws JargonException       for iRODS error
 	 */
 	void deleteAllAVUMetadata(String absolutePath) throws DataNotFoundException, JargonException;
 
@@ -961,17 +832,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Query for a specific AVU associated with the collection based on the metadata
 	 * id
 	 *
-	 * @param collectionAbsolutePath
-	 *            {@code String} with the absolute path to the iRODS collection
-	 * @param id
-	 *            {@code int} with the id of the avu (unique database key)
+	 * @param collectionAbsolutePath {@code String} with the absolute path to the
+	 *                               iRODS collection
+	 * @param id                     {@code int} with the id of the avu (unique
+	 *                               database key)
 	 * @return {@link MetaDataAndDomainData} at the given id
-	 * @throws FileNotFoundException
-	 *             if the collection is not found
-	 * @throws DataNotFoundException
-	 *             if the avu is not found
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws FileNotFoundException if the collection is not found
+	 * @throws DataNotFoundException if the avu is not found
+	 * @throws JargonException       for iRODS error
 	 */
 	MetaDataAndDomainData findMetadataValueForCollectionByMetadataId(String collectionAbsolutePath, int id)
 			throws FileNotFoundException, DataNotFoundException, JargonException;
@@ -980,15 +848,11 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Query for a specific AVU associated with the collection based on the metadata
 	 * id and a provided objStat
 	 *
-	 * @param objStat
-	 *            {@link ObjStat} previously obtained objStat of a collection
-	 * @param id
-	 *            {@code int} with the id of the avu (unique database key)
+	 * @param objStat {@link ObjStat} previously obtained objStat of a collection
+	 * @param id      {@code int} with the id of the avu (unique database key)
 	 * @return {@link MetaDataAndDomainData} at the given id
-	 * @throws DataNotFoundException
-	 *             if the avu is not found
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws DataNotFoundException if the avu is not found
+	 * @throws JargonException       for iRODS error
 	 */
 	MetaDataAndDomainData findMetadataValueForCollectionById(ObjStat objStat, int id)
 			throws DataNotFoundException, JargonException;
@@ -1001,16 +865,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionToNotInheritInAdminMode(String zone, String absolutePath, boolean recursive)
 			throws JargonException;
@@ -1023,16 +883,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Permissions are always associated with the canonical path name, and a soft
 	 * linked collection will have the same permissions as the canonical collection
 	 *
-	 * @param zone
-	 *            {@code String} with an optional zone for the file. Leave blank if
-	 *            not used, it is not required.
-	 * @param absolutePath
-	 *            {@code String} with the absolute path to the collection.
-	 * @param recursive
-	 *            {@code boolean} that indicates whether the permission should be
-	 *            applied recursively
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param zone         {@code String} with an optional zone for the file. Leave
+	 *                     blank if not used, it is not required.
+	 * @param absolutePath {@code String} with the absolute path to the collection.
+	 * @param recursive    {@code boolean} that indicates whether the permission
+	 *                     should be applied recursively
+	 * @throws JargonException for iRODS error
 	 */
 	void setAccessPermissionInheritAsAdmin(String zone, String absolutePath, boolean recursive) throws JargonException;
 

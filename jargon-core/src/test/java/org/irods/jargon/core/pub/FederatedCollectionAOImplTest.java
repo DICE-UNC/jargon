@@ -131,7 +131,7 @@ public class FederatedCollectionAOImplTest {
 		Assert.assertNotNull("got a null userFilePermission", userFilePermission);
 
 		Assert.assertEquals("did not get user name concatenated", concatenatedUserName,
-				userFilePermission.getUserName());
+				userFilePermission.getNameWithZone());
 		Assert.assertEquals("did not get user zone",
 				String.valueOf(testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
 				userFilePermission.getUserZone());
@@ -225,7 +225,12 @@ public class FederatedCollectionAOImplTest {
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY), targetIrodsCollection,
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY), true);
 
-		List<UserFilePermission> userFilePermissions = collectionAO.listPermissionsForCollection(targetIrodsCollection);
+		IRODSAccount otherZoneAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO otherZoneCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAO(otherZoneAccount);
+
+		List<UserFilePermission> userFilePermissions = otherZoneCollectionAO
+				.listPermissionsForCollection(targetIrodsCollection);
 		Assert.assertNotNull("got a null userFilePermissions", userFilePermissions);
 		Assert.assertEquals("did not find the three permissions", 3, userFilePermissions.size());
 
