@@ -28,17 +28,12 @@ public class UserFilePermission {
 	/**
 	 * Public values constructor.
 	 *
-	 * @param userName
-	 *            {@code String} with the name of the user (no #zone)
-	 * @param userId
-	 *            {@code String} with the id of the user
-	 * @param filePermissionEnum
-	 *            {@link FilePermissionEnum} for the given user
-	 * @param userType
-	 *            {@link UserTypeEnum} value for user
-	 * @param userZone
-	 *            {@code String} with an optional zone name, set to blank if not
-	 *            used
+	 * @param userName           {@code String} with the name of the user (no #zone)
+	 * @param userId             {@code String} with the id of the user
+	 * @param filePermissionEnum {@link FilePermissionEnum} for the given user
+	 * @param userType           {@link UserTypeEnum} value for user
+	 * @param userZone           {@code String} with an optional zone name, set to
+	 *                           blank if not used
 	 */
 	public UserFilePermission(final String userName, final String userId, final FilePermissionEnum filePermissionEnum,
 			final UserTypeEnum userType, final String userZone) {
@@ -101,8 +96,7 @@ public class UserFilePermission {
 	/**
 	 * Set the name of the user
 	 *
-	 * @param userName
-	 *            {@code String} with the name of the user
+	 * @param userName {@code String} with the name of the user
 	 */
 	public void setUserName(final String userName) {
 		this.userName = userName;
@@ -134,8 +128,7 @@ public class UserFilePermission {
 	/**
 	 * Sets the unique user id primary key
 	 *
-	 * @param userId
-	 *            {@code String} user id to set
+	 * @param userId {@code String} user id to set
 	 */
 	public void setUserId(final String userId) {
 		this.userId = userId;
@@ -154,8 +147,7 @@ public class UserFilePermission {
 	/**
 	 * Set the file permission for the user
 	 *
-	 * @param filePermissionEnum
-	 *            {@link FilePermissionEnum} value
+	 * @param filePermissionEnum {@link FilePermissionEnum} value
 	 */
 	public void setFilePermissionEnum(final FilePermissionEnum filePermissionEnum) {
 		this.filePermissionEnum = filePermissionEnum;
@@ -173,8 +165,7 @@ public class UserFilePermission {
 	/**
 	 * Set the type of user for this user
 	 *
-	 * @param userType
-	 *            {@link UserTypeEnum}
+	 * @param userType {@link UserTypeEnum}
 	 */
 	public synchronized void setUserType(final UserTypeEnum userType) {
 		this.userType = userType;

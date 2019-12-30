@@ -1607,6 +1607,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	public FilePermissionEnum getPermissionForCollection(final String irodsAbsolutePath, final String userName,
 			final String zone) throws FileNotFoundException, JargonException {
 
+		// TODO: is zone even a necessary here? See zone checks below, consider
+		// deprecating - mc
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
@@ -1623,8 +1625,40 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		log.info("getPermissionForCollection for absPath:{}", myPath);
 		log.info("userName:{}", userName);
+		log.info("zone:{}", zone);
 
-		UserFilePermission permission = getPermissionForUserName(myPath, userName);
+		/*
+		 * Get the target zone from the path, what zone am I inquring on?
+		 */
+
+		String targetZone = MiscIRODSUtils.getZoneInPath(irodsAbsolutePath);
+		log.debug("targetZone:{}", targetZone);
+
+		/*
+		 * If the user zone is in the target zone, then we don't use user#zone format.
+		 * 
+		 * If the user zone is not in the target zone, then we use user#zone format
+		 * where zone will be the home zone of the user
+		 */
+
+		String queryUser;
+		if (zone.isEmpty()) {
+			log.debug("defaulting to current zone, no zone provided");
+			queryUser = userName;
+		} else if (targetZone.equals(this.getIRODSAccount().getZone())) {
+			log.debug("same zone provided as logged in, no #zone format");
+			queryUser = userName;
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(userName);
+			sb.append('#');
+			sb.append(this.getIRODSAccount().getZone());
+			queryUser = sb.toString();
+		}
+
+		log.info("queryUser:{}", queryUser);
+
+		UserFilePermission permission = getPermissionForUserName(myPath, queryUser); // FIXME: this should be user#zone?
 		if (permission == null) {
 			log.info("no permission found, return 'none'");
 			return FilePermissionEnum.NONE;
@@ -1806,8 +1840,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		UserFilePermission userFilePermission;
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
 		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
+		String targetZone = MiscIRODSUtils.getZoneInPath(absPath);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(getIRODSAccount());
+
+		log.info("theUser:{}", theUser);
+		log.info("theZone:{}", theZone);
+		log.info("targetZone:{}", targetZone);
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		CollectionAOHelper.buildACLQueryForCollectionName(absPath, builder);
@@ -1835,21 +1874,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			 * separate query must be done
 			 */
 
-			user = userAO.findByIdInZone(row.getColumn(2), getIRODSAccount().getZone());
-			StringBuilder userAndZone = null;
-			String displayUserName = null;
+			user = userAO.findByIdInZone(row.getColumn(2), targetZone);
 
-			userAndZone = new StringBuilder(row.getColumn(0));
-			userAndZone.append('#');
-			userAndZone.append(row.getColumn(1));
-
-			if (row.getColumn(1).equals(MiscIRODSUtils.getZoneInPath(absPath))) {
-				displayUserName = row.getColumn(0);
-			} else {
-				displayUserName = userAndZone.toString();
-			}
-
-			userFilePermission = new UserFilePermission(displayUserName, row.getColumn(2),
+			userFilePermission = new UserFilePermission(row.getColumn(0), row.getColumn(2),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(3))),
 					user.getUserType(), row.getColumn(1));
 			log.info("loaded filePermission:{}", userFilePermission);

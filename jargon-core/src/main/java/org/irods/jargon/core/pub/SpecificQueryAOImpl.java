@@ -438,7 +438,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQuery
 		 * look up the alias and get the column names and number of arguments expected
 		 */
 
-		SpecificQueryDefinition specificQueryDefinition = findSpecificQueryByAlias(specificQuery.getQueryString());
+		SpecificQueryDefinition specificQueryDefinition = findSpecificQueryByAlias(specificQuery.getQueryString(),
+				specificQuery.getZoneHint());
 
 		log.debug("found specific query definition by alias");
 

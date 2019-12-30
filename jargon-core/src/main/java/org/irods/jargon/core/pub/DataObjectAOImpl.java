@@ -3223,7 +3223,38 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null zone");
 		}
 
-		UserFilePermission userFilePermission = this.getPermissionForDataObjectForUserName(absolutePath, userName);
+		/*
+		 * Get the target zone from the path, what zone am I inquring on?
+		 */
+
+		String targetZone = MiscIRODSUtils.getZoneInPath(absolutePath);
+		log.debug("targetZone:{}", targetZone);
+
+		/*
+		 * If the user zone is in the target zone, then we don't use user#zone format.
+		 * 
+		 * If the user zone is not in the target zone, then we use user#zone format
+		 * where zone will be the home zone of the user
+		 */
+
+		String queryUser;
+		if (zone.isEmpty()) {
+			log.debug("defaulting to current zone, no zone provided");
+			queryUser = userName;
+		} else if (targetZone.equals(this.getIRODSAccount().getZone())) {
+			log.debug("same zone provided as logged in, no #zone format");
+			queryUser = userName;
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(userName);
+			sb.append('#');
+			sb.append(this.getIRODSAccount().getZone());
+			queryUser = sb.toString();
+		}
+
+		log.info("queryUser:{}", queryUser);
+
+		UserFilePermission userFilePermission = this.getPermissionForDataObjectForUserName(absolutePath, queryUser);
 
 		if (userFilePermission == null) {
 			return null;
@@ -3545,15 +3576,26 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		IRODSQueryResultSetInterface resultSet;
 
+		String theUser = MiscIRODSUtils.getUserInUserName(userName);
+		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
+		String targetZone = MiscIRODSUtils.getZoneInPath(absPath);
+		log.info("theUser:{}", theUser);
+		log.info("theZone:{}", theZone);
+		log.info("targetZone:{}", targetZone);
+
 		try {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.EQUAL, userName)
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME, QueryConditionOperators.EQUAL, theUser)
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE, OrderByType.DESC);
+			if (!theZone.isEmpty()) {
+				builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ZONE, QueryConditionOperators.EQUAL,
+						theZone.trim());
+			}
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 					MiscIRODSUtils.getZoneInPath(absPath));
 
-			// FIXME: this may be incorrect, should I return the highest? What
+			// TODO: this may be incorrect, should I return the highest? What
 			// if there are multiples? should I sort on highest, add order by
 
 			IRODSQueryResultRow row = resultSet.getFirstResult();

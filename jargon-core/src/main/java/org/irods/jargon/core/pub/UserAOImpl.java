@@ -699,6 +699,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@Override
 	public void changeAUserPasswordByAnAdmin(final String userName, final String newPassword) throws JargonException {
 
+		changeAUserPasswordByAnAdminWithAdminPwd(userName, newPassword);
+
+	}
+
+	private void changeAUserPasswordByAnAdminWithChallenge(final String userName, final String newPassword)
+			throws JargonException {
+
 		// see clientLogin.c and iadmin.c(line 807) for irods equivalent
 		// functions
 		if (userName == null || userName.isEmpty()) {
@@ -717,7 +724,29 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				getIRODSAccount().getPassword(), derivedChallenge);
 
 		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
-		GeneralAdminInp adminPI = GeneralAdminInp.instanceForModifyUserPassword(userName, myKey2);
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForModifyUserPasswordByAdmin(userName, myKey2);
+		getIRODSProtocol().irodsFunction(adminPI);
+
+	}
+
+	private void changeAUserPasswordByAnAdminWithAdminPwd(final String userName, final String newPassword)
+			throws JargonException {
+
+		// see clientLogin.c and iadmin.c(line 807) for irods equivalent
+		// functions
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("userName is null or missing");
+		}
+
+		if (newPassword == null || newPassword.isEmpty()) {
+			throw new IllegalArgumentException("newPassword is null or missing");
+		}
+
+		String obfuscatedPassword = IRODSPasswordUtilities.obfEncodeByKey(newPassword,
+				this.getIRODSAccount().getPassword(), true);
+
+		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForModifyUserPasswordByAdmin(userName, obfuscatedPassword);
 		getIRODSProtocol().irodsFunction(adminPI);
 
 	}

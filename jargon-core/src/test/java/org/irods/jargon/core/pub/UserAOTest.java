@@ -817,7 +817,7 @@ public class UserAOTest {
 		Assert.assertFalse("no avus returned", avuList.isEmpty());
 	}
 
-	@Test
+	@Ignore // until #350 resolved
 	// https://github.com/DICE-UNC/jargon/issues/130
 	public void testChangeUserPassword() throws Exception {
 		String testUser = "testChangeUserPassword";
@@ -1145,8 +1145,7 @@ public class UserAOTest {
 	/**
 	 * Bug [#1070] [iROD-Chat:9099] iDropLiteApplet AuthenticationException
 	 *
-	 * @throws Exception
-	 *             This looks like an iRODS bug, reported, ignored for now....
+	 * @throws Exception This looks like an iRODS bug, reported, ignored for now....
 	 */
 	@Ignore
 	public void testGenerateTempPasswordWhenPAMAuthenticatedBug1070() throws Exception {
