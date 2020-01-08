@@ -1053,7 +1053,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 						thisFileTransferOptions);
 			} else {
 				dataObjInp = DataObjInp.instanceForGetSpecifyingResource(irodsFileToGet.getAbsolutePath(),
-						irodsFileToGet.getResource(), "", thisFileTransferOptions);
+						irodsFileToGet.getResource(), "", "", thisFileTransferOptions);
 			}
 
 			processGetAfterResourceDetermined(irodsFileToGet, localFile, dataObjInp, thisFileTransferOptions,
@@ -1228,6 +1228,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 *                            that is the source of the transfer. The resource
 	 *                            of the {@code IRODSFile} is controlling.
 	 * @param localFileToHoldData {@link File} which is the target of the transfer
+	 * @param replNum 			  {@code String} with the replica number that should be
+	 * 							  retrieved
 	 * @param transferOptions     {@link TransferOptions} to control the transfer,
 	 *                            or null if not specified. Note that the
 	 *                            {@code TransferOptions} object will be cloned, and
@@ -1237,7 +1239,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 *         opened file, to be used for sending operation complete messages
 	 * @throws JargonException
 	 */
-	int irodsDataObjectGetOperationForClientSideAction(final IRODSFile irodsFileToGet, final File localFileToHoldData,
+	int irodsDataObjectGetOperationForClientSideAction(final IRODSFile irodsFileToGet, final File localFileToHoldData, final String replNum,
 			final TransferOptions transferOptions) throws OverwriteException, DataNotFoundException, JargonException {
 
 		if (localFileToHoldData == null) {
@@ -1256,7 +1258,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		TransferOptions myTransferOptions = buildDefaultTransferOptionsIfNotSpecified(transferOptions);
 
 		final DataObjInp dataObjInp = DataObjInp.instanceForGetSpecifyingResource(irodsFileToGet.getAbsolutePath(),
-				irodsFileToGet.getResource(), localFileToHoldData.getAbsolutePath(), myTransferOptions);
+				irodsFileToGet.getResource(), localFileToHoldData.getAbsolutePath(), replNum, myTransferOptions);
 
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
 		transferControlBlock.setTransferOptions(myTransferOptions);
