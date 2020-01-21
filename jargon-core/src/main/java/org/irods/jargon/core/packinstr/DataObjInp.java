@@ -33,6 +33,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String FORCE_FLAG_KW = "forceFlag";
 	public static final String DATA_INCLUDED_KW = "dataIncluded";
 	public static final String RESC_NAME = "rescName";
+	public static final String REPL_NUM = "replNum";
 	public static final String MY_STR = "myStr";
 	public static final String LOCAL_PATH = "localPath";
 	public static final String ALL = "all";
@@ -129,6 +130,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	private long offset = 0L;
 	private long dataSize = 0L;
 	private String resource = "";
+	private String replNum = "";
 	private ForceOptions forceOption = ForceOptions.NO_FORCE;
 	private int operationType = 0;
 	private boolean replicationToAll = false;
@@ -611,6 +613,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            should be retrieved
 	 * @param localPath
 	 *            {@code String} with the absolute path to the local file
+	 * @param replNum {@code String} with the replica number that should be
+	 * 				retrieved
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null if
@@ -620,7 +624,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *             for iRODS error
 	 */
 	public static final DataObjInp instanceForGetSpecifyingResource(final String sourceAbsolutePath,
-			final String resource, final String localPath, final TransferOptions transferOptions)
+			final String resource, final String localPath, final String replNum, final TransferOptions transferOptions)
 			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
@@ -636,7 +640,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		}
 
 		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0, OpenFlags.READ, 0L, 0L, resource,
-				transferOptions);
+				replNum, transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
 		dataObjInp.setLocalPath(localPath);
@@ -708,8 +712,16 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		return dataObjInp;
 	}
 
+	
 	private DataObjInp(final String fileAbsolutePath, final int createMode, final OpenFlags openFlags,
 			final long offset, final long dataSize, final String resource, final TransferOptions transferOptions)
+			throws JargonException {
+			this(fileAbsolutePath, createMode, openFlags, offset, dataSize, resource, "", transferOptions);
+	}
+	
+	
+	private DataObjInp(final String fileAbsolutePath, final int createMode, final OpenFlags openFlags,
+			final long offset, final long dataSize, final String resource, final String replNum, final TransferOptions transferOptions)
 			throws JargonException {
 
 		super();
@@ -743,6 +755,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		this.offset = offset;
 		this.dataSize = dataSize;
 		this.resource = resource;
+		this.replNum = replNum;
 		forceOption = DataObjInp.ForceOptions.NO_FORCE;
 		this.transferOptions = transferOptions;
 
@@ -761,7 +774,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		Tag message = new Tag(PI_TAG,
 				new Tag[] { new Tag(OBJ_PATH, getFileAbsolutePath()), new Tag(CREATE_MODE, getCreateMode()),
-						new Tag(OPEN_FLAGS, tagOpenFlags), new Tag(OFFSET, getOffset()),
+						new Tag(OPEN_FLAGS, tagOpenFlags), new Tag(OFFSET, getOffset()), 
 						new Tag(DATA_SIZE, getDataSize()), new Tag(NUM_THREADS, transferOptionsNumThreads),
 						new Tag(OPR_TYPE, getOperationType()) });
 
@@ -792,6 +805,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
 			}
+		}
+		
+		if (getReplNum().length() > 0) {
+			kvps.add(KeyValuePair.instance(REPL_NUM, getReplNum()));
 		}
 
 		message.addTag(createKeyValueTag(kvps));
@@ -896,6 +913,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		return resource;
 	}
 
+	protected String getReplNum() {
+		return replNum;
+	}
+	
 	public ForceOptions getForceOptions() {
 		return forceOption;
 	}
