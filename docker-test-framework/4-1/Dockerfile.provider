@@ -1,0 +1,42 @@
+#
+# iRODS Provider Image.
+#
+FROM ubuntu:14.04
+
+# Install pre-requisites
+RUN apt-get update && \
+    apt-get install -y sudo \
+                       wget \
+                       lsb-release \
+                       apt-transport-https \
+                       postgresql \
+                       python-pip \
+                       libfuse2 \
+                       unixodbc \
+                       netcat \
+                       super \
+                       odbc-postgresql \
+                       python-jsonschema \
+                       lsof \
+                       python-psutil \
+                       libjson-perl && \
+    pip install xmlrunner
+
+# Grab .debs
+RUN wget https://files.renci.org/pub/irods/releases/4.1.12/ubuntu14/irods-runtime-4.1.12-ubuntu14-x86_64.deb && \
+    wget https://files.renci.org/pub/irods/releases/4.1.12/ubuntu14/irods-icat-4.1.12-ubuntu14-x86_64.deb && \
+    wget https://files.renci.org/pub/irods/releases/4.1.12/ubuntu14/irods-database-plugin-postgres-1.12-ubuntu14-x86_64.deb
+
+RUN dpkg -i irods-runtime-4.1.12-ubuntu14-x86_64.deb
+RUN dpkg -i irods-icat-4.1.12-ubuntu14-x86_64.deb
+RUN dpkg -i irods-database-plugin-postgres-1.12-ubuntu14-x86_64.deb
+
+# Setup catalog database
+ADD db_commands.txt /
+ADD testsetup-consortium.sh /
+RUN service postgresql start && su - postgres -c 'psql -f /db_commands.txt'
+
+# Set command to execute when launching the container.
+ADD start_provider.sh /
+RUN chmod u+x /start_provider.sh
+ENTRYPOINT ["./start_provider.sh"]

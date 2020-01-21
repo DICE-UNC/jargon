@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  irods-catalog-provder:
+    hostname: icat.example.org
+    build:
+        context: ./
+        dockerfile: Dockerfile.provider
+    volumes:
+      - /home/alanking/projects/builds/irods:/irods_packages
+      - /home/alanking/projects/builds/icommands:/icommands_packages
+
