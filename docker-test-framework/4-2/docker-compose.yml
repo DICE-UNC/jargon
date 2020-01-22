@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  irods-catalog-provider-4-2-7:
+    build:
+        context: .
+        dockerfile: Dockerfile.provider
+    hostname: icat.example.org
+    networks:
+      default:
+        aliases:
+          - icat.example.org
+    ports:
+      - "1247:1247"
+      - "5432:5432"
+      #- "20000-21999:20000-21999"
+
+  irods-catalog-consumer-resource1-4-2-7:
+    build:
+        context: .
+        dockerfile: Dockerfile.consumer
+    hostname: resource1.example.org
+    networks:
+      default:
+        aliases:
+          - resource1.example.org
+    depends_on:
+      - irods-catalog-provider-4-2-7
+  
