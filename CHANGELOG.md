@@ -36,3 +36,11 @@ Fixed PAMAuth so that username is propogated from IRODSAccount into the packing 
 #### Cross zone group methods added to GroupAO #348
 
  Improved cross-zone behavior of UserGroup queries to support query of group membership in federated zones. 
+ 
+#### 4.1 and 4.2 resc id differences when getting data object #355
+ 
+Jargon-side patch for irods-contrib/metalnx-web#134. This patch detects server type and does not query resc_id when querying a pre-4.2 iRODS.
+
+#### #345 Sending the replNum of the desired replica when getting a file
+
+Pull request complements of JEREM-M (thank you!) Sending the replNum parameter from the rule call to the IRODS commands call.

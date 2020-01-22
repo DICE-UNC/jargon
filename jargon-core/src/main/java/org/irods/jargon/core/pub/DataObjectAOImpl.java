@@ -16,6 +16,7 @@ import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -256,9 +257,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
+		IRODSServerProperties irodsServerProperties = this.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(getIRODSAccount()).getIRODSServerProperties();
+
 		IRODSQueryResultSet resultSet = null;
 		try {
-			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+
+			if (irodsServerProperties.isAtLeastIrods420()) {
+				log.debug("is at least 4.2 for data object selects");
+				DataAOHelper.addDataObjectSelectsToBuilder(builder);
+			} else {
+				log.debug("is prior to 4.2 for data object selects");
+				DataAOHelper.addDataObjectSelectsToBuilder4dot1(builder);
+			}
 
 			if (collectionAndPath.getCollectionParent() == null || collectionAndPath.getCollectionParent().isEmpty()) {
 				log.info("ignoring collection path in query");
@@ -290,7 +301,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new DataNotFoundException("no data object data found in iCAT for objStat");
 		}
 
-		dataObject = DataAOHelper.buildDomainFromResultSetRow(resultSet.getFirstResult());
+		if (irodsServerProperties.isAtLeastIrods420()) {
+			log.debug("is at least 4.2 for data object result set processing");
+			dataObject = DataAOHelper.buildDomainFromResultSetRow(resultSet.getFirstResult());
+		} else {
+			log.debug("is prior to 4.2 for data object result set processing");
+			dataObject = DataAOHelper.buildDomainFromResultSetRow4dot1(resultSet.getFirstResult());
+		}
 
 		// use the ObjStat to twizzle the data object to reflect any special
 		// collection info
