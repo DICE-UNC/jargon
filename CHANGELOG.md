@@ -23,6 +23,9 @@ Added functional tests and clarified setting of proxyUser and proxyZone in IRODS
 
 Clarified UserAO and GroupAO methods, fixed issues where users were appearing in GroupAO findXXX methods. Transitioned queries to builder model in GroupAO.
 
+### Add docker-compose test environment stand-up #354
+
+Added an adaptation of iRODS test harness to bring up docker-compose versions of iRODS 4.1 and 4.2.7. Currently this has a consumer and provider for each, need to add a federated zone as a next step.
 
 #### When invoking a rule via jargon the microservice msiDataObjGet doesn't end #337
 
