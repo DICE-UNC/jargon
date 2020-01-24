@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Adding a function for rebalancing a resource #332
 
+#### Added a self-contained Docker iRODS test grid and self-configuring build/test Docker environment
+
+Docker-compose enabled iRODS server for 4.1 and 4.2.7 provisioned. Separate Docker container can build and run unit tests against this Docker iRODS grid. This is an initial implementation and will be expanded in later releases. See DOCKERTEST.md
+
 ### Changed
 
 #### Allow setting of proxy user/zone in IRODSAccount #338
