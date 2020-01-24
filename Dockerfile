@@ -15,4 +15,4 @@ WORKDIR /var/jargon
 ENTRYPOINT ["sh"]
 
 # /var/maven/apache-maven-3.6.3/bin/mvn
-# docker run -it -v /Users/conwaymc/Documents/workspace-niehs-rel/jargon:/var/jargon --network="irodsnet" diceunc/jargon-test:latest 
+# docker run -it -v /Users/conwaymc/Documents/workspace-niehs-rel/jargon:/var/jargon --network="4-2_irodsnet" diceunc/jargon-test:latest 

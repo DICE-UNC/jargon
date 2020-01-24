@@ -2,6 +2,7 @@ version: '3'
 
 services:
   irods-catalog-provider:
+    container_name: irods-catalog-provider
     build:
         context: .
         dockerfile: Dockerfile.provider
@@ -16,6 +17,7 @@ services:
       #- "20000-21999:20000-21999"
 
   irods-catalog-consumer-resource1:
+    container_name: irods-catalog-consumer-resource1
     build:
         context: .
         dockerfile: Dockerfile.consumer
@@ -28,3 +30,4 @@ services:
       - irods-catalog-provider
 networks:
   irodsnet:
+    

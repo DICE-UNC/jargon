@@ -1034,7 +1034,7 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
 				irodsAccount);
 		ticketSvc.deleteTicket(testCollection);
-		ticketSvc.createTicket(TicketCreateModeEnum.WRITE, destFile, testCollection);
+		String ticketString = ticketSvc.createTicket(TicketCreateModeEnum.WRITE, destFile, testCollection);
 
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
