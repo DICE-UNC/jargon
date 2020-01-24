@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  irods-catalog-provider-4-2-7:
+  irods-catalog-provider:
     build:
         context: .
         dockerfile: Dockerfile.provider
     hostname: icat.example.org
     networks:
-      default:
+      irodsnet:
         aliases:
           - icat.example.org
     ports:
@@ -15,15 +15,19 @@ services:
       - "5432:5432"
       #- "20000-21999:20000-21999"
 
-  irods-catalog-consumer-resource1-4-2-7:
+  irods-catalog-consumer-resource1:
     build:
         context: .
         dockerfile: Dockerfile.consumer
     hostname: resource1.example.org
     networks:
-      default:
+      irodsnet:
         aliases:
           - resource1.example.org
     depends_on:
-      - irods-catalog-provider-4-2-7
+      - irods-catalog-provider
+
+networks:
+  irodsnet:
+
   

@@ -7,7 +7,7 @@ services:
         dockerfile: Dockerfile.provider
     hostname: icat.example.org
     networks:
-      default:
+      irodsnet:
         aliases:
           - icat.example.org
     ports:
@@ -21,36 +21,10 @@ services:
         dockerfile: Dockerfile.consumer
     hostname: resource1.example.org
     networks:
-      default:
+      irodsnet:
         aliases:
           - resource1.example.org
     depends_on:
       - irods-catalog-provider
-  #irods-catalog-consumer-resource2:
-    #build:
-        #context: .
-        #dockerfile: Dockerfile.consumer
-    #hostname: resource2.example.org
-    #networks:
-      #default:
-        #aliases:
-          #- resource2.example.org
-    #volumes:
-      #- /home/alanking/projects/builds/irods:/irods_packages:ro
-      #- /home/alanking/projects/builds/icommands:/icommands_packages:ro
-    #depends_on:
-      #- irods-catalog-provider
-  #irods-catalog-consumer-resource3:
-    #build:
-        #context: .
-        #dockerfile: Dockerfile.consumer
-    #hostname: resource3.example.org
-    #networks:
-      #default:
-        #aliases:
-          #- resource3.example.org
-    #volumes:
-      #- /home/alanking/projects/builds/irods:/irods_packages:ro
-      #- /home/alanking/projects/builds/icommands:/icommands_packages:ro
-    #depends_on:
-      #- irods-catalog-provider
+networks:
+  irodsnet:

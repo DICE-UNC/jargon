@@ -1,6 +1,6 @@
 #! /bin/bash
 
-topo_provider="irods-catalog-provider-4-2-7"
+topo_provider="irods-catalog-provider"
 
 # Wait until the provider is up and accepting connections.
 until nc -z $topo_provider 1247; do
