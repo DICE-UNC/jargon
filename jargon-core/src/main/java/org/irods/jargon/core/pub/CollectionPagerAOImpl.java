@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * Improved facility to list under a parent collection in a manner that supports
  * paging by clients. This implementation is meant to be a lower level interface
  * to paging, returning a detailed view of the paging status.
- * <p/>
+ * <p>
  * This interface focuses on paging via offsets, and handles paging across
  * collections and data objects, which are treated as distinct data sources.
  *
