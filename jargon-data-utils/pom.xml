@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>4.3.1.0-RELEASE</version>
+		<version>4.3.1.1-SNAPSHOT</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-data-utils</artifactId>
