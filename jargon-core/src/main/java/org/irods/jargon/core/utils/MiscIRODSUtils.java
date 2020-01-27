@@ -37,7 +37,7 @@ public class MiscIRODSUtils {
 	 *
 	 * @param irodsPath {@link String} with an iRODS path
 	 * @return {@link String} with a normalized iRODS path
-	 * @throws PathTooLongException
+	 * @throws PathTooLongException {@link PathTooLongException}
 	 */
 	public static String normalizeIrodsPath(final String irodsPath) throws PathTooLongException {
 		if (irodsPath == null) {

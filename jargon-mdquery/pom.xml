@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" 
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>jargon</artifactId>
@@ -41,6 +41,21 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -54,53 +69,53 @@
 							<tasks>
 								<delete file="${basedir}/src/test/resources/testing.properties" />
 								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
-								<echo file="${basedir}/src/test/resources/testing.properties" append="true">
-									test.data.directory=${jargon.test.data.directory}
-									test.irods.admin=${jargon.test.irods.admin}
-									test.irods.admin.password=${jargon.test.irods.admin.password}
-									test.irods.user=${jargon.test.irods.user}
-									test.irods.password=${jargon.test.irods.password}
-									test.irods.resource=${jargon.test.irods.resource}
-									test2.irods.user=${jargon.test.irods.user2}
-									test2.irods.password=${jargon.test.irods.password2}
-									test2.irods.resource=${jargon.test.irods.resource2}
-									test3.irods.user=${jargon.test.irods.user3}
-									test3.irods.password=${jargon.test.irods.password3}
-									test3.irods.resource=${jargon.test.irods.resource3}
-									test.irods.host=${jargon.test.irods.host}
-									test.irods.port=${jargon.test.irods.port}
-									test.irods.zone=${jargon.test.irods.zone}
-									jargon.test.kerberos.user=${jargon.test.kerberos.user}
-									test.resource.group=${jargon.test.resource.group}
-									test.irods.userDN=${jargon.test.irods.userDN}
-									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
-									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
-									test.option.exercise.audit=${jargon.test.option.exercise.audit}
-									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}
-									test.option.distributed.resources=${test.option.distributed.resources}
-									test.option.registration=${test.option.registration}
-									test.option.strictACL=${test.option.strictACL}
-									test.option.federated.zone=${test.option.federated.zone}
-									test.option.kerberos=${test.option.kerberos}
-									test.option.pam=${test.option.pam}
-									jargon.test.pam.user=${jargon.test.pam.user}
-									jargon.test.pam.password=${jargon.test.pam.password}
-									test.federated.irods.admin=${jargon.test.federated.irods.admin}
-									test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}
-									test.federated.irods.user=${jargon.test.federated.irods.user}
-									test.federated.irods.password=${jargon.test.federated.irods.password}
-									test.federated.irods.resource=${jargon.test.federated.irods.resource}
-									test.federated.irods.host=${jargon.test.federated.irods.host}
-									test.federated.irods.port=${jargon.test.federated.irods.port}
-									test.federated.irods.zone=${jargon.test.federated.irods.zone}
-									test.option.gsi=${test.option.gsi}
-									test.option.gsi.host=${test.option.gsi.host}
-									test.option.gsi.port=${test.option.gsi.port}
-									test.option.gsi.zone=${test.option.gsi.zone}
-									test.option.gsi.dn=${test.option.gsi.dn}
-									test.option.gsi.user=${test.option.gsi.user}
-									test.option.gsi.file=${test.option.gsi.file}
-		</echo>
+								<echo file="${basedir}/src/test/resources/testing.properties" append="true"> 
+								test.data.directory=${jargon.test.data.directory}
+								test.irods.admin=${jargon.test.irods.admin}
+								test.irods.admin.password=${jargon.test.irods.admin.password}
+								test.irods.user=${jargon.test.irods.user}
+								test.irods.password=${jargon.test.irods.password}
+								test.irods.resource=${jargon.test.irods.resource}
+								test2.irods.user=${jargon.test.irods.user2}
+								test2.irods.password=${jargon.test.irods.password2}
+								test2.irods.resource=${jargon.test.irods.resource2}
+								test3.irods.user=${jargon.test.irods.user3}
+								test3.irods.password=${jargon.test.irods.password3}
+								test3.irods.resource=${jargon.test.irods.resource3}
+								test.irods.host=${jargon.test.irods.host}
+								test.irods.port=${jargon.test.irods.port}
+								test.irods.zone=${jargon.test.irods.zone}
+								jargon.test.kerberos.user=${jargon.test.kerberos.user}
+								test.resource.group=${jargon.test.resource.group}
+								test.irods.userDN=${jargon.test.irods.userDN}
+								test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
+								test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
+								test.option.exercise.audit=${jargon.test.option.exercise.audit}
+								test.option.exercise.workflow=${jargon.test.option.exercise.workflow}
+								test.option.distributed.resources=${test.option.distributed.resources}
+								test.option.registration=${test.option.registration}
+								test.option.strictACL=${test.option.strictACL}
+								test.option.federated.zone=${test.option.federated.zone}
+								test.option.kerberos=${test.option.kerberos}
+								test.option.pam=${test.option.pam}
+								jargon.test.pam.user=${jargon.test.pam.user}
+								jargon.test.pam.password=${jargon.test.pam.password}
+								test.federated.irods.admin=${jargon.test.federated.irods.admin}
+								test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}
+								test.federated.irods.user=${jargon.test.federated.irods.user}
+								test.federated.irods.password=${jargon.test.federated.irods.password}
+								test.federated.irods.resource=${jargon.test.federated.irods.resource}
+								test.federated.irods.host=${jargon.test.federated.irods.host}
+								test.federated.irods.port=${jargon.test.federated.irods.port}
+								test.federated.irods.zone=${jargon.test.federated.irods.zone}
+								test.option.gsi=${test.option.gsi}
+								test.option.gsi.host=${test.option.gsi.host}
+								test.option.gsi.port=${test.option.gsi.port}
+								test.option.gsi.zone=${test.option.gsi.zone}
+								test.option.gsi.dn=${test.option.gsi.dn}
+								test.option.gsi.user=${test.option.gsi.user}
+								test.option.gsi.file=${test.option.gsi.file}
+								</echo>
 							</tasks>
 						</configuration>
 						<goals>

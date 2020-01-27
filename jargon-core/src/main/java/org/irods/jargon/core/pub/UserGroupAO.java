@@ -160,7 +160,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *
 	 * @param userGroupName {@code String} with search term
 	 * @throws JargonException {@link JargonException}
-	 * @return {@code List} of {@link UserGroup}
+	 * @return {@code List} of {@code String}
 	 * 
 	 */
 	List<String> findUserGroupNames(String userGroupName, boolean caseInsensitive) throws JargonException;

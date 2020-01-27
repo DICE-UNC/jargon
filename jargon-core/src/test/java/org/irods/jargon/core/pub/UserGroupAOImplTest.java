@@ -337,7 +337,7 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(), "zone1");
+		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(), irodsAccount.getZone());
 
 		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
 

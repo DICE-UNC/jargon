@@ -25,7 +25,7 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-* Jargon depends on Java 1.8+
+* Jargon depends on Java 1.8+ with a current focus on testing/running under OpenJDK 11
 * Jargon is built using Apache Maven2, see POM for dependencies
 * Jargon supports iRODS current releases, it also maintains very reasonable backwards compatability to iRODS 3.3.1 however this is no longer actively tested
 

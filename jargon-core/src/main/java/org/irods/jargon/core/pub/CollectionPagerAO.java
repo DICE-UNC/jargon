@@ -24,7 +24,7 @@ public interface CollectionPagerAO {
 
 	/**
 	 * Start a listing under a path, getting the first page of results.
-	 * <p>
+	 * 
 	 * Inside the {@link PagingAwareCollectionListing} is a POJO containing
 	 * information about the status of the listing (more collections or data objects
 	 * to page, counts, etc). This object may be retained by the client caller and
@@ -55,9 +55,10 @@ public interface CollectionPagerAO {
 	 *                          the parent collection
 	 * @param inCollections     {@code boolean} that will be {@code true} if the
 	 *                          current page is displaying collections. A value of
-	 *                          {@false} indicates that data objects are currently
-	 *                          displayed. If the current view is not 'split' into
-	 *                          files and collections, the parameter is ignored.
+	 *                          {@code false} indicates that data objects are
+	 *                          currently displayed. If the current view is not
+	 *                          'split' into files and collections, the parameter is
+	 *                          ignored.
 	 * @param offset            {@code int} with the next offset. This will be an
 	 *                          offset within the current type (file or collection)
 	 *                          in a split view, or the offset into the entire
