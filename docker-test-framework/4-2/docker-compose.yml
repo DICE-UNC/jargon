@@ -14,7 +14,7 @@ services:
     ports:
       - "1247:1247"
       #- "5432:5432"
-      #- "20000-21999:20000-21999"
+      - "20000-21999:20000-21999"
 
   irods-catalog-consumer-resource1:
     container_name: irods-catalog-consumer-resource1
