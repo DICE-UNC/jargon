@@ -269,6 +269,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
 		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
 		JargonProperties props = irodsSession.getJargonProperties();
+		Assert.assertNotNull("null props", props);
 
 	}
 

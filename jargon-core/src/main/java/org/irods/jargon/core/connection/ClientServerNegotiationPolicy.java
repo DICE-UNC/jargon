@@ -93,7 +93,7 @@ public class ClientServerNegotiationPolicy {
 			log.info("setting to no negotiation");
 			return SslNegotiationPolicy.NO_NEGOTIATION;
 		} else {
-			throw new IllegalArgumentException("unknown negotitation policy");
+			throw new IllegalArgumentException("unknown negotiation policy");
 		}
 
 	}

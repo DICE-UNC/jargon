@@ -99,7 +99,7 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 		if (!resourceName.isEmpty()) {
 			kvps.add(KeyValuePair.instance(RESC_NAME_KW, resourceName));
 		} else if (replicaNumber > -1) {
-			kvps.add(KeyValuePair.instance(REPL_NUM_KW, resourceName));
+			kvps.add(KeyValuePair.instance(REPL_NUM_KW, Integer.toString(replicaNumber)));
 		}
 
 		/*

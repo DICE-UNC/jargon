@@ -249,7 +249,7 @@ public class DataObjInpTest {
 	public final void testGetParsedTagsForGetWithResource() throws Exception {
 		DataObjInp dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
 				"/test1/home/test1/test-scratch/IrodsCommandsGetTest/testGetSpecifyingResource.txt", "test1-resc", "",
-				null);
+				"1", null);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(
@@ -260,9 +260,11 @@ public class DataObjInpTest {
 		sb.append("<dataSize>0</dataSize>\n");
 		sb.append("<numThreads>0</numThreads>\n");
 		sb.append("<oprType>2</oprType>\n");
-		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
+		sb.append("<KeyValPair_PI><ssLen>2</ssLen>\n");
 		sb.append("<keyWord>rescName</keyWord>\n");
+		sb.append("<keyWord>replNum</keyWord>\n");
 		sb.append("<svalue>test1-resc</svalue>\n");
+		sb.append("<svalue>1</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
 

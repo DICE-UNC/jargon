@@ -345,11 +345,27 @@ public class MiscIRODSUtils {
 	 */
 
 	public static String convertStreamToString(final InputStream inputStream) {
+		return convertStreamToString(inputStream, "UTF-8");
+	}
+
+	/**
+	 * Handy method to take the given input stream and make it a String using a
+	 * provided encoding
+	 *
+	 * @param inputStream
+	 *
+	 *                    {@link InputStream} to be converted to a string using the
+	 *                    given encoding
+	 * @param encoding    {@code String} with the encoding
+	 * @return {@link String} with the stream contents
+	 */
+
+	public static String convertStreamToString(final InputStream inputStream, final String encoding) {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
 		Reader in;
 		try {
-			in = new InputStreamReader(inputStream, "UTF-8");
+			in = new InputStreamReader(inputStream, encoding);
 			int read;
 			do {
 				read = in.read(buffer, 0, buffer.length);

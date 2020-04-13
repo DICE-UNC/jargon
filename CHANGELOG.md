@@ -7,47 +7,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### Adding a function for rebalancing a resource #332
-
-#### Added a self-contained Docker iRODS test grid and self-configuring build/test Docker environment
-
-Docker-compose enabled iRODS server for 4.1 and 4.2.7 provisioned. Separate Docker container can build and run unit tests against this Docker iRODS grid. This is an initial implementation and will be expanded in later releases. See DOCKERTEST.md
-
 ### Changed
-
-#### Allow setting of proxy user/zone in IRODSAccount #338
-
-Convenience method for creating IRODSAccount proxy user settings
-
-#### Add tests/doc and clarify function of proxy users #339
-
-Added functional tests and clarified setting of proxyUser and proxyZone in IRODSAccount.
-
-#### cleanups and additions to groupAO and userAO handling for groups in metalnx #344
-
-Clarified UserAO and GroupAO methods, fixed issues where users were appearing in GroupAO findXXX methods. Transitioned queries to builder model in GroupAO.
-
-### Add docker-compose test environment stand-up #354
-
-Added an adaptation of iRODS test harness to bring up docker-compose versions of iRODS 4.1 and 4.2.7. Currently this has a consumer and provider for each, need to add a federated zone as a next step.
-
-#### When invoking a rule via jargon the microservice msiDataObjGet doesn't end #337
-
-Added overhead code for client-side rule actions to send an oprComplete after a parallel get
-operation. This prevents 'stuck' rules. Fix for user-reported issue.
-
-#### fix use of proxy in pam auth #347
-
-Fixed PAMAuth so that username is propogated from IRODSAccount into the packing instruction. This had been set to proxyName().
-
-#### Cross zone group methods added to GroupAO #348
-
- Improved cross-zone behavior of UserGroup queries to support query of group membership in federated zones. 
- 
-#### 4.1 and 4.2 resc id differences when getting data object #355
- 
-Jargon-side patch for irods-contrib/metalnx-web#134. This patch detects server type and does not query resc_id when querying a pre-4.2 iRODS.
-
-#### #345 Sending the replNum of the desired replica when getting a file
-
-Pull request complements of JEREM-M (thank you!) Sending the replNum parameter from the rule call to the IRODS commands call.

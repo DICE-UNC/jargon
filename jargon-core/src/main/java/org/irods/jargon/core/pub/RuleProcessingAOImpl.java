@@ -819,13 +819,21 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 			log.info("get will use force option");
 			force = true;
 		}
+		
+		String replNum = kvpMap.get("replNum");
+		if (replNum != null) {
+			log.info("get will fetch replica : {}", replNum);
+		} else {
+			replNum = "";
+		}
+		
 
 		log.debug("getting reference to local file");
 
 		File localFile = new File(localPath);
 
 		if (label.equals(CL_GET_ACTION)) {
-			clientSideGetAction(irodsFileAbsolutePath, localFile, resourceName, force, numThreads);
+			clientSideGetAction(irodsFileAbsolutePath, localFile, resourceName, replNum, force, numThreads);
 		} else if (label.equals(CL_PUT_ACTION)) {
 			clientSidePutAction(irodsFileAbsolutePath, localFile, resourceName, force, numThreads);
 		}
@@ -867,7 +875,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	}
 
 	private void clientSideGetAction(final String irodsFileAbsolutePath, final File localFile,
-			final String resourceName, final boolean force, final int nbrThreads)
+			final String resourceName, final String replNum, final boolean force, final int nbrThreads)
 			throws JargonException, DataNotFoundException {
 
 		log.info("client-side get action");
@@ -885,6 +893,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 			transferOptions.setForceOption(ForceOption.NO_FORCE);
 		}
 
+
 		if (nbrThreads == -1) {
 			log.debug("override to no parallel threads for this transfer");
 			transferOptions.setUseParallelTransfer(false);
@@ -892,7 +901,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		transferOptions.setMaxThreads(nbrThreads);
 
-		dataObjectAO.irodsDataObjectGetOperationForClientSideAction(irodsFile, localFile, transferOptions);
+		dataObjectAO.irodsDataObjectGetOperationForClientSideAction(irodsFile, localFile, replNum, transferOptions);
 
 		log.debug("client side get action was successful");
 
