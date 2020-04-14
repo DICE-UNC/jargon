@@ -14,7 +14,20 @@ services:
     ports:
       - "1247:1247"
       #- "5432:5432"
-      - "20000-21999:20000-21999"
+      #- "20000-21999"
+
+  maven:
+    container_name: maven
+    build:
+        context: .
+        dockerfile: Dockerfile.testbuild
+    volumes:
+      - ../..:/usr/src/jargon
+      - ../../settings.xml:/root/.m2/settings.xml
+    networks:
+      irodsnet:
+        aliases:
+          - maven.example.org
 
   irods-catalog-consumer-resource1:
     container_name: irods-catalog-consumer-resource1
