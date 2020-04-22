@@ -7,4 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### add docker test and build capacity to testing framework #359
+
+Added a unified test framework that contains a preconfigured iRODS grid in Docker Compose as well as a connected test and build container
+that can run pre-packaged unit tests.
+
+
 ### Changed

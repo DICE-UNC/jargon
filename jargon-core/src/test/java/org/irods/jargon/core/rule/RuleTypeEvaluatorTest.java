@@ -6,19 +6,20 @@ import org.junit.Test;
 
 public class RuleTypeEvaluatorTest {
 
-	@Test(expected = UnknownRuleTypeException.class)
-	public void testNoMatchText() throws Exception {
-		String ruleText = "myTestRule \n hello; \n }";
-		RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
-		ruleTypeEvaluator.guessRuleLanguageType(ruleText);
-	}
-
 	@Test
 	public void testIrodsText() throws Exception {
 		String ruleText = "myTestRule { \n hello; \n }";
 		RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
 		IrodsRuleInvocationTypeEnum actual = ruleTypeEvaluator.guessRuleLanguageType(ruleText);
 		Assert.assertEquals(IrodsRuleInvocationTypeEnum.IRODS, actual);
+	}
+
+	@Test
+	public void testOtherText() throws Exception {
+		String ruleText = "{ \n hello:'goodbye' \n }";
+		RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
+		IrodsRuleInvocationTypeEnum actual = ruleTypeEvaluator.guessRuleLanguageType(ruleText);
+		Assert.assertEquals(IrodsRuleInvocationTypeEnum.OTHER, actual);
 	}
 
 	@Test
@@ -50,7 +51,7 @@ public class RuleTypeEvaluatorTest {
 		String testFileName = "/a/path/to/core.wtf";
 		RuleTypeEvaluator detector = new RuleTypeEvaluator();
 		IrodsRuleInvocationTypeEnum actual = detector.detectTypeFromExtension(testFileName);
-		Assert.assertNull(actual);
+		Assert.assertEquals(IrodsRuleInvocationTypeEnum.OTHER, actual);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -65,6 +66,14 @@ public class RuleTypeEvaluatorTest {
 		String ruleText = "# @RuleEngine=\"IRODS\"";
 		IrodsRuleInvocationTypeEnum actual = detector.detectTypeFromRuleTextAnnotation(ruleText);
 		Assert.assertEquals(IrodsRuleInvocationTypeEnum.IRODS, actual);
+	}
+
+	@Test
+	public void testDetectTypeFromTextWithOtherAnnotation() throws Exception {
+		RuleTypeEvaluator detector = new RuleTypeEvaluator();
+		String ruleText = "# @RuleEngine=\"OTHER\"";
+		IrodsRuleInvocationTypeEnum actual = detector.detectTypeFromRuleTextAnnotation(ruleText);
+		Assert.assertEquals(IrodsRuleInvocationTypeEnum.OTHER, actual);
 	}
 
 	@Test

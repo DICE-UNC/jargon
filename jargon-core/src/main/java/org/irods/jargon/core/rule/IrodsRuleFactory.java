@@ -28,10 +28,8 @@ public class IrodsRuleFactory {
 	/**
 	 * Constructor with required fields
 	 *
-	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} for the current user
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory}
+	 * @param irodsAccount             {@link IRODSAccount} for the current user
 	 *
 	 */
 	public IrodsRuleFactory(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount) {
@@ -52,19 +50,16 @@ public class IrodsRuleFactory {
 	/**
 	 * Create an <code>IRODSRule</code> representation from the base text
 	 *
-	 * @param irodsRuleAsString
-	 *            <code>String</code> with the rule text, including the input and
-	 *            output lines
-	 * @param inputParameterOverrides
-	 *            <code>List</code> of optional {@link IRODSRuleParameter} (can be
-	 *            null) overrides to the input parameters.
-	 * @param ruleInvocationConfiguration
-	 *            {@link RuleInvocationConfiguration} with config hints
+	 * @param irodsRuleAsString           <code>String</code> with the rule text,
+	 *                                    including the input and output lines
+	 * @param inputParameterOverrides     <code>List</code> of optional
+	 *                                    {@link IRODSRuleParameter} (can be null)
+	 *                                    overrides to the input parameters.
+	 * @param ruleInvocationConfiguration {@link RuleInvocationConfiguration} with
+	 *                                    config hints
 	 * @return {@link IRODSRule} ready to submit to iRODS for processing
-	 * @throws JargonRuleException
-	 *             for rule error
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonRuleException for rule error
+	 * @throws JargonException     for iRODS error
 	 */
 	public IRODSRule instanceIrodsRule(final String irodsRuleAsString,
 			final List<IRODSRuleParameter> inputParameterOverrides,
@@ -90,17 +85,19 @@ public class IrodsRuleFactory {
 		log.debug("irodsRuleAsString:{}", irodsRuleAsString);
 		log.info("determining the rule type");
 
-		if (copiedRuleInvocationConfiguration
-				.getIrodsRuleInvocationTypeEnum() == IrodsRuleInvocationTypeEnum.AUTO_DETECT) {
-			log.info("will attempt to auto-detect based on the rule text");
-			RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
-			IrodsRuleInvocationTypeEnum invocationType = ruleTypeEvaluator.guessRuleLanguageType(irodsRuleAsString);
-			copiedRuleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(invocationType);
-			log.info("rule invocation type determined to be:{}", invocationType);
-		} else {
-			log.info("using the user-supplied rule type of:{}",
-					copiedRuleInvocationConfiguration.getIrodsRuleInvocationTypeEnum());
-		}
+		if (ruleInvocationConfiguration.getRuleEngineSpecifier().isEmpty())
+
+			if (copiedRuleInvocationConfiguration
+					.getIrodsRuleInvocationTypeEnum() == IrodsRuleInvocationTypeEnum.AUTO_DETECT) {
+				log.info("will attempt to auto-detect based on the rule text");
+				RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
+				IrodsRuleInvocationTypeEnum invocationType = ruleTypeEvaluator.guessRuleLanguageType(irodsRuleAsString);
+				copiedRuleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(invocationType);
+				log.info("rule invocation type determined to be:{}", invocationType);
+			} else {
+				log.info("using the user-supplied rule type of:{}",
+						copiedRuleInvocationConfiguration.getIrodsRuleInvocationTypeEnum());
+			}
 
 		AbstractRuleTranslator ruleTranslator = null;
 
@@ -114,6 +111,11 @@ public class IrodsRuleFactory {
 		case PYTHON:
 			copiedRuleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.PYTHON);
 			ruleTranslator = new PythonRuleTranslator(irodsAccessObjectFactory.getIRODSServerProperties(irodsAccount),
+					copiedRuleInvocationConfiguration, irodsAccessObjectFactory.getJargonProperties());
+			break;
+		case OTHER:
+			copiedRuleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.OTHER);
+			ruleTranslator = new OtherRuleTranslator(irodsAccessObjectFactory.getIRODSServerProperties(irodsAccount),
 					copiedRuleInvocationConfiguration, irodsAccessObjectFactory.getJargonProperties());
 			break;
 		default:

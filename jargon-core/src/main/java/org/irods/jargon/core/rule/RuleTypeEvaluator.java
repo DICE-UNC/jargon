@@ -40,12 +40,10 @@ public class RuleTypeEvaluator {
 	/**
 	 * Guess at the type of a rule based on looking at the text
 	 *
-	 * @param ruleText
-	 *            <code>String</code> with the text of the rule
+	 * @param ruleText <code>String</code> with the text of the rule
 	 * @return {@link IrodsRuleInvocationTypeEnum} with the guessed type of the
 	 *         rule, or an exception will be thrown if it cannot be determined
-	 * @throws UnknownRuleTypeException
-	 *             for rule type not supported
+	 * @throws UnknownRuleTypeException for rule type not supported
 	 */
 	public IrodsRuleInvocationTypeEnum guessRuleLanguageType(final String ruleText) throws UnknownRuleTypeException {
 		if (ruleText == null || ruleText.isEmpty()) {
@@ -73,16 +71,16 @@ public class RuleTypeEvaluator {
 			return IrodsRuleInvocationTypeEnum.PYTHON;
 		}
 
-		// I have fallen through to an exception with no match
-		throw new UnknownRuleTypeException("cannot determine rule type");
+		// I have fallen through to an exception with no match, not python or iRODS
+		// rule, treat as 'other'
+		return IrodsRuleInvocationTypeEnum.OTHER;
 
 	}
 
 	/**
 	 * Guess a rule type based on the file extenstion
 	 *
-	 * @param fileName
-	 *            <code>String</code> with a file name or even a path
+	 * @param fileName <code>String</code> with a file name or even a path
 	 * @return {@link IrodsRuleInvocationTypeEnum} which can return
 	 *         <code>null</code> if it can't guess
 	 */
@@ -101,7 +99,7 @@ public class RuleTypeEvaluator {
 		} else if (extension.trim().equals(".py")) {
 			enumVal = IrodsRuleInvocationTypeEnum.PYTHON;
 		} else {
-			enumVal = null;
+			enumVal = IrodsRuleInvocationTypeEnum.OTHER;
 		}
 
 		return enumVal;
@@ -110,8 +108,7 @@ public class RuleTypeEvaluator {
 	/**
 	 * Look for a rule engine type hint annotation
 	 *
-	 * @param ruleText
-	 *            <code>String</code> with the rule text
+	 * @param ruleText <code>String</code> with the rule text
 	 * @return {@link IrodsRuleInvocationTypeEnum} which can return
 	 *         <code>null</code> if it can't guess
 	 */
@@ -150,6 +147,8 @@ public class RuleTypeEvaluator {
 				enumVal = IrodsRuleInvocationTypeEnum.IRODS;
 			} else if (annotationType.equals(IrodsRuleInvocationTypeEnum.PYTHON.toString())) {
 				enumVal = IrodsRuleInvocationTypeEnum.PYTHON;
+			} else if (annotationType.equals(IrodsRuleInvocationTypeEnum.OTHER.toString())) {
+				enumVal = IrodsRuleInvocationTypeEnum.OTHER;
 			} else {
 				enumVal = null;
 			}
