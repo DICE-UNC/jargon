@@ -13,4 +13,7 @@ Added a unified test framework that contains a preconfigured iRODS grid in Docke
 that can run pre-packaged unit tests.
 
 
+#### add force flag to rename operations #363
+Add a force option to the rename methods in IRODSFileSystemAO to support NFSRods requirements. This is an added signature with a force flag that does not change the original api
+
 ### Changed
