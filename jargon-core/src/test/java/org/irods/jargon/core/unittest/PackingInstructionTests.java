@@ -3,7 +3,6 @@ package org.irods.jargon.core.unittest;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstructionTest;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInpTest;
 import org.irods.jargon.core.packinstr.CollInpTest;
-import org.irods.jargon.core.packinstr.DataObjCopyInpTest;
 import org.irods.jargon.core.packinstr.DataObjInpForMcollTest;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStatTest;
 import org.irods.jargon.core.packinstr.DataObjInpForRegTest;
@@ -35,15 +34,15 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AbstractIRODSPackingInstructionTest.class,
 
-		GenQueryInpTest.class, DataObjInpTest.class, CollInpTest.class, DataObjCopyInpTest.class,
-		GeneralAdminInpTest.class, ExecCmdTest.class, OpenedDataObjInpTest.class, ExecMyRuleInp_PITest.class,
-		UserAdminInpTest.class, StructFileExtAndRegInpTest.class, FileReadInpTest.class, ExecCmdStreamCloseTest.class,
-		SimpleQueryInpTest.class, SimpleQueryInpTest.class, ModAccessControlInpTest.class, GetTempPasswordInTest.class,
-		TransferOptionsTest.class, DataObjInpForObjStatTest.class, GetTempPasswordForOtherTest.class,
-		DataObjInpForRegTest.class, DataObjInpForUnregisterTest.class, DataObjInpForMcollTest.class,
-		DataObjInpForUnmountTest.class, ReconnMsgTest.class, SpecificQueryInpTest.class, PamAuthRequestInpTest.class,
-		SSLStartInpTest.class, SSLEndInpTest.class, AuthReqPluginRequestInpTest.class, }) // ModDataObjMetaInpTest.class
-																							// })
+		GenQueryInpTest.class, DataObjInpTest.class, CollInpTest.class, GeneralAdminInpTest.class, ExecCmdTest.class,
+		OpenedDataObjInpTest.class, ExecMyRuleInp_PITest.class, UserAdminInpTest.class,
+		StructFileExtAndRegInpTest.class, FileReadInpTest.class, ExecCmdStreamCloseTest.class, SimpleQueryInpTest.class,
+		SimpleQueryInpTest.class, ModAccessControlInpTest.class, GetTempPasswordInTest.class, TransferOptionsTest.class,
+		DataObjInpForObjStatTest.class, GetTempPasswordForOtherTest.class, DataObjInpForRegTest.class,
+		DataObjInpForUnregisterTest.class, DataObjInpForMcollTest.class, DataObjInpForUnmountTest.class,
+		ReconnMsgTest.class, SpecificQueryInpTest.class, PamAuthRequestInpTest.class, SSLStartInpTest.class,
+		SSLEndInpTest.class, AuthReqPluginRequestInpTest.class, }) // ModDataObjMetaInpTest.class
+																	// })
 public class PackingInstructionTests {
 
 }
