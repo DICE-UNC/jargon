@@ -235,11 +235,25 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
+
 		if (getApiNumber() == COPY_API_NBR || getApiNumber() == COPY_API_NBR_410) {
 			return getTagValueForCopy();
+		} else if (getApiNumber() == RENAME_API_NBR || getApiNumber() == RENAME_FILE_API_NBR) {
+			return getTagValueForRename();
 		} else {
 			return getTagValueForReplicate();
 		}
+	}
+
+	private Tag getTagValueForRename() throws JargonException {
+		// get the DataObjInp tag for the from file
+		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, force);
+		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath, resourceName, false);
+
+		// now build the whole tag
+		Tag message = new Tag(PI_TAG, new Tag[] { fromFileTag, toFileTag });
+
+		return message;
 	}
 
 	private Tag getTagValueForReplicate() throws JargonException {
@@ -256,7 +270,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	private Tag getTagValueForCopy() throws JargonException {
 		// get the DataObjInp tag for the from file
-		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, sourceFileLength);
+		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, false);
 		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath, resourceName, force);
 
 		// now build the whole tag
@@ -266,20 +280,15 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	}
 
-	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath, final long sourceFileLength)
+	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath, final boolean force)
 			throws JargonException {
-		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
-
-		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] { new Tag(DataObjInp.OBJ_PATH, fromFileAbsolutePath),
-				new Tag(DataObjInp.CREATE_MODE, 0), new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, sourceFileLength), new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, DataObjInp.COPY_FILE_SRC_OPERATION_TYPE), createKeyValueTag(kvps) });
-		return fileTag;
+		DataObjInp dataObjInp = DataObjInp.instanceForCopySource(fromFileAbsolutePath, force);
+		return dataObjInp.getTagValue();
 	}
 
 	private Tag buildDataObjInpTagForCopyDest(final String destFileAbsolutePath, final String destResource,
-			final boolean overwrite) throws JargonException {
-		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, overwrite);
+			final boolean force) throws JargonException {
+		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, force);
 		return dataObjInp.getTagValue();
 	}
 
