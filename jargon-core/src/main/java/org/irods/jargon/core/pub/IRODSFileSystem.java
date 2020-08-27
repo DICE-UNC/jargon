@@ -71,11 +71,22 @@ public final class IRODSFileSystem {
 	private static final Logger log = LoggerFactory.getLogger(IRODSFileSystem.class);
 
 	/**
+	 * Create an instance based on a particular type of protocol manager (e.g. a
+	 * pooling or caching manager)
+	 * 
+	 * @param irodsProtocolManager {@link IRODSProtocolManager}
+	 * @return {@link IRODSFileSystem}
+	 * @throws JargonException {@link JargonException}
+	 */
+	public static IRODSFileSystem instance(IRODSProtocolManager irodsProtocolManager) throws JargonException {
+		return new IRODSFileSystem(irodsProtocolManager);
+	}
+
+	/**
 	 * Create a default IRODSFileSystem
 	 *
 	 * @return {@code IRODSFileSystem} that is initialized and ready to connect
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static IRODSFileSystem instance() throws JargonException {
 		return new IRODSFileSystem();
@@ -92,10 +103,8 @@ public final class IRODSFileSystem {
 	 * charge of producing iRODS connections upon request, through some arbitrary
 	 * mechanism. This constructor allows pool, proxy, and other connection sources.
 	 *
-	 * @param irodsProtocolManager
-	 *            {@link IRODSProtocolManager} instance
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsProtocolManager {@link IRODSProtocolManager} instance
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSFileSystem(final IRODSProtocolManager irodsProtocolManager) throws JargonException {
 		if (irodsProtocolManager == null) {
@@ -111,8 +120,7 @@ public final class IRODSFileSystem {
 	 * Lazily initialize and return an {@code IRODSAccessObjectFactoryImpl}
 	 *
 	 * @return {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException {
 		if (irodsAccessObjectFactory == null) {
@@ -125,11 +133,9 @@ public final class IRODSFileSystem {
 	 * For a given {@code IRODSAccount} create an {@code IRODSFileFactory} that can
 	 * return iRODS file objects for the particular connection.
 	 *
-	 * @param irodsAccount
-	 *            {@link org.irods.jargon.core.connection.IRODSAccount}
+	 * @param irodsAccount {@link org.irods.jargon.core.connection.IRODSAccount}
 	 * @return {@link IRODSFileFactory}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSFileFactory getIRODSFileFactory(final IRODSAccount irodsAccount) throws JargonException {
 		return new IRODSFileFactoryImpl(irodsSession, irodsAccount);
@@ -142,8 +148,7 @@ public final class IRODSFileSystem {
 	 * {@code ThreadLocal} which means a Thread's connections to iRODS are only
 	 * visible from that Thread.
 	 *
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public void close() throws JargonException {
 		irodsSession.closeSession();
@@ -170,10 +175,8 @@ public final class IRODSFileSystem {
 	 * Connections are stored in a {@code ThreadLocal} which means a Thread's
 	 * connections to iRODS are only visible from that Thread.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @throws JargonException for iRODS error
 	 */
 	public void close(final IRODSAccount irodsAccount) throws JargonException {
 		irodsSession.closeSession(irodsAccount);
@@ -191,8 +194,7 @@ public final class IRODSFileSystem {
 	 * finally blocks. If you do want an error thrown, use the
 	 * {@code close(IRODSAccount)} method.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
+	 * @param irodsAccount {@link IRODSAccount}
 	 */
 	public void closeAndEatExceptions(final IRODSAccount irodsAccount) {
 		try {
