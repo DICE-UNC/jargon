@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author conwaymc
  *
  */
-class ApiPluginExecutorImpl extends IRODSGenericAO {
+class ApiPluginExecutorImpl<InputType, OutputType> extends IRODSGenericAO {
 
 	private static Logger log = LoggerFactory.getLogger(ApiPluginExecutorImpl.class);
 	private ObjectMapper mapper = new ObjectMapper();
@@ -30,7 +30,7 @@ class ApiPluginExecutorImpl extends IRODSGenericAO {
 		super(irodsSession, irodsAccount);
 	}
 
-	public <InputType, OutputType> OutputType callPluggableApi(int apiNumber, InputType input) throws JargonException {
+	public OutputType callPluggableApi(int apiNumber, InputType input) throws JargonException {
 		log.info("callPluggableApi())");
 		if (apiNumber <= 0) {
 			throw new IllegalArgumentException("invalid api number");
@@ -45,7 +45,7 @@ class ApiPluginExecutorImpl extends IRODSGenericAO {
 		try {
 			String jsonInput = mapper.writeValueAsString(input);
 			log.debug("jsonInput:{}", jsonInput);
-			return null;
+			return (OutputType) new Object(); // FIXME: temp shim
 
 		} catch (JsonProcessingException e) {
 			log.error("Invalid json", e);

@@ -2,14 +2,18 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
+import org.irods.jargon.core.apiplugin.TestPluggableInput;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -48,9 +52,16 @@ public class ApiPluginExecutorImplTest {
 	}
 
 	@Test
-	public void testCallPluggableApi() {
+	public void testCallPluggableApi() throws JargonException {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = Mockito.mock(IRODSSession.class);
+		JargonProperties properties = irodsFileSystem.getJargonProperties();
+		Mockito.when(irodsSession.getJargonProperties()).thenReturn(properties);
+		ApiPluginExecutorImpl<TestPluggableInput, Object> impl = new ApiPluginExecutorImpl<>(irodsSession,
+				irodsAccount);
+		TestPluggableInput input = new TestPluggableInput();
+		Object actual = impl.callPluggableApi(1, input);
+		Assert.assertNotNull("null output", actual);
 
 	}
 
