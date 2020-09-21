@@ -1,0 +1,54 @@
+{
+            {"entity_name", user_home},
+            {"entity_type", "collection"},
+            {"operations", json::array({
+                {
+                    {"operation", "add"},
+                    {"attribute", "the_attr"},
+                    {"value", "the_val"},
+                    {"units", "the_units"}
+                },
+                {
+                    {"operation", "add"},
+                    {"attribute", "name"},
+                    {"value", "john doe"},
+                    {"units", ""}
+                },
+                {
+                    {"operation", "add"},
+                    {"attribute", "a0"},
+                    {"value", "v0"},
+                    {"units", "u0"}
+                },
+                {
+                    {"operation", "add"},
+                    {"attribute", "a1"},
+                    {"value", "v1"},
+                    {"units", "u1"}
+                },
+                {
+                    {"operation", "add"},
+                    {"attribute", "a2"},
+                    {"value", "v2"},
+                    {"units", "u2"}
+                },
+                {
+                    {"operation", "add"},
+                    {"attribute", "a3"},
+                    {"value", "v3"},
+                    {"units", "u3"}
+                },
+                {
+                    {"operation", "remove"},
+                    {"attribute", "name"},
+                    {"value", "john doe"},
+                    {"units", ""}
+                },
+                {
+                    {"operation", "add"},
+                    {"attribute", "occupation"},
+                    {"value", "software developer"},
+                    {"units", "C++"}
+                }
+            })}
+        }
