@@ -19,16 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service to provide a secure data cache. This allows information to be
- * serialized by a key and stored as an iRODS file in an encrypted format, and
- * later retrieved.
+ * Service to provide an insecure data cache. The data in the cache is not
+ * encrypted and stored as plain text.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implements DataCacheService {
-
-	String xform = "DES/ECB/PKCS5Padding";
+public class NoEncryptDataCacheServiceImpl extends AbstractDataUtilsServiceImpl implements DataCacheService {
 
 	/**
 	 * Configuration controls behavior of the cache. This can be set, or can just
@@ -37,7 +34,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 */
 	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 
-	public static final Logger log = LoggerFactory.getLogger(DataCacheServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(NoEncryptDataCacheServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies
@@ -47,7 +44,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 * @param irodsAccount             {@link IRODSAccount} that contains the login
 	 *                                 information
 	 */
-	public DataCacheServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public NoEncryptDataCacheServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -55,7 +52,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	/**
 	 * Default (no-values) constructor.
 	 */
-	public DataCacheServiceImpl() {
+	public NoEncryptDataCacheServiceImpl() {
 		super();
 	}
 
@@ -85,24 +82,16 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 			purgeOldRequests();
 		}
 
-		int keyHash = key.hashCode();
-		log.info("generated hash for key:{}", keyHash);
 		byte[] stringData = stringToCache.getBytes();
-		log.info("encrypting...");
 
-		CacheEncryptor cacheEncryptor = new CacheEncryptor(key);
-		byte[] encrypted = cacheEncryptor.encrypt(stringData);
-		log.info("bytes now encrypted for length:{}", encrypted.length);
-		// store in file
-
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(key, irodsAccount.getUserName());
 		log.info("storing to file at absolute path: {}", irodsFileAbsolutePath);
 		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
 
 		createCacheFileAndCacheDir(cacheFile);
 		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
+		stream2StreamAO.streamBytesToIRODSFile(stringData, cacheFile);
 
 		log.info("done...");
 		return irodsFileAbsolutePath;
@@ -143,18 +132,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 
 		checkContracts();
 
-		// build hash of key and look for file
-		int keyHash = key.hashCode();
-		log.info("generated hash for key:{}", keyHash);
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(key, irodsAccount.getUserName());
 		log.info("looking for cache file at path:{}", irodsFileAbsolutePath);
 		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
 		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		byte[] fileBytes = stream2StreamAO.streamFileToByte(cacheFile);
-		log.info("decrypting data based on provided key....");
-		CacheEncryptor cacheEncryptor = new CacheEncryptor(key);
-		fileBytes = cacheEncryptor.decrypt(fileBytes);
 
 		log.info("streamed file into bytes for length of: {}", fileBytes.length);
 		log.info("deserialzing...");
@@ -180,7 +163,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 		}
 
 		checkContracts();
-		log.info("putInformationIntoCache()");
+		log.info("putSerializedEncryptedObjectIntoCache()");
 
 		// clean up old files? (or in a sep thread?) make an option based on
 		// created date and window
@@ -191,29 +174,17 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 			purgeOldRequests();
 		}
 
-		int keyHash = key.hashCode();
-		log.info("generated hash for key:{}", keyHash);
-
-		// serialize and encrypt object
-		log.info("serializing object to byte buffer...");
 		byte[] serializedObject = serializeObjectToByteStream(informationObject, key);
 		log.info("object serialized into:{} bytes", serializedObject.length);
 
-		log.info("encrypting...");
-
-		CacheEncryptor cacheEncryptor = new CacheEncryptor(key);
-		byte[] encrypted = cacheEncryptor.encrypt(serializedObject);
-		log.info("bytes now encrypted for length:{}", encrypted.length);
-		// store in file
-
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(key, irodsAccount.getUserName());
 		log.info("storing to file at absolute path: {}", irodsFileAbsolutePath);
 		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
 		createCacheFileAndCacheDir(cacheFile);
 
 		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
-		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
+		stream2StreamAO.streamBytesToIRODSFile(serializedObject, cacheFile);
 
 		log.info("done...");
 		return irodsFileAbsolutePath;
@@ -247,17 +218,13 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 		}
 
 		// build hash of key and look for file
-		int keyHash = key.hashCode();
-		log.info("generated hash for key:{}", keyHash);
-		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash, irodsAccount.getUserName());
+
+		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(key, irodsAccount.getUserName());
 		log.info("looking for cache file at path:{}", irodsFileAbsolutePath);
 		IRODSFile cacheFile = getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(irodsFileAbsolutePath);
 		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(irodsAccount);
 		byte[] fileBytes = stream2StreamAO.streamFileToByte(cacheFile);
-		log.info("decrypting data based on provided key....");
-		CacheEncryptor cacheEncryptor = new CacheEncryptor(key);
-		fileBytes = cacheEncryptor.decrypt(fileBytes);
 
 		log.info("streamed file into bytes for length of: {}", fileBytes.length);
 		log.info("deserialzing...");
@@ -273,13 +240,13 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 * @param userName {@code String}
 	 * @return {@code String}
 	 */
-	private String buildIRODSFileAbsolutePath(final int keyHash, final String userName) {
+	private String buildIRODSFileAbsolutePath(final String key, final String userName) {
 		StringBuilder sb = computeCacheDirPathFromHomeDirFromUserAndZone(userName);
 
 		sb.append("/");
 		sb.append(userName);
 		sb.append("-");
-		sb.append(keyHash);
+		sb.append(key);
 		sb.append(".dat");
 
 		return sb.toString();

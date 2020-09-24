@@ -10,6 +10,7 @@ import java.nio.channels.ClosedChannelException;
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.ProtocolFormException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
@@ -205,6 +206,144 @@ public class IRODSMidLevelProtocol {
 			}
 		}
 
+	}
+
+	/**
+	 * Call an iRODS pluggable api endpoint with the pre-serialized json and return
+	 * the json as a string value to be marshaled by the wrapper function.
+	 * 
+	 * @return {@code String} with the string-ified JSON response, marshal and
+	 *         unmarshal are external to this method
+	 */
+	public synchronized String irodsPluggableApiFunction(String inputJson, int apiNumber) throws JargonException {
+
+		log.info("irodsPluggableApiFunction()");
+
+		log.debug("apiNumber is:{}", apiNumber);
+
+		if (inputJson == null || inputJson.length() == 0) {
+			String err = "null or blank inputJson";
+			log.error(err);
+			throw new JargonException(err);
+		}
+
+		// message may be null for some operations
+
+		try {
+			int messageLength = 0;
+
+			messageLength = inputJson.getBytes(getEncoding()).length;
+
+			sendHeader(IRODSConstants.RODS_API_REQ, messageLength, 0, 0, apiNumber);
+
+			if (getStartupResponseData() == null) {
+				log.debug("no ssl flush checking during negotiation");
+			} else if (isPamFlush()) {
+				log.debug("doing extra pam flush for iRODS 3.2");
+				getIrodsConnection().flush();
+			}
+
+			getIrodsConnection().send(inputJson);
+			getIrodsConnection().flush();
+
+		} catch (UnsupportedEncodingException e) {
+			log.error("unsupported encoding", e);
+			throw new JargonException(e);
+		} catch (IOException e) {
+			disconnectWithForce();
+			throw new JargonException(e);
+		}
+
+		return readPluggableApiMessage();
+
+	}
+
+	/**
+	 * Read a message from iRODS in response to a pluggable api operation, which
+	 * should be a JSON string
+	 *
+	 * @return {@code String} with the iRODS JSON response
+	 * @throws JargonException on iRODS error
+	 */
+	public synchronized String readPluggableApiMessage() throws JargonException {
+		log.debug("readPluggableApiMessage()");
+		Tag header = readHeader();
+		String message = null;
+
+		int messageLength = header.getTags()[1].getIntValue();
+		int errorLength = header.getTags()[2].getIntValue();
+		int bytesLength = header.getTags()[3].getIntValue();
+		int info = header.getTags()[4].getIntValue();
+
+		if (log.isDebugEnabled()) {
+			log.debug("message length:{}", messageLength);
+			log.debug("error length:{}", errorLength);
+			log.debug("bytesLength:{}", bytesLength);
+			log.debug("info value:{}", info);
+		}
+
+		// Reports iRODS errors, throw exception if appropriate
+		if (info < 0) {
+			processMessageInfoLessThanZero(messageLength, errorLength, info);
+			log.debug("returning null, no results");
+			// query with no results
+			return null;
+		}
+
+		if (messageLength > 0) {
+			log.debug("message length greater than zero");
+			message = readJsonMessageBody(messageLength);
+
+		}
+		// previous will have returned or thrown exception
+
+		if (errorLength != 0) {
+			return handlePluggableApiError(errorLength);
+		}
+
+		if (bytesLength != 0 || info > 0) {
+			log.debug("bytes length is not zero, this is an unexpected condition for pluggable API");
+			throw new ProtocolFormException("bytesLength >0, byte buffers not expected in pluggable API calls");
+		}
+
+		return message;
+	}
+
+	/**
+	 * Read the actual JSON message body in response to a pluggable API request
+	 * 
+	 * @param length {@code int} with message length
+	 * @return {@code String} with the JSON string response for later marshaling
+	 * @throws JargonException {@link JargonException}
+	 */
+	String readJsonMessageBody(final int length) throws JargonException {
+		byte[] body = new byte[length];
+		try {
+			irodsConnection.read(body, 0, length);
+		} catch (ClosedChannelException e) {
+			log.error("closed channel", e);
+			disconnectWithForce();
+			throw new JargonException(e);
+		} catch (InterruptedIOException e) {
+			log.error("interrupted io", e);
+			disconnectWithForce();
+			throw new JargonException(e);
+		} catch (IOException e) {
+			log.error("io exception", e);
+			disconnectWithForce();
+			throw new JargonException(e);
+		}
+		try {
+			return new String(body, this.getEncoding());
+		} catch (UnsupportedEncodingException e) {
+			log.error("Unsupported encoding for:{}", getEncoding());
+			throw new JargonException("Unsupported encoding for:" + getEncoding());
+		}
+	}
+
+	private String handlePluggableApiError(int errorLength) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**

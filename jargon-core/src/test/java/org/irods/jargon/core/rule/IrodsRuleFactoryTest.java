@@ -57,6 +57,38 @@ public class IrodsRuleFactoryTest {
 	}
 
 	@Test
+	public void testCreateOtherRuleForQuotaAutoDetect() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2")) {
+			return;
+		}
+
+		String ruleFile = "/rules/logicalQuotaRule.json";
+
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString(ruleFile);
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		RuleInvocationConfiguration ruleInvocationConfiguration = new RuleInvocationConfiguration();
+		ruleInvocationConfiguration.setRuleEngineSpecifier("otherRuleEngineBreh");
+		ruleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.OTHER);
+
+		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(irodsFileSystem.getIRODSAccessObjectFactory(),
+				irodsAccount);
+		IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(ruleString, inputOverrides,
+				ruleInvocationConfiguration);
+		Assert.assertNotNull("did not produce rule", irodsRule);
+		Assert.assertEquals(IrodsRuleInvocationTypeEnum.OTHER,
+				irodsRule.getRuleInvocationConfiguration().getIrodsRuleInvocationTypeEnum());
+
+	}
+
+	@Test
 	public void testCreatePythonBasedRuleAutoDetect() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);

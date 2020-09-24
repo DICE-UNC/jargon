@@ -65,12 +65,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 	/**
 	 *
-	 * @param irodsSession
-	 *            {@link IRODSSession}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsSession {@link IRODSSession}
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @throws JargonException for iRODS error
 	 */
 	public IRODSFileSystemAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -149,13 +146,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/**
 	 * Do a query on the given file to see if it has an executable bit set
 	 *
-	 * @param irodsFile
-	 *            {@link IRODSFile} to check
+	 * @param irodsFile {@link IRODSFile} to check
 	 *
 	 * @return {@code boolean} of {@code true} if file is data object, exists, and
 	 *         is executable
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	private boolean checkIfDataObjectExecutable(final IRODSFile irodsFile) throws JargonException {
 
@@ -1097,13 +1092,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/**
 	 * Get the resource for the given file
 	 *
-	 * @param irodsFile
-	 *            {@link IRODSFile}
+	 * @param irodsFile {@link IRODSFile}
 	 * @return {@link Resource}
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws DataNotFoundException
-	 *             if file not found
+	 * @throws JargonException       for iRODS error
+	 * @throws DataNotFoundException if file not found
 	 */
 	protected Resource getFileResource(final IRODSFile irodsFile) throws JargonException, DataNotFoundException {
 
@@ -1135,6 +1127,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		log.info("renaming directory:{}", fromFile);
 		log.info(" to:{}", toFile);
 
+		renameDirectory(fromFile, toFile, false);
+	}
+
+	@Override
+	public void renameDirectory(final IRODSFile fromFile, final IRODSFile toFile, final boolean force)
+			throws JargonException {
+		log.info("renaming directory:{}", fromFile);
+		log.info(" to:{}", toFile);
+		log.info(" force:{}", force);
+
 		if (!fromFile.isDirectory()) {
 			String msg = "from file:" + fromFile.getAbsolutePath() + " is not a directory";
 			log.error(msg);
@@ -1142,7 +1144,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		}
 
 		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(fromFile.getAbsolutePath(),
-				toFile.getAbsolutePath());
+				toFile.getAbsolutePath(), force);
 		Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, dataObjCopyInp.getParsedTags(),
 				DataObjCopyInp.RENAME_FILE_API_NBR);
 
@@ -1173,6 +1175,33 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(fromFile.getAbsolutePath(),
 				toFile.getAbsolutePath());
+		Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, dataObjCopyInp.getParsedTags(),
+				DataObjCopyInp.RENAME_FILE_API_NBR);
+
+		if (response != null) {
+			log.warn("unexpected response from irods, expected null message - logged and ignored ");
+		}
+
+		log.debug("rename successful");
+
+	}
+
+	@Override
+	public void renameFile(final IRODSFile fromFile, final IRODSFile toFile, final boolean force)
+			throws JargonException {
+
+		log.info("renaming file:{}", fromFile.getAbsolutePath());
+		log.info(" to:{}", toFile.getAbsolutePath());
+		log.info(" force:{}", force);
+
+		if (!fromFile.isFile()) {
+			String msg = "from file:" + fromFile.getAbsolutePath() + " is not a file";
+			log.error(msg);
+			throw new JargonException(msg);
+		}
+
+		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(fromFile.getAbsolutePath(),
+				toFile.getAbsolutePath(), force);
 		Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, dataObjCopyInp.getParsedTags(),
 				DataObjCopyInp.RENAME_FILE_API_NBR);
 
@@ -1296,10 +1325,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/**
 	 * Respond to client status messages for an operation until exhausted.
 	 *
-	 * @param reply
-	 *            {@code Tag} containing status messages from IRODS
-	 * @throws IOException
-	 *             for error
+	 * @param reply {@code Tag} containing status messages from IRODS
+	 * @throws IOException for error
 	 */
 	private void processClientStatusMessages(final Tag reply) throws JargonException {
 

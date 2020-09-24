@@ -44,7 +44,7 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
-	@Test
+	@Test(expected = EmptyCartException.class)
 	public final void testSerializeEmptyShoppingCartAsLoggedInUser() throws Exception {
 		String key = "key";
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -55,8 +55,7 @@ public class ShoppingCartServiceImplTest {
 		ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount, dataCacheServiceFactory);
 		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
-		String actual = shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
-		Assert.assertNotNull("null path returned, no serializing of cart", actual);
+		shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
 
 	}
 
@@ -81,6 +80,7 @@ public class ShoppingCartServiceImplTest {
 		shoppingCartService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
 		shoppingCartService.setIrodsAccount(irodsAccount);
 		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance("foo"));
 		shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
 
 	}
@@ -117,7 +117,7 @@ public class ShoppingCartServiceImplTest {
 		String testUserName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY);
 		String key = "key";
 		String expectedPath = "/a/path";
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getEnvironmentalInfoAO(irodsAccount);

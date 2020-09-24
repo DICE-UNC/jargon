@@ -33,19 +33,36 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the packing instruction for a move of a data object
 	 * (not a collection, there is a different initializer for that).
 	 *
-	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the absolute path to the source file.
-	 * @param targetFileAbsolutePath
-	 *            {@code String} with the absolute path to the target file.
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 *                               source file.
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 *                               target file.
 	 * @return {@code DataObjCopyInp}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static final DataObjCopyInp instanceForRenameFile(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) throws JargonException {
 
+		return DataObjCopyInp.instanceForRenameFile(sourceFileAbsolutePath, targetFileAbsolutePath, false);
+	}
+
+	/**
+	 * Create an instance of the packing instruction for a move of a data object
+	 * (not a collection, there is a different initializer for that).
+	 *
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 *                               source file.
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 *                               target file.
+	 * @param force                  {@code boolean} indicating force operation
+	 * @return {@code DataObjCopyInp}
+	 * @throws JargonException for iRODS error
+	 */
+	public static final DataObjCopyInp instanceForRenameFile(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final boolean force) throws JargonException {
+
 		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR, sourceFileAbsolutePath,
-				targetFileAbsolutePath, DataObjInp.RENAME_FILE_OPERATION_TYPE, "", 0, false);
+				targetFileAbsolutePath, DataObjInp.RENAME_FILE_OPERATION_TYPE, "", 0, force);
 		return dataObjCopyInp;
 	}
 
@@ -53,19 +70,17 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance that will do a file copy between two iRODS directories
 	 * using 4.1+ iRODS protocol
 	 *
-	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the absolute path to the source file
-	 * @param targetFileAbsolutePath
-	 *            {@code String} with the absolute path to the target file
-	 * @param copyToResource
-	 *            {@code String} with an optional resource for the target file
-	 * @param sourceFileLength
-	 *            {@code long} with the length of the source file
-	 * @param force
-	 *            {@code boolean} that indicates whether force option should be set
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 *                               source file
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 *                               target file
+	 * @param copyToResource         {@code String} with an optional resource for
+	 *                               the target file
+	 * @param sourceFileLength       {@code long} with the length of the source file
+	 * @param force                  {@code boolean} that indicates whether force
+	 *                               option should be set
 	 * @return {@link DataObjCopyInp}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static final DataObjCopyInp instanceForCopy410(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String copyToResource, final long sourceFileLength,
@@ -79,19 +94,17 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance that will do a file copy between two iRODS directories
 	 *
-	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the absolute path to the source file
-	 * @param targetFileAbsolutePath
-	 *            {@code String} with the absolute path to the target file
-	 * @param copyToResource
-	 *            {@code String} with an optional resource for the target file
-	 * @param sourceFileLength
-	 *            {@code long} with the length of the source file
-	 * @param force
-	 *            {@code boolean} that indicates whether force option should be set
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 *                               source file
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 *                               target file
+	 * @param copyToResource         {@code String} with an optional resource for
+	 *                               the target file
+	 * @param sourceFileLength       {@code long} with the length of the source file
+	 * @param force                  {@code boolean} that indicates whether force
+	 *                               option should be set
 	 * @return {@link DataObjCopyInp}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static final DataObjCopyInp instanceForCopy(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String copyToResource, final long sourceFileLength,
@@ -105,13 +118,12 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the packing instruction for a move of a collection (not
 	 * a data object, there is a different initializer for that).
 	 *
-	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the absolute path to the source file
-	 * @param targetFileAbsolutePath
-	 *            {@code String} with the absolute path to the target file
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 *                               source file
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 *                               target file
 	 * @return {@code DataObjCopyInp}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static final DataObjCopyInp instanceForRenameCollection(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) throws JargonException {
@@ -121,23 +133,44 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 		return dataObjCopyInp;
 	}
 
+	/*
+	 * Create an instance of the packing instruction for a move of a collection (not
+	 * a data object, there is a different initializer for that).
+	 *
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 * source file
+	 * 
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 * target file
+	 * 
+	 * @param targetFileAbsolutePath {@code boolean} indicating whether force is in
+	 * effect (true)
+	 * 
+	 * @return {@code DataObjCopyInp}
+	 * 
+	 * @throws JargonException for iRODS error
+	 */
+	public static final DataObjCopyInp instanceForRenameCollection(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final boolean force) throws JargonException {
+
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR, sourceFileAbsolutePath,
+				targetFileAbsolutePath, DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE, "", 0, force);
+		return dataObjCopyInp;
+	}
+
 	/**
 	 * Create an instance of the packing instruction for a copy of a collection.
 	 *
-	 * @param sourceFileAbsolutePath
-	 *            {@code String} with the absolute path to the source file.
-	 * @param targetFileAbsolutePath
-	 *            {@code String} with the absolute path to the target file.
-	 * @param targetResourceName
-	 *            {@code String} with optional resource name for target. Blank if
-	 *            not used
-	 * @param sourceFileLength
-	 *            {@code long} with a length of the source file
-	 * @param force
-	 *            {@code boolean} if this is a force operation
+	 * @param sourceFileAbsolutePath {@code String} with the absolute path to the
+	 *                               source file.
+	 * @param targetFileAbsolutePath {@code String} with the absolute path to the
+	 *                               target file.
+	 * @param targetResourceName     {@code String} with optional resource name for
+	 *                               target. Blank if not used
+	 * @param sourceFileLength       {@code long} with a length of the source file
+	 * @param force                  {@code boolean} if this is a force operation
 	 * @return {@code DataObjCopyInp}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public static final DataObjCopyInp instanceForCopyCollection(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String targetResourceName, final long sourceFileLength,
@@ -202,11 +235,25 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
+
 		if (getApiNumber() == COPY_API_NBR || getApiNumber() == COPY_API_NBR_410) {
 			return getTagValueForCopy();
+		} else if (getApiNumber() == RENAME_API_NBR || getApiNumber() == RENAME_FILE_API_NBR) {
+			return getTagValueForRename();
 		} else {
 			return getTagValueForReplicate();
 		}
+	}
+
+	private Tag getTagValueForRename() throws JargonException {
+		// get the DataObjInp tag for the from file
+		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, force);
+		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath, resourceName, false);
+
+		// now build the whole tag
+		Tag message = new Tag(PI_TAG, new Tag[] { fromFileTag, toFileTag });
+
+		return message;
 	}
 
 	private Tag getTagValueForReplicate() throws JargonException {
@@ -223,7 +270,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	private Tag getTagValueForCopy() throws JargonException {
 		// get the DataObjInp tag for the from file
-		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, sourceFileLength);
+		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, false);
 		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath, resourceName, force);
 
 		// now build the whole tag
@@ -233,20 +280,15 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	}
 
-	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath, final long sourceFileLength)
+	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath, final boolean force)
 			throws JargonException {
-		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
-
-		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] { new Tag(DataObjInp.OBJ_PATH, fromFileAbsolutePath),
-				new Tag(DataObjInp.CREATE_MODE, 0), new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, sourceFileLength), new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, DataObjInp.COPY_FILE_SRC_OPERATION_TYPE), createKeyValueTag(kvps) });
-		return fileTag;
+		DataObjInp dataObjInp = DataObjInp.instanceForCopySource(fromFileAbsolutePath, force);
+		return dataObjInp.getTagValue();
 	}
 
 	private Tag buildDataObjInpTagForCopyDest(final String destFileAbsolutePath, final String destResource,
-			final boolean overwrite) throws JargonException {
-		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, overwrite);
+			final boolean force) throws JargonException {
+		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, force);
 		return dataObjInp.getTagValue();
 	}
 

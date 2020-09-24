@@ -13,6 +13,6 @@ package org.irods.jargon.core.rule;
  *
  */
 public enum IrodsRuleInvocationTypeEnum {
-	IRODS, PYTHON, AUTO_DETECT
+	IRODS, PYTHON, OTHER, AUTO_DETECT
 
 }

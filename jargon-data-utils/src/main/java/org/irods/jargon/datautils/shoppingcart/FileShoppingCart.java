@@ -53,14 +53,12 @@ public class FileShoppingCart implements Serializable {
 	 * character, build a {@code FileShoppingCart}. The cart will be empty if no
 	 * files are in the serialized string form
 	 *
-	 * @param stringRepresentation
-	 *            {@code String} with a one line per file, separated by \n, as
-	 *            created by the
-	 *            {@code serializeShoppingCartContentsToStringOneItemPerLine()}
-	 *            method.
+	 * @param stringRepresentation {@code String} with a one line per file,
+	 *                             separated by \n, as created by the
+	 *                             {@code serializeShoppingCartContentsToStringOneItemPerLine()}
+	 *                             method.
 	 * @return {@link FileShoppingCart} instance
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	public static FileShoppingCart instanceFromSerializedStringRepresentation(final String stringRepresentation)
 			throws JargonException {
@@ -115,8 +113,7 @@ public class FileShoppingCart implements Serializable {
 	 * Place an item in the shopping cart. The cart will overwrite an existing
 	 * entry, thus preventing duplicates.
 	 *
-	 * @param shoppingCartEntry
-	 *            {@link ShoppingCartEntry} to add to the cart
+	 * @param shoppingCartEntry {@link ShoppingCartEntry} to add to the cart
 	 */
 	public void addAnItem(final ShoppingCartEntry shoppingCartEntry) {
 
@@ -131,9 +128,8 @@ public class FileShoppingCart implements Serializable {
 	 * Remove a file from the shopping cart. Silently ignore if the item is not
 	 * there
 	 *
-	 * @param fileName
-	 *            {@code String} with the absolute file path to the item to be
-	 *            removed from the cart
+	 * @param fileName {@code String} with the absolute file path to the item to be
+	 *                 removed from the cart
 	 */
 	public void removeAnItem(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {

@@ -945,6 +945,52 @@ public class IRODSFileSystemAOImplTest {
 	}
 
 	@Test
+	public final void testRenameFileWithForce() throws Exception {
+
+		String testFileName = "testRenameFileWithForce.txt";
+		String testRenamedFileName = "testRenameFileWithForceb.txt";
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testRenamedFileName, 11);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		StringBuilder fileNameAndPath = new StringBuilder();
+		fileNameAndPath.append(absPath);
+
+		fileNameAndPath.append(testFileName);
+
+		StringBuilder dupFileNameAndPath = new StringBuilder();
+		dupFileNameAndPath.append(absPath);
+		dupFileNameAndPath.append(testRenamedFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
+		dto.putOperation(dupFileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSFile irodsRenameFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testRenamedFileName);
+		IRODSFileSystemAO fileSystemAO = accessObjectFactory.getIRODSFileSystemAO(irodsAccount);
+
+		fileSystemAO.renameFile(irodsFile, irodsRenameFile, true);
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+	}
+
+	@Test
 	public final void testRenameDirectory() throws Exception {
 
 		// create a file and place on two resources
