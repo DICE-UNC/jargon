@@ -45,14 +45,11 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 	 * Constructor creates a {@code ShoppingCartService} with necessary dependencies
 	 *
 	 *
-	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that will create, and for whom the cart
-	 *            contents will be cached
-	 * @param dataCacheServiceFactory
-	 *            {@link DataCacheServiceFactory} used to create
-	 *            DataCacheServiceComponents
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory}
+	 * @param irodsAccount             {@link IRODSAccount} that will create, and
+	 *                                 for whom the cart contents will be cached
+	 * @param dataCacheServiceFactory  {@link DataCacheServiceFactory} used to
+	 *                                 create DataCacheServiceComponents
 	 */
 	public ShoppingCartServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount, final DataCacheServiceFactory dataCacheServiceFactory) {
@@ -75,7 +72,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 	 */
 	@Override
 	public String serializeShoppingCartAsLoggedInUser(final FileShoppingCart fileShoppingCart, final String key)
-			throws JargonException {
+			throws EmptyCartException, JargonException {
 
 		log.info("serializeShoppingCartAsLoggedInUser()");
 
@@ -85,6 +82,11 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 
 		if (key == null || key.isEmpty()) {
 			throw new IllegalArgumentException("null or empty key");
+		}
+
+		if (fileShoppingCart.getShoppingCartFileList().isEmpty()) {
+			log.error("empty shopping cart");
+			throw new EmptyCartException("no cart to serialize");
 		}
 
 		// check for dependencies
@@ -102,7 +104,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 		config.setCacheInHomeDir(true);
 
 		log.info("create data cache service from factory");
-		DataCacheService dataCacheService = dataCacheServiceFactory.instanceDataCacheService(getIrodsAccount());
+		DataCacheService dataCacheService = dataCacheServiceFactory.instanceNoEncryptDataCacheService(irodsAccount);
 
 		dataCacheService.setCacheServiceConfiguration(config);
 		log.info("putting data into cache");
@@ -141,7 +143,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 		config.setCacheInHomeDir(true);
 
 		log.info("create data cache service from factory");
-		DataCacheService dataCacheService = dataCacheServiceFactory.instanceDataCacheService(getIrodsAccount());
+		DataCacheService dataCacheService = dataCacheServiceFactory.instanceNoEncryptDataCacheService(irodsAccount);
 
 		/*
 		 * Use the user name and key value to find the cart file in iRODS. It will be
@@ -214,7 +216,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 		config.setCacheInHomeDir(true);
 
 		log.info("create data cache service from factory");
-		DataCacheService dataCacheService = dataCacheServiceFactory.instanceDataCacheService(tempUserAccount);
+		DataCacheService dataCacheService = dataCacheServiceFactory.instanceNoEncryptDataCacheService(tempUserAccount);
 
 		dataCacheService.setCacheServiceConfiguration(config);
 		log.info("putting data into cache");

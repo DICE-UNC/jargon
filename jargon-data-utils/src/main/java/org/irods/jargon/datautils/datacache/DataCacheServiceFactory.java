@@ -11,13 +11,20 @@ import org.irods.jargon.core.connection.IRODSAccount;
  */
 public interface DataCacheServiceFactory {
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.datautils.image.ImageServiceFactory#instanceThumbnailService
-	 * (org.irods.jargon.core.connection.IRODSAccount)
+	/**
+	 * Get the normal encrypting data cache service
+	 * 
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @return {@link DataCacheService} implementation
 	 */
 	public abstract DataCacheService instanceDataCacheService(IRODSAccount irodsAccount);
+
+	/**
+	 * Get a data cache service that does not encrypt
+	 * 
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @return {@link DataCacheService} implementation
+	 */
+	public DataCacheService instanceNoEncryptDataCacheService(IRODSAccount irodsAccount);
 
 }

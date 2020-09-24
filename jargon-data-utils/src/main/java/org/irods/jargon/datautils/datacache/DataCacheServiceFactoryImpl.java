@@ -33,4 +33,12 @@ public class DataCacheServiceFactoryImpl implements DataCacheServiceFactory {
 		return new DataCacheServiceImpl(irodsAccessObjectFactory, irodsAccount);
 	}
 
+	@Override
+	public DataCacheService instanceNoEncryptDataCacheService(final IRODSAccount irodsAccount) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		return new NoEncryptDataCacheServiceImpl(irodsAccessObjectFactory, irodsAccount);
+	}
+
 }
