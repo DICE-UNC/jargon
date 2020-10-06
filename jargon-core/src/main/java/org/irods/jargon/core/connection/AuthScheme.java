@@ -28,7 +28,7 @@ public enum AuthScheme {
 	public static AuthScheme findTypeByString(final String authType) {
 		AuthScheme authSchemeValue = null;
 		for (AuthScheme authScheme : AuthScheme.values()) {
-			if (authScheme.getTextValue().equals(authType)) {
+			if (authScheme.getTextValue().equals(authType.trim())) {
 				authSchemeValue = authScheme;
 				break;
 			}
