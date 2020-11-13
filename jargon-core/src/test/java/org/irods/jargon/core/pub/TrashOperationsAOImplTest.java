@@ -84,7 +84,7 @@ public class TrashOperationsAOImplTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void testEmptyTrashDataObjectForLoggedInUser() throws Exception {
 		String testFileName = System.currentTimeMillis() + "testEmptyTrashDataObjectForLoggedInUser.txt";
 		String testCollectionName = "testEmptyTrashDataObjectForLoggedInUser";
