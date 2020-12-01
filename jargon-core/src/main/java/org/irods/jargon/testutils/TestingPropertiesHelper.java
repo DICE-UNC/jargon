@@ -67,6 +67,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
 	public static String IRODS_TEST_OPTION_EIRODS = "test.option.eirods";
 	public static String IRODS_TEST_OPTION_PYTHON = "test.option.python";
+	public static String IRODS_SSL_NEGOTIATION_PROPERTY = "ssl.negotiation.policy";
 
 	/**
 	 * Return the given property (by key) as an int

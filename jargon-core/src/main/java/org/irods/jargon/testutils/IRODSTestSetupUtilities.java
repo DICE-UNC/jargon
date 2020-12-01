@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.UnixFileRenameException;
@@ -46,6 +49,20 @@ public class IRODSTestSetupUtilities {
 
 		try {
 			irodsFileSystem = IRODSFileSystem.instance();
+			SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(
+					irodsFileSystem.getJargonProperties());
+			String negPropsValue = testingPropertiesHelper.getTestProperties()
+					.getProperty(TestingPropertiesHelper.IRODS_SSL_NEGOTIATION_PROPERTY);
+
+			// If prop not set default to neg refuse
+			if (negPropsValue == null) {
+				settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
+			} else {
+				settableJargonProperties.setNegotiationPolicy(SslNegotiationPolicy.valueOf(negPropsValue));
+
+			}
+			irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
+
 			dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 			collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 
@@ -57,8 +74,7 @@ public class IRODSTestSetupUtilities {
 	/**
 	 * Remove the scratch directory from irods based on the testing.properties file
 	 *
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	@Overheaded
 	// [#1628] intermittent -528036 errors on delete of collections
@@ -100,8 +116,7 @@ public class IRODSTestSetupUtilities {
 	 * Clear and then create a fresh scratch directory in irods based on the
 	 * testing.properties file
 	 *
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public void initializeIrodsScratchDirectory() throws TestConfigurationException {
 		clearIrodsScratchDirectory();
@@ -128,11 +143,9 @@ public class IRODSTestSetupUtilities {
 	 * Create a directory under scratch with the given name, which is typically a
 	 * name assigned per Junit test class
 	 *
-	 * @param testingDirectory
-	 *            {@code String} with a directory to go underneath scratch, do not
-	 *            supply leading '/'
-	 * @throws TestConfigurationException
-	 *             {@link TestConfigurationException}
+	 * @param testingDirectory {@code String} with a directory to go underneath
+	 *                         scratch, do not supply leading '/'
+	 * @throws TestConfigurationException {@link TestConfigurationException}
 	 */
 	public void initializeDirectoryForTest(final String testingDirectory) throws TestConfigurationException {
 		StringBuilder scratchDir = new StringBuilder();
@@ -164,19 +177,17 @@ public class IRODSTestSetupUtilities {
 	 * folders. Each list of candidates is tested with a random number and added at
 	 * that point based on a threshold value
 	 *
-	 * @param irodsAbsolutePath
-	 *            {@code String} with a parent path
-	 * @param candidateAvusForData
-	 *            {@link AvuData} in a {@code List} that will be added to data
-	 *            objects if a random number is above a threshold
-	 * @param candidateAvusForCollections
-	 *            {@link AvuData} in a {@code List} that will be added to
-	 *            collections if a random number is above a threshold
-	 * @param thresholdToAdd
-	 *            {@code int} to compare to a random number to indicate that the
-	 *            given avu should be added at the given node or leaf (0-99)
-	 * @throws Exception
-	 *             for any error
+	 * @param irodsAbsolutePath           {@code String} with a parent path
+	 * @param candidateAvusForData        {@link AvuData} in a {@code List} that
+	 *                                    will be added to data objects if a random
+	 *                                    number is above a threshold
+	 * @param candidateAvusForCollections {@link AvuData} in a {@code List} that
+	 *                                    will be added to collections if a random
+	 *                                    number is above a threshold
+	 * @param thresholdToAdd              {@code int} to compare to a random number
+	 *                                    to indicate that the given avu should be
+	 *                                    added at the given node or leaf (0-99)
+	 * @throws Exception for any error
 	 */
 	public void decorateDirWithMetadata(final String irodsAbsolutePath, final List<AvuData> candidateAvusForData,
 			final List<AvuData> candidateAvusForCollections, final int thresholdToAdd) throws Exception {
