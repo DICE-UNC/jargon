@@ -953,8 +953,7 @@ class CollectionListingUtils {
 		IRODSQueryResultSet resultSet;
 
 		try {
-			builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE, SelectFieldTypes.COUNT)
-					.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME, SelectFieldTypes.COUNT)
+			builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME, SelectFieldTypes.COUNT)
 					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_PARENT_NAME, QueryConditionOperators.EQUAL,
 							effectiveAbsolutePath);
 
