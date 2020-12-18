@@ -217,6 +217,10 @@ public class IRODSMidLevelProtocol {
 	 */
 	public synchronized String irodsPluggableApiFunction(String inputJson, int apiNumber) throws JargonException {
 
+		// BytesBuf_T
+		// see
+		// https://github.com/irods/irods/blob/master/unit_tests/src/test_get_file_descriptor_info.cpp#L47
+		// https://github.com/irods/irods/blob/master/plugins/api/src/get_file_descriptor_info.cpp#L358-L383
 		log.info("irodsPluggableApiFunction()");
 
 		log.debug("apiNumber is:{}", apiNumber);

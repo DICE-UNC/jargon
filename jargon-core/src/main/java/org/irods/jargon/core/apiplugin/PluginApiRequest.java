@@ -12,6 +12,10 @@ package org.irods.jargon.core.apiplugin;
  */
 public abstract class PluginApiRequest {
 
+	// api number
+	// <AtomicMetadataOperation, AtomicMetadataResponse>
+	// AtomicMetadataResponse resp = execApi()
+
 	/**
 	 * 
 	 */

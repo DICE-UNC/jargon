@@ -148,6 +148,7 @@ public class IRODSFileOutputStreamTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		irodsFile.setResource("repl");// resource set?
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		int writtenInt = 3;
