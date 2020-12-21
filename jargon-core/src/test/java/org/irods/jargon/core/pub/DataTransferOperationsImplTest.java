@@ -114,6 +114,11 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testPhysicalMoveDelegatedThroughMove() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String testFileName = "testPhysicalMoveDelegatedThroughMove.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
@@ -402,6 +407,11 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
@@ -700,6 +710,10 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testGetOneFileWithCallbackParallel() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
 
 		SettableJargonPropertiesMBean settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);

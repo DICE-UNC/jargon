@@ -31,12 +31,9 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	public static final Logger log = LoggerFactory.getLogger(TrashOperationsAOImpl.class);
 
 	/**
-	 * @param irodsSession
-	 *            {@link IRODSSession}
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsSession {@link IRODSSession}
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @throws JargonException for iRODS error
 	 */
 	public TrashOperationsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -265,21 +262,17 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * of all of the parameters, and these parameters are set by the varous public
 	 * method signatures
 	 *
-	 * @param irodsZone
-	 *            optional (<code>null</code> or blank) <code>String</code> with a
-	 *            zone for which the trash will be emptied. defaults to the current
-	 *            logged in zone
-	 * @param irodsPath
-	 *            <code>String</code> with the iRODS absolute path to a collection
-	 *            or data object to remove. At this point the path should be
-	 *            properly resolved for the various operations, such as user home or
-	 *            orphan files
-	 * @param trashOptions
-	 *            {@link TrashOptions} that control details of the processing
-	 * @throws FileNotFoundException
-	 *             if file missing
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsZone    optional (<code>null</code> or blank) <code>String</code>
+	 *                     with a zone for which the trash will be emptied. defaults
+	 *                     to the current logged in zone
+	 * @param irodsPath    <code>String</code> with the iRODS absolute path to a
+	 *                     collection or data object to remove. At this point the
+	 *                     path should be properly resolved for the various
+	 *                     operations, such as user home or orphan files
+	 * @param trashOptions {@link TrashOptions} that control details of the
+	 *                     processing
+	 * @throws FileNotFoundException if file missing
+	 * @throws JargonException       for iRODS error
 	 */
 	private void emptyTrash(final String irodsZone, final String irodsPath, final TrashOptions trashOptions)
 			throws FileNotFoundException, JargonException {
@@ -318,6 +311,10 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 			CollInpForEmptyTrash collInp = new CollInpForEmptyTrash(trashOptions, irodsPath, operativeZone);
 			Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, collInp.getParsedTags(),
 					CollInp.RMDIR_API_NBR);
+			if (response == null) {
+				log.warn("no client response message, but normal");
+				return;
+			}
 			processClientStatusMessages(response);
 		} else {
 			log.info("deleting as a data object");
@@ -338,21 +335,17 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * Empty the trash can for the logged in user with the given iRODS absolute
 	 * path, allowing the setting of options.
 	 *
-	 * @param userName
-	 *            <code>String</code> that will have trash emptied. Note that
-	 *            federated zone user identities must be provided, so a cross zone
-	 *            user would be user#zone
-	 * @param irodsZone
-	 *            optional (<code>null</code> or blank) <code>String</code> with a
-	 *            zone for which the trash will be emptied. defaults to the current
-	 *            logged in zone
-	 * @param irodsPath
-	 *            <code>String</code> with the iRODS absolute path to a collection
-	 *            or data object to remove.
-	 * @param trashOptions
-	 *            {@link TrashOptions} that control details of the processing
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param userName     <code>String</code> that will have trash emptied. Note
+	 *                     that federated zone user identities must be provided, so
+	 *                     a cross zone user would be user#zone
+	 * @param irodsZone    optional (<code>null</code> or blank) <code>String</code>
+	 *                     with a zone for which the trash will be emptied. defaults
+	 *                     to the current logged in zone
+	 * @param irodsPath    <code>String</code> with the iRODS absolute path to a
+	 *                     collection or data object to remove.
+	 * @param trashOptions {@link TrashOptions} that control details of the
+	 *                     processing
+	 * @throws JargonException for iRODS error
 	 */
 	public void emptyTrashAdminMode(final String userName, final String irodsZone, final String irodsPath,
 			final TrashOptions trashOptions) throws JargonException {
@@ -362,10 +355,8 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	/**
 	 * Respond to client status messages for an operation until exhausted.
 	 *
-	 * @param reply
-	 *            {@code Tag} containing status messages from IRODS
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param reply {@code Tag} containing status messages from IRODS
+	 * @throws JargonException for iRODS error
 	 */
 	private void processClientStatusMessages(final Tag reply) throws JargonException {
 

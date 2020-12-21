@@ -32,6 +32,7 @@ as the operative profile to be used in building and testing jargon against a cho
 				<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
 				<jargon.test.irods.scratch.subdir>jargon-scratch</jargon.test.irods.scratch.subdir>
 				<jargon.test.option.exercise.remoteexecstream>true</jargon.test.option.exercise.remoteexecstream>
+				<jargon.test.option.exercise.parallel.txfr>false</jargon.test.option.exercise.parallel.txfr>
 				<jargon.test.option.exercise.ticket>false</jargon.test.option.exercise.ticket>
 				<jargon.test.option.exercise.audit>false</jargon.test.option.exercise.audit>
 				<jargon.test.option.exercise.workflow>false</jargon.test.option.exercise.workflow>

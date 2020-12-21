@@ -23,6 +23,7 @@ public class TestingPropertiesHelper {
 	public static final String IRODS_GSI_ZONE_KEY = "test.option.gsi.zone";
 	public static final String IRODS_GSI_DN_KEY = "test.option.gsi.dn";
 	public static final String IRODS_GSI_CERT_PATH = "test.option.gsi.file";
+	public static final Object IRODS_TEST_OPTION_PARALLEL_TRANSFER = "jargon.test.option.exercise.parallel.txfr";
 	public static String GENERATED_FILE_DIRECTORY_KEY = "test.data.directory";
 	public static String IRODS_USER_KEY = "test.irods.user";
 	public static String IRODS_PASSWORD_KEY = "test.irods.password";
@@ -1094,6 +1095,15 @@ public class TestingPropertiesHelper {
 	 */
 	public boolean isTestEirods(final Properties testingProperties) {
 		String val = (String) testingProperties.get(TestingPropertiesHelper.IRODS_TEST_OPTION_EIRODS);
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	public boolean isTestParallelTransfer(final Properties testingProperties) {
+		String val = (String) testingProperties.get(TestingPropertiesHelper.IRODS_TEST_OPTION_PARALLEL_TRANSFER);
 		if (val == null) {
 			return false;
 		} else {

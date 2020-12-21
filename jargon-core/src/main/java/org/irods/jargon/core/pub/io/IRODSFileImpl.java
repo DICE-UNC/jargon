@@ -22,6 +22,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.exception.ResourceHierarchyException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
@@ -350,7 +351,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
-
+		} catch (ResourceHierarchyException rhe) {
+			return false;
 		} catch (JargonException e) {
 			String msg = "JargonException caught and rethrown as IOException:" + e.getMessage();
 			log.error(msg, e);

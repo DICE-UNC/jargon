@@ -118,6 +118,7 @@
 									test.resource.group=${jargon.test.resource.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
+									jargon.test.option.exercise.parallel.txfr=${jargon.test.option.exercise.parallel.txfr}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
 									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}

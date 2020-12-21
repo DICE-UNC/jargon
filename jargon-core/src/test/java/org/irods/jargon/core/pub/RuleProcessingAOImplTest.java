@@ -589,6 +589,11 @@ public class RuleProcessingAOImplTest {
 
 	@Test
 	public void testExecuteRequestClientActionParallelPut() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		// create a local file to put
 		// put a collection out to do a checksum on
 		String testFileName = "testExecuteRequestClientActionParallelPut.txt";
@@ -642,6 +647,11 @@ public class RuleProcessingAOImplTest {
 	 */
 	@Test
 	public void testExecuteRequestClientActionParallelPutNoThreading() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		// create a local file to put
 		// put a collection out to do a checksum on
 		String testFileName = "testExecuteRequestClientActionParallelPutNoThreading.txt";
@@ -1058,6 +1068,11 @@ public class RuleProcessingAOImplTest {
 
 	@Test
 	public void testExecuteRequestClientActionGetFileParallel() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String testFileName = "testExecuteRequestClientActionGetFileParallel.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileClientParallel.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -1111,6 +1126,11 @@ public class RuleProcessingAOImplTest {
 
 	@Test
 	public void testExecuteRequestClientActionGetFileParallelBug1641AddMessages() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String testFileName = "testExecuteRequestClientActionGetFileParallelBug1641AddMessages.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileParallelBug1641AddMessagesGet.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -1176,6 +1196,11 @@ public class RuleProcessingAOImplTest {
 	 */
 	@Test
 	public void testExecuteRequestClientActionGetFileParallelNoThreadsIndicated() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String testFileName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicated.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicatedReturned.txt";
 

@@ -275,6 +275,10 @@ public class BulkFileOperationsAOImplTest {
 	@Test
 	public void testCreateBundleWhenTarFileAlreadyExistsForceSpecified() throws Exception {
 
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String tarName = "testCreateBundleWhenTarFileAlreadyExistsForceSpecified.tar";
 		String testSubdir = "testCreateBundleWhenTarFileAlreadyExistsForceSpecified";
 		String bunSubdir = "testCreateBundleWhenTarFileAlreadyExistsForceSpecifiedBunSubdir";

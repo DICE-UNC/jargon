@@ -1429,6 +1429,10 @@ public class DataObjectAOImplTest {
 	@Test
 	public final void testGetParallelWithIntraFileCallbacks() throws Exception {
 
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		int testFileLen = 200 * 1024 * 1024;
 
 		// generate a local scratch file
@@ -4162,6 +4166,11 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public void testParallelPutFileVerifyChecksum() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		// generate a local scratch file
 		String testFileName = "testParallelPutFileVerifyChecksum.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -4198,7 +4207,6 @@ public class DataObjectAOImplTest {
 		String testFileName = "testGetWithChecksumVerification.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
-
 		String getFileName = "testGetWithChecksumVerificationResult.txt";
 		String getResultLocalPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
 				+ getFileName;
@@ -4231,6 +4239,10 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public final void testParallelGetWithChecksumVerification() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
 
 		// generate a local scratch file
 		String testFileName = "testParallelGetWithChecksumVerification.txt";
