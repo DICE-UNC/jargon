@@ -65,7 +65,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-	@Test
+	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/374
 	public void testPhysicalMove() throws Exception {
 		String testFileName = "testPhysicalMove.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -346,6 +346,11 @@ public class DataTransferOperationsImplTestNoInternalCache {
 
 	@Test
 	public void testParallelPutThenGetOneFile() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		// generate a local scratch file
 		String testFileName = "testPutThenGetOneFile.txt";
 		String testRetrievedFileName = "testPutThenGetOneFileRetreived.txt";

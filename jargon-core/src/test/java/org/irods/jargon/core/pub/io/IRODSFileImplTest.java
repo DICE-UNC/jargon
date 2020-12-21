@@ -954,7 +954,7 @@ public class IRODSFileImplTest {
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#createNewFile()}.
 	 */
-	@Test
+	@Ignore // FIXME:https://github.com/DICE-UNC/jargon/issues/375
 	public final void testCreateNewFileAlreadyExists() throws Exception {
 		String testFileName = "testCreateNewFileAlreadyExists.txt";
 
@@ -1828,7 +1828,8 @@ public class IRODSFileImplTest {
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#renameTo(java.io.File)} .
 	 */
-	@Test
+	@Ignore // FIXME: temp turn off till fix for
+			// https://github.com/DICE-UNC/jargon/issues/374
 	public final void testRenameToFileFilePhyMove() throws Exception {
 		String testFileName = "testRenameFileToFilePhyMove.txt";
 

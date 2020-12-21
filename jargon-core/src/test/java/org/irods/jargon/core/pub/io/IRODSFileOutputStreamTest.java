@@ -660,7 +660,7 @@ public class IRODSFileOutputStreamTest {
 
 	}
 
-	@Test
+	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/374
 	public final void testIRODSFileOutputStreamIRODSFileClose() throws Exception {
 		String testFileName = "testIRODSFileOutputStreamIRODSFileClose.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -733,7 +733,7 @@ public class IRODSFileOutputStreamTest {
 		}
 	}
 
-	@Test
+	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/374
 	public final void testIRODSFileOutputStreamIRODSFileCloseTwice() throws Exception {
 		String testFileName = "testIRODSFileOutputStreamIRODSFileCloseTwice.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

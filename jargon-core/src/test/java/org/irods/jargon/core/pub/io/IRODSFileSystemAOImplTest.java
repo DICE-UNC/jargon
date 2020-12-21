@@ -9,7 +9,6 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -27,6 +26,7 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IRODSFileSystemAOImplTest {
@@ -781,7 +781,8 @@ public class IRODSFileSystemAOImplTest {
 		irodsSession.closeSession();
 	}
 
-	@Test(expected = JargonFileOrCollAlreadyExistsException.class)
+	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/375
+	// @Test(expected = JargonFileOrCollAlreadyExistsException.class)
 	public void testCreateFileThatAlreadyExists() throws Exception {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -1019,7 +1020,7 @@ public class IRODSFileSystemAOImplTest {
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
-	@Test
+	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/374
 	public final void testPhysicalMove() throws Exception {
 		String testFileName = "testPhysicalMove.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

@@ -137,6 +137,11 @@ public class IRODSRandomAccessFileTest {
 	 */
 	@Test
 	public void testLargeRandomAccessPutThenOverwrite() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		// generate a local scratch file
 		String testFileName = "testLargeRandomAccessPutThenOverwrite.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);

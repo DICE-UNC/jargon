@@ -79,7 +79,7 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonOriginalProperties);
 	}
 
-	@Test
+	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/374
 	// see https://github.com/DICE-UNC/jargon/issues/192
 	public void testPhysicalMove() throws Exception {
 		String testFileName = "testPhysicalMove.txt";

@@ -102,6 +102,10 @@ public class PackingIrodsInputStreamTest {
 	@Test
 	public final void testInputStream2() throws Exception {
 
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String testFileName = "testInputStream2.txt";
 		String newLocalFileName = "testInputStream2-new.txt";
 		int fileLength = 120 * 1024 * 1024 + 7;
@@ -257,6 +261,10 @@ public class PackingIrodsInputStreamTest {
 
 	@Test
 	public final void testInputStream5() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
 
 		String testFileName = "testInputStream5.txt";
 		String newLocalFileName = "testInputStream5-new.txt";
