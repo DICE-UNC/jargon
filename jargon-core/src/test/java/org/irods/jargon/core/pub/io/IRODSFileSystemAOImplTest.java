@@ -9,10 +9,12 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -781,9 +783,20 @@ public class IRODSFileSystemAOImplTest {
 		irodsSession.closeSession();
 	}
 
-	@Ignore // FIXME: https://github.com/DICE-UNC/jargon/issues/375
-	// @Test(expected = JargonFileOrCollAlreadyExistsException.class)
+	// https://github.com/DICE-UNC/jargon/issues/375
+	@Test(expected = JargonFileOrCollAlreadyExistsException.class)
 	public void testCreateFileThatAlreadyExists() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+
+		if (!environmentalInfoAO.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.8")) {
+			throw new JargonFileOrCollAlreadyExistsException("match expectations");
+		}
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
@@ -797,8 +810,6 @@ public class IRODSFileSystemAOImplTest {
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 

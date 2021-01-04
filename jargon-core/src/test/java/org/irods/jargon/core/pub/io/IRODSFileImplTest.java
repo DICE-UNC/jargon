@@ -954,8 +954,20 @@ public class IRODSFileImplTest {
 	 * Test method for
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#createNewFile()}.
 	 */
-	@Ignore // FIXME:https://github.com/DICE-UNC/jargon/issues/375
+	@Test // fixed for https://github.com/DICE-UNC/jargon/issues/375
 	public final void testCreateNewFileAlreadyExists() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+
+		if (!environmentalInfoAO.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.8")) {
+			return;
+
+		}
+
 		String testFileName = "testCreateNewFileAlreadyExists.txt";
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -968,8 +980,6 @@ public class IRODSFileImplTest {
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 

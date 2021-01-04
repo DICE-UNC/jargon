@@ -86,7 +86,7 @@ public class IRODSStarringServiceImplTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindStarredForAbsolutePathWhenDataObject() throws Exception {
-		String absolutePath = "/absolutePath";
+		String absolutePath = "/parent/absolutePath";
 		String description = "description";
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
@@ -105,6 +105,8 @@ public class IRODSStarringServiceImplTest {
 
 		IRODSFile irodsFile = Mockito.mock(IRODSFile.class);
 		Mockito.when(irodsFileFactory.instanceIRODSFile(absolutePath)).thenReturn(irodsFile);
+		Mockito.when(irodsFile.getParent()).thenReturn("/parent");
+		Mockito.when(irodsFile.getName()).thenReturn("absolutePath");
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(absolutePath);
