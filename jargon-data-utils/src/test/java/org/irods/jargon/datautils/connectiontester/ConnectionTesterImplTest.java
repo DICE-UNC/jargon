@@ -88,6 +88,11 @@ public class ConnectionTesterImplTest {
 
 	@Test
 	public void testRunTestsSmallAndLarge() throws Exception {
+
+		if (!testingPropertiesHelper.isTestParallelTransfer(testingProperties)) {
+			return;
+		}
+
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
 		String targetIrodsFile = testingPropertiesHelper

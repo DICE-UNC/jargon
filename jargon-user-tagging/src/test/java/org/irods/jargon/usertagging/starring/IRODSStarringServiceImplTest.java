@@ -22,6 +22,7 @@ import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -369,8 +370,7 @@ public class IRODSStarringServiceImplTest {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	@Test
+	@Ignore
 	public void testStarFileOrCollectionWhenDataObjectAsAnUpdate() throws Exception {
 		String absolutePath = "/absolutePath";
 		String description = "description";
