@@ -25,3 +25,7 @@ fail against docker test images due to Docker networking and high ports
 ```
 
 ### Changed
+
+#### create an IRODSFile when it already exists no longer throws an exception (in 4.2.9) #375
+
+There is a slight behavior change post 4.2.8 where calling create on a file acts in a more idempotent way, not throwing an error when a file was previously created. This seems like a minor variance with a low level of surprise, therefore we'll just roll with the slight variation, not worry about prior differences, and adjust the unit testing expectations.

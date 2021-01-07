@@ -965,7 +965,6 @@ public class IRODSFileImplTest {
 		if (!environmentalInfoAO.getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.8")) {
 			return;
-
 		}
 
 		String testFileName = "testCreateNewFileAlreadyExists.txt";
