@@ -339,8 +339,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				getIRODSAccessObjectFactory());
 		final List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 
-		entries.addAll(collectionListingUtils.listAllCollectionsUnderPath(objStat, 0));
-		entries.addAll(collectionListingUtils.listAllDataObjectsUnderPath(objStat, 0));
+		try {
+			entries.addAll(collectionListingUtils.listAllCollectionsUnderPath(objStat, 0));
+		} catch (DataNotFoundException dnf) {
+			log.warn("overhead of data not found and possible continuation flag error in iRODS", dnf);
+		}
+
+		try {
+			entries.addAll(collectionListingUtils.listAllDataObjectsUnderPath(objStat, 0));
+		} catch (DataNotFoundException dnf) {
+			log.warn("overhead of data not found and possible continuation flag error in iRODS", dnf);
+		}
 
 		return entries;
 	}
@@ -374,8 +383,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				getIRODSAccessObjectFactory());
 		final List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 
-		entries.addAll(collectionListingUtils.listAllCollectionsUnderPath(objStat, 0));
-		entries.addAll(collectionListingUtils.listAllDataObjectsUnderPath(objStat, 0));
+		try {
+			entries.addAll(collectionListingUtils.listAllCollectionsUnderPath(objStat, 0));
+		} catch (DataNotFoundException dnf) {
+			log.warn("overhead of data not found and possible continuation flag error in iRODS", dnf);
+		}
+
+		try {
+			entries.addAll(collectionListingUtils.listAllDataObjectsUnderPath(objStat, 0));
+		} catch (DataNotFoundException dnf) {
+			log.warn("overhead of data not found and possible continuation flag error in iRODS", dnf);
+		}
 
 		return entries;
 	}

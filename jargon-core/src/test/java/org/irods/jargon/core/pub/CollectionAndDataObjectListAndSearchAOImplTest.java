@@ -461,7 +461,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		String fileName = "testListDataObjectsUnderPathGivingPagingAwareCollectionListing.txt";
 		String testSubdir = "testListDataObjectsUnderPathGivingPagingAwareCollectionListing";
-		int count = 200;
+		int count = 2000;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile irodsFile = null;
@@ -699,7 +699,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		String subdirPrefix = "testListFilesAndCollectionsUnderPath";
 		String fileName = "testListCollectionsUnderPath.txt";
 
-		int count = 30;
+		int count = 3000;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
