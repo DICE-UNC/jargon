@@ -152,6 +152,45 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	}
 
 	@Test
+	public void testListAllCollectionsUnderPath() throws Exception {
+
+		String subdirPrefix = "testListAllCollectionsUnderPath";
+		int count = 100;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual.listAllCollectionsUnderPath(targetIrodsCollection,
+				0);
+		Assert.assertNotNull("null result from query", entries);
+		Assert.assertFalse("should not have been and empty result list", entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries.get(entries.size() - 1);
+		Assert.assertTrue("should be last result", entry.isLastResult());
+
+	}
+
+	@Test
 	public void testListCollectionsUnderPath() throws Exception {
 
 		String subdirPrefix = "testListCollectionsUnderPath";
@@ -350,6 +389,51 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
 		Assert.assertEquals(200, entries.size());
+
+		// bounce thru and make sure each is a data object with the correct name
+
+		for (CollectionAndDataObjectListingEntry resultEntry : entries) {
+			Assert.assertTrue("this is not a data object",
+					resultEntry.getObjectType() == CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT);
+			Assert.assertTrue("file name not correctly returned", resultEntry.getPathOrName().indexOf(fileName) > -1);
+		}
+	}
+
+	@Test
+	public void testListAllDataObjectsUnderPath() throws Exception {
+
+		String fileName = "testListAllDataObjectsUnderPath.txt";
+		String testSubdir = "testListAllDataObjectsUnderPath";
+		int count = 2000;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile irodsFile = null;
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testSubdir);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual.listAllDataObjectsUnderPath(targetIrodsCollection,
+				0);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries.get(entries.size() - 1);
+		Assert.assertTrue(entry.isLastResult());
+		Assert.assertEquals(entry.getCount(), entries.size());
+		Assert.assertEquals(2000, entries.size());
 
 		// bounce thru and make sure each is a data object with the correct name
 
@@ -646,6 +730,48 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual
 				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		Assert.assertEquals(count * 2, entries.size());
+	}
+
+	@Test
+	public void testListAllFilesAndCollectionsUnderPath() throws Exception {
+
+		String subdirPrefix = "testListAllFilesAndCollectionsUnderPath";
+		String fileName = "testListAllFilesAndCollectionsUnderPath.txt";
+
+		int count = 30;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listAllDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
 		Assert.assertEquals(count * 2, entries.size());

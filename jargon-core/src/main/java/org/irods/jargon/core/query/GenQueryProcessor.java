@@ -27,8 +27,7 @@ public class GenQueryProcessor {
 	private static final Logger log = LoggerFactory.getLogger(GenQueryProcessor.class);
 
 	/**
-	 * @param irodsCommands
-	 *            {@link IRODSMidLevelProtocol}
+	 * @param irodsCommands {@link IRODSMidLevelProtocol}
 	 */
 	public GenQueryProcessor(final IRODSMidLevelProtocol irodsCommands) {
 		if (irodsCommands == null) {
@@ -43,21 +42,17 @@ public class GenQueryProcessor {
 	 * result set contains information on the original query, and the state of the
 	 * original query (more results, etc).
 	 *
-	 * @param translatedIRODSQuery
-	 *            {@link TranslatedIRODSGenQuery} to be run
-	 * @param continueIndex
-	 *            {@code int} if this is a continuation of a non-closed result
-	 * @param partialStartIndex
-	 *            {@code int} with an offset
-	 * @param queryCloseBehavior
-	 *            {@link QueryCloseBehavior} describing desired behavior upon
-	 *            completion of this query
-	 * @param zoneName
-	 *            {@code String} ({@code null} or blank if not used) that indicates
-	 *            an optional zone for the query
+	 * @param translatedIRODSQuery {@link TranslatedIRODSGenQuery} to be run
+	 * @param continueIndex        {@code int} if this is a continuation of a
+	 *                             non-closed result
+	 * @param partialStartIndex    {@code int} with an offset
+	 * @param queryCloseBehavior   {@link QueryCloseBehavior} describing desired
+	 *                             behavior upon completion of this query
+	 * @param zoneName             {@code String} ({@code null} or blank if not
+	 *                             used) that indicates an optional zone for the
+	 *                             query
 	 * @return {@link IRODSQueryResultSet}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	public IRODSQueryResultSet executeTranslatedIRODSQuery(final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex, final QueryCloseBehavior queryCloseBehavior,
@@ -127,11 +122,9 @@ public class GenQueryProcessor {
 	/**
 	 * Send the query
 	 *
-	 * @param genQueryInp
-	 *            {@link GenQueryInp} with the packing instruction
+	 * @param genQueryInp {@link GenQueryInp} with the packing instruction
 	 * @return {@link Tag} with the return result
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	public Tag sendGenQueryAndReturnResponse(final GenQueryInp genQueryInp) throws JargonException {
 
@@ -144,14 +137,12 @@ public class GenQueryProcessor {
 	/**
 	 * send the notification to iRODS to close the query result set.
 	 *
-	 * @param irodsQueryResultSet
-	 *            {@link IRODSQueryResultSet} to close
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsQueryResultSet {@link IRODSQueryResultSet} to close
+	 * @throws JargonException for iRODS error
 	 */
 	public void closeResults(final IRODSQueryResultSet irodsQueryResultSet) throws JargonException {
 
-		log.info("getting more results for query");
+		log.info("closeResults()");
 		if (irodsQueryResultSet == null) {
 			throw new JargonException("null irodsQueryResultSet");
 		}
@@ -170,13 +161,10 @@ public class GenQueryProcessor {
 	/**
 	 * translate the given query
 	 *
-	 * @param irodsQuery
-	 *            {@link AbstractIRODSGenQuery}
+	 * @param irodsQuery {@link AbstractIRODSGenQuery}
 	 * @return {@link TranslatedIRODSGenQuery} translated into runnable form
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws JargonQueryException
-	 *             if the query is malformed
+	 * @throws JargonException      for iRODS error
+	 * @throws JargonQueryException if the query is malformed
 	 */
 	public TranslatedIRODSGenQuery translateProvidedQuery(final AbstractIRODSGenQuery irodsQuery)
 			throws JargonException, JargonQueryException {

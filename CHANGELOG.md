@@ -24,6 +24,50 @@ fail against docker test images due to Docker networking and high ports
 
 ```
 
+### dd 'rollup' of all listing entries when doing collection listing #377
+
+Added new signatures in CollectionAndDataObjectListAndSearchAO to return all children of a folder rather than paged results.
+
+```java
+
+/**
+	 * List all data objects and collections under a given absolute path, fetching
+	 * all pages at once
+	 * 
+	 * @param objStat {@link ObjStat}
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws JargonException       {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listAllDataObjectsAndCollectionsUnderPath(final ObjStat objStat)
+			throws FileNotFoundException, JargonException;
+
+	/**
+	 * List all data objects under a given absolute path, fetching all pages at once
+	 * 
+	 * @param objStat {@link ObjStat}
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws JargonException       {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listAllDataObjectsUnderPath(final String absolutePathToParent,
+			final int partialStartIndex) throws JargonException;
+
+	/**
+	 * List all collections under a given absolute path, fetching all pages at once
+	 * 
+	 * @param objStat {@link ObjStat}
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
+	 * @throws FileNotFoundException {@link FileNotFoundException}
+	 * @throws JargonException       {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listAllCollectionsUnderPath(final String absolutePathToParent,
+			final int partialStartIndex) throws FileNotFoundException, JargonException;
+
+
+
+```
+
 ### Changed
 
 #### create an IRODSFile when it already exists no longer throws an exception (in 4.2.9) #375

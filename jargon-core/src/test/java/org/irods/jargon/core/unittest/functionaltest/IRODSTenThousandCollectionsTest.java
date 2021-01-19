@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.SettableJargonPropertiesMBean;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -93,7 +95,6 @@ public class IRODSTenThousandCollectionsTest {
 	}
 
 	@Test
-	// TODO: expand this to cover paging and validate cursor data
 	public void testListFilesAndCollectionsUnderPathWithPaging() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -107,6 +108,66 @@ public class IRODSTenThousandCollectionsTest {
 				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
+
+	}
+
+	@Test
+	public void testListAllCollectionsUnderPath() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		props.setMaxFilesAndDirsQueryMax(200);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual.listAllCollectionsUnderPath(targetIrodsCollection,
+				0);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+
+		/*
+		 * get the collection name of the last entry provided
+		 */
+
+		Assert.assertEquals("did not get all 10000 entries", entries.size());
+		CollectionAndDataObjectListingEntry lastEntry = entries.get(entries.size() - 1);
+		Assert.assertFalse("should  be last record", lastEntry.isLastResult());
+
+	}
+
+	@Test
+	public void testListAllFilesAndCollectionsUnderPath() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonPropertiesMBean props = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		props.setMaxFilesAndDirsQueryMax(1000);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listAllDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+
+		/*
+		 * get the collection name of the last entry provided
+		 */
+
+		Assert.assertEquals("did not get all 10000 entries", entries.size());
+		CollectionAndDataObjectListingEntry lastEntry = entries.get(entries.size() - 1);
+		Assert.assertFalse("should  be last record", lastEntry.isLastResult());
 
 	}
 

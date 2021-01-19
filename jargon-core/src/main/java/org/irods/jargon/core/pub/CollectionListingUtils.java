@@ -470,6 +470,66 @@ class CollectionListingUtils {
 
 	}
 
+	/**
+	 * List all collections under a path, handling any paging within this method
+	 * invocation. Returns all results.
+	 * 
+	 * @param objStat           {@link objStat}
+	 * @param partialStartIndex {@code int} with the page offset (0 starts from
+	 *                          beginning
+	 * @return {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listAllCollectionsUnderPath(final ObjStat objStat,
+			final int partialStartIndex) throws FileNotFoundException, JargonException {
+
+		log.info("listCollectionsUnderPath()");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat is null");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		if (objStat.isStandInGeneratedObjStat()) {
+			log.info("this objStat was heuristically generated, create stand-in subdirs if needed");
+			return handleNoListingUnderRootOrHome(objStat.getAbsolutePath());
+		}
+
+		/*
+		 * Special collections are processed in different ways.
+		 *
+		 * Listing for soft links substitutes the source path for the target path in the
+		 * query
+		 */
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		boolean complete = false;
+		int myOffset = partialStartIndex;
+
+		while (!complete) {
+
+			if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
+					|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+				entries.addAll(listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath, true, myOffset));
+			} else {
+				entries.addAll(listCollectionsUnderPathViaGenQuery(objStat, myOffset, effectiveAbsolutePath));
+			}
+
+			if (entries.get(entries.size() - 1).isLastResult()) {
+				complete = true;
+			} else {
+				myOffset = entries.get(entries.size() - 1).getCount();
+			}
+		}
+
+		return entries;
+
+	}
+
 	private List<CollectionAndDataObjectListingEntry> listUnderPathWhenSpecColl(final ObjStat objStat,
 			final String effectiveAbsolutePath, final boolean isCollection, final long offset) throws JargonException {
 
@@ -628,6 +688,10 @@ class CollectionListingUtils {
 			collectionAndDataObjectListingEntry = CollectionAOHelper
 					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row, resultSet.getTotalRecords());
 
+			if (row.isLastResult()) {
+				log.info("last result!:{}", row);
+			}
+
 			adjustEntryFromRowInCaseOfSpecialCollection(objStat, effectiveAbsolutePath,
 					collectionAndDataObjectListingEntry);
 
@@ -728,6 +792,54 @@ class CollectionListingUtils {
 		}
 
 		return files;
+
+	}
+
+	/**
+	 * List all data objects under a path, handling any paging within this method
+	 * invocation. Returns all results.
+	 * 
+	 * @param objStat           {@link objStat}
+	 * @param partialStartIndex {@code int} with the page offset (0 starts from
+	 *                          beginning
+	 * @return {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException {@link JargonException}
+	 */
+	List<CollectionAndDataObjectListingEntry> listAllDataObjectsUnderPath(final ObjStat objStat,
+			final int partialStartIndex) throws JargonException {
+
+		log.info("listDataObjectsUnderPath(objStat, partialStartIndex)");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("collectionAndDataObjectListingEntry is null");
+		}
+
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
+
+		log.info("listDataObjectsUnderPath for: {}", objStat);
+
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		boolean complete = false;
+		int myOffset = partialStartIndex;
+
+		while (!complete) {
+
+			if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
+					|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+				entries.addAll(listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath, false, myOffset));
+			} else {
+				entries.addAll(listDataObjectsUnderPathViaGenQuery(objStat, myOffset, effectiveAbsolutePath));
+			}
+
+			if (entries.get(entries.size() - 1).isLastResult()) {
+				complete = true;
+			} else {
+				myOffset = entries.get(entries.size() - 1).getCount();
+			}
+		}
+
+		return entries;
 
 	}
 
