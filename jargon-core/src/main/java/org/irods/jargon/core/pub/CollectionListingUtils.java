@@ -519,7 +519,9 @@ class CollectionListingUtils {
 				entries.addAll(listCollectionsUnderPathViaGenQuery(objStat, myOffset, effectiveAbsolutePath));
 			}
 
-			if (entries.get(entries.size() - 1).isLastResult()) {
+			if (entries.isEmpty()) {
+				complete = true;
+			} else if (entries.get(entries.size() - 1).isLastResult()) {
 				complete = true;
 			} else {
 				myOffset = entries.get(entries.size() - 1).getCount();
@@ -832,7 +834,9 @@ class CollectionListingUtils {
 				entries.addAll(listDataObjectsUnderPathViaGenQuery(objStat, myOffset, effectiveAbsolutePath));
 			}
 
-			if (entries.get(entries.size() - 1).isLastResult()) {
+			if (entries.isEmpty()) {
+				complete = true;
+			} else if (entries.get(entries.size() - 1).isLastResult()) {
 				complete = true;
 			} else {
 				myOffset = entries.get(entries.size() - 1).getCount();
