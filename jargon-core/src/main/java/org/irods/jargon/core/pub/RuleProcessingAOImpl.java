@@ -54,6 +54,10 @@ import org.irods.jargon.core.utils.TagHandlingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
  * Access object that an execute iRODS rules, useful in services as a
  * stand-alone object, and a component used in other Access Objects.
@@ -92,6 +96,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 	private static final Object DEST_RESC_NAME = "rescName";
 
+	ObjectMapper mapper = new ObjectMapper();
+
 	/**
 	 * @param irodsSession {@link IRODSSession}
 	 * @param irodsAccount {@link IRODSAccount}
@@ -129,6 +135,80 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		return executeRuleFromResource(resourcePath, irodsRuleInputParameters, ruleInvocationConfiguration);
 
+	}
+
+	@Override
+	public IRODSRuleExecResult executeJsonStyleRule(final String ruleString,
+			final List<IRODSRuleParameter> irodsRuleInputParameters,
+			final List<IRODSRuleParameter> irodsRuleContextParameters,
+			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {
+
+		if (ruleString == null || ruleString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleString");
+		}
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
+		}
+
+		if (irodsRuleInputParameters == null) {
+			throw new IllegalArgumentException("null irodsRuleInputParameters");
+		}
+
+		if (irodsRuleContextParameters == null) {
+			throw new IllegalArgumentException("null irodsRuleContextParameters");
+		}
+
+		log.info("ruleName:{}", ruleString);
+		log.info("irodsRuleInputParameters:{}", irodsRuleInputParameters);
+		log.info("irodsRuleContextParameters:{}", irodsRuleContextParameters);
+		log.info("ruleInvocationConfiguration:{}", ruleInvocationConfiguration);
+
+		// jsonize the input parameters
+
+		ObjectNode rootNode = mapper.createObjectNode();
+		for (IRODSRuleParameter irodsRuleParameter : irodsRuleInputParameters) {
+			rootNode.put(irodsRuleParameter.getUniqueName(), irodsRuleParameter.getValueAsStringWithQuotesStripped());
+		}
+
+		String inputParamsString = null;
+
+		try {
+			inputParamsString = mapper.writeValueAsString(rootNode);
+		} catch (JsonProcessingException e) {
+			log.error("unable to parse parameters into json string", e);
+			throw new JargonException("json processing exception in rule", e);
+		}
+
+		// jsonize context params
+
+		ObjectNode contextNode = mapper.createObjectNode();
+		for (IRODSRuleParameter irodsRuleParameter : irodsRuleContextParameters) {
+			contextNode.put(irodsRuleParameter.getUniqueName(),
+					irodsRuleParameter.getValueAsStringWithQuotesStripped());
+		}
+
+		String inputContextString = null;
+
+		try {
+			inputContextString = mapper.writeValueAsString(contextNode);
+		} catch (JsonProcessingException e) {
+			log.error("unable to parse context parameters into json string", e);
+			throw new JargonException("json processing exception in rule", e);
+		}
+
+		// form the call to the underlying rule
+
+		List<IRODSRuleParameter> finalInputParameters = new ArrayList<IRODSRuleParameter>();
+		finalInputParameters.add(new IRODSRuleParameter("*params", replaceAllQuotesInJson(inputParamsString)));
+		finalInputParameters.add(new IRODSRuleParameter("*config", replaceAllQuotesInJson(inputContextString)));
+		IRODSRuleExecResult ruleExecResult = executeRule(ruleString, finalInputParameters, ruleInvocationConfiguration);
+		log.info("ruleExecResult:{}", ruleExecResult);
+		return ruleExecResult;
+	}
+
+	private String replaceAllQuotesInJson(final String inputString) {
+		return inputString.replaceAll("\"", "\\\\\"");
 	}
 
 	@Override
@@ -359,7 +439,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
 		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(getIRODSAccessObjectFactory(), getIRODSAccount());
-		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, inputParameterOverrides,
+		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, null,
 				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
 
@@ -811,6 +891,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 				resourceName = "";
 			}
 		}
+
 		log.info("resourceName:{}", resourceName);
 
 		String forceValue = kvpMap.get("forceFlag");
@@ -819,14 +900,13 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 			log.info("get will use force option");
 			force = true;
 		}
-		
+
 		String replNum = kvpMap.get("replNum");
 		if (replNum != null) {
 			log.info("get will fetch replica : {}", replNum);
 		} else {
 			replNum = "";
 		}
-		
 
 		log.debug("getting reference to local file");
 
@@ -892,7 +972,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		} else {
 			transferOptions.setForceOption(ForceOption.NO_FORCE);
 		}
-
 
 		if (nbrThreads == -1) {
 			log.debug("override to no parallel threads for this transfer");

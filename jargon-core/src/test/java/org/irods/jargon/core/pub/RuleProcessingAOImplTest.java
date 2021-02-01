@@ -113,6 +113,40 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	@Test // FIXME: enable test after bug in JSON parsing in rule engine is fixed
+	public void testExecuteJSONRule() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
+
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString("/rules/call_json_style.r");
+
+		RuleInvocationConfiguration context = new RuleInvocationConfiguration();
+		context.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.IRODS);
+		context.setEncodeRuleEngineInstance(true);
+
+		List<IRODSRuleParameter> inputParameters = new ArrayList<>();
+		inputParameters.add(new IRODSRuleParameter("logical_path", "/a/path"));
+		inputParameters.add(new IRODSRuleParameter("offset", 0));
+		inputParameters.add(new IRODSRuleParameter("limit", 500));
+
+		List<IRODSRuleParameter> configParameters = new ArrayList<>();
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeJsonStyleRule(ruleString, inputParameters,
+				configParameters, context);
+		Assert.assertNotNull("null result", result);
+
+	}
+
 	@Test
 	public void testExecuteRuleNewSyntax() throws Exception {
 
