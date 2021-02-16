@@ -439,7 +439,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
 		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(getIRODSAccessObjectFactory(), getIRODSAccount());
-		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, null,
+		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, inputParameterOverrides,
 				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
 
