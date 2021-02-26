@@ -110,10 +110,10 @@
 									test3.irods.password=${jargon.test.irods.password3}
 									test3.irods.resource=${jargon.test.irods.resource3}
 									test.irods.host=${jargon.test.irods.host}
-									test.resource.host=${jargon.test.resource.host}
+									# test.resource.host=${jargon.test.resource.host}
 									test.irods.port=${jargon.test.irods.port}
 									test.irods.zone=${jargon.test.irods.zone}
-									jargon.test.kerberos.user=${jargon.test.kerberos.user}
+									#jargon.test.kerberos.user=${jargon.test.kerberos.user}
 									jargon.test.user.group=${jargon.test.user.group}
 									test.resource.group=${jargon.test.resource.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
@@ -123,19 +123,17 @@
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
 									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}
 									test.option.exercise.filesystem.mount=${jargon.test.option.exercise.filesystem.mount}
-									test.option.exercise.filesystem.mount.local=${jargon.test.option.exercise.filesystem.mount.local}
+									# test.option.exercise.filesystem.mount.local=${jargon.test.option.exercise.filesystem.mount.local}
 									test.option.distributed.resources=${test.option.distributed.resources}
 									test.option.registration=${test.option.registration}
 									test.option.strictACL=${test.option.strictACL}
 									test.option.federated.zone=${test.option.federated.zone}
-									test.option.kerberos=${test.option.kerberos}
+									#test.option.kerberos=${test.option.kerberos}
 									test.option.pam=${test.option.pam}
 									test.option.ssl.configured=${test.option.ssl.configured}
 									jargon.test.pam.user=${jargon.test.pam.user}
 									jargon.test.pam.password=${jargon.test.pam.password}
-									test.option.krb=${test.option.krb}
-									jargon.test.krb.user=${jargon.test.krb.user}
-									jargon.test.krb.password=${jargon.test.krb.password}
+									
 									test.federated.irods.admin=${jargon.test.federated.irods.admin}
 									test.federated.irods.admin.password=${jargon.test.federated.irods.admin.password}
 									test.federated.irods.user=${jargon.test.federated.irods.user}
@@ -144,13 +142,7 @@
 									test.federated.irods.host=${jargon.test.federated.irods.host}
 									test.federated.irods.port=${jargon.test.federated.irods.port}
 									test.federated.irods.zone=${jargon.test.federated.irods.zone}
-									test.option.gsi=${test.option.gsi}
-									test.option.gsi.host=${test.option.gsi.host}
-									test.option.gsi.port=${test.option.gsi.port}
-									test.option.gsi.zone=${test.option.gsi.zone}
-									test.option.gsi.dn=${test.option.gsi.dn}
-									test.option.gsi.user=${test.option.gsi.user}
-									test.option.gsi.file=${test.option.gsi.file}
+									
 									test.option.mount.basedir=${test.option.mount.basedir}
 									test.option.python=${test.option.python}
 								</echo>

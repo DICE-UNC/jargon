@@ -22,6 +22,8 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -;
 
 EXPOSE 1247 1248
 
+ADD for-etc-irods /
+
 # Set command to execute when launching the container.
 ADD start_provider.sh /
 ADD testsetup-consortium.sh /
