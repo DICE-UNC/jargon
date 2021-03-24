@@ -1,7 +1,7 @@
 # Project: Jargon-core API
 ### Date: 02/26/2021
-### Release Version: 4.3.2.1-RELEASE
-### git tag: 4.3.2.1-RELEASE
+### Release Version: 
+### git tag: 4.3.2.2-SNAPSHOT
 
 ## News
 
