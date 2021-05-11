@@ -803,6 +803,15 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			final String absolutePathToParent, final int partialStartIndex)
 			throws FileNotFoundException, JargonException {
+	    
+	        return listCollectionsUnderPathWithPermissions(absolutePathToParent, partialStartIndex, false);
+
+	}
+
+	@Override
+	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
+			final String absolutePathToParent, final int partialStartIndex, final boolean usingOracleSyntax)
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
@@ -821,20 +830,30 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
 		return listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(absolutePathToParent, partialStartIndex,
-				objStat);
+				objStat, usingOracleSyntax);
 
 	}
 
 	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsViaSpecQuery(
-			final ObjStat objStat, final int offset) throws JargonException, JargonQueryException {
+			final ObjStat objStat, final int offset, final boolean usingOracleSyntax)
+			throws JargonException, JargonQueryException {
 
 		log.info("listCollectionsUnderPathWithPermissionsViaSpecQuery()");
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
+		
+		final int limit = getJargonProperties().getMaxFilesAndDirsQueryMax();
 
 		final List<String> arguments = new ArrayList<>(3);
 		arguments.add(effectiveAbsolutePath);
-		arguments.add(String.valueOf(getJargonProperties().getMaxFilesAndDirsQueryMax()));
-		arguments.add(String.valueOf(offset));
+
+		if (usingOracleSyntax) {
+		        arguments.add(String.valueOf(offset));
+		        arguments.add(String.valueOf(offset + limit));
+		}
+		else {
+		        arguments.add(String.valueOf(limit));
+		        arguments.add(String.valueOf(offset));
+		}
 
 		final SpecificQuery specificQuery = SpecificQuery.instanceArguments(SHOW_COLL_ACLS, arguments, 0,
 				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
@@ -850,6 +869,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
 			final String absolutePathToParent, final int partialStartIndex, final ObjStat objStat)
+			throws FileNotFoundException, JargonException {
+
+	        return listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(absolutePathToParent, partialStartIndex, objStat, false);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
+			final String absolutePathToParent, final int partialStartIndex, final ObjStat objStat, final boolean usingOracleSyntax)
 			throws FileNotFoundException, JargonException {
 
 		log.info("listCollectionsUnderPathWithPermissionsCheckingIfSpecQueryUsed()");
@@ -875,7 +902,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			} else {
 				log.info("attemting to list via specQuery...");
 				try {
-					return listCollectionsUnderPathWithPermissionsViaSpecQuery(objStat, partialStartIndex);
+					return listCollectionsUnderPathWithPermissionsViaSpecQuery(objStat, partialStartIndex, usingOracleSyntax);
 				} catch (final JargonException je) {
 
 					log.error("error executing spec query will do the genQuery fallback");
@@ -887,7 +914,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		return listCollectionsUnderPathWithPermissionsUsingGenQuery(absolutePathToParent, partialStartIndex, objStat);
-
 	}
 
 	/**
@@ -1196,6 +1222,22 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			final String absolutePathToParent, final int partialStartIndex)
 			throws FileNotFoundException, JargonException {
 
+	        return listDataObjectsUnderPathWithPermissions(absolutePathToParent, partialStartIndex, false);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * listDataObjectsUnderPathWithPermissions(java.lang.String, int, boolean)
+	 */
+	@Override
+	@FederationEnabled
+	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
+			final String absolutePathToParent, final int partialStartIndex, final boolean usingOracleSyntax)
+			throws FileNotFoundException, JargonException {
+
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
 		}
@@ -1211,11 +1253,19 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("doing listing using genquery...");
 		return listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(absolutePathToParent, partialStartIndex,
-				objStat);
+				objStat, usingOracleSyntax);
 	}
 
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
 			final String absolutePathToParent, final int partialStartIndex, final ObjStat objStat)
+			throws FileNotFoundException, JargonException {
+
+	        return listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(absolutePathToParent, partialStartIndex, objStat, false);
+
+	}
+
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsCheckingIfSpecQueryUsed(
+			final String absolutePathToParent, final int partialStartIndex, final ObjStat objStat, final boolean usingOracleSyntax)
 			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
@@ -1247,7 +1297,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			} else {
 				log.info("attemting to list via specQuery...");
 				try {
-					return listDataObjectsUnderPathWithPermissionsViaSpecQuery(objStat, partialStartIndex);
+					return listDataObjectsUnderPathWithPermissionsViaSpecQuery(objStat, partialStartIndex, usingOracleSyntax);
 				} catch (final JargonException je) {
 
 					log.error("error executing spec query will do the genQuery fallback");
@@ -1305,7 +1355,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	}
 
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsViaSpecQuery(
-			final ObjStat objStat, final int offset) throws JargonQueryException, JargonException {
+			final ObjStat objStat, final int offset, final boolean usingOracleSyntax)
+			throws JargonQueryException, JargonException {
 
 		log.info("listDataObjectsUnderPathWithPermissionsViaSpecQuery()");
 
@@ -1316,11 +1367,20 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
 
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
+		
+		final int limit = getJargonProperties().getMaxFilesAndDirsQueryMax();
 
 		final List<String> arguments = new ArrayList<>(3);
 		arguments.add(effectiveAbsolutePath);
-		arguments.add(String.valueOf(getJargonProperties().getMaxFilesAndDirsQueryMax()));
-		arguments.add(String.valueOf(offset));
+		
+		if (usingOracleSyntax) {
+		        arguments.add(String.valueOf(offset));
+		        arguments.add(String.valueOf(offset + limit));
+		}
+		else {
+		        arguments.add(String.valueOf(limit));
+		        arguments.add(String.valueOf(offset));
+		}
 
 		final SpecificQuery specificQuery = SpecificQuery.instanceArguments(SHOW_DATA_OBJ_ACLS, arguments, 0,
 				MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));

@@ -382,6 +382,36 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 			int partialStartIndex) throws FileNotFoundException, JargonException;
 
 	/**
+	 * Retrieve a list of collections (not data objects) underneath a given parent
+	 * path, with the user ACL permissions displayed. This is equivalent to the ls
+	 * -la results. The returned {@code CollectionAndDataObjectListingEntry} objects
+	 * will have a collection of {@code UserFilePermission} objects that detail the
+	 * permissions.
+	 *
+	 * @param absolutePathToParent {@code String} with the absolute path to the
+	 *                             parent. If blank, the root is used. If the path
+	 *                             is really a file, the method will list from the
+	 *                             parent of the file.
+	 * @param partialStartIndex    {@code int} with the offset from which to start
+	 *                             returning results.
+	 * @param usingOracleSyntax    {@code boolean} indicates how the offset and
+	 *                             limit are to be passed to the specific query.
+	 *                             If true, the arguments that identify which rows
+	 *                             to return are passed as
+	 *                             (offset, offset + limit). If false, the
+	 *                             arguments are passed as (limit, offset). This
+	 *                             option only applies to specific queries.
+	 * @return {@code List} of
+	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         including file permissions
+	 * @throws FileNotFoundException if the given absolutePathToParent does not
+	 *                               exist
+	 * @throws JargonException       for iRODS error
+	 */
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(String absolutePathToParent,
+			int partialStartIndex, boolean usingOracleSyntax) throws FileNotFoundException, JargonException;
+
+	/**
 	 * This is a method that can support listing and paging of data objects in a
 	 * collection, including ACL information. This is suitable for creating
 	 * interfaces that need to handle paging of large collections. Note that this
@@ -407,6 +437,40 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(String absolutePathToParent,
 			int partialStartIndex) throws FileNotFoundException, JargonException;
+
+	/**
+	 * This is a method that can support listing and paging of data objects in a
+	 * collection, including ACL information. This is suitable for creating
+	 * interfaces that need to handle paging of large collections. Note that this
+	 * method returns a simple value object that contains information about paging
+	 * for each object. Clients of this method can inspect the returned results to
+	 * determine the position of each result and whether there are more records to
+	 * display.
+	 *
+	 * This method is not a search method, it simply lists.
+	 *
+	 * @param absolutePathToParent {@code String} with the absolute path to the
+	 *                             parent. If blank, the root is used. If the path
+	 *                             is really a file, the method will list from the
+	 *                             parent of the file.
+	 * @param partialStartIndex    {@code int} with the offset from which to start
+	 *                             returning results.
+	 * @param usingOracleSyntax    {@code boolean} indicates how the offset and
+	 *                             limit are to be passed to the specific query.
+	 *                             If true, the arguments that identify which rows
+	 *                             to return are passed as
+	 *                             (offset, offset + limit). If false, the
+	 *                             arguments are passed as (limit, offset). This
+	 *                             option only applies to specific queries.
+	 * @return {@code List} of
+	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         with included per-user ACL information
+	 * @throws FileNotFoundException exception if the given absolutePathToParent
+	 *                               does not exist
+	 * @throws JargonException       for iRODS error
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(String absolutePathToParent,
+			int partialStartIndex, boolean usingOracleSyntax) throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to support
