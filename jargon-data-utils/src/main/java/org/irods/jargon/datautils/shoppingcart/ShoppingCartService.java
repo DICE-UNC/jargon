@@ -1,5 +1,7 @@
 package org.irods.jargon.datautils.shoppingcart;
 
+import java.util.List;
+
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.datautils.DataUtilsService;
@@ -93,5 +95,17 @@ public interface ShoppingCartService extends DataUtilsService {
 
 	String serializeShoppingCartAsSpecifiedUser(FileShoppingCart fileShoppingCart, String key, String userName)
 			throws JargonException;
+
+	/**
+	 * Append the list of items to the file shopping cart and store, duplicates will
+	 * be collapsed
+	 * 
+	 * @param key      {@code String} with the cart key
+	 * @param fileList {@code List} of {@code String} with the items (iRODS paths)
+	 *                 that are the items to add
+	 * @return {@link FileShoppingCart} with the new cart
+	 * @throws JargonException {@link JargonException}
+	 */
+	FileShoppingCart appendToShoppingCart(final String key, final List<String> fileList) throws JargonException;
 
 }

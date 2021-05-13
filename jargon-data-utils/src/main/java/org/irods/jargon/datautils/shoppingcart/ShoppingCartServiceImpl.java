@@ -1,5 +1,7 @@
 package org.irods.jargon.datautils.shoppingcart;
 
+import java.util.List;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -89,9 +91,6 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 			throw new EmptyCartException("no cart to serialize");
 		}
 
-		// check for dependencies
-		checkContracts();
-
 		log.info("fileShoppingCart:${}", fileShoppingCart);
 		log.info("key:${}", key);
 
@@ -110,6 +109,39 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 		log.info("putting data into cache");
 		return dataCacheService
 				.putStringValueIntoCache(fileShoppingCart.serializeShoppingCartContentsToStringOneItemPerLine(), key);
+
+	}
+
+	@Override
+	public FileShoppingCart appendToShoppingCart(final String key, final List<String> fileList) throws JargonException {
+		log.info("appendToShoppingCart()");
+
+		if (key == null || key.isEmpty()) {
+			throw new IllegalArgumentException("null or empty key");
+		}
+
+		if (fileList == null) {
+			throw new IllegalArgumentException("null or empty fileList");
+		}
+
+		// get the current cart or create a new one
+
+		FileShoppingCart existingCart = null;
+
+		try {
+			existingCart = this.retreiveShoppingCartAsLoggedInUser(key);
+		} catch (DataNotFoundException dnf) {
+			log.info("no existing cart, create a new one");
+			existingCart = FileShoppingCart.instance();
+		}
+
+		for (String item : fileList) {
+			existingCart.addAnItem(ShoppingCartEntry.instance(item));
+		}
+
+		log.info("items added, now save the cart data:{}", existingCart);
+		this.serializeShoppingCartAsLoggedInUser(existingCart, key);
+		return existingCart;
 
 	}
 
