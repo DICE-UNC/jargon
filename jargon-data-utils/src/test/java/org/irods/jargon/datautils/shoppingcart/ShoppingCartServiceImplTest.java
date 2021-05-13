@@ -1,10 +1,11 @@
 package org.irods.jargon.datautils.shoppingcart;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
@@ -70,21 +71,6 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
-	@Test(expected = JargonRuntimeException.class)
-	public final void testBuildWithDefaultConstructorNoCacheServiceSet() throws Exception {
-		String key = "key";
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-		ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl();
-		shoppingCartService.setDataCacheServiceFactory(null);
-		shoppingCartService.setIrodsAccessObjectFactory(irodsFileSystem.getIRODSAccessObjectFactory());
-		shoppingCartService.setIrodsAccount(irodsAccount);
-		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
-		fileShoppingCart.addAnItem(ShoppingCartEntry.instance("foo"));
-		shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
-
-	}
-
 	@Test
 	public final void testSerializeDeserializeShoppingCartAsLoggedInUser() throws Exception {
 		String key = "key";
@@ -103,6 +89,33 @@ public class ShoppingCartServiceImplTest {
 		shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
 		FileShoppingCart cart = shoppingCartService.retreiveShoppingCartAsLoggedInUser(key);
 		Assert.assertTrue("no files in cart", cart.hasItems());
+
+	}
+
+	@Test
+	public final void testAddItemToCartWithADuplicate() throws Exception {
+		String key = "key";
+		String expectedPath1 = "/a/path";
+		String expectedPath2 = "/a/path2";
+		String expectedPath3 = "/a/path3";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataCacheServiceFactory dataCacheServiceFactory = new DataCacheServiceFactoryImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory());
+
+		ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount, dataCacheServiceFactory);
+		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath1));
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath2));
+		shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
+		String[] fileList = { expectedPath3, expectedPath3 };
+		shoppingCartService.appendToShoppingCart(key, new ArrayList<String>(Arrays.asList(fileList)));
+
+		FileShoppingCart cart = shoppingCartService.retreiveShoppingCartAsLoggedInUser(key);
+		Assert.assertTrue("no files in cart", cart.hasItems());
+		Assert.assertEquals("should be 3 files", 3, cart.getShoppingCartFileList().size());
 
 	}
 
