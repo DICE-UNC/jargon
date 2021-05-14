@@ -76,3 +76,7 @@ Added new signatures in CollectionAndDataObjectListAndSearchAO to return all chi
 #### create an IRODSFile when it already exists no longer throws an exception (in 4.2.9) #375
 
 There is a slight behavior change post 4.2.8 where calling create on a file acts in a more idempotent way, not throwing an error when a file was previously created. This seems like a minor variance with a low level of surprise, therefore we'll just roll with the slight variation, not worry about prior differences, and adjust the unit testing expectations.
+
+#### add DataNotFound semantics when streaming byte buffers from irods in Stream2StreamAO #387
+
+Retrieve shopping cart was having an issue with a JargonException when retrieving a non-existent cart, now will gracefully handle this. This also updates Stream2StreamAO so that streaming a byte buffer from iRODS when no file exists will properly return a DataNotFoundException

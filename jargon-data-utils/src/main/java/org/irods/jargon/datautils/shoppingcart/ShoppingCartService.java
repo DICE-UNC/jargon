@@ -2,7 +2,6 @@ package org.irods.jargon.datautils.shoppingcart;
 
 import java.util.List;
 
-import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.datautils.DataUtilsService;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
@@ -56,17 +55,16 @@ public interface ShoppingCartService extends DataUtilsService {
 
 	/**
 	 * Retrieve a {@code FileShoppingCart} from iRODS. This has been serialized and
-	 * encrypted by an arbitrary key for the user that is logged in.
-	 *
+	 * encrypted by an arbitrary key for the user that is logged in. If the cart
+	 * doesn't exist an empty one will be created for the user and returned
 	 *
 	 * @param key {@code String} that was used to serialize the shopping cart using
 	 *            the {@code serializeShoppingCartAsLoggedInUser} method. Without
 	 *            the correct key, the cart cannot be found or de-serialized.
-	 * @return {@link FileShoppingCart} representing the de-serialized data
-	 * @throws DataNotFoundException if the cart cannot be retrieved
-	 * @throws JargonException       {@link JargonException}
+	 * @return {@link FileShoppingCart} representing the de-serialized data \
+	 *         * @throws JargonException {@link JargonException}
 	 */
-	FileShoppingCart retreiveShoppingCartAsLoggedInUser(String key) throws DataNotFoundException, JargonException;
+	FileShoppingCart retreiveShoppingCartAsLoggedInUser(String key) throws JargonException;
 
 	/**
 	 * Place the shopping cart as a serialized file in the given user's home

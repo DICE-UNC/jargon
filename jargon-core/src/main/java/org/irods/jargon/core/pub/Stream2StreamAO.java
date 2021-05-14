@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -21,12 +22,9 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	/**
 	 * Given the set of bytes, copy them to the given target file in iRODS.
 	 *
-	 * @param bytesToStream
-	 *            {@code byte[]} with the bytes to copy
-	 * @param irodsTargetFile
-	 *            {@link IRODSFile} that will be written to
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param bytesToStream   {@code byte[]} with the bytes to copy
+	 * @param irodsTargetFile {@link IRODSFile} that will be written to
+	 * @throws JargonException for iRODS error
 	 */
 	void streamBytesToIRODSFile(final byte[] bytesToStream, final IRODSFile irodsTargetFile) throws JargonException;
 
@@ -38,26 +36,22 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * This particular method is used internally for object de-serialization when
 	 * stored as iRODS files.
 	 *
-	 * @param irodsFile
-	 *            {@link IRODSFile} that will be the source of the byte data
+	 * @param irodsFile {@link IRODSFile} that will be the source of the byte data
 	 * @return {@code byte[]} array representing the file contents
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws DataNotFoundException {@link DataNotFoundException}
+	 * @throws JargonException       {@link JargonException} for iRODS error
 	 */
-	byte[] streamFileToByte(IRODSFile irodsFile) throws JargonException;
+	byte[] streamFileToByte(IRODSFile irodsFile) throws DataNotFoundException, JargonException;
 
 	/**
 	 * Stream the {@code InputStream} to the {@code OutputStream}
 	 *
-	 * @param inputStream
-	 *            {@code InputStream} to stream from
-	 * @param outputStream
-	 *            {@code OutputStream} to stream to
-	 * @throws NoResourceDefinedException
-	 *             if no storage resource is defined, and iRODS does not have a
-	 *             default resource selection rule
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param inputStream  {@code InputStream} to stream from
+	 * @param outputStream {@code OutputStream} to stream to
+	 * @throws NoResourceDefinedException if no storage resource is defined, and
+	 *                                    iRODS does not have a default resource
+	 *                                    selection rule
+	 * @throws JargonException            for iRODS error
 	 */
 	void streamToStreamCopy(InputStream inputStream, OutputStream outputStream)
 			throws NoResourceDefinedException, JargonException;
@@ -79,23 +73,21 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * a buffered stream, using the characteristics described in jargon.properties.
 	 *
 	 *
-	 * @param inputStream
-	 *            {@link InputStream} for the transfer, note that this method does
-	 *            not wrap the stream with any buffering, so a properly buffered
-	 *            stream should be provided based on needs.
-	 * @param targetFile
-	 *            {@link File} that will be the target for the stream transfer. If
-	 *            the {@code targetFile} is an instance of {@link IRODSFile}, the
-	 *            transfer will be done using iRODS protocols to iRODS.
-	 * @param length
-	 *            {@code long} with the length of the source stream
-	 * @param readBuffSize
-	 *            {@code int} with the buffer size used for the transfer. Setting to
-	 *            0 will cause the default buffer size to be used.
+	 * @param inputStream  {@link InputStream} for the transfer, note that this
+	 *                     method does not wrap the stream with any buffering, so a
+	 *                     properly buffered stream should be provided based on
+	 *                     needs.
+	 * @param targetFile   {@link File} that will be the target for the stream
+	 *                     transfer. If the {@code targetFile} is an instance of
+	 *                     {@link IRODSFile}, the transfer will be done using iRODS
+	 *                     protocols to iRODS.
+	 * @param length       {@code long} with the length of the source stream
+	 * @param readBuffSize {@code int} with the buffer size used for the transfer.
+	 *                     Setting to 0 will cause the default buffer size to be
+	 *                     used.
 	 * @return {@link TransferStatistics} that give information about the transfer
 	 *         size and rate
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	TransferStatistics transferStreamToFileUsingIOStreams(InputStream inputStream, File targetFile, long length,
 			int readBuffSize) throws JargonException;
@@ -103,14 +95,11 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	/**
 	 * Stream a class-path resource to a target iRODS file
 	 *
-	 * @param resourcePath
-	 *            {@code String} with a path to a resource that can be loaded by the
-	 *            class loader.
-	 * @param irodsFileAbsolutePath
-	 *            {@code String} with an iRODS file absolute path to which the
-	 *            resource will be loaded.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param resourcePath          {@code String} with a path to a resource that
+	 *                              can be loaded by the class loader.
+	 * @param irodsFileAbsolutePath {@code String} with an iRODS file absolute path
+	 *                              to which the resource will be loaded.
+	 * @throws JargonException for iRODS error
 	 */
 	void streamClasspathResourceToIRODSFile(String resourcePath, String irodsFileAbsolutePath) throws JargonException;
 
@@ -124,14 +113,12 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * This method will close the streams and do a final flush of the output stream,
 	 * so no further processing is necessary.
 	 *
-	 * @param inputStream
-	 *            {@link InputStream}. If not buffered, it will be buffered
-	 * @param outputStream
-	 *            {@link OutputStream}. If not buffered, it will be buffered
+	 * @param inputStream  {@link InputStream}. If not buffered, it will be buffered
+	 * @param outputStream {@link OutputStream}. If not buffered, it will be
+	 *                     buffered
 	 * @return {@link TransferStatistics} that give information about the transfer
 	 *         size and rate
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	TransferStatistics streamToStreamCopyUsingStandardIO(InputStream inputStream, OutputStream outputStream)
 			throws JargonException;

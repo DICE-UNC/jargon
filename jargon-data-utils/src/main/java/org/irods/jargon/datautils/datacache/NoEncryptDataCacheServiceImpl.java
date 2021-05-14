@@ -10,6 +10,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
@@ -118,7 +119,8 @@ public class NoEncryptDataCacheServiceImpl extends AbstractDataUtilsServiceImpl 
 	 * retrieveStringValueFromCache(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String retrieveStringValueFromCache(final String userName, final String key) throws JargonException {
+	public String retrieveStringValueFromCache(final String userName, final String key)
+			throws DataNotFoundException, JargonException {
 
 		if (key == null || key.isEmpty()) {
 			throw new IllegalArgumentException("null key");

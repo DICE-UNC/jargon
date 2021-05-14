@@ -16,6 +16,7 @@ import java.nio.channels.WritableByteChannel;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
@@ -362,9 +363,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 	}
 
-	
 	@Override
-	public byte[] streamFileToByte(final IRODSFile irodsFile) throws JargonException {
+	public byte[] streamFileToByte(final IRODSFile irodsFile) throws DataNotFoundException, JargonException {
 
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("null irodsTargetFile");
@@ -375,7 +375,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 		if (irodsFile.exists() && irodsFile.isFile()) {
 			log.info("verified as an existing data object");
 		} else {
-			throw new JargonException("cannot stream, does not exist or is not a file");
+			throw new DataNotFoundException("cannot stream, does not exist or is not a file");
 		}
 
 		InputStream is = getIRODSFileFactory().instanceIRODSFileInputStream(irodsFile);

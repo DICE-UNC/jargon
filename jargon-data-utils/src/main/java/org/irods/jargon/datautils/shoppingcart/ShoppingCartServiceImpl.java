@@ -152,17 +152,13 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 	 * retreiveShoppingCartAsLoggedInUser(java.lang.String)
 	 */
 	@Override
-	public FileShoppingCart retreiveShoppingCartAsLoggedInUser(final String key)
-			throws DataNotFoundException, JargonException {
+	public FileShoppingCart retreiveShoppingCartAsLoggedInUser(final String key) throws JargonException {
 
 		log.info("retreiveShoppingCartAsLoggedInUser()");
 
 		if (key == null || key.isEmpty()) {
 			throw new IllegalArgumentException("null or empty key");
 		}
-
-		// check for dependencies
-		checkContracts();
 
 		log.info("key:{}", key);
 
@@ -184,8 +180,15 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 		dataCacheService.setCacheServiceConfiguration(config);
 		log.info("retrieve data from cache");
 		log.info("serializing back to cart...");
-		return FileShoppingCart.instanceFromSerializedStringRepresentation(
-				dataCacheService.retrieveStringValueFromCache(irodsAccount.getUserName(), key));
+		try {
+			String cartAsString = dataCacheService.retrieveStringValueFromCache(irodsAccount.getUserName(), key);
+			return FileShoppingCart.instanceFromSerializedStringRepresentation(cartAsString);
+		} catch (DataNotFoundException e) {
+			log.warn("no cart file, create one and return an empty one");
+			FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
+			this.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
+			return fileShoppingCart;
+		}
 
 	}
 
