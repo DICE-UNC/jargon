@@ -59,8 +59,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 	public void streamBytesToIRODSFile(final byte[] bytesToStream, final IRODSFile irodsTargetFile)
 			throws JargonException {
 
-		if (bytesToStream == null || bytesToStream.length == 0) {
-			throw new IllegalArgumentException("null or empty bytesToStream");
+		if (bytesToStream == null) {
+			throw new IllegalArgumentException("null  bytesToStream");
 		}
 
 		if (irodsTargetFile == null) {
@@ -69,6 +69,11 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 
 		log.info("streamBytesToIRODSFile(), irodsFile:{}", irodsTargetFile);
 		log.info("bytesToStream length:{}", bytesToStream.length);
+
+		if (bytesToStream.length == 0) {
+			log.warn("empty bytes, just return");
+			return;
+		}
 
 		OutputStream ifOs = getIRODSFileFactory().instanceIRODSFileOutputStream(irodsTargetFile,
 				OpenFlags.WRITE_TRUNCATE);
@@ -107,7 +112,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 		// FIXME: deprecate length, not needed
 
 		if (inputStream == null) {
-			throw new IllegalArgumentException("null or empty inputStream");
+			throw new IllegalArgumentException("null inputStream");
 		}
 
 		if (targetFile == null) {

@@ -80,3 +80,11 @@ There is a slight behavior change post 4.2.8 where calling create on a file acts
 #### add DataNotFound semantics when streaming byte buffers from irods in Stream2StreamAO #387
 
 Retrieve shopping cart was having an issue with a JargonException when retrieving a non-existent cart, now will gracefully handle this. This also updates Stream2StreamAO so that streaming a byte buffer from iRODS when no file exists will properly return a DataNotFoundException
+
+#### Append cart #386
+
+Added ability to append items to the file shopping cart
+
+#### Add COLL_DATA_MODIFY_TIME variant to match COLL_COLL_MODIFY_TIME #382
+
+Added a modify time variable name for data objects that matches the collection modify time

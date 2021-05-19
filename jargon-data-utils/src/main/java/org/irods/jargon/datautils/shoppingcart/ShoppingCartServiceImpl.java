@@ -86,11 +86,6 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 			throw new IllegalArgumentException("null or empty key");
 		}
 
-		if (fileShoppingCart.getShoppingCartFileList().isEmpty()) {
-			log.error("empty shopping cart");
-			throw new EmptyCartException("no cart to serialize");
-		}
-
 		log.info("fileShoppingCart:${}", fileShoppingCart);
 		log.info("key:${}", key);
 

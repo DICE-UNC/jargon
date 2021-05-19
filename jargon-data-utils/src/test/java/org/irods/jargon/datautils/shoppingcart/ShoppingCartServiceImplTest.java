@@ -45,6 +45,24 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
+	@Test
+	public final void testSerializeAndRetrieveEmptyShoppingCartAsLoggedInUser() throws Exception {
+		String key = "key";
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataCacheServiceFactory dataCacheServiceFactory = new DataCacheServiceFactoryImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory());
+
+		ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount, dataCacheServiceFactory);
+		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
+		String actual = shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
+		Assert.assertNotNull("null path returned, no serializing of cart", actual);
+		FileShoppingCart actualCart = shoppingCartService.retreiveShoppingCartAsLoggedInUser(key);
+		Assert.assertNotNull("actual cart is null", actualCart);
+
+	}
+
 	@Test(expected = EmptyCartException.class)
 	public final void testSerializeEmptyShoppingCartAsLoggedInUser() throws Exception {
 		String key = "key";
