@@ -88,3 +88,7 @@ Added ability to append items to the file shopping cart
 #### Add COLL_DATA_MODIFY_TIME variant to match COLL_COLL_MODIFY_TIME #382
 
 Added a modify time variable name for data objects that matches the collection modify time
+
+#### Modify time difference between queryBuilder and lastModified #381
+
+Added unit test to verify IRODSFile and DataObject dates agree as part of explaining a user reported issue

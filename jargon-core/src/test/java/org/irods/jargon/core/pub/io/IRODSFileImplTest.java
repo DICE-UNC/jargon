@@ -260,6 +260,45 @@ public class IRODSFileImplTest {
 
 	}
 
+	/**
+	 * Test method for https://github.com/DICE-UNC/jargon/issues/381 Modify time
+	 * difference between queryBuilder and lastModified #381
+	 * 
+	 */
+	@Test
+	public final void testFileModDateVersusQueryDateBug381() throws Exception {
+		String testFileName = "Modify time difference between queryBuilder and lastModified #381.txt";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		StringBuilder fileNameAndPath = new StringBuilder();
+		fileNameAndPath.append(absPath);
+
+		fileNameAndPath.append(testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection, "", null, null);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		File irodsFile = (File) irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		long fileLastMod = irodsFile.lastModified();
+
+		// query last mod from the data object
+
+		DataObjectAO dataObjectAO = accessObjectFactory.getDataObjectAO(irodsAccount);
+
+		DataObject actualDataObject = dataObjectAO.findByAbsolutePath(irodsFile.getAbsolutePath());
+		long doLastMod = actualDataObject.getUpdatedAt().getTime();
+
+		Assert.assertEquals("modified dates mismatch", fileLastMod, doLastMod);
+
+	}
+
 	@Test
 	public final void testCanExecute() throws Exception {
 		String testFileName = "testCanExecute.sh";
