@@ -10,16 +10,10 @@ package org.irods.jargon.core.apiplugin;
  * @author conwaymc
  *
  */
-public abstract class PluginApiRequest {
+public abstract class PluggableApiRequest {
 
 	// api number
 	// <AtomicMetadataOperation, AtomicMetadataResponse>
 	// AtomicMetadataResponse resp = execApi()
-
-	/**
-	 * 
-	 */
-	public PluginApiRequest() {
-	}
 
 }

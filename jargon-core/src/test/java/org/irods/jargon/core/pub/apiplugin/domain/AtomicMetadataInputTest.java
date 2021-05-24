@@ -3,6 +3,8 @@ package org.irods.jargon.core.pub.apiplugin.domain;
 import java.util.Properties;
 
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.apiplugin.atomicmetadata.AtomicMetadataOperation;
+import org.irods.jargon.core.pub.apiplugin.atomicmetadata.AtomicMetadataRequest;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -53,7 +55,7 @@ public class AtomicMetadataInputTest {
 	public void testCreateJsonRequest() throws Exception {
 		String entityName = "entityName";
 		String entityType = "collection";
-		AtomicMetadataInput atomicMetadataInput = new AtomicMetadataInput();
+		AtomicMetadataRequest atomicMetadataInput = new AtomicMetadataRequest();
 		atomicMetadataInput.setEntityName(entityName);
 		atomicMetadataInput.setEntityType(entityType);
 
@@ -67,7 +69,7 @@ public class AtomicMetadataInputTest {
 		String actual = mapper.writeValueAsString(atomicMetadataInput);
 		Assert.assertNotNull("null atomicMetadataInput", atomicMetadataInput);
 
-		AtomicMetadataInput remapped = mapper.readValue(actual, AtomicMetadataInput.class);
+		AtomicMetadataRequest remapped = mapper.readValue(actual, AtomicMetadataRequest.class);
 		Assert.assertNotNull("did not get remapped object back", remapped);
 
 	}

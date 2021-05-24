@@ -3,9 +3,14 @@
  */
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.apiplugin.PluggableApiRequest;
+import org.irods.jargon.core.apiplugin.PluggableApiResponse;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.BytesBuff;
+import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author conwaymc
  *
  */
-class ApiPluginExecutorImpl<InputType, OutputType> extends IRODSGenericAO {
+class ApiPluginExecutorImpl<I extends PluggableApiRequest, O extends PluggableApiResponse> extends IRODSGenericAO {
 
 	private static Logger log = LoggerFactory.getLogger(ApiPluginExecutorImpl.class);
 	private ObjectMapper mapper = new ObjectMapper();
@@ -30,22 +35,31 @@ class ApiPluginExecutorImpl<InputType, OutputType> extends IRODSGenericAO {
 		super(irodsSession, irodsAccount);
 	}
 
-	public OutputType callPluggableApi(int apiNumber, InputType input) throws JargonException {
+	public O callPluggableApi(int apiNumber, I request) throws JargonException {
 		log.info("callPluggableApi())");
+
 		if (apiNumber <= 0) {
 			throw new IllegalArgumentException("invalid api number");
 		}
-		if (input == null) {
+
+		if (request == null) {
 			throw new IllegalArgumentException("null input");
 		}
 
 		log.info("apiNumber:{}", apiNumber);
-		log.info("input:{}", input);
+		log.info("input:{}", request);
 
 		try {
-			String jsonInput = mapper.writeValueAsString(input);
+			String jsonInput = mapper.writeValueAsString(request);
 			log.debug("jsonInput:{}", jsonInput);
-			return (OutputType) new Object(); // FIXME: temp shim
+			BytesBuff bytesBuff = BytesBuff.instance(jsonInput, apiNumber);
+			Tag response;
+			ObjStat objStat;
+			response = this.getIRODSAccessObjectFactory().getIrodsSession().currentConnection(this.getIRODSAccount())
+					.irodsFunction(bytesBuff);
+
+			log.debug("response from objStat: {}", response.parseTag());
+			return null;
 
 		} catch (JsonProcessingException e) {
 			log.error("Invalid json", e);

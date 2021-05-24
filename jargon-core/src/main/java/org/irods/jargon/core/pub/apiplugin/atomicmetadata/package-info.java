@@ -5,4 +5,4 @@
  * @author conwaymc
  *
  */
-package org.irods.jargon.core.pub.apiplugin.domain;
+package org.irods.jargon.core.pub.apiplugin.atomicmetadata;

@@ -9,12 +9,6 @@ package org.irods.jargon.core.apiplugin;
  * @author conwaymc
  *
  */
-public abstract class PluginApiResponse {
-
-	/**
-	 * 
-	 */
-	public PluginApiResponse() {
-	}
+public abstract class PluggableApiResponse {
 
 }

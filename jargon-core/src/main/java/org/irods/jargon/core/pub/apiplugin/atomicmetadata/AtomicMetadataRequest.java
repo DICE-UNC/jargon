@@ -1,10 +1,12 @@
 /**
  * 
  */
-package org.irods.jargon.core.pub.apiplugin.domain;
+package org.irods.jargon.core.pub.apiplugin.atomicmetadata;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.irods.jargon.core.apiplugin.PluggableApiRequest;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
@@ -14,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
  * @author conwaymc
  *
  */
-public class AtomicMetadataInput {
+public class AtomicMetadataRequest extends PluggableApiRequest {
 
 	/**
 	 * Name of the entity (e.g. path) to be decorated as {@code String}
@@ -27,14 +29,14 @@ public class AtomicMetadataInput {
 
 	/**
 	 * Individual metadata operations as
-	 * {@link AtomicMetadataInput.AtomicMetadataOperation}
+	 * {@link AtomicMetadataRequest.AtomicMetadataOperation}
 	 */
 	private List<AtomicMetadataOperation> operations = new ArrayList<>();
 
 	/**
 	 * 
 	 */
-	public AtomicMetadataInput() {
+	public AtomicMetadataRequest() {
 	}
 
 	@JsonGetter("entity_name")

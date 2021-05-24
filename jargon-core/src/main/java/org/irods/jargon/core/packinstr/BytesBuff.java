@@ -20,16 +20,17 @@ public class BytesBuff extends AbstractIRODSPackingInstruction {
 
 	private final String buffer;
 
-	public static final BytesBuff instance(final String buffer) throws JargonException {
-		return new BytesBuff(buffer);
+	public static final BytesBuff instance(final String buffer, final int apiNumber) throws JargonException {
+		return new BytesBuff(buffer, apiNumber);
 	}
 
-	private BytesBuff(final String buffer) throws JargonException {
+	private BytesBuff(final String buffer, final int apiNumber) throws JargonException {
 		super();
 		if (buffer == null) {
 			throw new JargonException("buffer is null");
 		}
 		this.buffer = buffer;
+		this.setApiNumber(apiNumber);
 	}
 
 	@Override

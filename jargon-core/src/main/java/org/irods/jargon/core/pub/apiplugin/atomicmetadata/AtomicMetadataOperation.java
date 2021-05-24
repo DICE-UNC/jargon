@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.core.pub.apiplugin.domain;
+package org.irods.jargon.core.pub.apiplugin.atomicmetadata;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
