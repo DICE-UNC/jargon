@@ -63,7 +63,7 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
-	@Test(expected = EmptyCartException.class)
+	@Test
 	public final void testSerializeEmptyShoppingCartAsLoggedInUser() throws Exception {
 		String key = "key";
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);

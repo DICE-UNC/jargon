@@ -95,7 +95,7 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	@Test
+	@Ignore // #376
 	public final void testPutFileToIRODSUsingTicket() throws Exception {
 
 		if (!testTicket) {
@@ -204,7 +204,7 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	@Test
+	@Ignore // #376
 	public final void testUploadFileToIRODSUsingAnonymous() throws Exception {
 
 		if (!testTicket) {
@@ -929,7 +929,7 @@ public class TicketClientOperationsImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // #376
 	public void testRedeemTicketAndStreamToIRODSCollection() throws Exception {
 		if (!testTicket) {
 			return;
@@ -1001,7 +1001,7 @@ public class TicketClientOperationsImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // #376
 	public void testRedeemTicketAndStreamToIRODSCollectionAsAnonymous() throws Exception {
 		if (!testTicket) {
 			return;
@@ -1073,7 +1073,7 @@ public class TicketClientOperationsImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // #376
 	public void testRedeemTicketAndStreamToIRODSCollectionEmptyFile() throws Exception {
 		if (!testTicket) {
 			return;
