@@ -4,9 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-## [4.3.2.1-RELEASE] - 02/26/2021
 
 ### Added
 
@@ -92,3 +89,7 @@ Added a modify time variable name for data objects that matches the collection m
 #### Modify time difference between queryBuilder and lastModified #381
 
 Added unit test to verify IRODSFile and DataObject dates agree as part of explaining a user reported issue
+
+####  Temporarily calm unit tests for tickets until resolved  #376
+
+Temporarily turned off certain ticket unit tests that are failing for follow up in a maintenance release
