@@ -106,4 +106,6 @@ public interface ShoppingCartService extends DataUtilsService {
 	 */
 	FileShoppingCart appendToShoppingCart(final String key, final List<String> fileList) throws JargonException;
 
+	FileShoppingCart removeSpecifiedItemsFromShoppingCart(final String key, final List<String> fileList) throws JargonException;
+
 }

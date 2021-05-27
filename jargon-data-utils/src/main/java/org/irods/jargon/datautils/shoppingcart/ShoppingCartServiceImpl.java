@@ -140,6 +140,37 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implem
 
 	}
 
+	@Override
+	public FileShoppingCart removeSpecifiedItemsFromShoppingCart(final String key, final List<String> fileList)
+			throws JargonException {
+		log.info("removeSpecifiedItemsFromShoppingCart()");
+
+		if (key == null || key.isEmpty()) {
+			throw new IllegalArgumentException("null or empty key");
+		}
+
+		log.info("key:{}", key);
+
+		if (fileList == null) {
+			throw new IllegalArgumentException("null or empty fileList");
+		}
+
+		// retrieve the cart
+
+		FileShoppingCart cart = this.retreiveShoppingCartAsLoggedInUser(key);
+
+		for (String removeItem : fileList) {
+			log.debug("remove item:{}", removeItem);
+			cart.removeAnItem(removeItem);
+		}
+
+		this.serializeShoppingCartAsLoggedInUser(cart, key);
+
+		log.info("items removed");
+		return cart;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *

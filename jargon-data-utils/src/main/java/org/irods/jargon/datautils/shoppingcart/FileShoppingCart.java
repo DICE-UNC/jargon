@@ -49,6 +49,20 @@ public class FileShoppingCart implements Serializable {
 	}
 
 	/**
+	 * Remove an item from the cart, ignore if item is not in the cart
+	 * 
+	 * @param itemPath {@code String} with the item to remove
+	 */
+	public void removeItem(final String itemPath) {
+		if (itemPath == null || itemPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty itemPath");
+		}
+
+		this.shoppingCartEntries.remove(itemPath);
+
+	}
+
+	/**
 	 * Given a string representation (one file per line, separated by the \n
 	 * character, build a {@code FileShoppingCart}. The cart will be empty if no
 	 * files are in the serialized string form

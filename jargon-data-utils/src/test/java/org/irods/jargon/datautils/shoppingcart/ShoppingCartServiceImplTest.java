@@ -2,6 +2,7 @@ package org.irods.jargon.datautils.shoppingcart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -108,6 +109,39 @@ public class ShoppingCartServiceImplTest {
 		FileShoppingCart cart = shoppingCartService.retreiveShoppingCartAsLoggedInUser(key);
 		Assert.assertTrue("no files in cart", cart.hasItems());
 
+	}
+
+	@Test
+	public final void testRemoveItemsFromCart() throws Exception {
+		String key = "key";
+		String expectedPath1 = "/a/path";
+		String expectedPath2 = "/a/path2";
+		String expectedPath3 = "/a/path3";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataCacheServiceFactory dataCacheServiceFactory = new DataCacheServiceFactoryImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory());
+
+		ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount, dataCacheServiceFactory);
+		FileShoppingCart fileShoppingCart = FileShoppingCart.instance();
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath1));
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath2));
+		fileShoppingCart.addAnItem(ShoppingCartEntry.instance(expectedPath3));
+		shoppingCartService.serializeShoppingCartAsLoggedInUser(fileShoppingCart, key);
+
+		// remove items 1 and 3
+
+		List<String> itemsToRemove = new ArrayList<>();
+		itemsToRemove.add(expectedPath1);
+		itemsToRemove.add(expectedPath3);
+		shoppingCartService.removeSpecifiedItemsFromShoppingCart(key, itemsToRemove);
+
+		FileShoppingCart cart = shoppingCartService.retreiveShoppingCartAsLoggedInUser(key);
+		Assert.assertEquals("did not delete expected items", 1, cart.getShoppingCartFileList().size());
+		String itemLeft = cart.getShoppingCartFileList().get(0);
+		Assert.assertEquals("did not get expected item", expectedPath2, itemLeft);
 	}
 
 	@Test
