@@ -184,8 +184,8 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 			throw new JargonException("domain object unique name is null or empty");
 		}
 
-		if (avuAttribute == null || avuAttribute.isEmpty()) {
-			throw new JargonException("avu attribute is null or empty");
+		if (avuAttribute == null) {
+			throw new JargonException("avu attribute is null");
 		}
 
 		if (avuValue == null) {
