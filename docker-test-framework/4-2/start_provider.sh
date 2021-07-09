@@ -15,13 +15,14 @@ python /var/lib/irods/scripts/setup_irods.py < /var/lib/irods/packaging/localhos
 cp /server_config.json /etc/irods/server_config.json
 cp /jargon_extras.re /etc/irods/jargon_extras.re
 
-echo Running Test Setup Script
-su irods -c '/testsetup-consortium.sh'
-echo Completed Test Setup Script
 
 echo Now restart for new server_config.json
 su irods -c 'python /var/lib/irods/scripts/irods_control.py restart'
 echo Completed iRODS restart
+
+echo Running Test Setup Script
+su irods -c '/testsetup-consortium.sh'
+echo Completed Test Setup Script
 
 # Keep container running if the test fails.
 tail -f /dev/null
