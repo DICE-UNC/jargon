@@ -58,7 +58,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	private int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
 	private OpenFlags openFlags = null;
-	private String resourceToken = null;
+	private String resourceToken = null; // FIXME: change to replicaToken
 
 	private static final long serialVersionUID = -6986662136294659059L;
 
@@ -1305,6 +1305,9 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public synchronized void close() throws JargonException {
+		
+		here if we have a resc token we want to call rc_replica_close
+		
 		if (log.isInfoEnabled()) {
 			log.info("closing irodsFile:{}", getAbsolutePath());
 		}
