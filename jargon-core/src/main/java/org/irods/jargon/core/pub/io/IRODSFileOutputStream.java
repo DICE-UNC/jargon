@@ -57,19 +57,14 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * or for some other reason cannot be opened for reading then a
 	 * {@code FileNotFoundException} is thrown.
 	 *
-	 * @param irodsFile
-	 *            {@link IRODSFile} that underlies the stream
-	 * @param fileIOOperations
-	 *            {@link FileIOOperations} that handles the iRODS protoco
-	 * @param openFlags
-	 *            {@link OpenFlags} for the stream
-	 * @exception NoResourceDefinedException
-	 *                if no storage resource is defined, and iRODS has not default
-	 *                resource rule
-	 * @exception FileNotFoundException
-	 *                when file is not found in iRODS
-	 * @exception JargonException
-	 *                when other iRODS errors occur
+	 * @param irodsFile        {@link IRODSFile} that underlies the stream
+	 * @param fileIOOperations {@link FileIOOperations} that handles the iRODS
+	 *                         protoco
+	 * @param openFlags        {@link OpenFlags} for the stream
+	 * @exception NoResourceDefinedException if no storage resource is defined, and
+	 *                                       iRODS has not default resource rule
+	 * @exception FileNotFoundException      when file is not found in iRODS
+	 * @exception JargonException            when other iRODS errors occur
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations,
 			final OpenFlags openFlags) throws NoResourceDefinedException, FileNotFoundException, JargonException {

@@ -801,6 +801,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 		String absPath = resolveAbsolutePathGivenObjStat(getObjStat(irodsFile.getAbsolutePath()));
 
+		
+		// FIXME: here is where we do the version check
+		
+		if (this.getIRODSServerProperties().isSupportsResourceTokens()) {
+			let's get a resource token
+		} else {
+			we don't care
+		}
+		
+
 		DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
 
 		if (log.isInfoEnabled()) {

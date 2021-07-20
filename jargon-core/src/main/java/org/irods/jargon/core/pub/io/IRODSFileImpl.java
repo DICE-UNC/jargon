@@ -58,6 +58,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	private int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
 	private OpenFlags openFlags = null;
+	private String resourceToken = null;
 
 	private static final long serialVersionUID = -6986662136294659059L;
 
@@ -1432,6 +1433,27 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	public void setIrodsFileSystemAO(final IRODSFileSystemAO irodsFileSystemAO) {
 		this.irodsFileSystemAO = irodsFileSystemAO;
+	}
+
+	/**
+	 * Get the resource token that may have been obtained when the file was opened.
+	 * This is only present in later versions of iRODS.
+	 * 
+	 * @return {@code String} with the resource token, {code null} indicates that no
+	 *         token exists
+	 */
+	public String getResourceToken() {
+		return resourceToken;
+	}
+
+	/**
+	 * Set the resource token if one is available (dependant on iRODS version)
+	 * 
+	 * @param resourceToken {@code String} with the resource token value, if
+	 *                      available
+	 */
+	public void setResourceToken(String resourceToken) {
+		this.resourceToken = resourceToken;
 	}
 
 }
