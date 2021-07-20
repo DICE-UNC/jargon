@@ -52,6 +52,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int CHECKSUM_API_NBR = 629;
 	public static final int GET_HOST_FOR_GET_API_NBR = 694;
 	public static final int GET_HOST_FOR_PUT_API_NBR = 686;
+	/*
+	 * see
+	 * https://github.com/irods/irods/blob/6784fbb26fc703212f02e170d1bb51e799ffc1ac/
+	 * plugins/api/src/replica_open.cpp#L174-L175 this is the new replica open that
+	 * will return a replica access token for post 4.2.8
+	 */
+
+	public static final int REPLICA_OPEN_API_NBR = 20003;
 
 	public static final String DATA_TYPE_GENERIC = "generic";
 	public static final String DATA_TYPE_MSSO = "msso file";

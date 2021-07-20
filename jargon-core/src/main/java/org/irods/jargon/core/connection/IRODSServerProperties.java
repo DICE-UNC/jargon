@@ -118,6 +118,20 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Indicates whether the iRODS server supports resource tokens and locking
+	 * 
+	 * @return {@code boolean} if resource tokens and locking are supported
+	 */
+	public boolean isSupportsResourceTokens() {
+		boolean supports = false;
+
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.8")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Does the server (based on version) support tickets?
 	 *
 	 * @return {@code boolean} of {@code true} if this version supports tickets
@@ -165,9 +179,8 @@ public class IRODSServerProperties {
 	 * will indicate that the iRODS version being connected to is at or above the
 	 * given version.
 	 *
-	 * @param releaseVersion
-	 *            {@code String} in standard iRODS version format that will be
-	 *            checked against the currently-connected server.
+	 * @param releaseVersion {@code String} in standard iRODS version format that
+	 *                       will be checked against the currently-connected server.
 	 * @return {@code boolean} that will be {@code true} if the iRODS server is at
 	 *         or above the {@code releaseVersion}
 	 */
