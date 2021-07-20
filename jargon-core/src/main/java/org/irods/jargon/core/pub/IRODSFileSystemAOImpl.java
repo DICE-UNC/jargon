@@ -803,32 +803,29 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 		
 		// FIXME: here is where we do the version check
-		
+		int fileId;
 		if (this.getIRODSServerProperties().isSupportsResourceTokens()) {
 			let's get a resource token
 		} else {
-			we don't care
+			DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
+
+			if (log.isInfoEnabled()) {
+				log.info("opening file:" + absPath);
+			}
+
+			Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
+					DataObjInp.OPEN_FILE_API_NBR);
+
+			if (response == null) {
+				String msg = "null response from IRODS call";
+				log.error(msg);
+				throw new JargonException(msg);
+			}
+
+			// parse out the response
+			fileId = response.getTag(MsgHeader.PI_NAME).getTag(MsgHeader.INT_INFO).getIntValue();
 		}
 		
-
-		DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
-
-		if (log.isInfoEnabled()) {
-			log.info("opening file:" + absPath);
-		}
-
-		Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
-				DataObjInp.OPEN_FILE_API_NBR);
-
-		if (response == null) {
-			String msg = "null response from IRODS call";
-			log.error(msg);
-			throw new JargonException(msg);
-		}
-
-		// parse out the response
-		int fileId = response.getTag(MsgHeader.PI_NAME).getTag(MsgHeader.INT_INFO).getIntValue();
-
 		log.debug("file id for opened file:{}", fileId);
 
 		return fileId;

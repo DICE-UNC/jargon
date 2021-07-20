@@ -35,6 +35,10 @@ class ApiPluginExecutorImpl<I extends PluggableApiRequest, O extends PluggableAp
 		super(irodsSession, irodsAccount);
 	}
 
+	public O callPluggableApi(int apiNumber, AbstractPI) {
+		
+	}
+
 	public O callPluggableApi(int apiNumber, I request) throws JargonException {
 		log.info("callPluggableApi())");
 
