@@ -1305,9 +1305,10 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public synchronized void close() throws JargonException {
-		
-		here if we have a resc token we want to call rc_replica_close
-		
+
+		// here if we have a resc token we want to call rc_replica_close // FIXME: close
+		// here
+
 		if (log.isInfoEnabled()) {
 			log.info("closing irodsFile:{}", getAbsolutePath());
 		}
@@ -1445,6 +1446,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * @return {@code String} with the resource token, {code null} indicates that no
 	 *         token exists
 	 */
+	@Override
 	public String getResourceToken() {
 		return resourceToken;
 	}
@@ -1455,6 +1457,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * @param resourceToken {@code String} with the resource token value, if
 	 *                      available
 	 */
+	@Override
 	public void setResourceToken(String resourceToken) {
 		this.resourceToken = resourceToken;
 	}

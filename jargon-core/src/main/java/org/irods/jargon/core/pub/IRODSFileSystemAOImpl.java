@@ -29,6 +29,7 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
+import org.irods.jargon.core.pub.domain.pluggable.DataObjectOpen;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -45,6 +46,9 @@ import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * This is a backing object for IRODSFileImpl, handling all IRODS interactions.
@@ -76,7 +80,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		irodsGenQueryExecutor = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
 		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-
 	}
 
 	/*
@@ -801,11 +804,27 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 		String absPath = resolveAbsolutePathGivenObjStat(getObjStat(irodsFile.getAbsolutePath()));
 
-		
 		// FIXME: here is where we do the version check
 		int fileId;
 		if (this.getIRODSServerProperties().isSupportsResourceTokens()) {
-			let's get a resource token
+			log.info("");
+			DataObjInp dataObjInp = DataObjInp.instanceForOpenResourceToken(absPath, openFlags);
+			ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
+					.getApiPluginExecutor(getIRODSAccount());
+			PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
+					dataObjInp);
+			log.debug("responseJson:{}", apiResponse);
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				DataObjectOpen dataObjectOpen = mapper.readValue(apiResponse.getJsonResult(), DataObjectOpen.class);
+				log.debug("dataObjectOpen:{}", dataObjectOpen);
+				fileId = apiResponse.getIntInfo();
+				irodsFile.setResourceToken(dataObjectOpen.getReplicaToken());
+			} catch (JsonProcessingException e) {
+				log.error("error mapping json:{}", apiResponse, e);
+				throw new JargonException("json mapping error", e);
+			}
+
 		} else {
 			DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
 
@@ -825,7 +844,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 			// parse out the response
 			fileId = response.getTag(MsgHeader.PI_NAME).getTag(MsgHeader.INT_INFO).getIntValue();
 		}
-		
+
 		log.debug("file id for opened file:{}", fileId);
 
 		return fileId;

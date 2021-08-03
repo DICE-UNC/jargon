@@ -3,28 +3,21 @@
  */
 package org.irods.jargon.core.pub;
 
-import org.irods.jargon.core.apiplugin.PluggableApiRequest;
-import org.irods.jargon.core.apiplugin.PluggableApiResponse;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.BytesBuff;
-import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.packinstr.IRodsPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author conwaymc
  *
  */
-class ApiPluginExecutorImpl<I extends PluggableApiRequest, O extends PluggableApiResponse> extends IRODSGenericAO {
+class ApiPluginExecutorImpl extends IRODSGenericAO implements ApiPluginExecutor {
 
 	private static Logger log = LoggerFactory.getLogger(ApiPluginExecutorImpl.class);
-	private ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * @param irodsSession
@@ -35,11 +28,45 @@ class ApiPluginExecutorImpl<I extends PluggableApiRequest, O extends PluggableAp
 		super(irodsSession, irodsAccount);
 	}
 
-	public O callPluggableApi(int apiNumber, AbstractPI) {
-		
+	/**
+	 * Make a function call using a regular packing instruction as a request and
+	 * expecting JSON as a result
+	 * 
+	 * @param apiNumber {@code int} with the API number
+	 * @param irodsPI   {@link IRodsPI}
+	 * @return a {@code String} with serialized JSON
+	 * @throws JargonException {@link JargonException} for upstream iRODS errors
+	 */
+	@Override
+	public PluggableApiCallResult callPluggableApi(int apiNumber, IRodsPI irodsPI) throws JargonException {
+
+		log.info("callPluggableApi()");
+
+		if (apiNumber <= 0) {
+			throw new IllegalArgumentException("apiNumber is not > 0");
+		}
+
+		if (irodsPI == null) {
+			throw new IllegalArgumentException("irodsPi is null");
+		}
+
+		PluggableApiCallResult response = this.getIRODSProtocol().irodsFunctionWithPluggableResult(irodsPI);
+		log.debug("pluggable result string:{}", response);
+		return response;
+
 	}
 
-	public O callPluggableApi(int apiNumber, I request) throws JargonException {
+	/**
+	 * Make a function call using a serialized JSON request and expecting JSON as a
+	 * result
+	 * 
+	 * @param apiNumber {@code int} with the API number
+	 * @param request   {@code String}
+	 * @return a {@code String} with serialized JSON
+	 * @throws JargonException {@link JargonException} for upstream iRODS errors
+	 */
+	@Override
+	public PluggableApiCallResult callPluggableApi(int apiNumber, String request) throws JargonException {
 		log.info("callPluggableApi())");
 
 		if (apiNumber <= 0) {
@@ -53,23 +80,13 @@ class ApiPluginExecutorImpl<I extends PluggableApiRequest, O extends PluggableAp
 		log.info("apiNumber:{}", apiNumber);
 		log.info("input:{}", request);
 
-		try {
-			String jsonInput = mapper.writeValueAsString(request);
-			log.debug("jsonInput:{}", jsonInput);
-			BytesBuff bytesBuff = BytesBuff.instance(jsonInput, apiNumber);
-			Tag response;
-			ObjStat objStat;
-			response = this.getIRODSAccessObjectFactory().getIrodsSession().currentConnection(this.getIRODSAccount())
-					.irodsFunction(bytesBuff);
+		log.debug("request:{}", request);
+		BytesBuff bytesBuff = BytesBuff.instance(request, apiNumber);
 
-			log.debug("response from objStat: {}", response.parseTag());
-			return null;
+		PluggableApiCallResult response = this.getIRODSAccessObjectFactory().getIrodsSession()
+				.currentConnection(this.getIRODSAccount()).readPluggableApiMessage();
 
-		} catch (JsonProcessingException e) {
-			log.error("Invalid json", e);
-			throw new JargonException("invalid json", e);
-		}
-
+		log.debug("response from pluggable api call: {}", response);
+		return response;
 	}
-
 }

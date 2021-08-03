@@ -431,6 +431,10 @@ public class IRODSFileOutputStreamTest {
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertTrue("no file descriptor assigned", irodsFileOutputStream.getFileDescriptor() > -1);
 
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isSupportsResourceTokens()) {
+			Assert.assertNotNull("no resource token found", irodsFile.getResourceToken());
+		}
+
 	}
 
 	@Test

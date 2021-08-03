@@ -648,6 +648,12 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 		return new DataObjectChecksumUtilitiesAOImpl(irodsSession, irodsAccount);
 	}
 
+	@Override
+	public ApiPluginExecutor getApiPluginExecutor(final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new ApiPluginExecutorImpl(irodsSession, irodsAccount);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *

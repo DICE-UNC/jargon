@@ -348,6 +348,26 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Instance for open where a resource token will be obtained, this is only for
+	 * iRODS > 4.2.8
+	 * 
+	 * @param fileAbsolutePath {@code String} with the file absolute path
+	 * @param openFlags        {@link OpenFlags}
+	 * @return {@link DataObjInp}
+	 * @throws JargonException {@link JargonException}
+	 */
+	public static DataObjInp instanceForOpenResourceToken(String fileAbsolutePath, OpenFlags openFlags)
+			throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
+		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
+			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
+		}
+		dataObjInp.setApiNumber(DataObjInp.REPLICA_OPEN_API_NBR);
+		return dataObjInp;
+	}
+
+	/**
 	 * Create an instance of the protocol for a file open operation.
 	 *
 	 * @param fileAbsolutePath {@code String} with the physical path of the file to

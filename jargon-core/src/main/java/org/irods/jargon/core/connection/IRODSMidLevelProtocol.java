@@ -7,10 +7,10 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.ClosedChannelException;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.ProtocolFormException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
@@ -18,6 +18,7 @@ import org.irods.jargon.core.packinstr.SSLEndInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.protovalues.RequestTypes;
+import org.irods.jargon.core.pub.PluggableApiCallResult;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,10 +213,11 @@ public class IRODSMidLevelProtocol {
 	 * Call an iRODS pluggable api endpoint with the pre-serialized json and return
 	 * the json as a string value to be marshaled by the wrapper function.
 	 * 
-	 * @return {@code String} with the string-ified JSON response, marshal and
-	 *         unmarshal are external to this method
+	 * @return {@link PluggableApiCallResult} with the string-ified JSON response,
+	 *         marshal and unmarshal are external to this method
 	 */
-	public synchronized String irodsPluggableApiFunction(String inputJson, int apiNumber) throws JargonException {
+	public synchronized PluggableApiCallResult irodsPluggableApiFunction(String inputJson, int apiNumber)
+			throws JargonException {
 
 		// BytesBuf_T
 		// see
@@ -266,13 +268,14 @@ public class IRODSMidLevelProtocol {
 	 * Read a message from iRODS in response to a pluggable api operation, which
 	 * should be a JSON string
 	 *
-	 * @return {@code String} with the iRODS JSON response
+	 * @return {@link PluggableApiCallResult} with the iRODS JSON response
 	 * @throws JargonException on iRODS error
 	 */
-	public synchronized String readPluggableApiMessage() throws JargonException {
+	public synchronized PluggableApiCallResult readPluggableApiMessage() throws JargonException {
 		log.debug("readPluggableApiMessage()");
 		Tag header = readHeader();
-		String message = null;
+		Tag message = null;
+		String jsonOutput = null;
 
 		int messageLength = header.getTags()[1].getIntValue();
 		int errorLength = header.getTags()[2].getIntValue();
@@ -296,21 +299,38 @@ public class IRODSMidLevelProtocol {
 
 		if (messageLength > 0) {
 			log.debug("message length greater than zero");
-			message = readJsonMessageBody(messageLength);
+			message = readMessageBody(messageLength, true);
 
 		}
 		// previous will have returned or thrown exception
 
 		if (errorLength != 0) {
-			return handlePluggableApiError(errorLength);
+			processMessageErrorNotEqualZero(errorLength);
 		}
 
-		if (bytesLength != 0 || info > 0) {
-			log.debug("bytes length is not zero, this is an unexpected condition for pluggable API");
-			throw new ProtocolFormException("bytesLength >0, byte buffers not expected in pluggable API calls");
+		if (bytesLength > 0) {
+			throw new UnsupportedOperationException("unable to handle bytes buffer from pluggable api call");
 		}
 
-		return message;
+		// look for the tag with the actual encoded message (tag is buf in a
+		// BinBytesBuf_PI tag
+
+		if (message == null) {
+			String msg = "null message from call";
+			log.error(msg);
+			throw new JargonException(msg);
+		}
+
+		// parse out the response
+		String messageBytes = message.getTag("buf").getStringValue();
+		byte[] decoded = Base64.decode(messageBytes);
+		PluggableApiCallResult pluggableApiResult = new PluggableApiCallResult();
+		pluggableApiResult.setErrorInfo(errorLength);
+		pluggableApiResult.setErrorInfo(info);
+		pluggableApiResult.setJsonResult(new String(decoded));
+
+		return pluggableApiResult;
+
 	}
 
 	/**
@@ -907,6 +927,52 @@ public class IRODSMidLevelProtocol {
 		}
 
 		return irodsFunction(IRODSConstants.RODS_API_REQ, irodsPI.getParsedTags(), irodsPI.getApiNumber());
+	}
+
+	/**
+	 * Create an iRODS message Tag, including header. This convenience method is
+	 * suitable for operations that do not require error or binary streams, and will
+	 * set up empty streams for the method call.
+	 *
+	 * @param irodsPI {@link IRodsPI} with the packing instruction to execute
+	 * @return {@link Tag} with the result of the call
+	 * @throws JargonException for iRODS error
+	 */
+	public synchronized PluggableApiCallResult irodsFunctionWithPluggableResult(final IRodsPI irodsPI)
+			throws JargonException {
+
+		// BytesBuf_T
+		// see
+		// https://github.com/irods/irods/blob/master/unit_tests/src/test_get_file_descriptor_info.cpp#L47
+		// https://github.com/irods/irods/blob/master/plugins/api/src/get_file_descriptor_info.cpp#L358-L383
+		log.info("irodsFunctionWithPluggableResult()");
+
+		if (irodsPI == null) {
+			String err = "null irodsPI";
+			log.error(err);
+			throw new IllegalArgumentException(err);
+		}
+
+		String out = irodsPI.getParsedTags();
+
+		if (out == null || out.length() == 0) {
+			String err = "null or missing message returned from parse";
+			log.error(err);
+			throw new IllegalArgumentException(err);
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug(out);
+		}
+
+		try {
+			sendHeader(IRODSConstants.RODS_API_REQ, out.getBytes(getEncoding()).length, 0, 0, irodsPI.getApiNumber());
+			irodsConnection.send(out);
+			irodsConnection.flush();
+		} catch (IOException e) {
+			log.error("");
+		}
+		return readPluggableApiMessage();
 	}
 
 	/**

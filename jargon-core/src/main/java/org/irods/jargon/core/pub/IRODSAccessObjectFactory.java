@@ -69,11 +69,10 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code UserAO} access object to interact with iRODS
 	 * Users.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.UserAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	UserAO getUserAO(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -81,11 +80,10 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code EnvironmentalInfoAO} access object to retrieve
 	 * global information from iRODS.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.EnvironmentalInfoAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	EnvironmentalInfoAO getEnvironmentalInfoAO(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -93,11 +91,10 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code IRODSGenQueryExecutor} access object to
 	 * interact with iRODS GenQuery.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.IRODSGenQueryExecutor}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	IRODSGenQueryExecutor getIRODSGenQueryExecutor(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -105,11 +102,10 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code ZoneAO} access object to interact with iRODS
 	 * Zones.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.ZoneAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	ZoneAO getZoneAO(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -117,11 +113,10 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code ResourceAO} access object to interact with
 	 * iRODS Resources.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.ResourceAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	ResourceAO getResourceAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -131,11 +126,10 @@ public interface IRODSAccessObjectFactory {
 	 * rarely need direct use. Rather, the facilities of
 	 * {@link org.irods.jargon.core.pub.io.IRODSFile} should be utilized.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.IRODSFileSystemAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	IRODSFileSystemAO getIRODSFileSystemAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -143,11 +137,10 @@ public interface IRODSAccessObjectFactory {
 	 * Returns an {@code IRODSFileFactory} that can be used to create various types
 	 * of iRODS files and streams.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileFactory}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	IRODSFileFactory getIRODSFileFactory(IRODSAccount irodsAccount) throws JargonException;
 
@@ -155,19 +148,17 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code UserGroupAO} access object to interact with
 	 * iRODS UserGroups.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.UserGroupAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Close all connections associated with the current thread.
 	 *
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	void closeSession() throws JargonException;
 
@@ -175,11 +166,10 @@ public interface IRODSAccessObjectFactory {
 	 * Returns a {@code CollectionAO} implementation that works on IRODS Collection
 	 * objects
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	CollectionAO getCollectionAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -187,11 +177,10 @@ public interface IRODSAccessObjectFactory {
 	 * Returns a {@code DataObjectAO} implementation that works on IRODS data
 	 * objects (files)
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.DataObjectAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	DataObjectAO getDataObjectAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -201,11 +190,10 @@ public interface IRODSAccessObjectFactory {
 	 * the iRODS hierarchy. This is distinct from the typical find and list methods
 	 * in the access objects for DataObject and Collection.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(IRODSAccount irodsAccount)
 			throws JargonException;
@@ -214,11 +202,10 @@ public interface IRODSAccessObjectFactory {
 	 * Returns a {@code RuleProcessingAO} implementation that interacts with iRODS
 	 * rule processing
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.RuleProcessingAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	RuleProcessingAO getRuleProcessingAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -226,11 +213,10 @@ public interface IRODSAccessObjectFactory {
 	 * Returns a {@code DataTransferOperations} object that provides a centralized
 	 * set of methods for moving data around the iRODS system.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.DataTransferOperations}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	DataTransferOperations getDataTransferOperations(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -238,21 +224,19 @@ public interface IRODSAccessObjectFactory {
 	 * Returns a {@code RemoteExecutionOfCommandsAO} that can execute commands
 	 * (scripts) remotely on an iRODS server.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Close the underlying connection for the given IRODSAccount.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
+	 * @throws JargonException for iRODS error
 	 */
 	void closeSession(IRODSAccount irodsAccount) throws JargonException;
 
@@ -260,8 +244,8 @@ public interface IRODSAccessObjectFactory {
 	 * For easy wiring via dependency injection, an access object factory may be
 	 * created and injected with the {@code IRODSSession}
 	 *
-	 * @param irodsSession
-	 *            {@link IRODSSession} that will manage the connection to iRODS.
+	 * @param irodsSession {@link IRODSSession} that will manage the connection to
+	 *                     iRODS.
 	 */
 	void setIrodsSession(final IRODSSession irodsSession);
 
@@ -276,22 +260,20 @@ public interface IRODSAccessObjectFactory {
 	 * Returns a {@code BulkFileOperationsAO} that can handle the creation and
 	 * extraction of compressed file archives (tars) in iRODS.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link BulkFileOperationsAO}
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get the access object that can manage quota information and settings.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link QuotaAO} instance
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	QuotaAO getQuotaAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -301,12 +283,11 @@ public interface IRODSAccessObjectFactory {
 	 * pre-arranged statements. These queries are typically used for various admin
 	 * functions, and require admin rights.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link SimpleQueryExecutorAO} to send and process results of a simple
 	 *         query.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	SimpleQueryExecutorAO getSimpleQueryExecutorAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -321,8 +302,7 @@ public interface IRODSAccessObjectFactory {
 	 * Close the underlying connection for the given IRODSAccount. Any resulting
 	 * exceptions are logged as a warning and ignored.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount}
+	 * @param irodsAccount {@link IRODSAccount}
 	 */
 	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
 
@@ -330,11 +310,10 @@ public interface IRODSAccessObjectFactory {
 	 * Get an access object that can assist in stream to stream or byte array to
 	 * stream copies into iRODS.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link Stream2StreamAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -343,52 +322,47 @@ public interface IRODSAccessObjectFactory {
 	 * controls behavior of Jargon.
 	 *
 	 * @return {@link JargonProperties}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	JargonProperties getJargonProperties() throws JargonException;
 
 	/**
 	 * Get an AO to query audit trail info for a data object
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link DataObjectAuditAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	DataObjectAuditAO getDataObjectAuditAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get an AO to query audit trail info for a collection
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link CollectionAuditAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get an AO to administer mounted collections and soft links
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link MountedCollectionAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	MountedCollectionAO getMountedCollectionAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get an AO that manages iRODS file registration and de-registration
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link IRODSRegistrationOfFilesAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -398,8 +372,7 @@ public interface IRODSAccessObjectFactory {
 	 *
 	 * @return {@link TransferControlBlock} reflecting default options and
 	 *         properties.
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException;
 
@@ -409,8 +382,7 @@ public interface IRODSAccessObjectFactory {
 	 *
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties() throws JargonException;
 
@@ -419,12 +391,11 @@ public interface IRODSAccessObjectFactory {
 	 * that need to directly invoke and process packing instructions and other
 	 * protocol operations.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link ProtocolExtensionPoint} that may be used to communicate with
 	 *         iRODS using packing instructions.
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	ProtocolExtensionPoint getProtocolExtensionPoint(IRODSAccount irodsAccount) throws JargonException;
 
@@ -432,12 +403,10 @@ public interface IRODSAccessObjectFactory {
 	 * Get the properties of the iRODS server described by the provided
 	 * {@code IRODSAccount}
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the server for which
-	 *            properties will be derived
+	 * @param irodsAccount {@link IRODSAccount} that describes the server for which
+	 *                     properties will be derived
 	 * @return {@link IRODSServerProperties} for the server at the given account
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount) throws JargonException;
 
@@ -445,12 +414,11 @@ public interface IRODSAccessObjectFactory {
 	 * Return a {@code ResourceGroupAO} object that can handle the resource groups
 	 * in the iRODS icat
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link ResourceGroupAO} that can interact with resource groups on the
 	 *         iCAT
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount) throws JargonException;
 
@@ -458,11 +426,10 @@ public interface IRODSAccessObjectFactory {
 	 * Create an instance of a {@code SpecificQueryAO} access object to interact
 	 * with iRODS Specific Queries.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that describes the connection to iRODS.
+	 * @param irodsAccount {@link IRODSAccount} that describes the connection to
+	 *                     iRODS.
 	 * @return {@link org.irods.jargon.core.pub.SpecificQueryAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount) throws JargonException;
 
@@ -481,18 +448,15 @@ public interface IRODSAccessObjectFactory {
 	 * connection in order to obtain a new authentication. Rather, this method will
 	 * silently return an already-cached authentication for the current connection
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the authenticating principal
+	 * @param irodsAccount {@link IRODSAccount} with the authenticating principal
 	 * @return {@link AuthResponse} containing information about the authenticated
 	 *         principal. Note that the authentication process may cause the
 	 *         authenticating {@code IRODSAccount} to be altered or augmented. The
 	 *         resulting account that can be cached and re-used by applications will
 	 *         be in the authenticated account.
-	 * @throws AuthenticationException
-	 *             If the principal cannot be authenticated. This will be thrown on
-	 *             initial authentication
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws AuthenticationException If the principal cannot be authenticated.
+	 *                                 This will be thrown on initial authentication
+	 * @throws JargonException         {@link JargonException}
 	 */
 	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount) throws AuthenticationException, JargonException;
 
@@ -505,18 +469,15 @@ public interface IRODSAccessObjectFactory {
 	 * already authenticated. If not cached, this method causes an authentication
 	 * process.
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the authenticating principal
+	 * @param irodsAccount {@link IRODSAccount} with the authenticating principal
 	 * @return {@link AuthResponse} containing information about the authenticated
 	 *         principal. Note that the authentication process may cause the
 	 *         authenticating {@code IRODSAccount} to be altered or augmented. The
 	 *         resulting account that can be cached and re-used by applications will
 	 *         be in the authenticated account.
-	 * @throws AuthenticationException
-	 *             If the principal cannot be authenticated. This will be thrown on
-	 *             initial authentication
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws AuthenticationException If the principal cannot be authenticated.
+	 *                                 This will be thrown on initial authentication
+	 * @throws JargonException         {@link JargonException}
 	 */
 	AuthResponse authenticateIRODSAccountUtilizingCachedConnectionIfPresent(IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException;
@@ -549,36 +510,39 @@ public interface IRODSAccessObjectFactory {
 	/**
 	 * Service for pagable collection listings
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the authenticating principal
+	 * @param irodsAccount {@link IRODSAccount} with the authenticating principal
 	 * @return {@link CollectionPagerAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get a utility to deal with checksums in iRODS
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the authenticating principal
+	 * @param irodsAccount {@link IRODSAccount} with the authenticating principal
 	 * @return {@link DataObjectChecksumUtilitiesAO} that supports varous checksum
 	 *         operations
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 	DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get object that handles the trash can operations
 	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the authenticating principal
+	 * @param irodsAccount {@link IRODSAccount} with the authenticating principal
 	 * @return {@link TrashOperationsAO}
-	 * @throws JargonException
-	 *             {@link JargonException}
+	 * @throws JargonException {@link JargonException}
 	 */
 
 	TrashOperationsAO getTrashOperationsAO(IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Get an instance of an {@link ApiPluginExecutor}
+	 * 
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @return {@link ApiPluginExecutor}
+	 * @throws JargonException {@link JargonExecutor}
+	 */
+	ApiPluginExecutor getApiPluginExecutor(final IRODSAccount irodsAccount) throws JargonException;
 
 }
