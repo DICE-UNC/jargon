@@ -339,4 +339,21 @@ public interface IRODSFile {
 
 	public abstract OpenFlags getOpenFlags();
 
+	/**
+	 * Get the resource token that may have been obtained when the file was opened.
+	 * This is only present in later versions of iRODS.
+	 * 
+	 * @return {@code String} with the resource token, {code null} indicates that no
+	 *         token exists
+	 */
+	String getResourceToken();
+
+	/**
+	 * Set the resource token if one is available (dependant on iRODS version)
+	 * 
+	 * @param resourceToken {@code String} with the resource token value, if
+	 *                      available
+	 */
+	void setResourceToken(String resourceToken);
+
 }
