@@ -79,31 +79,29 @@ public class IRODSFileOutputStream extends OutputStream {
 			throw new IllegalArgumentException("openFlags is null");
 		}
 
-		/*
-		 * Exists and other checks done by object calling this constructor
-		 */
-
 		this.irodsFile = irodsFile;
 		this.openFlags = openFlags;
-		openIRODSFile(fileIOOperations);
+		openWithFlags(fileIOOperations, openFlags);
 		this.fileIOOperations = fileIOOperations;
 	}
 
-	private int openIRODSFile(final FileIOOperations fileIOOperations)
+	private int openWithFlags(final FileIOOperations fileIOOperations, final OpenFlags openFlags)
 			throws NoResourceDefinedException, JargonException {
 
 		log.info("openIRODSFile()");
 		int fileDescriptor = -1;
 
+		// this.irodsFile.open();
+
 		boolean exists = irodsFile.exists();
 		log.info("exists? {}", exists);
-
-		/*
-		 * Check exists with open flags and throw error or create as needed
-		 */
-
-		irodsFile.setOpenFlags(openFlags);
-
+//
+//		/*
+//		 * Check exists with open flags and throw error or create as needed
+//		 */
+//
+//		irodsFile.setOpenFlags(openFlags);
+//
 		if (exists) {
 			if (openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS || openFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
 				log.error("file exists, open flags indicate failure intended");
@@ -115,8 +113,11 @@ public class IRODSFileOutputStream extends OutputStream {
 			}
 
 		} else {
-			log.info("file does not exist, create it");
-			irodsFile.createNewFileCheckNoResourceFound(openFlags);
+			log.info("file does not exist, create it by adjusting open flags");
+			irodsFile.open(OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS);
+			// irodsFile.createNewFileCheckNoResourceFound(openFlags);
+			// now if this is 4.2.9 or greater go ahead and obtain the replica token
+			// irodsFile
 
 		}
 
@@ -158,18 +159,29 @@ public class IRODSFileOutputStream extends OutputStream {
 	 */
 	@Override
 	public void close() throws IOException {
+		log.info("close()");
 		try {
-			irodsFile.close();
 
-			/*
-			 * If checksum compute is true, add an iRODS checksum
-			 */
+			log.info("close will use replica close and handle checksum there if needed");
 
-			if (getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
-					|| getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
-				log.info("computing checksum per jargon properties settings");
+			if (this.getFileIOOperations().getIRODSAccessObjectFactory()
+					.getIRODSServerProperties(this.getFileIOOperations().getIRODSAccount())
+					.isSupportsResourceTokens()) {
 
-				getFileIOOperations().computeChecksumOnIrodsFile(irodsFile.getAbsolutePath());
+			} else {
+				irodsFile.close();
+
+				/*
+				 * If checksum compute is true, add an iRODS checksum
+				 */
+
+				if (getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
+						|| getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
+					log.info("computing checksum per jargon properties settings");
+
+					getFileIOOperations().computeChecksumOnIrodsFile(irodsFile.getAbsolutePath());
+
+				}
 
 			}
 

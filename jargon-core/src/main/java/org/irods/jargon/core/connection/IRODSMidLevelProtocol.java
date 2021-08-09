@@ -326,7 +326,7 @@ public class IRODSMidLevelProtocol {
 		byte[] decoded = Base64.decode(messageBytes);
 		PluggableApiCallResult pluggableApiResult = new PluggableApiCallResult();
 		pluggableApiResult.setErrorInfo(errorLength);
-		pluggableApiResult.setErrorInfo(info);
+		pluggableApiResult.setIntInfo(info);
 		pluggableApiResult.setJsonResult(new String(decoded));
 
 		return pluggableApiResult;

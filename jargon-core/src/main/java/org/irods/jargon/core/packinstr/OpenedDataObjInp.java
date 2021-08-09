@@ -49,13 +49,11 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the OpenedDataObjInp packing instruction for a file
 	 * seek operation
 	 *
-	 * @param offset
-	 *            {@code long} with the offset into the file to seek to.
-	 * @param fileDescriptor
-	 *            {@code int} that iRODS assigns to the file when opening.
-	 * @param whence
-	 *            {@code int} with the proper seek type (see SEEK_ constants in this
-	 *            class)
+	 * @param offset         {@code long} with the offset into the file to seek to.
+	 * @param fileDescriptor {@code int} that iRODS assigns to the file when
+	 *                       opening.
+	 * @param whence         {@code int} with the proper seek type (see SEEK_
+	 *                       constants in this class)
 	 * @return an instance of the packing instruction ready to send to iRODS.
 	 */
 	public static final OpenedDataObjInp instanceForFileSeek(final long offset, final int fileDescriptor,
@@ -80,8 +78,8 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * Instance for a close operation specifying putOpr to trigger postProcForPut
 	 * per More enhancements to file close to trigger acPostProcForPut #93
 	 *
-	 * @param fileDescriptor
-	 *            {@code int} that iRODS assigns to the file when opening.
+	 * @param fileDescriptor {@code int} that iRODS assigns to the file when
+	 *                       opening.
 	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileCloseWithPutOpr(final int fileDescriptor) {
@@ -91,8 +89,8 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Instance for a close operation
 	 *
-	 * @param fileDescriptor
-	 *            {@code int} that iRODS assigns to the file when opening.
+	 * @param fileDescriptor {@code int} that iRODS assigns to the file when
+	 *                       opening.
 	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileClose(final int fileDescriptor) {

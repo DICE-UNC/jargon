@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.apiplugin.ApiPluginConstants;
+import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -25,12 +27,16 @@ import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.ResourceHierarchyException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
+import org.irods.jargon.core.pub.ApiPluginExecutor;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.pluggable.ReplicaClose;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * Describes a file or collection on the IRODS data grid. Note that
@@ -369,6 +375,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), openFlags, DataObjInp.DEFAULT_CREATE_MODE);
 
 			log.debug("file descriptor from new file create: {}", fileDescriptor);
+
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}
@@ -1319,13 +1326,38 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			return;
 		}
 
-		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
-				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
-			log.info("closing with putOpr");
-			irodsFileSystemAO.fileClose(getFileDescriptor(), true);
-		} else {
-			irodsFileSystemAO.fileClose(getFileDescriptor(), false);
+		// check if I have a replica token, in which case you will do a replica close
+		if (this.getReplicaToken() != null) {
+			log.info("close via replica token path");
 
+			ReplicaClose replicaClose = new ReplicaClose();
+			replicaClose.setFd(this.fileDescriptor);
+			if (this.getIrodsFileSystemAO().getJargonProperties().isComputeChecksumAfterTransfer()) {
+				log.debug("add checksum flag");
+				replicaClose.setComputeChecksum(true);
+			}
+
+			try {
+				String replicaCloseString = IRODSSession.objectMapper.writeValueAsString(replicaClose);
+				ApiPluginExecutor apiPluginExecutor = this.getIrodsFileSystemAO().getIRODSAccessObjectFactory()
+						.getApiPluginExecutor(this.getIrodsFileSystemAO().getIRODSAccount());
+				apiPluginExecutor.callPluggableApi(ApiPluginConstants.REPLICA_CLOSE_APN, replicaCloseString);
+
+			} catch (JsonProcessingException e) {
+				log.error("error writing json", e);
+				throw new JargonException("error writing replica close", e);
+			}
+
+		} else {
+
+			if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+					|| openFlags == OpenFlags.WRITE_TRUNCATE) {
+				log.info("closing with putOpr, check if i need to use a replica close (4.2.9+");
+				irodsFileSystemAO.fileClose(getFileDescriptor(), true);
+			} else {
+				irodsFileSystemAO.fileClose(getFileDescriptor(), false);
+
+			}
 		}
 
 		setFileDescriptor(-1);
@@ -1447,7 +1479,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 *         token exists
 	 */
 	@Override
-	public String getResourceToken() {
+	public String getReplicaToken() {
 		return resourceToken;
 	}
 
@@ -1458,7 +1490,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 *                      available
 	 */
 	@Override
-	public void setResourceToken(String resourceToken) {
+	public void setReplicaToken(String resourceToken) {
 		this.resourceToken = resourceToken;
 	}
 

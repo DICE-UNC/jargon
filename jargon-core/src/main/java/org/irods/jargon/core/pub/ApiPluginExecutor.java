@@ -11,7 +11,7 @@ import org.irods.jargon.core.packinstr.IRodsPI;
  * @author conwaymc
  *
  */
-interface ApiPluginExecutor {
+public interface ApiPluginExecutor {
 
 	/**
 	 * Make a function call using a regular packing instruction as a request and
