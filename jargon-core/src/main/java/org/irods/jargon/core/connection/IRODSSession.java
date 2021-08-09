@@ -45,6 +45,8 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Utility to open and maintain connections to iRODS across services. This is
  * used internally to keep connections to iRODS on a per-thread basis. A
@@ -74,6 +76,12 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class IRODSSession {
+
+	/**
+	 * Shared {@link ObjectMapper} for general use in JSON processing. This can be
+	 * treated as thread safe.
+	 */
+	public static final ObjectMapper objectMapper = new ObjectMapper();
 
 	/**
 	 * {@code ThreadLocal} to cache connections to iRODS. This is a {@code Map} that

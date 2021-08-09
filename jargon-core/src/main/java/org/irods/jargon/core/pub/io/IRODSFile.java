@@ -125,10 +125,8 @@ public interface IRODSFile {
 	 * access. Whether or not a read-only file or directory may be deleted depends
 	 * upon the underlying system.
 	 *
-	 * @param executable
-	 *            {@code boolean} with the desired execute state
-	 * @param ownerOnly
-	 *            {@code boolean} if exec by owner only
+	 * @param executable {@code boolean} with the desired execute state
+	 * @param ownerOnly  {@code boolean} if exec by owner only
 	 * @return {@code boolean} indicating success
 	 */
 	boolean setExecutable(boolean executable, boolean ownerOnly);
@@ -140,8 +138,7 @@ public interface IRODSFile {
 	 * access. Whether or not a read-only file or directory may be deleted depends
 	 * upon the underlying system.
 	 *
-	 * @param executable
-	 *            {@code boolean} with executable state
+	 * @param executable {@code boolean} with executable state
 	 * @return {@code boolean} indicating success
 	 */
 	boolean setExecutable(boolean executable);
@@ -150,8 +147,7 @@ public interface IRODSFile {
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
 	 *
-	 * @param time
-	 *            {@code long} with the last modified date
+	 * @param time {@code long} with the last modified date
 	 * @return {@code boolean} indicating success
 	 */
 	boolean setLastModified(long time);
@@ -160,10 +156,9 @@ public interface IRODSFile {
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
 	 *
-	 * @param readable
-	 *            {@code boolean} indicating the readable state to set
-	 * @param ownerOnly
-	 *            {@code boolean} indicating whether this is set for the owner only
+	 * @param readable  {@code boolean} indicating the readable state to set
+	 * @param ownerOnly {@code boolean} indicating whether this is set for the owner
+	 *                  only
 	 * @return {@code boolean} indicating success
 	 */
 	boolean setReadable(boolean readable, boolean ownerOnly);
@@ -172,8 +167,7 @@ public interface IRODSFile {
 	 * This method is not implemented for IRODS, and will throw an
 	 * {@code UnsupportedOperationException} if called.
 	 *
-	 * @param readable
-	 *            {@code boolean} indicating desired read state
+	 * @param readable {@code boolean} indicating desired read state
 	 * @return {@code boolean} indicating success
 	 */
 	boolean setReadable(boolean readable);
@@ -202,8 +196,7 @@ public interface IRODSFile {
 	 * parameter to tell iRODS what resoruce to operate with.
 	 *
 	 * @return {@code String} with the resource name
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	String getResource() throws JargonException;
 
@@ -213,8 +206,7 @@ public interface IRODSFile {
 	 * instead, this is used by any Jargon methods that have {@code IRODSFile} as a
 	 * paramenter to tell iRODS what resoruce to operate with.
 	 *
-	 * @param resource
-	 *            {@code String} with the resource name
+	 * @param resource {@code String} with the resource name
 	 */
 	void setResource(String resource);
 
@@ -229,20 +221,18 @@ public interface IRODSFile {
 	 * will open the file in read/write mode.
 	 *
 	 * @return {@code int} with the iRODS file descriptor.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	int open() throws JargonException;
 
 	/**
-	 * Open the iRODS file (obtaining a file descritor from iRODS). THis method will
-	 * open the file according to the provided flags
+	 * Open the iRODS file (obtaining a file descriptor from iRODS). THis method
+	 * will open the file according to the provided flags
 	 *
-	 * @param openFlags
-	 *            {@link OpenFlags} enum value that will dictate the open behavior
+	 * @param openFlags {@link OpenFlags} enum value that will dictate the open
+	 *                  behavior
 	 * @return {@code int} with the iRODS file descriptor value
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 */
 	int open(final OpenFlags openFlags) throws JargonException;
 
@@ -251,8 +241,7 @@ public interface IRODSFile {
 	 * will open the file in read-only mode.
 	 *
 	 * @return {@code int} with the irods file descriptor.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @throws JargonException for iRODS error
 	 * @deprecated use the @{code open(OpenFlags)} method
 	 */
 	@Deprecated
@@ -265,8 +254,7 @@ public interface IRODSFile {
 	/**
 	 * Rename to a new target location
 	 *
-	 * @param dest
-	 *            {@link IRODSFile} that is the target of the rename
+	 * @param dest {@link IRODSFile} that is the target of the rename
 	 * @return {@code boolean} if successful
 	 *
 	 */
@@ -275,11 +263,10 @@ public interface IRODSFile {
 	/**
 	 * Rename to a new target location
 	 *
-	 * @param dest
-	 *            {@link File} that is the target. This must be an {@link IRODSFile}
-	 *            and will be cast as such in the implementation, other types will
-	 *            cause an exception. This method conforms more closely to the
-	 *            {@link File} API.
+	 * @param dest {@link File} that is the target. This must be an
+	 *             {@link IRODSFile} and will be cast as such in the implementation,
+	 *             other types will cause an exception. This method conforms more
+	 *             closely to the {@link File} API.
 	 * @return {@code boolean} if successful
 	 */
 	boolean renameTo(File dest);
@@ -299,11 +286,9 @@ public interface IRODSFile {
 	 * special uses for narrow cases in Jargon, and should not typically be used. In
 	 * normal usage, the {@code IRODSFile} keeps track of its file descriptor.
 	 *
-	 * @param fd
-	 *            {@code int} with the file descriptor associated with this file
-	 *            that should be closed in iRODS.
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param fd {@code int} with the file descriptor associated with this file that
+	 *           should be closed in iRODS.
+	 * @throws JargonException for iRODS error
 	 */
 	void closeGivenDescriptor(int fd) throws JargonException;
 
@@ -313,17 +298,13 @@ public interface IRODSFile {
 	 * {@code java.io.File createNewFile()} method to handle cases where no defautl
 	 * storage resource is found
 	 *
-	 * @param openFlags
-	 *            {@link OpenFlags} for create
+	 * @param openFlags {@link OpenFlags} for create
 	 *
 	 * @return {@code boolean} of {@code true} if the file could be created
-	 * @throws NoResourceDefinedException
-	 *             if no default storage resource is defined, and no default rule is
-	 *             installed in iRODS
-	 * @throws JargonException
-	 *             for iRODS error
-	 * @throws NoResourceDefinedException
-	 *             when resource is missing
+	 * @throws NoResourceDefinedException if no default storage resource is defined,
+	 *                                    and no default rule is installed in iRODS
+	 * @throws JargonException            for iRODS error
+	 * @throws NoResourceDefinedException when resource is missing
 	 */
 	boolean createNewFileCheckNoResourceFound(OpenFlags openFlags) throws NoResourceDefinedException, JargonException;
 
@@ -346,7 +327,7 @@ public interface IRODSFile {
 	 * @return {@code String} with the resource token, {code null} indicates that no
 	 *         token exists
 	 */
-	String getResourceToken();
+	String getReplicaToken();
 
 	/**
 	 * Set the resource token if one is available (dependant on iRODS version)
@@ -354,6 +335,6 @@ public interface IRODSFile {
 	 * @param resourceToken {@code String} with the resource token value, if
 	 *                      available
 	 */
-	void setResourceToken(String resourceToken);
+	void setReplicaToken(String resourceToken);
 
 }

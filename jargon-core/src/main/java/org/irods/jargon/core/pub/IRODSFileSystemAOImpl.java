@@ -802,13 +802,45 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 			throw new JargonException("irodsFile is null");
 		}
 
-		String absPath = resolveAbsolutePathGivenObjStat(getObjStat(irodsFile.getAbsolutePath()));
+		log.info("irodsFile:{}", irodsFile);
+		log.info("openFlags:{}", openFlags);
+		/*
+		 * See if file exists and if so resolve its absolute path in case it's a link
+		 */
+		String absPath = null;
+		try {
+			absPath = resolveAbsolutePathGivenObjStat(getObjStat(irodsFile.getAbsolutePath()));
+		} catch (FileNotFoundException e) {
+			absPath = irodsFile.getAbsolutePath();
+		}
 
-		// FIXME: here is where we do the version check
+		OpenFlags myOpenFlags = openFlags;
+
+		if (irodsFile.exists()) {
+			log.info("file exists");
+			if (myOpenFlags == OpenFlags.WRITE_FAIL_IF_EXISTS || myOpenFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
+				log.error("file exists, open flags indicate failure intended");
+				throw new JargonException(
+						"Attempt to open a file that exists is an error based on the desired openFlags");
+			}
+		} else {
+			/*
+			 * if it doesn't exist and the flags are for a write, go ahead and set to
+			 * create. Not sure if this is a sensible default or confuses things so if you
+			 * are looking here you should open an issue.
+			 */
+			if (myOpenFlags == OpenFlags.READ_WRITE || myOpenFlags == OpenFlags.WRITE
+					|| myOpenFlags == OpenFlags.WRITE_TRUNCATE) {
+				log.info("set openFlags to create if not exists, since file did not exist");
+				myOpenFlags = OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS;
+			}
+
+		}
+
 		int fileId;
 		if (this.getIRODSServerProperties().isSupportsResourceTokens()) {
 			log.info("");
-			DataObjInp dataObjInp = DataObjInp.instanceForOpenResourceToken(absPath, openFlags);
+			DataObjInp dataObjInp = DataObjInp.instanceForOpenResourceToken(absPath, myOpenFlags);
 			ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
 					.getApiPluginExecutor(getIRODSAccount());
 			PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
@@ -819,14 +851,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 				DataObjectOpen dataObjectOpen = mapper.readValue(apiResponse.getJsonResult(), DataObjectOpen.class);
 				log.debug("dataObjectOpen:{}", dataObjectOpen);
 				fileId = apiResponse.getIntInfo();
-				irodsFile.setResourceToken(dataObjectOpen.getReplicaToken());
+				irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
 			} catch (JsonProcessingException e) {
 				log.error("error mapping json:{}", apiResponse, e);
 				throw new JargonException("json mapping error", e);
 			}
 
 		} else {
-			DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
+			DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, myOpenFlags);
 
 			if (log.isInfoEnabled()) {
 				log.info("opening file:" + absPath);

@@ -38,7 +38,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String LOCAL_PATH = "localPath";
 	public static final String ALL = "all";
 
-	public static final int CREATE = 512;
+	public static final int CREATE = 64;
 	public static final int TRUNCATE = 1024;
 
 	public static final int CREATE_FILE_API_NBR = 601;
@@ -360,7 +360,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throws JargonException {
 		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
 		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
-				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
+				|| openFlags == OpenFlags.WRITE_TRUNCATE || openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
 			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
 		}
 		dataObjInp.setApiNumber(DataObjInp.REPLICA_OPEN_API_NBR);
@@ -380,7 +380,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throws JargonException {
 		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
 		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
-				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
+				|| openFlags == OpenFlags.WRITE_TRUNCATE || openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
 			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
 		}
 		return dataObjInp;
@@ -880,7 +880,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			tagOpenFlags = 2;
 			break;
 		case READ_WRITE_CREATE_IF_NOT_EXISTS:
-			tagOpenFlags = 2;
+			tagOpenFlags = 2 | CREATE;
 			break;
 		case READ_WRITE_FAIL_IF_EXISTS:
 			tagOpenFlags = 2;
