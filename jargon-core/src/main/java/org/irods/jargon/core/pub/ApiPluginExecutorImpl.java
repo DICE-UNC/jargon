@@ -6,7 +6,6 @@ package org.irods.jargon.core.pub;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.BytesBuff;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,10 +80,8 @@ class ApiPluginExecutorImpl extends IRODSGenericAO implements ApiPluginExecutor 
 		log.info("input:{}", request);
 
 		log.debug("request:{}", request);
-		BytesBuff bytesBuff = BytesBuff.instance(request, apiNumber);
 
-		PluggableApiCallResult response = this.getIRODSAccessObjectFactory().getIrodsSession()
-				.currentConnection(this.getIRODSAccount()).readPluggableApiMessage();
+		PluggableApiCallResult response = this.getIRODSProtocol().irodsPluggableApiFunction(request, apiNumber);
 
 		log.debug("response from pluggable api call: {}", response);
 		return response;

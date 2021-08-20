@@ -164,17 +164,15 @@ public class IRODSFileOutputStream extends OutputStream {
 
 			log.info("close will use replica close and handle checksum there if needed");
 
-			if (this.getFileIOOperations().getIRODSAccessObjectFactory()
-					.getIRODSServerProperties(this.getFileIOOperations().getIRODSAccount())
-					.isSupportsResourceTokens()) {
+			irodsFile.close();
 
-			} else {
-				irodsFile.close();
+			/*
+			 * If checksum compute is true, add an iRODS checksum. This is no longer done
+			 * when post 4.2.9 irods, instead this is done using the replica close and the
+			 * checksum flag there
+			 */
 
-				/*
-				 * If checksum compute is true, add an iRODS checksum
-				 */
-
+			if (this.irodsFile.getReplicaToken() == null) {
 				if (getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
 						|| getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
 					log.info("computing checksum per jargon properties settings");
@@ -182,7 +180,6 @@ public class IRODSFileOutputStream extends OutputStream {
 					getFileIOOperations().computeChecksumOnIrodsFile(irodsFile.getAbsolutePath());
 
 				}
-
 			}
 
 		} catch (JargonException e) {
