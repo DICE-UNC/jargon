@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
+import org.irods.jargon.core.packinstr.BinBytesBuff;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
 import org.irods.jargon.core.packinstr.SSLEndInp;
@@ -233,12 +234,16 @@ public class IRODSMidLevelProtocol {
 			throw new JargonException(err);
 		}
 
+		byte[] encodedInput = Base64.encode(inputJson.getBytes());
+
+		BinBytesBuff bytesBuff = BinBytesBuff.instance(new String(encodedInput), apiNumber);
+		String tagOut = bytesBuff.getParsedTags();
+
 		// message may be null for some operations
 
 		try {
-			int messageLength = 0;
 
-			messageLength = inputJson.getBytes(getEncoding()).length;
+			int messageLength = tagOut.getBytes(this.getEncoding()).length;
 
 			sendHeader(IRODSConstants.RODS_API_REQ, messageLength, 0, 0, apiNumber);
 
@@ -249,7 +254,7 @@ public class IRODSMidLevelProtocol {
 				getIrodsConnection().flush();
 			}
 
-			getIrodsConnection().send(inputJson);
+			getIrodsConnection().send(tagOut);
 			getIrodsConnection().flush();
 
 		} catch (UnsupportedEncodingException e) {
@@ -297,12 +302,17 @@ public class IRODSMidLevelProtocol {
 			return null;
 		}
 
+		PluggableApiCallResult pluggableApiResult = new PluggableApiCallResult();
+		pluggableApiResult.setErrorInfo(errorLength);
+		pluggableApiResult.setIntInfo(info);
+
 		if (messageLength > 0) {
 			log.debug("message length greater than zero");
 			message = readMessageBody(messageLength, true);
-
+			String messageBytes = message.getTag("buf").getStringValue();
+			byte[] decoded = Base64.decode(messageBytes);
+			pluggableApiResult.setJsonResult(new String(decoded));
 		}
-		// previous will have returned or thrown exception
 
 		if (errorLength != 0) {
 			processMessageErrorNotEqualZero(errorLength);
@@ -315,19 +325,7 @@ public class IRODSMidLevelProtocol {
 		// look for the tag with the actual encoded message (tag is buf in a
 		// BinBytesBuf_PI tag
 
-		if (message == null) {
-			String msg = "null message from call";
-			log.error(msg);
-			throw new JargonException(msg);
-		}
-
 		// parse out the response
-		String messageBytes = message.getTag("buf").getStringValue();
-		byte[] decoded = Base64.decode(messageBytes);
-		PluggableApiCallResult pluggableApiResult = new PluggableApiCallResult();
-		pluggableApiResult.setErrorInfo(errorLength);
-		pluggableApiResult.setIntInfo(info);
-		pluggableApiResult.setJsonResult(new String(decoded));
 
 		return pluggableApiResult;
 
