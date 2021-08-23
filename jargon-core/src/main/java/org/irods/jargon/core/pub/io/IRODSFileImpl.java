@@ -350,12 +350,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized boolean createNewFile() throws IOException {
 		try {
-			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE, 0600); // FIXME:
-																														// kory
-																														// test
-
+			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE, 0600);
 			log.debug("file descriptor from new file create: {}", fileDescriptor);
-
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		} catch (ResourceHierarchyException rhe) {
