@@ -231,6 +231,9 @@ public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements SimpleQ
 
 			for (int i = 1; i < rows.size(); i++) {
 				idx = rows.get(i).indexOf(':');
+				if(idx < 0) {
+					break;
+				}
 				thisCol = rows.get(i).substring(0, idx).trim();
 				if (thisCol.equals(firstColName)) {
 					break;
