@@ -106,7 +106,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		if (quotaValue <= 0) {
+		if (quotaValue < 0) {
 			throw new IllegalArgumentException("quotaValue is null or empty");
 		}
 

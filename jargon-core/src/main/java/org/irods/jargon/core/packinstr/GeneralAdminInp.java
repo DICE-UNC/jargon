@@ -169,8 +169,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		if (quotaValue <= 0) {
-			throw new IllegalArgumentException("quota value is less than or equal to zero");
+		if (quotaValue < 0) {
+			throw new IllegalArgumentException("quota value is less than zero");
 		}
 
 		return new GeneralAdminInp("set-quota", "user", userName, "total", String.valueOf(quotaValue), BLANK, BLANK,
