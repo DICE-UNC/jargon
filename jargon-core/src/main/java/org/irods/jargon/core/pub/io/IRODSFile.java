@@ -249,6 +249,22 @@ public interface IRODSFile {
 
 	void close() throws JargonException;
 
+	/**
+	 * Call a close on the file (that may underlie a stream). This close is only
+	 * used for iRODS versions that support replica tokens and will case an
+	 * {@link UnsupportedOperationException} if invoked on a version of iRODS that
+	 * does not support this style of close
+	 * 
+	 * @param updateSize                {@code boolean} update size in catalog
+	 * @param updateStatus              {@code boolean} update status in catalog
+	 * @param computeChecksum           {@code boolean} compute the checksum
+	 * @param sendNotifications         {@code boolean} send notifications
+	 * @param preserveReplicaStateTable {@code boolean} preserve replica state table
+	 * @throws JargonException {@link JargonException}
+	 */
+	void close(boolean updateSize, boolean updateStatus, boolean computeChecksum, boolean sendNotifications,
+			boolean preserveReplicaStateTable) throws JargonException;
+
 	int compareTo(IRODSFile irodsFile2);
 
 	/**

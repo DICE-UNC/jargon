@@ -1301,6 +1301,66 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		return openWithMode(openFlags);
 	}
 
+	@Override
+	public synchronized void close(final boolean updateSize, final boolean updateStatus, final boolean computeChecksum,
+			final boolean sendNotifications, final boolean preserveReplicaStateTable) throws JargonException {
+
+		log.info("close() with flags");
+
+		/*
+		 * If I'm calling this on iRODS when it doesn't support replica tokens, then
+		 * this is a usage error
+		 * 
+		 * if we're not holding a resource token we will go to the normal close,
+		 * otherwise we will process with the provided flags. This is a relaxed
+		 * interpretation and we can covert this if it creates unexpected behaviors
+		 * 
+		 */
+
+		if (!this.getIrodsFileSystemAO().getIRODSServerProperties().isSupportsResourceTokens()) {
+			log.error("iRODS does not support replica tokens");
+			throw new UnsupportedOperationException("This version of iRODS does not support replica tokens");
+		}
+
+		// check if I have a replica token, in which case you will do a replica close
+		if (this.getReplicaToken() != null) {
+			log.info("close via replica token path");
+
+			ReplicaClose replicaClose = new ReplicaClose();
+			replicaClose.setFd(this.fileDescriptor);
+			replicaClose.setPreserveReplicaStateTable(preserveReplicaStateTable);
+			replicaClose.setSendNotifications(sendNotifications);
+			replicaClose.setUpdateSize(updateSize);
+			replicaClose.setUpdateStatus(updateStatus);
+			replicaClose.setComputeChecksum(computeChecksum);
+
+			try {
+				String replicaCloseString = IRODSSession.objectMapper.writeValueAsString(replicaClose);
+				ApiPluginExecutor apiPluginExecutor = this.getIrodsFileSystemAO().getIRODSAccessObjectFactory()
+						.getApiPluginExecutor(this.getIrodsFileSystemAO().getIRODSAccount());
+				apiPluginExecutor.callPluggableApi(ApiPluginConstants.REPLICA_CLOSE_APN, replicaCloseString);
+
+			} catch (JsonProcessingException e) {
+				log.error("error writing json", e);
+				throw new JargonException("error writing replica close", e);
+			}
+
+		} else {
+
+			if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+					|| openFlags == OpenFlags.WRITE_TRUNCATE) {
+				log.info("closing with putOpr, check if i need to use a replica close (4.2.9+");
+				irodsFileSystemAO.fileClose(getFileDescriptor(), true);
+			} else {
+				irodsFileSystemAO.fileClose(getFileDescriptor(), false);
+
+			}
+		}
+
+		setFileDescriptor(-1);
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1312,9 +1372,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		// here if we have a resc token we want to call rc_replica_close // FIXME: close
 		// here
 
-		if (log.isInfoEnabled()) {
-			log.info("closing irodsFile:{}", getAbsolutePath());
-		}
+		log.info("closing irodsFile:{}", getAbsolutePath());
 
 		if (getFileDescriptor() <= 0) {
 			log.info("file is not open, silently ignore");
