@@ -179,7 +179,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStream
-	 * (org.irods.jargon.core.pub.io.IRODSFile)
+	 * (org.irods.jargon.core.pub.io.IRODSFile) FIXME: what if the replica token is
+	 * already in the irods file?
 	 */
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(final IRODSFile file)
@@ -188,6 +189,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 		log.info("instanceIRODSFileOutputStream()");
 		return this.instanceIRODSFileOutputStream(file, OpenFlags.WRITE);
 	}
+
+	// add instanceIRODSFileOutputStream(IRODSFile, replicaToken);
 
 	/*
 	 * (non-Javadoc)
@@ -335,6 +338,9 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 
 		return instanceIRODSFileOutputStream(name, OpenFlags.WRITE);
 	}
+
+	// FIXME: instanceIRODSFileOutputStream(final String name, final String
+	// replicaToken)
 
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(final String name, final OpenFlags openFlags)

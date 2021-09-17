@@ -77,6 +77,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class IRODSSession {
 
+	// TODO: add private concurrent hashmap
+	// concurrenthashmap<abspath, atomic counter>
+	// on any open oper add or ref by abspath and incr ctr
+	/*
+	 * in IRODSFile.close() { if jargonprops says do file close stuff { boolean
+	 * isfinal = dedrementOpenCounter(path) if isfinal { closewithalltheflags(update
+	 * catalog = true) else { closewithinterem flags stuff } } }
+	 * 
+	 * boolean sychnronized removeOpenFile(abspath) { decrement IRODSSession hashmap
+	 * counter, remove if at zero
+	 * 
+	 * synchronized addOpenFile(path) { add to hashmap if exists or create new entry
+	 * }
+	 * 
+	 * 
+	 * 
+	 */
+
 	/**
 	 * Shared {@link ObjectMapper} for general use in JSON processing. This can be
 	 * treated as thread safe.

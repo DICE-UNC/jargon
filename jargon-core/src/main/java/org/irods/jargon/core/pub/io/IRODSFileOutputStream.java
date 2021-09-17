@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
-import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.slf4j.Logger;
@@ -34,17 +33,10 @@ public class IRODSFileOutputStream extends OutputStream {
 	private final FileIOOperations fileIOOperations;
 
 	/**
-	 * This is the default open mode see {@link DataObjInp.OpenFlags} for details.
-	 * New signatures allow other open options.
-	 */
-	private OpenFlags openFlags = OpenFlags.WRITE;
-
-	/**
 	 * @return the fileIOOperations
 	 */
 	protected FileIOOperations getFileIOOperations() {
 		return fileIOOperations;
-
 	}
 
 	/**
@@ -80,7 +72,6 @@ public class IRODSFileOutputStream extends OutputStream {
 		}
 
 		this.irodsFile = irodsFile;
-		this.openFlags = openFlags;
 		openWithFlags(fileIOOperations, openFlags);
 		this.fileIOOperations = fileIOOperations;
 	}
@@ -152,6 +143,30 @@ public class IRODSFileOutputStream extends OutputStream {
 		}
 	}
 
+	/**
+	 * iRODS-specific close supporting replica tokens
+	 * 
+	 * @param updateSize                {@code boolean} update size in catalog
+	 * @param updateStatus              {@code boolean} update status in catalog
+	 * @param computeChecksum           {@code boolean} compute the checksum
+	 * @param sendNotifications         {@code boolean} send notifications
+	 * @param preserveReplicaStateTable {@code boolean} preserve replica state table
+	 * @throws JargonException {@link JargonException}
+	 */
+	public void close(final boolean updateSize, final boolean updateStatus, final boolean computeChecksum,
+			final boolean sendNotifications, final boolean preserveReplicaStateTable) throws JargonException {
+
+		log.info("close() with flags");
+		log.info("updateSize:{}", updateSize);
+		log.info("updateStatus:{}", updateStatus);
+		log.info("computeChecksum:{}", computeChecksum);
+		log.info("sendNotifications:{}", sendNotifications);
+		log.info("preserveReplicaStateTable:{}", preserveReplicaStateTable);
+
+		irodsFile.close(updateSize, updateStatus, computeChecksum, sendNotifications, preserveReplicaStateTable);
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -167,20 +182,24 @@ public class IRODSFileOutputStream extends OutputStream {
 			irodsFile.close();
 
 			/*
+			 * Legacy support
+			 * 
 			 * If checksum compute is true, add an iRODS checksum. This is no longer done
 			 * when post 4.2.9 irods, instead this is done using the replica close and the
-			 * checksum flag there
+			 * checksum flag in the irodsFile.close() operation above
 			 */
 
 			if (this.irodsFile.getReplicaToken() == null) {
 				if (getFileIOOperations().getJargonProperties().isComputeAndVerifyChecksumAfterTransfer()
 						|| getFileIOOperations().getJargonProperties().isComputeChecksumAfterTransfer()) {
 					log.info("computing checksum per jargon properties settings");
-
 					getFileIOOperations().computeChecksumOnIrodsFile(irodsFile.getAbsolutePath());
-
 				}
 			}
+
+			/*
+			 * ...Legacy support
+			 */
 
 		} catch (JargonException e) {
 			String msg = "JargonException caught in constructor, rethrow as IOException";
