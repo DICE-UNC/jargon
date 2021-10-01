@@ -31,6 +31,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;
+	private boolean coordinated = false;
 
 	/**
 	 * @return the fileIOOperations
@@ -72,9 +73,37 @@ public class IRODSFileOutputStream extends OutputStream {
 		}
 
 		this.irodsFile = irodsFile;
+
+		/*
+		 * if coordinated openCoordinated(fileIOOperations, openFlags) else
+		 */
+
 		openWithFlags(fileIOOperations, openFlags);
+
 		this.fileIOOperations = fileIOOperations;
 	}
+
+	/*
+	 * openCoordinated
+	 * 
+	 * * StreamDeque - responsible for coordination among multiple stream open calls
+	 * -synch open - acquire replica token
+	 * 
+	 * -close
+	 * 
+	 * replicatoken string -deque of open output streams
+	 * 
+	 * 
+	 * IRODS Session coordinatedStreamMap = new ConcurrentHashMap<String,
+	 * StreamDeque>
+	 * 
+	 * - streamDeque contains ref to each output stream
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 
 	private int openWithFlags(final FileIOOperations fileIOOperations, final OpenFlags openFlags)
 			throws NoResourceDefinedException, JargonException {

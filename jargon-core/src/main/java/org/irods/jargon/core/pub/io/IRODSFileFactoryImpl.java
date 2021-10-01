@@ -175,6 +175,16 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 	}
 
 	/*
+	 * FIXME: this will be added
+	 */
+	//
+	// public IRODSFileOutputStream instanceCoordinatedIRODSFileOutputStream(final
+	// String path,
+//			final OpenFlags openFlags) {
+//
+//	}
+
+	/*
 	 * (non-Javadoc)
 	 *
 	 * @see

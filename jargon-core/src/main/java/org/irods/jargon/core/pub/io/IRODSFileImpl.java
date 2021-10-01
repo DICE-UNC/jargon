@@ -1384,6 +1384,37 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		if (this.getReplicaToken() != null) {
 			log.info("close via replica token path");
 
+			/*
+			 * StreamDeque - responsible for coordination among multiple stream open calls
+			 * -synch open - acquire replica token
+			 * 
+			 * -close
+			 * 
+			 * replicatoken string -deque of open output streams
+			 * 
+			 * 
+			 * IRODS Session coordinatedStreamMap = new ConcurrentHashMap<String,
+			 * StreamDeque>
+			 * 
+			 * - streamDeque contains ref to each output stream
+			 * 
+			 * IRODSFileFactory
+			 * 
+			 * - adds a new factory method for coordinatedOutputStream on create
+			 * -StreamDeque acquire() check if path is in map, push on deque. returns the
+			 * replica token
+			 * 
+			 * 
+			 * 
+			 * if coordinated if last element add flags and close stream remove from irods
+			 * session map replica close else replica close as below
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 */
+
 			ReplicaClose replicaClose = new ReplicaClose();
 			replicaClose.setFd(this.fileDescriptor);
 			if (this.getIrodsFileSystemAO().getJargonProperties().isComputeChecksumAfterTransfer()) {
