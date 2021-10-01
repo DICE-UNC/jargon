@@ -14,6 +14,7 @@ import org.irods.jargon.core.connection.IRODSSimpleProtocolManagerTest;
 import org.irods.jargon.core.connection.PAMAuthTest;
 import org.irods.jargon.core.connection.PipelineConfigurationTest;
 import org.irods.jargon.core.connection.ProxyUserFunctionalTest;
+import org.irods.jargon.core.connection.ReplicaTokenCacheManagerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -23,7 +24,7 @@ import org.junit.runners.Suite;
 		DefaultPropertiesJargonConfigTest.class, ConnectionProgressStatusTest.class, PAMAuthTest.class,
 		DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class,
 		ClientServerNegotationPolicyFromPropertiesBuilderTest.class, ClientServerNegotiationPolicyTest.class,
-		PipelineConfigurationTest.class, ProxyUserFunctionalTest.class })
+		PipelineConfigurationTest.class, ProxyUserFunctionalTest.class, ReplicaTokenCacheManagerTest.class })
 public class ConnectionTests {
 
 }

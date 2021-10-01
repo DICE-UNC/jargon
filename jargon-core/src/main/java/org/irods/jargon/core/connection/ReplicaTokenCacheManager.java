@@ -57,7 +57,7 @@ public class ReplicaTokenCacheManager {
 	 * 
 	 * @throws ReplicaTokenLockException
 	 */
-	public String obtainExistingReplicaToken(final String logicalPath) throws ReplicaTokenLockException {
+	public String claimExistingReplicaToken(final String logicalPath) throws ReplicaTokenLockException {
 		log.info("obtainExistingReplicaToken()");
 
 		if (logicalPath == null || logicalPath.isEmpty()) {
@@ -69,6 +69,8 @@ public class ReplicaTokenCacheManager {
 			log.error("no cache entry found, perhaps lock was not acquired?");
 			throw new ReplicaTokenLockException("null cache entry, was lock acquired before calling this method?");
 		}
+
+		replicaTokenCacheEntry.incrementOpenCount();
 
 		return replicaTokenCacheEntry.getReplicaToken();
 
@@ -126,7 +128,7 @@ public class ReplicaTokenCacheManager {
 	 * @param logicalPath
 	 * @throws ReplicaTokenLockException
 	 */
-	public void registarReplicaTokenUsage(final String logicalPath) throws ReplicaTokenLockException {
+	public void registerReplicaTokenUsage(final String logicalPath) throws ReplicaTokenLockException {
 
 		log.info("registarReplicaTokenUsage()");
 
