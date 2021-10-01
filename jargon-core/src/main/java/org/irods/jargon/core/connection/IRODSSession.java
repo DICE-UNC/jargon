@@ -102,6 +102,12 @@ public class IRODSSession {
 	public static final ObjectMapper objectMapper = new ObjectMapper();
 
 	/**
+	 * Shared {@link ReplicaTokenCacheManager} that can be used to manage replica
+	 * tokens for opened files
+	 */
+	public static final ReplicaTokenCacheManager replicaTokenCacheManager = new ReplicaTokenCacheManager();
+
+	/**
 	 * {@code ThreadLocal} to cache connections to iRODS. This is a {@code Map} that
 	 * is keyed by the {@link IRODSAccount}, so that each thread automatically
 	 * shares a common connection to an iRODS server.
