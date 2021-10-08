@@ -9,6 +9,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -787,15 +788,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#openFile(org.irods.jargon
-	 * .core.pub.io.IRODSFile, org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
-	 */
 	@Override
-	public int openFile(final IRODSFile irodsFile, final DataObjInp.OpenFlags openFlags) throws JargonException {
-
+	public int openFile(IRODSFile irodsFile, OpenFlags openFlags, boolean coordinated) throws JargonException {
 		log.info("openFile(final IRODSFile irodsFile,final DataObjInp.OpenFlags openFlags)");
 
 		if (irodsFile == null) {
@@ -838,23 +832,50 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		}
 
 		int fileId;
-		if (this.getIRODSServerProperties().isSupportsResourceTokens()) {
-			log.info("");
-			DataObjInp dataObjInp = DataObjInp.instanceForOpenResourceToken(absPath, myOpenFlags);
-			ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
-					.getApiPluginExecutor(getIRODSAccount());
-			PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
-					dataObjInp);
-			log.debug("responseJson:{}", apiResponse);
-			ObjectMapper mapper = new ObjectMapper();
+		if (this.getIRODSServerProperties().isSupportsReplicaTokens()) {
+			log.info("open using replica token semantics");
+			/*
+			 * See if there is a cached replica token, I need to get a lock on it at any
+			 * rate
+			 */
+
+			Lock replicaLock = null;
 			try {
-				DataObjectOpen dataObjectOpen = mapper.readValue(apiResponse.getJsonResult(), DataObjectOpen.class);
-				log.debug("dataObjectOpen:{}", dataObjectOpen);
-				fileId = apiResponse.getIntInfo();
-				irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
-			} catch (JsonProcessingException e) {
-				log.error("error mapping json:{}", apiResponse, e);
-				throw new JargonException("json mapping error", e);
+				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(absPath);
+				replicaLock.tryLock(); // TODO: add timeout>
+
+				String replicaToken = IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(absPath);
+				if (replicaToken.isEmpty()) {
+					log.debug("need to obtain a replica token");
+					DataObjInp dataObjInp = DataObjInp.instanceForOpenReplicaToken(absPath, myOpenFlags);
+					ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
+							.getApiPluginExecutor(getIRODSAccount());
+					PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
+							dataObjInp);
+					log.debug("responseJson:{}", apiResponse);
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						DataObjectOpen dataObjectOpen = mapper.readValue(apiResponse.getJsonResult(),
+								DataObjectOpen.class);
+						log.debug("dataObjectOpen:{}", dataObjectOpen);
+						fileId = apiResponse.getIntInfo();
+						irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
+						IRODSSession.replicaTokenCacheManager.registerReplicaTokenUsage(irodsFile.getAbsolutePath(),
+								dataObjectOpen.getReplicaToken());
+					} catch (JsonProcessingException e) {
+						log.error("error mapping json:{}", apiResponse, e);
+						throw new JargonException("json mapping error", e);
+					}
+				} else {
+					log.debug("replicaToken exists, use for the open");
+					throw new UnsupportedOperationException("cannot handle existing replica token yet");
+
+				}
+
+			} finally {
+				if (replicaLock != null) {
+					replicaLock.unlock();
+				}
 			}
 
 		} else {
@@ -880,6 +901,18 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		log.debug("file id for opened file:{}", fileId);
 
 		return fileId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#openFile(org.irods.jargon
+	 * .core.pub.io.IRODSFile, org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
+	 */
+	@Override
+	public int openFile(final IRODSFile irodsFile, final DataObjInp.OpenFlags openFlags) throws JargonException {
+
+		return openFile(irodsFile, openFlags, false);
 	}
 
 	/*

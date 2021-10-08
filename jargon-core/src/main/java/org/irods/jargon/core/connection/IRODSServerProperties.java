@@ -118,11 +118,11 @@ public class IRODSServerProperties {
 	}
 
 	/**
-	 * Indicates whether the iRODS server supports resource tokens and locking
+	 * Indicates whether the iRODS server supports replica tokens and locking
 	 * 
-	 * @return {@code boolean} if resource tokens and locking are supported
+	 * @return {@code boolean} if replica tokens and locking are supported
 	 */
-	public boolean isSupportsResourceTokens() {
+	public boolean isSupportsReplicaTokens() {
 		boolean supports = false;
 
 		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.8")) {

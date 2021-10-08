@@ -236,6 +236,32 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 		}
 	}
 
+	@Override
+	public IRODSFileOutputStream instanceIRODSFileOutputStream(final IRODSFile file, final OpenFlags openFlags,
+			final boolean coordinated) throws NoResourceDefinedException, JargonException {
+
+		log.info("instanceIRODSFileOutputStream()");
+
+		if (file == null) {
+			throw new IllegalArgumentException("null file");
+		}
+
+		if (openFlags == null) {
+			throw new IllegalArgumentException("null openFlags");
+		}
+
+		log.info("file:{}", file);
+		log.info("openFlags:{}", openFlags);
+
+		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(getIRODSSession(), getIRODSAccount());
+		try {
+			return new IRODSFileOutputStream(file, fileIOOperations, openFlags, coordinated);
+		} catch (FileNotFoundException e) {
+			log.error("FileNotFound creating output stream", e);
+			throw new JargonException(e);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *

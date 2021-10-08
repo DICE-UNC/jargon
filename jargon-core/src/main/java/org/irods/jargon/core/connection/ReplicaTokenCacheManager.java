@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author conwaymc
- * 
+ *
  *         A manager of replica tokens by iRODS logical path, this thread-safe
  *         cache is responsible for monitoring when a replica token has been
  *         acquired, acquiring a replica token the first time and then reusing
@@ -29,7 +29,7 @@ public class ReplicaTokenCacheManager {
 	/**
 	 * Idempotent method to get a reference to a {@link Lock}. A valid lock must be
 	 * acquired before attempting to read, set, or clear a replica token entry
-	 * 
+	 *
 	 * @param logicalPath {@code String} which is the iRODS path which is protected
 	 *                    by the lock
 	 * @return {@link Lock} object that can be tried in order to read or manipulate
@@ -54,7 +54,7 @@ public class ReplicaTokenCacheManager {
 	 * token, the calling initializer that is doing the open should call an open and
 	 * obtain the replica token from iRODS and then initialize the cache with that
 	 * token using the {@code addReplicaToken} method.
-	 * 
+	 *
 	 * @throws ReplicaTokenLockException
 	 */
 	public String claimExistingReplicaToken(final String logicalPath) throws ReplicaTokenLockException {
@@ -82,9 +82,9 @@ public class ReplicaTokenCacheManager {
 	 * method is called when the open is the first open for a file. On this first
 	 * open a call is made to obtain a replica token which will then be added to the
 	 * cache via the {@code addReplicaToken()} method.
-	 * 
+	 *
 	 * This method is used
-	 * 
+	 *
 	 * @param logicalPath
 	 * @param replicaToken
 	 * @throws ReplicaTokenLockException
@@ -124,11 +124,11 @@ public class ReplicaTokenCacheManager {
 
 	/**
 	 * Called after {@Lock} is tried and after obtaining the current replica token
-	 * 
-	 * @param logicalPath
-	 * @throws ReplicaTokenLockException
+	 *
+	 * @param logicalPath {@code String{ @throws ReplicaTokenLockException
 	 */
-	public void registerReplicaTokenUsage(final String logicalPath) throws ReplicaTokenLockException {
+	public void registerReplicaTokenUsage(final String logicalPath, final String replicaToken)
+			throws ReplicaTokenLockException {
 
 		log.info("registarReplicaTokenUsage()");
 
@@ -136,7 +136,12 @@ public class ReplicaTokenCacheManager {
 			throw new IllegalArgumentException("null or empty logicalPath");
 		}
 
+		if (replicaToken == null || replicaToken.isEmpty()) {
+			throw new IllegalArgumentException("null or empty replica token");
+		}
+
 		log.info("logicalPath:{}", logicalPath);
+		log.info("replicaToken:{}", replicaToken);
 
 		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(logicalPath);
 		if (replicaTokenCacheEntry == null) {
@@ -154,22 +159,24 @@ public class ReplicaTokenCacheManager {
 
 		}
 
-		replicaTokenCacheEntry.incrementOpenCount();
+		// note I don't increment the count because it was already claimed
+
+		replicaTokenCacheEntry.setReplicaToken(replicaToken);
 
 	}
 
 	/**
 	 * This method requires the caller to first call {@code obtainReplicaTokenLock}
 	 * with a {@code tryLock()}.
-	 * 
-	 * 
+	 *
+	 *
 	 * This method is called when a file is being closed, and where a replica token
 	 * was obtained. This method will decrement the count, when it gets to zero all
 	 * file handles are closed and the cache entry is removed. It is up to the
 	 * caller to adjust the close parameters to update the catalog, compute
 	 * checksums, and carry out all iRODS close operations with the desired close
 	 * flags.
-	 * 
+	 *
 	 * @param logicalPath {@code String} with the logical path to the file to be
 	 *                    closed
 	 * @return {@code boolean} with a value of {@code true} when this is the last
@@ -186,7 +193,10 @@ public class ReplicaTokenCacheManager {
 		log.info("logicalPath:{}", logicalPath);
 		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(logicalPath);
 		replicaTokenCacheEntry.decrementOpenCount();
-		if (replicaTokenCacheEntry.getOpenCount() == 0) {
+		if (replicaTokenCacheEntry.getOpenCount() < 0) {
+			log.error("replica count less than zero, this is an unexpected condition that indicates a system problem");
+			throw new IllegalStateException("replica count should never be less than zero");
+		} else if (replicaTokenCacheEntry.getOpenCount() == 0) {
 			replicaTokenCache.remove(logicalPath);
 			return true;
 		} else {

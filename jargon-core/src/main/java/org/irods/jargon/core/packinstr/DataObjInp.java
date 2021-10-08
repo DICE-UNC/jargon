@@ -348,7 +348,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Instance for open where a resource token will be obtained, this is only for
+	 * Instance for open where a replica token will be obtained, this is only for
 	 * iRODS > 4.2.8
 	 * 
 	 * @param fileAbsolutePath {@code String} with the file absolute path
@@ -356,7 +356,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link DataObjInp}
 	 * @throws JargonException {@link JargonException}
 	 */
-	public static DataObjInp instanceForOpenResourceToken(String fileAbsolutePath, OpenFlags openFlags)
+	public static DataObjInp instanceForOpenReplicaToken(String fileAbsolutePath, OpenFlags openFlags)
 			throws JargonException {
 		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
 		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
