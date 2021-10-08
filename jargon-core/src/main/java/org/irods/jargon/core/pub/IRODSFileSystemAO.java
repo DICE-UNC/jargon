@@ -218,6 +218,19 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	int openFile(IRODSFile irodsFile, DataObjInp.OpenFlags openFlags) throws JargonException;
 
 	/**
+	 * Open the given file in iRODS. This will assign a file id number.
+	 *
+	 * @param irodsFile   {@link IRODSFile}
+	 * @param openFlags   {@code DataObjInp.OpenFlags} enum value which describes
+	 *                    the open options.
+	 * @param coordinated {@code boolean} indicating that Jargon should coordinate
+	 *                    caching of replica tokens for multiple streams
+	 * @return {@code int} with the internal iRODS identifier for the file.
+	 * @throws JargonException for iRODS error
+	 */
+	int openFile(IRODSFile irodsFile, DataObjInp.OpenFlags openFlags, boolean coordinated) throws JargonException;
+
+	/**
 	 * Transfer a file between iRODS resources
 	 *
 	 * @param absolutePathToSourceFile {@code String} with the absolute path to the

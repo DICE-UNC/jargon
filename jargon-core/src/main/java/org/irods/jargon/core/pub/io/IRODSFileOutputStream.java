@@ -52,7 +52,7 @@ public class IRODSFileOutputStream extends OutputStream {
 	 *
 	 * @param irodsFile        {@link IRODSFile} that underlies the stream
 	 * @param fileIOOperations {@link FileIOOperations} that handles the iRODS
-	 *                         protoco
+	 *                         protocol
 	 * @param openFlags        {@link OpenFlags} for the stream
 	 * @exception NoResourceDefinedException if no storage resource is defined, and
 	 *                                       iRODS has not default resource rule
@@ -61,6 +61,34 @@ public class IRODSFileOutputStream extends OutputStream {
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations,
 			final OpenFlags openFlags) throws NoResourceDefinedException, FileNotFoundException, JargonException {
+
+		this(irodsFile, fileIOOperations, openFlags, false);
+	}
+
+	/**
+	 * Constuctor that indicates whether a stream is coordinated, in the sense that
+	 * multiple streams opened for the same iRODS path share a replica token, and
+	 * the stream can coordinate the close flags properly for catalog updates,
+	 * checksum calculation
+	 * 
+	 * If the named file does not exist, is a directory rather than a regular file,
+	 * or for some other reason cannot be opened for reading then a
+	 * {@code FileNotFoundException} is thrown.
+	 *
+	 * @param irodsFile        {@link IRODSFile} that underlies the stream
+	 * @param fileIOOperations {@link FileIOOperations} that handles the iRODS
+	 *                         protoco
+	 * @param openFlags        {@link OpenFlags} for the stream
+	 * @boolean coordinated {@code} boolean that indicates whether to coordinate
+	 *          replica tokens
+	 * @exception NoResourceDefinedException if no storage resource is defined, and
+	 *                                       iRODS has not default resource rule
+	 * @exception FileNotFoundException      when file is not found in iRODS
+	 * @exception JargonException            when other iRODS errors occur
+	 */
+	protected IRODSFileOutputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations,
+			final OpenFlags openFlags, final boolean coordinated)
+			throws NoResourceDefinedException, FileNotFoundException, JargonException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -78,9 +106,10 @@ public class IRODSFileOutputStream extends OutputStream {
 		 * if coordinated openCoordinated(fileIOOperations, openFlags) else
 		 */
 
-		openWithFlags(fileIOOperations, openFlags);
+		openWithFlags(fileIOOperations, openFlags, coordinated);
 
 		this.fileIOOperations = fileIOOperations;
+		this.coordinated = coordinated;
 	}
 
 	/*
@@ -105,8 +134,8 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * 
 	 */
 
-	private int openWithFlags(final FileIOOperations fileIOOperations, final OpenFlags openFlags)
-			throws NoResourceDefinedException, JargonException {
+	private int openWithFlags(final FileIOOperations fileIOOperations, final OpenFlags openFlags,
+			final boolean coordinated) throws NoResourceDefinedException, JargonException {
 
 		log.info("openIRODSFile()");
 		int fileDescriptor = -1;
@@ -129,12 +158,12 @@ public class IRODSFileOutputStream extends OutputStream {
 						"Attempt to open a file that exists is an error based on the desired openFlags");
 			} else {
 				log.info("open file with given flags");
-				irodsFile.open(openFlags);
+				irodsFile.open(openFlags, coordinated);
 			}
 
 		} else {
 			log.info("file does not exist, create it by adjusting open flags");
-			irodsFile.open(OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS);
+			irodsFile.open(OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS, coordinated);
 			// irodsFile.createNewFileCheckNoResourceFound(openFlags);
 			// now if this is 4.2.9 or greater go ahead and obtain the replica token
 			// irodsFile

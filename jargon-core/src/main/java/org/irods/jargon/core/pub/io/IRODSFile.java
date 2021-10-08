@@ -237,6 +237,19 @@ public interface IRODSFile {
 	int open(final OpenFlags openFlags) throws JargonException;
 
 	/**
+	 * Open the iRODS file (obtaining a file descriptor from iRODS). THis method
+	 * will open the file according to the provided flags
+	 *
+	 * @param openFlags   {@link OpenFlags} enum value that will dictate the open
+	 *                    behavior
+	 * @param coordinated {@code boolean} indicating that Jargon should coordinate
+	 *                    replica token caching when multiple streams are opened
+	 * @return {@code int} with the iRODS file descriptor value
+	 * @throws JargonException for iRODS error
+	 */
+	int open(final OpenFlags openFlags, final boolean coordinated) throws JargonException;
+
+	/**
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read-only mode.
 	 *
