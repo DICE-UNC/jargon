@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.apiplugin.ApiPluginConstants;
@@ -1135,30 +1136,17 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	@Override
 	public String toString() {
-		final int maxLen = 10;
-		StringBuilder builder = new StringBuilder();
-		builder.append("IRODSFileImpl [");
-		if (irodsFileSystemAO != null) {
-			builder.append("irodsFileSystemAO=").append(irodsFileSystemAO).append(", ");
-		}
-		if (fileName != null) {
-			builder.append("fileName=").append(fileName).append(", ");
-		}
-		if (resource != null) {
-			builder.append("resource=").append(resource).append(", ");
-		}
-		builder.append("fileDescriptor=").append(fileDescriptor).append(", ");
-		if (directory != null) {
-			builder.append("directory=").append(directory.subList(0, Math.min(directory.size(), maxLen))).append(", ");
-		}
-		if (openFlags != null) {
-			builder.append("openFlags=").append(openFlags).append(", ");
-		}
-		if (resourceToken != null) {
-			builder.append("resourceToken=").append(resourceToken).append(", ");
-		}
-		builder.append("coordinated=").append(coordinated).append("]");
-		return builder.toString();
+
+		StringBuilder s = new StringBuilder();
+		s.append("irods://");
+		s.append(irodsFileSystemAO.getIRODSAccount().getUserName());
+		s.append('@');
+		s.append(irodsFileSystemAO.getIRODSAccount().getHost());
+		s.append(':');
+		s.append(irodsFileSystemAO.getIRODSAccount().getPort());
+		s.append(getAbsolutePath());
+		return s.toString();
+
 	}
 
 	/*
@@ -1345,9 +1333,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 		int fileDescriptor = irodsFileSystemAO.openFile(this, openFlags, coordinated);
 
-		if (log.isDebugEnabled()) {
-			log.debug("opened file with descriptor of:" + fileDescriptor);
-		}
+		log.debug("opened file with descriptor of:" + fileDescriptor);
 
 		this.fileDescriptor = fileDescriptor;
 		this.openFlags = openFlags;
@@ -1383,11 +1369,23 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 			Lock replicaLock = null;
 			try {
-				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(this.getAbsolutePath());
-				replicaLock.tryLock(); // TODO: add timeout>
+				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(this.getAbsolutePath(),
+						this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
+				try {
+					boolean locked = replicaLock.tryLock(
+							this.getIrodsFileSystemAO().getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
+							TimeUnit.SECONDS);
+					if (!locked) {
+						log.error("timeout trying to lock replica token cache");
+						throw new JargonRuntimeException("timeout obtaining replica token lock");
+					}
+				} catch (InterruptedException e) {
+					log.info("interrupted", e);
+					throw new JargonRuntimeException("replica token cache tryLock interrupted", e);
+				}
 
-				boolean isFinalReplicaClose = IRODSSession.replicaTokenCacheManager
-						.closeReplicaToken(this.getAbsolutePath());
+				boolean isFinalReplicaClose = IRODSSession.replicaTokenCacheManager.closeReplicaToken(
+						this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
 				log.info("is this is the final replica close?:{}", isFinalReplicaClose);
 
 				ReplicaClose replicaClose = new ReplicaClose();

@@ -702,7 +702,24 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 		}
 
 		// open the file if it is not opened
-		irodsFile.open();
+		irodsFile.open(); // FIXME: add coordinated flag
+		return new IRODSRandomAccessFile(irodsFile, fileIOOperations);
+	}
+
+	@Override
+	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(IRODSFile irodsFile, OpenFlags openFlags,
+			boolean coordinated) throws NoResourceDefinedException, JargonException {
+		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(getIRODSSession(), getIRODSAccount());
+		log.info("opening IRODSFileImpl for: {}", irodsFile.getAbsoluteFile());
+
+		if (!irodsFile.exists()) {
+			log.info("requested file does not exist, will be created");
+
+			irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
+		}
+
+		// open the file if it is not opened
+		irodsFile.open(openFlags, coordinated);
 		return new IRODSRandomAccessFile(irodsFile, fileIOOperations);
 	}
 

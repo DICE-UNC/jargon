@@ -67,14 +67,11 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Create an instance of the IRODS implementation of a random access file
 	 *
-	 * @param irodsFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFileImpl} that describes
-	 *            the file.
-	 * @param fileIOOperations
-	 *            {@code FileIOOperations} that will encapsulate the actual methods
-	 *            in IRODS
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param irodsFile        {@link org.irods.jargon.core.pub.io.IRODSFileImpl}
+	 *                         that describes the file.
+	 * @param fileIOOperations {@code FileIOOperations} that will encapsulate the
+	 *                         actual methods in IRODS
+	 * @throws JargonException for iRODS error
 	 */
 	protected IRODSRandomAccessFile(final IRODSFile irodsFile, final FileIOOperations fileIOOperations)
 			throws JargonException {
@@ -109,14 +106,11 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * written by the writeBooleans method of interface BinaryDataOutput.
 	 * <P>
 	 *
-	 * @param values
-	 *            the array of values to set
-	 * @param nValues
-	 *            the number of values to read
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param values  the array of values to set
+	 * @param nValues the number of values to read
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	public void readBooleans(final boolean[] values, final int nValues) throws EOFException, IOException {
 		byte bytes[] = new byte[nValues];
@@ -134,12 +128,10 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * {@code InputStream}, this method behaves in the exactly the same way as
 	 * java.io.InputStream.read(byte[]).
 	 *
-	 * @param b
-	 *            the buffer into which the data is read.
+	 * @param b the buffer into which the data is read.
 	 * @return the total number of bytes read into the buffer, or {@code -1} if
 	 *         there is no more data because the end of this file has been reached.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	public int read(final byte b[]) throws IOException {
 		return readBytes(b, 0, b.length);
@@ -163,8 +155,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the next two bytes of this file as a Unicode character.
 	 *
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public char readChar() throws IOException {
@@ -190,10 +181,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 *
 	 * @return the value read
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	@Override
 	public double readDouble() throws EOFException, IOException {
@@ -215,10 +205,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 *
 	 * @return the value read
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	@Override
 	public float readFloat() throws EOFException, IOException {
@@ -234,12 +223,10 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * requested number of bytes are read, the end of the stream is detected, or an
 	 * exception is thrown.
 	 *
-	 * @param b
-	 *            the buffer into which the data is read.
-	 * @throws EOFException
-	 *             if this file reaches the end before reading all the bytes.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param b the buffer into which the data is read.
+	 * @throws EOFException if this file reaches the end before reading all the
+	 *                      bytes.
+	 * @throws IOException  if an I/O error occurs.
 	 */
 	@Override
 	public void readFully(final byte b[]) throws IOException {
@@ -253,15 +240,11 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * requested number of bytes are read, the end of the stream is detected, or an
 	 * exception is thrown.
 	 *
-	 * @param b
-	 *            the buffer into which the data is read.
-	 * @param offset
-	 *            the start offset of the data.
-	 * @param len
-	 *            the number of bytes to read.
+	 * @param b      the buffer into which the data is read.
+	 * @param offset the start offset of the data.
+	 * @param len    the number of bytes to read.
 	 *
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void readFully(final byte b[], final int offset, final int len) throws IOException {
@@ -290,10 +273,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 *
 	 * @return the value read
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	@Override
 	public int readInt() throws EOFException, IOException {
@@ -324,8 +306,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the next line of text from this file, or null if end of file is
 	 *         encountered before even one byte is read.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public String readLine() throws IOException {
@@ -359,10 +340,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 *
 	 * @return the value read
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	@Override
 	public long readLong() throws EOFException, IOException {
@@ -384,10 +364,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 *
 	 * @return the value read
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	@Override
 	public short readShort() throws EOFException, IOException {
@@ -411,15 +390,13 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return a Unicode string.
 	 *
-	 * @throws EOFException
-	 *             if this file reaches the end before reading all the bytes.
+	 * @throws EOFException           if this file reaches the end before reading
+	 *                                all the bytes.
 	 *
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException            if an I/O error occurs.
 	 *
-	 * @throws UTFDataFormatException
-	 *             if the bytes do not represent valid UTF-8 encoding of a Unicode
-	 *             string.
+	 * @throws UTFDataFormatException if the bytes do not represent valid UTF-8
+	 *                                encoding of a Unicode string.
 	 *
 	 */
 	@Override
@@ -437,8 +414,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * @return the next byte of this file, interpreted as an unsigned eight-bit
 	 *         number.
 	 *
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public int readUnsignedByte() throws IOException {
@@ -463,10 +439,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 *
 	 * @return the unsigned value
-	 * @throws EOFException
-	 *             if this stream reaches the end before reading all the bytes
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws EOFException if this stream reaches the end before reading all the
+	 *                      bytes
+	 * @throws IOException  if an I/O error occurs
 	 */
 	@Override
 	public int readUnsignedShort() throws IOException, EOFException {
@@ -485,11 +460,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * throws an {@code EOFException}. The actual number of bytes skipped is
 	 * returned. If {@code n} is negative, no bytes are skipped.
 	 *
-	 * @param n
-	 *            the number of bytes to be skipped.
+	 * @param n the number of bytes to be skipped.
 	 * @return the actual number of bytes skipped.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public int skipBytes(final int n) throws IOException {
@@ -512,10 +485,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Writes the specified byte to this file. The write starts at the current file
 	 * pointer.
 	 *
-	 * @param b
-	 *            the {@code byte} to be written.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param b the {@code byte} to be written.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void write(final int b) throws IOException {
@@ -528,10 +499,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Writes {@code b.length} bytes from the specified byte array to this file,
 	 * starting at the current file pointer.
 	 *
-	 * @param b
-	 *            the data.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param b the data.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void write(final byte b[]) throws IOException {
@@ -542,14 +511,10 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Writes {@code len} bytes from the specified byte array starting at offset
 	 * {@code off} to this file.
 	 *
-	 * @param b
-	 *            the data.
-	 * @param offset
-	 *            the start offset in the data.
-	 * @param len
-	 *            the number of bytes to write.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param b      the data.
+	 * @param offset the start offset in the data.
+	 * @param len    the number of bytes to write.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void write(final byte b[], final int offset, final int len) throws IOException {
@@ -562,10 +527,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * {@code false} is written out as the value {@code (byte)0} . The write starts
 	 * at the current position of the file pointer.
 	 *
-	 * @param v
-	 *            a {@code boolean} value to be written.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param v a {@code boolean} value to be written.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void writeBoolean(final boolean v) throws IOException {
@@ -576,10 +539,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Writes a {@code byte} to the file as a one-byte value. The write starts at
 	 * the current position of the file pointer.
 	 *
-	 * @param v
-	 *            a {@code byte} value to be written.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param v a {@code byte} value to be written.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void writeByte(final int v) throws IOException {
@@ -591,10 +552,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * string is written out, in sequence, by discarding its high eight bits. The
 	 * write starts at the current position of the file pointer.
 	 *
-	 * @param s
-	 *            a string of bytes to be written.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param s a string of bytes to be written.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void writeBytes(final String s) throws IOException {
@@ -614,10 +573,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a char equal to (char)v.
 	 * <P>
 	 *
-	 * @param v
-	 *            the short value to be written
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param v the short value to be written
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	public void writeChar(final int v) throws IOException {
@@ -631,10 +588,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * written to the data output stream as if by the {@code writeChar} method. The
 	 * write starts at the current position of the file pointer.
 	 *
-	 * @param s
-	 *            a {@code String} value to be written.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param s a {@code String} value to be written.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void writeChars(final String s) throws IOException {
@@ -658,10 +613,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * (double)v.
 	 * <P>
 	 *
-	 * @param v
-	 *            the double value to be written
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param v the double value to be written
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	public void writeDouble(final double v) throws IOException {
@@ -683,10 +636,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a float equal to (float)v.
 	 * <P>
 	 *
-	 * @param v
-	 *            the float value to be written
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param v the float value to be written
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	public void writeFloat(final float v) throws IOException {
@@ -708,10 +659,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a int equal to (int)v.
 	 * <P>
 	 *
-	 * @param v
-	 *            the int value to be written
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param v the int value to be written
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	public void writeInt(final int v) throws IOException {
@@ -733,10 +682,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a long equal to (long)v.
 	 * <P>
 	 *
-	 * @param v
-	 *            the long value to be written
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param v the long value to be written
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	public void writeLong(final long v) throws IOException {
@@ -758,10 +705,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a short equal to (short)v.
 	 * <P>
 	 *
-	 * @param v
-	 *            the short value to be written
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @param v the short value to be written
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	public void writeShort(final int v) throws IOException {
@@ -780,10 +725,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * length of the string. Following the length, each character of the string is
 	 * output, in sequence, using the UTF-8 encoding for each character.
 	 *
-	 * @param str
-	 *            a string to be written.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @param str a string to be written.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public void writeUTF(final String str) throws IOException {
@@ -842,9 +785,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the next byte of data, or {@code -1} if the end of the file has been
 	 *         reached.
-	 * @throws IOException
-	 *             if an I/O error occurs. Not thrown if end-of-file has been
-	 *             reached.
+	 * @throws IOException if an I/O error occurs. Not thrown if end-of-file has
+	 *                     been reached.
 	 */
 	public int read() throws IOException {
 		byte buffer[] = new byte[1];
@@ -868,15 +810,11 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Reads a sub array as a sequence of bytes.
 	 *
-	 * @param buffer
-	 *            the buffer into which the data is read.
-	 * @param offset
-	 *            the start offset in the data
-	 * @param len
-	 *            the maximum number of bytes read.
+	 * @param buffer the buffer into which the data is read.
+	 * @param offset the start offset in the data
+	 * @param len    the maximum number of bytes read.
 	 * @return {@code int} with number of bytes read
-	 * @throws IOException
-	 *             If an I/O error has occurred.
+	 * @throws IOException If an I/O error has occurred.
 	 */
 	protected int readBytes(final byte buffer[], final int offset, final int len) throws IOException {
 		int read;
@@ -894,14 +832,10 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Writes a sub array as a sequence of bytes.
 	 *
-	 * @param buffer
-	 *            the data to be written
-	 * @param offset
-	 *            the start offset in the data
-	 * @param len
-	 *            the number of bytes that are written
-	 * @throws IOException
-	 *             If an I/O error has occurred.
+	 * @param buffer the data to be written
+	 * @param offset the start offset in the data
+	 * @param len    the number of bytes that are written
+	 * @throws IOException If an I/O error has occurred.
 	 */
 	protected void writeBytes(final byte buffer[], final int offset, final int len) throws IOException {
 		try {
@@ -917,8 +851,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the offset from the beginning of the file, in bytes, at which the
 	 *         next read or write occurs.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	public long getFilePointer() throws IOException {
 		return filePointer;
@@ -930,18 +863,16 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * end of the file does not change the file length. The file length will change
 	 * only by writing after the offset has been set beyond the end of the file.
 	 *
-	 * @param position
-	 *            the offset position, measured in bytes from the at which to set
-	 *            the file pointer.
-	 * @param origin
-	 *            a Sets offset for the beginning of the seek.<br>
-	 *            SEEK_START - sets the offset from the beginning of the file.
-	 *            SEEK_CURRENT - sets the offset from the current position of the
-	 *            filePointer.<br>
-	 *            SEEK_END - sets the offset from the end of the file.<br>
+	 * @param position the offset position, measured in bytes from the at which to
+	 *                 set the file pointer.
+	 * @param origin   a Sets offset for the beginning of the seek.<br>
+	 *                 SEEK_START - sets the offset from the beginning of the file.
+	 *                 SEEK_CURRENT - sets the offset from the current position of
+	 *                 the filePointer.<br>
+	 *                 SEEK_END - sets the offset from the end of the file.<br>
 	 *
-	 * @throws IOException
-	 *             if {@code pos} is less than {@code 0} or if an I/O error occurs.
+	 * @throws IOException if {@code pos} is less than {@code 0} or if an I/O error
+	 *                     occurs.
 	 */
 	public void seek(final long position, final SeekWhenceType origin) throws IOException {
 		if (position < 0) {
@@ -965,16 +896,12 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * {@code InputStream}, this method behaves in the exactly the same way as
 	 * java.io.InputStream.read(byte[], int, int).
 	 *
-	 * @param b
-	 *            the buffer into which the data is read.
-	 * @param offset
-	 *            the start offset of the data.
-	 * @param len
-	 *            the maximum number of bytes read.
+	 * @param b      the buffer into which the data is read.
+	 * @param offset the start offset of the data.
+	 * @param len    the maximum number of bytes read.
 	 * @return the total number of bytes read into the buffer, or {@code -1} if
 	 *         there is no more data because the end of the file has been reached.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	public int read(final byte b[], final int offset, final int len) throws IOException {
 		return readBytes(b, offset, len);
@@ -984,8 +911,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Returns the length of this file.
 	 *
 	 * @return the length of this file, measured in bytes.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	public long length() throws IOException {
 		return irodsFile.length();
@@ -999,10 +925,8 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * an exception is thrown.
 	 *
 	 * @return the {@code boolean} value read.
-	 * @throws EOFException
-	 *             if this file has reached the end.
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws EOFException if this file has reached the end.
+	 * @throws IOException  if an I/O error occurs.
 	 */
 	@Override
 	public boolean readBoolean() throws IOException {
@@ -1031,8 +955,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the next byte of this file as a signed eight-bit {@code byte}.
 	 *
-	 * @throws IOException
-	 *             if an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	@Override
 	public byte readByte() throws IOException {
@@ -1045,14 +968,38 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	}
 
 	/**
+	 * iRODS-specific close supporting replica tokens
+	 * 
+	 * @param updateSize                {@code boolean} update size in catalog
+	 * @param updateStatus              {@code boolean} update status in catalog
+	 * @param computeChecksum           {@code boolean} compute the checksum
+	 * @param sendNotifications         {@code boolean} send notifications
+	 * @param preserveReplicaStateTable {@code boolean} preserve replica state table
+	 * @throws JargonException {@link JargonException}
+	 */
+	public void close(final boolean updateSize, final boolean updateStatus, final boolean computeChecksum,
+			final boolean sendNotifications, final boolean preserveReplicaStateTable) throws JargonException {
+
+		log.info("close() with flags");
+		log.info("updateSize:{}", updateSize);
+		log.info("updateStatus:{}", updateStatus);
+		log.info("computeChecksum:{}", computeChecksum);
+		log.info("sendNotifications:{}", sendNotifications);
+		log.info("preserveReplicaStateTable:{}", preserveReplicaStateTable);
+
+		irodsFile.close(updateSize, updateStatus, computeChecksum, sendNotifications, preserveReplicaStateTable);
+
+	}
+
+	/**
 	 * This method closes the underlying IRODSFileImpl
 	 *
-	 * @throws IOException
-	 *             for any underlying iRODS error
+	 * @throws IOException for any underlying iRODS error
 	 */
 	public void close() throws IOException {
+		log.info("close()");
+
 		try {
-			log.debug("closing: {}", irodsFile.getAbsolutePath());
 			irodsFile.close();
 		} catch (JargonException e) {
 			log.error("JargonException reading file", e);

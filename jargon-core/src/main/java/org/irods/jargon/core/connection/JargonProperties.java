@@ -602,4 +602,11 @@ public interface JargonProperties {
 	 */
 	boolean isRulesSetDestinationWhenAuto();
 
+	/**
+	 * Default tryLock seconds value when obtaining a lock on a replica token cache
+	 * 
+	 * @return {@code int} with trylock timeout in seconds
+	 */
+	int getReplicaTokenLockTimeoutSeconds();
+
 }

@@ -139,4 +139,6 @@ public interface SettableJargonPropertiesMBean extends JargonProperties {
 
 	void setMaxFilesAndDirsQueryMax(final int maxFilesAndDirsQueryMax);
 
+	void setReplicaTokenLockTimeoutSeconds(int replicaTokenLockTimeoutSeconds);
+
 }

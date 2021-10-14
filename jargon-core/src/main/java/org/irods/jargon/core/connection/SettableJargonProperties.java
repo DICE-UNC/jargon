@@ -120,12 +120,18 @@ public class SettableJargonProperties implements SettableJargonPropertiesMBean {
 	private boolean bypassSslCertChecks;
 
 	/**
+	 * {@code int} with a timeout, in seconds, for a tryLock on the replica token
+	 * cache
+	 */
+	private int replicaTokenLockTimeoutSeconds = 30;
+
+	/**
 	 * Construct a default properties set based on the provided initial set of
 	 * {@code JargonProperties}. This can be used to wire in properties via
 	 * configuration, as in Spring.
 	 *
-	 * @param jargonProperties
-	 *            {@link JargonProperties} that has the initial set of properties.
+	 * @param jargonProperties {@link JargonProperties} that has the initial set of
+	 *                         properties.
 	 */
 	public SettableJargonProperties(final JargonProperties jargonProperties) {
 		initialize(jargonProperties);
@@ -135,8 +141,7 @@ public class SettableJargonProperties implements SettableJargonPropertiesMBean {
 	 * Construct a default properties set based on the {@code jargon.properties} in
 	 * jargon, these can then be overridden.
 	 *
-	 * @throws JargonException
-	 *             if properties cannot be loaded
+	 * @throws JargonException if properties cannot be loaded
 	 */
 	public SettableJargonProperties() throws JargonException {
 		JargonProperties jargonProperties = new DefaultPropertiesJargonConfig();
@@ -207,6 +212,7 @@ public class SettableJargonProperties implements SettableJargonPropertiesMBean {
 		defaultPythonRuleEngineIdentifier = jargonProperties.getDefaultPythonRuleEngineIdentifier();
 		defaultCppRuleEngineIdentifier = jargonProperties.getDefaultCppRuleEngineIdentifier();
 		rulesSetDestinationWhenAuto = jargonProperties.isRulesSetDestinationWhenAuto();
+		replicaTokenLockTimeoutSeconds = jargonProperties.getReplicaTokenLockTimeoutSeconds();
 	}
 
 	@Override
@@ -783,7 +789,8 @@ public class SettableJargonProperties implements SettableJargonPropertiesMBean {
 		}
 		builder.append("encryptionKeySize=").append(encryptionKeySize).append(", encryptionSaltSize=")
 				.append(encryptionSaltSize).append(", encryptionNumberHashRounds=").append(encryptionNumberHashRounds)
-				.append(", bypassSslCertChecks=").append(bypassSslCertChecks).append("]");
+				.append(", bypassSslCertChecks=").append(bypassSslCertChecks)
+				.append(", replicaTokenLockTimeoutSeconds=").append(replicaTokenLockTimeoutSeconds).append("]");
 		return builder.toString();
 	}
 
@@ -944,6 +951,16 @@ public class SettableJargonProperties implements SettableJargonPropertiesMBean {
 	@Override
 	public void setRulesSetDestinationWhenAuto(final boolean rulesSetDestinationWhenAuto) {
 		this.rulesSetDestinationWhenAuto = rulesSetDestinationWhenAuto;
+	}
+
+	@Override
+	public int getReplicaTokenLockTimeoutSeconds() {
+		return replicaTokenLockTimeoutSeconds;
+	}
+
+	@Override
+	public void setReplicaTokenLockTimeoutSeconds(final int replicaTokenLockTimeoutSeconds) {
+		this.replicaTokenLockTimeoutSeconds = replicaTokenLockTimeoutSeconds;
 	}
 
 }
