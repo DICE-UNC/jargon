@@ -27,52 +27,54 @@ public class ReplicaTokenCacheManagerTest {
 		String path2 = "foo";
 		String path3 = "bar";
 
-		Lock lock1 = manager.obtainReplicaTokenLock(path1);
+		String userName = "foo";
+
+		Lock lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			manager.addReplicaToken(path1, path1);
+			manager.addReplicaToken(path1, userName, path1);
 		} finally {
 			lock1.unlock();
 		}
 
-		lock1 = manager.obtainReplicaTokenLock(path1);
+		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			String myToken = manager.claimExistingReplicaToken(path1);
+			String myToken = manager.claimExistingReplicaToken(path1, userName);
 			Assert.assertEquals(path1, myToken);
 		} finally {
 			lock1.unlock();
 		}
 
-		lock1 = manager.obtainReplicaTokenLock(path1);
+		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			String myToken = manager.claimExistingReplicaToken(path1);
+			String myToken = manager.claimExistingReplicaToken(path1, userName);
 			Assert.assertEquals(path1, myToken);
 		} finally {
 			lock1.unlock();
 		}
 
-		lock1 = manager.obtainReplicaTokenLock(path1);
+		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			manager.closeReplicaToken(path1);
+			manager.closeReplicaToken(path1, userName);
 		} finally {
 			lock1.unlock();
 		}
 
-		lock1 = manager.obtainReplicaTokenLock(path1);
+		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			manager.closeReplicaToken(path1);
+			manager.closeReplicaToken(path1, userName);
 		} finally {
 			lock1.unlock();
 		}
 
-		lock1 = manager.obtainReplicaTokenLock(path1);
+		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			boolean last = manager.closeReplicaToken(path1);
+			boolean last = manager.closeReplicaToken(path1, userName);
 			Assert.assertTrue(last);
 		} finally {
 			lock1.unlock();

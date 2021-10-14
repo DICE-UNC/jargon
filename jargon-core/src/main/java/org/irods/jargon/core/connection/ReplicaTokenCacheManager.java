@@ -24,7 +24,7 @@ public class ReplicaTokenCacheManager {
 
 	static Logger log = LoggerFactory.getLogger(ReplicaTokenCacheManager.class);
 
-	private ConcurrentHashMap<String, ReplicaTokenCacheEntry> replicaTokenCache = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<ReplicaTokenCacheKey, ReplicaTokenCacheEntry> replicaTokenCache = new ConcurrentHashMap<>();
 
 	/**
 	 * Idempotent method to get a reference to a {@link Lock}. A valid lock must be
@@ -32,10 +32,11 @@ public class ReplicaTokenCacheManager {
 	 *
 	 * @param logicalPath {@code String} which is the iRODS path which is protected
 	 *                    by the lock
+	 * @param userName    {@code String} which is hte user name
 	 * @return {@link Lock} object that can be tried in order to read or manipulate
 	 *         a replica token
 	 */
-	public Lock obtainReplicaTokenLock(final String logicalPath) {
+	public Lock obtainReplicaTokenLock(final String logicalPath, final String userName) {
 
 		log.info("obtainReplicaTokenLock()");
 
@@ -43,8 +44,10 @@ public class ReplicaTokenCacheManager {
 			throw new IllegalArgumentException("null or empty logicalPath");
 		}
 
-		replicaTokenCache.putIfAbsent(logicalPath, new ReplicaTokenCacheEntry(logicalPath));
-		return replicaTokenCache.get(logicalPath).getLock();
+		ReplicaTokenCacheKey cacheKey = ReplicaTokenCacheKey.instance(logicalPath, userName);
+
+		replicaTokenCache.putIfAbsent(cacheKey, new ReplicaTokenCacheEntry(logicalPath));
+		return replicaTokenCache.get(cacheKey).getLock();
 
 	}
 
@@ -54,17 +57,29 @@ public class ReplicaTokenCacheManager {
 	 * token, the calling initializer that is doing the open should call an open and
 	 * obtain the replica token from iRODS and then initialize the cache with that
 	 * token using the {@code addReplicaToken} method.
+	 * 
+	 * @param logicalPath {@code String} which is the iRODS path which is protected
+	 *                    by the lock
+	 * @param userName    {@code String} which is the user name
+	 * @return {@code String} with the replica token string
 	 *
 	 * @throws ReplicaTokenLockException
 	 */
-	public String claimExistingReplicaToken(final String logicalPath) throws ReplicaTokenLockException {
+	public String claimExistingReplicaToken(final String logicalPath, final String userName)
+			throws ReplicaTokenLockException {
 		log.info("obtainExistingReplicaToken()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
 
 		if (logicalPath == null || logicalPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty logicalPath");
 		}
 
-		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(logicalPath);
+		ReplicaTokenCacheKey cacheKey = ReplicaTokenCacheKey.instance(logicalPath, userName);
+
+		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(cacheKey);
 		if (replicaTokenCacheEntry == null) {
 			log.error("no cache entry found, perhaps lock was not acquired?");
 			throw new ReplicaTokenLockException("null cache entry, was lock acquired before calling this method?");
@@ -85,11 +100,14 @@ public class ReplicaTokenCacheManager {
 	 *
 	 * This method is used
 	 *
-	 * @param logicalPath
-	 * @param replicaToken
+	 * @param logicalPath  {@code String} which is the iRODS path which is protected
+	 *                     by the lock
+	 * @param userName     {@code String} which is the user name
+	 * @param replicaToken {@code String} with the replica token string
 	 * @throws ReplicaTokenLockException
 	 */
-	public void addReplicaToken(final String logicalPath, final String replicaToken) throws ReplicaTokenLockException {
+	public void addReplicaToken(final String logicalPath, final String userName, final String replicaToken)
+			throws ReplicaTokenLockException {
 
 		log.info("addReplicaToken()");
 
@@ -97,11 +115,17 @@ public class ReplicaTokenCacheManager {
 			throw new IllegalArgumentException("null or empty logicalPath");
 		}
 
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
 		if (replicaToken == null || replicaToken.isEmpty()) {
 			throw new IllegalArgumentException("null or empty replicaToken");
 		}
 
-		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(logicalPath);
+		ReplicaTokenCacheKey cacheKey = ReplicaTokenCacheKey.instance(logicalPath, userName);
+
+		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(cacheKey);
 		if (replicaTokenCacheEntry == null) {
 			log.error("no cache entry found, perhaps lock was not acquired?");
 			throw new ReplicaTokenLockException("null cache entry, was lock acquired before calling this method?");
@@ -123,49 +147,6 @@ public class ReplicaTokenCacheManager {
 	}
 
 	/**
-	 * Called after {@Lock} is tried and after obtaining the current replica token
-	 *
-	 * @param logicalPath {@code String{ @throws ReplicaTokenLockException
-	 */
-	public void registerReplicaTokenUsage(final String logicalPath, final String replicaToken)
-			throws ReplicaTokenLockException {
-
-		log.info("registarReplicaTokenUsage()");
-
-		if (logicalPath == null || logicalPath.isEmpty()) {
-			throw new IllegalArgumentException("null or empty logicalPath");
-		}
-
-		if (replicaToken == null || replicaToken.isEmpty()) {
-			throw new IllegalArgumentException("null or empty replica token");
-		}
-
-		log.info("logicalPath:{}", logicalPath);
-		log.info("replicaToken:{}", replicaToken);
-
-		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(logicalPath);
-		if (replicaTokenCacheEntry == null) {
-			log.error("no cache entry found, perhaps lock was not acquired?");
-			throw new ReplicaTokenLockException("null cache entry, was lock acquired before calling this method?");
-		}
-
-		/*
-		 * ensure that an error has not occurred where another thread has set the token
-		 */
-
-		if (!replicaTokenCacheEntry.getReplicaToken().isEmpty()) {
-			log.error("A token already exists, was lock called?");
-			throw new ReplicaTokenLockException("A token already exists, was lock called?");
-
-		}
-
-		// note I don't increment the count because it was already claimed
-
-		replicaTokenCacheEntry.setReplicaToken(replicaToken);
-
-	}
-
-	/**
 	 * This method requires the caller to first call {@code obtainReplicaTokenLock}
 	 * with a {@code tryLock()}.
 	 *
@@ -178,11 +159,12 @@ public class ReplicaTokenCacheManager {
 	 * flags.
 	 *
 	 * @param logicalPath {@code String} with the logical path to the file to be
-	 *                    closed
+	 *                    closed * @param userName {@code String} which is the user
+	 *                    name
 	 * @return {@code boolean} with a value of {@code true} when this is the last
 	 *         reference to the file
 	 */
-	public boolean closeReplicaToken(final String logicalPath) {
+	public boolean closeReplicaToken(final String logicalPath, final String userName) {
 
 		log.info("closeReplicaToken()");
 
@@ -190,14 +172,22 @@ public class ReplicaTokenCacheManager {
 			throw new IllegalArgumentException("null or empty logicalPath");
 		}
 
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
 		log.info("logicalPath:{}", logicalPath);
-		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(logicalPath);
+		log.info("userName:{}", userName);
+
+		ReplicaTokenCacheKey cacheKey = ReplicaTokenCacheKey.instance(logicalPath, userName);
+
+		ReplicaTokenCacheEntry replicaTokenCacheEntry = replicaTokenCache.get(cacheKey);
 		replicaTokenCacheEntry.decrementOpenCount();
 		if (replicaTokenCacheEntry.getOpenCount() < 0) {
 			log.error("replica count less than zero, this is an unexpected condition that indicates a system problem");
 			throw new IllegalStateException("replica count should never be less than zero");
 		} else if (replicaTokenCacheEntry.getOpenCount() == 0) {
-			replicaTokenCache.remove(logicalPath);
+			replicaTokenCache.remove(cacheKey);
 			return true;
 		} else {
 			return false;

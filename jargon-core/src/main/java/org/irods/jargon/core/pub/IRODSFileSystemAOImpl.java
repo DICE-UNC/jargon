@@ -9,6 +9,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -19,6 +20,7 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.CollInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
@@ -832,7 +834,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		}
 
 		int fileId;
-		if (this.getIRODSServerProperties().isSupportsReplicaTokens()) {
+		if (this.getIRODSServerProperties().isSupportsReplicaTokens() && coordinated) {
 			log.info("open using replica token semantics");
 			/*
 			 * See if there is a cached replica token, I need to get a lock on it at any
@@ -841,10 +843,22 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 			Lock replicaLock = null;
 			try {
-				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(absPath);
-				replicaLock.tryLock(); // TODO: add timeout>
+				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(irodsFile.getAbsolutePath(),
+						this.getIRODSAccount().getUserName());
+				try {
+					boolean locked = replicaLock.tryLock(this.getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
+							TimeUnit.SECONDS);
+					if (!locked) {
+						log.error("timeout trying to lock replica token cache");
+						throw new JargonRuntimeException("timeout obtaining replica token lock");
+					}
+				} catch (InterruptedException e) {
+					log.info("interrupted", e);
+					throw new JargonRuntimeException("replica token cache tryLock interrupted", e);
+				}
 
-				String replicaToken = IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(absPath);
+				String replicaToken = IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(absPath,
+						this.getIRODSAccount().getUserName());
 				if (replicaToken.isEmpty()) {
 					log.debug("need to obtain a replica token");
 					DataObjInp dataObjInp = DataObjInp.instanceForOpenReplicaToken(absPath, myOpenFlags);
@@ -860,8 +874,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 						log.debug("dataObjectOpen:{}", dataObjectOpen);
 						fileId = apiResponse.getIntInfo();
 						irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
-						IRODSSession.replicaTokenCacheManager.registerReplicaTokenUsage(irodsFile.getAbsolutePath(),
-								dataObjectOpen.getReplicaToken());
+						IRODSSession.replicaTokenCacheManager.addReplicaToken(irodsFile.getAbsolutePath(),
+								this.getIRODSAccount().getUserName(), dataObjectOpen.getReplicaToken());
 					} catch (JsonProcessingException e) {
 						log.error("error mapping json:{}", apiResponse, e);
 						throw new JargonException("json mapping error", e);
@@ -1022,7 +1036,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		log.info("fileClose(final int fileDescriptor) :{}", fileDescriptor);
 
 		if (fileDescriptor <= 0) {
-			throw new JargonException("attempting to close file with no valid descriptor");
+			log.warn("attempting to close file with no valid descriptor, will silently ignore");
+			return;
 		}
 		OpenedDataObjInp openedDataObjInp = null;
 		if (putOpr) {

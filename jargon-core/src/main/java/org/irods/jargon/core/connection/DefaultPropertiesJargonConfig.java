@@ -34,8 +34,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * Default constructor will load the default properties from the
 	 * 'jargon.properties' file on the classpath.
 	 *
-	 * @throws JargonException
-	 *             if properties cannot be loaded.
+	 * @throws JargonException if properties cannot be loaded.
 	 */
 	public DefaultPropertiesJargonConfig() throws JargonException {
 
@@ -608,4 +607,10 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsBoolean("rule.engine.set.destination.when.auto");
 
 	}
+
+	@Override
+	public int getReplicaTokenLockTimeoutSeconds() {
+		return verifyPropExistsAndGetAsInt("replica.token.cache.timeout.seconds");
+	}
+
 }
