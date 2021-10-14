@@ -882,8 +882,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					}
 				} else {
 					log.debug("replicaToken exists, use for the open");
-					throw new UnsupportedOperationException("cannot handle existing replica token yet");
-
+					// FIXME: propogate the replica token in the open
+					irodsFile.setReplicaToken(replicaToken);
+					IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(irodsFile.getAbsolutePath(),
+							this.getIRODSAccount().getUserName());
+					throw new UnsupportedOperationException("finish the call to pass the token");
 				}
 
 			} finally {
