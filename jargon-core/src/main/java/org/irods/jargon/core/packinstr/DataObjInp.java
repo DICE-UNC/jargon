@@ -39,7 +39,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String ALL = "all";
 
 	public static final int CREATE = 64;
-	public static final int TRUNCATE = 1024;
+	public static final int TRUNCATE = 512;
 
 	public static final int CREATE_FILE_API_NBR = 601;
 	public static final int DELETE_FILE_API_NBR = 615;
@@ -151,6 +151,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Can be set to {@code null} if no checksum is specified
 	 */
 	private ChecksumValue fileChecksumValue = null;
+	/**
+	 * Holds a replica token when it needs to be passed in an open operation
+	 */
+	private String replicaToken = null;
 
 	/**
 	 * Generic instance creation method with all constructor parameters. In this
@@ -383,6 +387,30 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 				|| openFlags == OpenFlags.WRITE_TRUNCATE || openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
 			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
 		}
+		return dataObjInp;
+	}
+
+	/**
+	 * Create an instance of the protocol for a file open operation where a replica
+	 * token was previously obtained and the user wishes to open another file with
+	 * the same token (adds to the open KVPs)
+	 *
+	 * @param fileAbsolutePath {@code String} with the physical path of the file to
+	 *                         open.
+	 * @param openFlags        {@code OpenFlags} enum value.
+	 * @return {@code DataObjInp} containing the necessary packing instruction
+	 * @throws JargonException for iRODS error
+	 */
+	public static final DataObjInp instanceForOpenWithExistingReplicaToken(final String fileAbsolutePath,
+			final OpenFlags openFlags, final String existingReplicaToken) throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
+		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+				|| openFlags == OpenFlags.WRITE_TRUNCATE || openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
+			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
+		}
+
+		dataObjInp.replicaToken = existingReplicaToken;
+
 		return dataObjInp;
 	}
 
@@ -815,6 +843,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		if (getReplNum().length() > 0) {
 			kvps.add(KeyValuePair.instance(REPL_NUM, getReplNum()));
+		}
+
+		if (replicaToken != null) {
+			// FIXME: complete kvps.add(KeyValuePair.instance("foo"), "bar");
 		}
 
 		message.addTag(createKeyValueTag(kvps));

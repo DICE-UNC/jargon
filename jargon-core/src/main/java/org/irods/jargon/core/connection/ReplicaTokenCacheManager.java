@@ -106,8 +106,8 @@ public class ReplicaTokenCacheManager {
 	 * @param replicaToken {@code String} with the replica token string
 	 * @throws ReplicaTokenLockException
 	 */
-	public void addReplicaToken(final String logicalPath, final String userName, final String replicaToken)
-			throws ReplicaTokenLockException {
+	public void addReplicaToken(final String logicalPath, final String userName, final String replicaToken,
+			final String replicaNumber) throws ReplicaTokenLockException {
 
 		log.info("addReplicaToken()");
 

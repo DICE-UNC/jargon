@@ -1,6 +1,8 @@
 
 package org.irods.jargon.core.pub.domain.pluggable;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,6 +13,14 @@ public class DataObjectOpen {
 	private String replicaToken = "";
 
 	private int fileId = 0;
+
+	private int replicaNumber = 0;
+
+	@SuppressWarnings("unchecked")
+	@JsonProperty("data_object_info")
+	private void unpackNested(Map<String, Object> dataObjectInfo) {
+		this.replicaNumber = (Integer) dataObjectInfo.get("replica_number");
+	}
 
 	/**
 	 * @return the replicaToken
@@ -43,6 +53,14 @@ public class DataObjectOpen {
 
 	public void setFileId(int fileId) {
 		this.fileId = fileId;
+	}
+
+	public int getReplicaNumber() {
+		return replicaNumber;
+	}
+
+	public void setReplicaNumber(int replicaNumber) {
+		this.replicaNumber = replicaNumber;
 	}
 
 }
