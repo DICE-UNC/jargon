@@ -32,7 +32,7 @@ public class ReplicaTokenCacheManagerTest {
 		Lock lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			manager.addReplicaToken(path1, userName, path1);
+			manager.addReplicaToken(path1, userName, path1, "bar");
 		} finally {
 			lock1.unlock();
 		}

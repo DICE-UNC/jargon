@@ -329,7 +329,7 @@ public class IRODSFileOutputStreamTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		irodsFile.createNewFile();
+		// irodsFile.createNewFile();
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		// get a simple byte array
@@ -371,7 +371,6 @@ public class IRODSFileOutputStreamTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		irodsFile.createNewFile();
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		// get a simple byte array
@@ -398,7 +397,6 @@ public class IRODSFileOutputStreamTest {
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		irodsFile.createNewFile();
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		// get a simple byte array
@@ -425,7 +423,6 @@ public class IRODSFileOutputStreamTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-		irodsFile.createNewFile();
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 		irodsFile.close();
@@ -545,10 +542,6 @@ public class IRODSFileOutputStreamTest {
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection + '/' + testFileName,
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertTrue("no file descriptor assigned", irodsFileOutputStream.getFileDescriptor() > -1);
-
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isSupportsReplicaTokens()) {
-			Assert.assertNotNull("no resource token found", irodsFile.getReplicaToken());
-		}
 
 	}
 

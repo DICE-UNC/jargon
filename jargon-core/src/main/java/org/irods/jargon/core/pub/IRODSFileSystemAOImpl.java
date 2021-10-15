@@ -874,8 +874,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 						log.debug("dataObjectOpen:{}", dataObjectOpen);
 						fileId = apiResponse.getIntInfo();
 						irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
-						IRODSSession.replicaTokenCacheManager.addReplicaToken(irodsFile.getAbsolutePath(),
-								this.getIRODSAccount().getUserName(), dataObjectOpen.getReplicaToken());
+						// FIXME: replica number added
+						// IRODSSession.replicaTokenCacheManager.addReplicaToken(irodsFile.getAbsolutePath(),
+						// this.getIRODSAccount().getUserName(), dataObjectOpen.getReplicaToken());
 					} catch (JsonProcessingException e) {
 						log.error("error mapping json:{}", apiResponse, e);
 						throw new JargonException("json mapping error", e);
@@ -886,7 +887,23 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					irodsFile.setReplicaToken(replicaToken);
 					IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(irodsFile.getAbsolutePath(),
 							this.getIRODSAccount().getUserName());
-					throw new UnsupportedOperationException("finish the call to pass the token");
+					DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, myOpenFlags);
+
+					if (log.isInfoEnabled()) {
+						log.info("opening file:" + absPath);
+					}
+
+					Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ,
+							dataObjInp.getParsedTags(), DataObjInp.OPEN_FILE_API_NBR);
+
+					if (response == null) {
+						String msg = "null response from IRODS call";
+						log.error(msg);
+						throw new JargonException(msg);
+					}
+
+					// parse out the response
+					fileId = response.getTag(MsgHeader.PI_NAME).getTag(MsgHeader.INT_INFO).getIntValue();
 				}
 
 			} finally {

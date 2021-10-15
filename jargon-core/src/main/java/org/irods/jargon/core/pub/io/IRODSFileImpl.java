@@ -1326,10 +1326,11 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		log.info("openFlags:{}", openFlags);
 		log.info("coordinated:{}", coordinated);
 
-		if (getFileDescriptor() > 0) {
-			log.info("file is already open, use the given descriptor");
-			return fileDescriptor;
-		}
+		/*
+		 * if (getFileDescriptor() > 0) {
+		 * log.info("file is already open, use the given descriptor"); return
+		 * fileDescriptor; }
+		 */
 
 		int fileDescriptor = irodsFileSystemAO.openFile(this, openFlags, coordinated);
 
@@ -1455,7 +1456,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	public void close() throws JargonException {
 
 		this.close(true, true, this.irodsFileSystemAO.getJargonProperties().isComputeChecksumAfterTransfer(), true,
-				true);
+				false);
 	}
 
 	/*

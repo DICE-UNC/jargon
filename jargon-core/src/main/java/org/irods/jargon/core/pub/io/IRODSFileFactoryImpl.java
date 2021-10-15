@@ -427,7 +427,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 				log.info("creating IRODSFileWriter for:" + name);
 			}
 			IRODSFile irodsFile = instanceIRODSFile(name);
-			irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
+			// irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
 			return new IRODSFileWriter(irodsFile, this);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating FileWriter", e);

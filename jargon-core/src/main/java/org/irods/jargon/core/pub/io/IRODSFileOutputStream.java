@@ -31,7 +31,6 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;
-	private boolean coordinated = false;
 
 	/**
 	 * @return the fileIOOperations
@@ -109,7 +108,6 @@ public class IRODSFileOutputStream extends OutputStream {
 		openWithFlags(fileIOOperations, openFlags, coordinated);
 
 		this.fileIOOperations = fileIOOperations;
-		this.coordinated = coordinated;
 	}
 
 	/*
@@ -149,9 +147,10 @@ public class IRODSFileOutputStream extends OutputStream {
 //		 * Check exists with open flags and throw error or create as needed
 //		 */
 //
-//		irodsFile.setOpenFlags(openFlags);
+		irodsFile.setOpenFlags(openFlags);
 //
 		if (exists) {
+			// this.irodsFile.close();
 			if (openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS || openFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
 				log.error("file exists, open flags indicate failure intended");
 				throw new JargonException(
@@ -164,10 +163,6 @@ public class IRODSFileOutputStream extends OutputStream {
 		} else {
 			log.info("file does not exist, create it by adjusting open flags");
 			irodsFile.open(OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS, coordinated);
-			// irodsFile.createNewFileCheckNoResourceFound(openFlags);
-			// now if this is 4.2.9 or greater go ahead and obtain the replica token
-			// irodsFile
-
 		}
 
 		fileDescriptor = irodsFile.getFileDescriptor();

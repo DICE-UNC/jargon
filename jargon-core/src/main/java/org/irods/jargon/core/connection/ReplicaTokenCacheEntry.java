@@ -21,6 +21,10 @@ public class ReplicaTokenCacheEntry {
 	 */
 	private String replicaToken = "";
 	/**
+	 * {@code String} with the replica number
+	 */
+	private String replicaNumber = "";
+	/**
 	 * Count of open files
 	 */
 	private int openCount = 0;
@@ -74,5 +78,40 @@ public class ReplicaTokenCacheEntry {
 
 	public Lock getLock() {
 		return lock;
+	}
+
+	/**
+	 * @return the replicaNumber
+	 */
+	public String getReplicaNumber() {
+		return replicaNumber;
+	}
+
+	/**
+	 * @param replicaNumber the replicaNumber to set
+	 */
+	public void setReplicaNumber(String replicaNumber) {
+		this.replicaNumber = replicaNumber;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ReplicaTokenCacheEntry [");
+		if (logicalPath != null) {
+			builder.append("logicalPath=").append(logicalPath).append(", ");
+		}
+		if (replicaToken != null) {
+			builder.append("replicaToken=").append(replicaToken).append(", ");
+		}
+		if (replicaNumber != null) {
+			builder.append("replicaNumber=").append(replicaNumber).append(", ");
+		}
+		builder.append("openCount=").append(openCount).append(", ");
+		if (lock != null) {
+			builder.append("lock=").append(lock);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 }
