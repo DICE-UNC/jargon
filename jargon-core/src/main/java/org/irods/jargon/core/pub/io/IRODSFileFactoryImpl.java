@@ -712,11 +712,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(getIRODSSession(), getIRODSAccount());
 		log.info("opening IRODSFileImpl for: {}", irodsFile.getAbsoluteFile());
 
-		if (!irodsFile.exists()) {
-			log.info("requested file does not exist, will be created");
-
-			irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
-		}
+		/*
+		 * if (!irodsFile.exists()) {
+		 * log.info("requested file does not exist, will be created");
+		 * 
+		 * irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE); }
+		 */
 
 		// open the file if it is not opened
 		irodsFile.open(openFlags, coordinated);

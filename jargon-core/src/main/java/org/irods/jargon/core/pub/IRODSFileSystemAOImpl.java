@@ -14,6 +14,7 @@ import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.ReplicaTokenCacheEntry;
 import org.irods.jargon.core.exception.CatalogAlreadyHasItemByThatNameException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -857,9 +858,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					throw new JargonRuntimeException("replica token cache tryLock interrupted", e);
 				}
 
-				String replicaToken = IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(absPath,
-						this.getIRODSAccount().getUserName());
-				if (replicaToken.isEmpty()) {
+				ReplicaTokenCacheEntry replicaTokenCacheEntry = IRODSSession.replicaTokenCacheManager
+						.claimExistingReplicaToken(absPath, this.getIRODSAccount().getUserName());
+
+				if (replicaTokenCacheEntry.getReplicaToken().isEmpty()) {
 					log.debug("need to obtain a replica token");
 					DataObjInp dataObjInp = DataObjInp.instanceForOpenReplicaToken(absPath, myOpenFlags);
 					ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
@@ -874,20 +876,20 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 						log.debug("dataObjectOpen:{}", dataObjectOpen);
 						fileId = apiResponse.getIntInfo();
 						irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
-						// FIXME: replica number added
-						// IRODSSession.replicaTokenCacheManager.addReplicaToken(irodsFile.getAbsolutePath(),
-						// this.getIRODSAccount().getUserName(), dataObjectOpen.getReplicaToken());
+						IRODSSession.replicaTokenCacheManager.addReplicaToken(irodsFile.getAbsolutePath(),
+								this.getIRODSAccount().getUserName(), dataObjectOpen.getReplicaToken(),
+								dataObjectOpen.getReplicaNumber());
 					} catch (JsonProcessingException e) {
 						log.error("error mapping json:{}", apiResponse, e);
 						throw new JargonException("json mapping error", e);
 					}
 				} else {
 					log.debug("replicaToken exists, use for the open");
-					// FIXME: propogate the replica token in the open
-					irodsFile.setReplicaToken(replicaToken);
-					IRODSSession.replicaTokenCacheManager.claimExistingReplicaToken(irodsFile.getAbsolutePath(),
-							this.getIRODSAccount().getUserName());
-					DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, myOpenFlags);
+					irodsFile.setReplicaToken(replicaTokenCacheEntry.getReplicaToken());
+					DataObjInp dataObjInp = DataObjInp.instanceForOpenWithExistingReplicaToken(absPath, myOpenFlags,
+							replicaTokenCacheEntry.getReplicaToken(),
+							Integer.parseInt(replicaTokenCacheEntry.getReplicaNumber()));
+					DataObjInp.instanceForOpen(absPath, myOpenFlags);
 
 					if (log.isInfoEnabled()) {
 						log.info("opening file:" + absPath);

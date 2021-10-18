@@ -61,11 +61,12 @@ public class ReplicaTokenCacheManager {
 	 * @param logicalPath {@code String} which is the iRODS path which is protected
 	 *                    by the lock
 	 * @param userName    {@code String} which is the user name
-	 * @return {@code String} with the replica token string
+	 * @return {@code ReplicaTokenCacheEntry} with the replica token string and
+	 *         replica number
 	 *
 	 * @throws ReplicaTokenLockException
 	 */
-	public String claimExistingReplicaToken(final String logicalPath, final String userName)
+	public ReplicaTokenCacheEntry claimExistingReplicaToken(final String logicalPath, final String userName)
 			throws ReplicaTokenLockException {
 		log.info("obtainExistingReplicaToken()");
 
@@ -85,9 +86,15 @@ public class ReplicaTokenCacheManager {
 			throw new ReplicaTokenLockException("null cache entry, was lock acquired before calling this method?");
 		}
 
-		replicaTokenCacheEntry.incrementOpenCount();
+		/*
+		 * If this replica token is already acquired, increment the count
+		 */
 
-		return replicaTokenCacheEntry.getReplicaToken();
+		if (!replicaTokenCacheEntry.getReplicaToken().isEmpty()) {
+			replicaTokenCacheEntry.incrementOpenCount();
+		}
+
+		return replicaTokenCacheEntry;
 
 	}
 
@@ -107,7 +114,7 @@ public class ReplicaTokenCacheManager {
 	 * @throws ReplicaTokenLockException
 	 */
 	public void addReplicaToken(final String logicalPath, final String userName, final String replicaToken,
-			final String replicaNumber) throws ReplicaTokenLockException {
+			final int replicaNumber) throws ReplicaTokenLockException {
 
 		log.info("addReplicaToken()");
 
@@ -142,6 +149,7 @@ public class ReplicaTokenCacheManager {
 		}
 
 		replicaTokenCacheEntry.setReplicaToken(replicaToken);
+		replicaTokenCacheEntry.setReplicaNumber(String.valueOf(replicaNumber));
 		replicaTokenCacheEntry.setOpenCount(1);
 
 	}

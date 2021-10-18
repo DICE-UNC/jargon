@@ -32,7 +32,7 @@ public class ReplicaTokenCacheManagerTest {
 		Lock lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			manager.addReplicaToken(path1, userName, path1, "bar");
+			manager.addReplicaToken(path1, userName, "bar", 1);
 		} finally {
 			lock1.unlock();
 		}
@@ -40,8 +40,8 @@ public class ReplicaTokenCacheManagerTest {
 		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			String myToken = manager.claimExistingReplicaToken(path1, userName);
-			Assert.assertEquals(path1, myToken);
+			ReplicaTokenCacheEntry entry = manager.claimExistingReplicaToken(path1, userName);
+			Assert.assertEquals(path1, entry.getReplicaToken());
 		} finally {
 			lock1.unlock();
 		}
@@ -49,8 +49,8 @@ public class ReplicaTokenCacheManagerTest {
 		lock1 = manager.obtainReplicaTokenLock(path1, userName);
 		try {
 			lock1.tryLock();
-			String myToken = manager.claimExistingReplicaToken(path1, userName);
-			Assert.assertEquals(path1, myToken);
+			ReplicaTokenCacheEntry entry = manager.claimExistingReplicaToken(path1, userName);
+			Assert.assertEquals(path1, entry.getReplicaToken());
 		} finally {
 			lock1.unlock();
 		}
