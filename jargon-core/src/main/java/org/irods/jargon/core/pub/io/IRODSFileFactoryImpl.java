@@ -724,4 +724,23 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 		return new IRODSRandomAccessFile(irodsFile, fileIOOperations);
 	}
 
+	@Override
+	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(String irodsAbsolutePath, OpenFlags openFlags,
+			boolean coordinated) throws NoResourceDefinedException, JargonException {
+
+		log.info("instanceIRODSRandomAccessFile()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
+		}
+
+		if (openFlags == null) {
+			throw new IllegalArgumentException("null openFlags");
+		}
+
+		IRODSFile pathFile = this.instanceIRODSFile(irodsAbsolutePath);
+		return this.instanceIRODSRandomAccessFile(pathFile, openFlags, coordinated);
+
+	}
+
 }
