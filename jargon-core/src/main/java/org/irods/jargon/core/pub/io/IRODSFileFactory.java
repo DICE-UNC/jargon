@@ -354,4 +354,24 @@ public interface IRODSFileFactory {
 	IRODSRandomAccessFile instanceIRODSRandomAccessFile(IRODSFile irodsFile, OpenFlags openFlags, boolean coordinated)
 			throws NoResourceDefinedException, JargonException;
 
+	/**
+	 * Create an IRODSRandomAccessFile given the absolutePath. Note that this method
+	 * will check if the file exists. This variant observes the open flags, so if
+	 * the file needs to be created, it must have a flags setting for 'create if not
+	 * exists'
+	 *
+	 * @param irodsAbsolutePath {@code String} with the absolute path to the iRODS
+	 *                          file to be opened as random access
+	 * @param openFlags         {@link OpenFlags} that defines how the file is to be
+	 *                          opened (e.g. Read only versus Read/write)
+	 * @param coordinated       {@code boolean} indicating whether to cache replica
+	 *                          tokens
+	 * @return {@link IRODSRandomAccessFile}
+	 * @throws NoResourceDefinedException if no storage resource is defined and no
+	 *                                    default rule is set up on iRODS
+	 * @throws JargonException            for iRODS error
+	 */
+	IRODSRandomAccessFile instanceIRODSRandomAccessFile(String irodsAbsolutePath, OpenFlags openFlags,
+			boolean coordinated) throws NoResourceDefinedException, JargonException;
+
 }
