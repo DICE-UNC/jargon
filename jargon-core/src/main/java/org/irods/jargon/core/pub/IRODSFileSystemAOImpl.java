@@ -9,19 +9,17 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.ReplicaTokenCacheEntry;
+import org.irods.jargon.core.connection.ReplicaTokenCacheManager;
 import org.irods.jargon.core.exception.CatalogAlreadyHasItemByThatNameException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.CollInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
@@ -842,24 +840,16 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 			 * rate
 			 */
 
-			Lock replicaLock = null;
+			ReplicaTokenCacheManager.ReplicaTokenLock replicaLock = null;
 			try {
-				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(irodsFile.getAbsolutePath(),
-						this.getIRODSAccount().getUserName());
-				try {
-					boolean locked = replicaLock.tryLock(this.getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
-							TimeUnit.SECONDS);
-					if (!locked) {
-						log.error("timeout trying to lock replica token cache");
-						throw new JargonRuntimeException("timeout obtaining replica token lock");
-					}
-				} catch (InterruptedException e) {
-					log.info("interrupted", e);
-					throw new JargonRuntimeException("replica token cache tryLock interrupted", e);
-				}
+				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(
+				    irodsFile.getAbsolutePath(), this.getIRODSAccount().getUserName());
 
+                replicaLock.tryLock(this.getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
+                                    true /* incrementOnOpen */);
+				
 				ReplicaTokenCacheEntry replicaTokenCacheEntry = IRODSSession.replicaTokenCacheManager
-						.claimExistingReplicaToken(absPath, this.getIRODSAccount().getUserName());
+				    .insertReplicaTokenEntry(absPath, this.getIRODSAccount().getUserName());
 
 				if (replicaTokenCacheEntry.getReplicaToken().isEmpty()) {
 					log.debug("need to obtain a replica token");
@@ -869,6 +859,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
 							dataObjInp);
 					log.debug("responseJson:{}", apiResponse);
+
 					ObjectMapper mapper = new ObjectMapper();
 					try {
 						DataObjectOpen dataObjectOpen = mapper.readValue(apiResponse.getJsonResult(),
@@ -876,6 +867,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 						log.debug("dataObjectOpen:{}", dataObjectOpen);
 						fileId = apiResponse.getIntInfo();
 						irodsFile.setReplicaToken(dataObjectOpen.getReplicaToken());
+
 						IRODSSession.replicaTokenCacheManager.addReplicaToken(irodsFile.getAbsolutePath(),
 								this.getIRODSAccount().getUserName(), dataObjectOpen.getReplicaToken(),
 								dataObjectOpen.getReplicaNumber());
@@ -903,6 +895,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 						log.error(msg);
 						throw new JargonException(msg);
 					}
+					
+					replicaTokenCacheEntry.incrementOpenCount();
 
 					// parse out the response
 					fileId = response.getTag(MsgHeader.PI_NAME).getTag(MsgHeader.INT_INFO).getIntValue();
@@ -910,7 +904,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 			} finally {
 				if (replicaLock != null) {
-					replicaLock.unlock();
+					replicaLock.unlock(false /* decrementOnClose */);
 				}
 			}
 
