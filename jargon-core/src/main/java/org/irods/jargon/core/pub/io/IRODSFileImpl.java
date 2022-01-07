@@ -13,11 +13,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.apiplugin.ApiPluginConstants;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.ReplicaTokenCacheManager;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -66,7 +65,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	private int fileDescriptor = -1;
 	private List<String> directory = new ArrayList<String>();
 	private OpenFlags openFlags = null;
-	private String resourceToken = null; // FIXME: change to replicaToken
+	private String replicaToken = null;
 	private boolean coordinated = false;
 
 	private static final long serialVersionUID = -6986662136294659059L;
@@ -1368,32 +1367,22 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		if (this.getReplicaToken() != null && this.coordinated) {
 			log.info("close with a replica token, see if this is the last close");
 
-			Lock replicaLock = null;
+			ReplicaTokenCacheManager.ReplicaTokenLock replicaLock = null;
 			try {
-				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(this.getAbsolutePath(),
-						this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
-				try {
-					boolean locked = replicaLock.tryLock(
-							this.getIrodsFileSystemAO().getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
-							TimeUnit.SECONDS);
-					if (!locked) {
-						log.error("timeout trying to lock replica token cache");
-						throw new JargonRuntimeException("timeout obtaining replica token lock");
-					}
-				} catch (InterruptedException e) {
-					log.info("interrupted", e);
-					throw new JargonRuntimeException("replica token cache tryLock interrupted", e);
-				}
+				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(
+				    this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
 
-				boolean isFinalReplicaClose = IRODSSession.replicaTokenCacheManager.closeReplicaToken(
-						this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
+                replicaLock.tryLock(this.getIrodsFileSystemAO().getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
+                                    false /* incrementOnOpen */);
+
+				boolean isFinalReplicaClose = IRODSSession.replicaTokenCacheManager.isFinalReferenceToReplicaToken(
+				    this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
 				log.info("is this is the final replica close?:{}", isFinalReplicaClose);
 
 				ReplicaClose replicaClose = new ReplicaClose();
 				replicaClose.setFd(this.fileDescriptor);
 
 				if (isFinalReplicaClose) {
-
 					// TODO: what of these options are indicated on final close?
 
 					replicaClose.setPreserveReplicaStateTable(preserveReplicaStateTable);
@@ -1415,6 +1404,9 @@ public class IRODSFileImpl extends File implements IRODSFile {
 							.getApiPluginExecutor(this.getIrodsFileSystemAO().getIRODSAccount());
 					apiPluginExecutor.callPluggableApi(ApiPluginConstants.REPLICA_CLOSE_APN, replicaCloseString);
 
+					IRODSSession.replicaTokenCacheManager.removeReplicaToken(
+					        this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
+
 				} catch (JsonProcessingException e) {
 					log.error("error writing json", e);
 					throw new JargonException("error writing replica close", e);
@@ -1422,7 +1414,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 			} finally {
 				if (replicaLock != null) {
-					replicaLock.unlock();
+					replicaLock.unlock(true /* decrementOnClose */);
 				}
 			}
 
@@ -1567,26 +1559,26 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	/**
-	 * Get the resource token that may have been obtained when the file was opened.
+	 * Get the replica token that may have been obtained when the file was opened.
 	 * This is only present in later versions of iRODS.
 	 * 
-	 * @return {@code String} with the resource token, {code null} indicates that no
+	 * @return {@code String} with the replica token, {code null} indicates that no
 	 *         token exists
 	 */
 	@Override
 	public String getReplicaToken() {
-		return resourceToken;
+		return replicaToken;
 	}
 
 	/**
-	 * Set the resource token if one is available (dependant on iRODS version)
+	 * Set the replica token if one is available (dependant on iRODS version)
 	 * 
-	 * @param resourceToken {@code String} with the resource token value, if
+	 * @param replicaToken {@code String} with the replica token value, if
 	 *                      available
 	 */
 	@Override
-	public void setReplicaToken(String resourceToken) {
-		this.resourceToken = resourceToken;
+	public void setReplicaToken(String replicaToken) {
+		this.replicaToken = replicaToken;
 	}
 
 	public boolean isCoordinated() {

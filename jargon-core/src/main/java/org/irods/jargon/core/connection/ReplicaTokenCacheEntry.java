@@ -3,9 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * @author conwaymc
  *
@@ -28,12 +25,6 @@ public class ReplicaTokenCacheEntry {
 	 * Count of open files
 	 */
 	private int openCount = 0;
-
-	/**
-	 * a reentrant lock that will be used by the open and close methods for streams
-	 * that use replica tokens
-	 */
-	private final Lock lock = new ReentrantLock();
 
 	public ReplicaTokenCacheEntry(final String logicalPath) {
 
@@ -67,17 +58,13 @@ public class ReplicaTokenCacheEntry {
 	public void setOpenCount(int openCount) {
 		this.openCount = openCount;
 	}
-
-	public void incrementOpenCount() {
-		this.openCount = openCount + 1;
+	
+	public int incrementOpenCount() {
+		return ++openCount;
 	}
 
-	public void decrementOpenCount() {
-		this.openCount = openCount - 1;
-	}
-
-	public Lock getLock() {
-		return lock;
+	public int decrementOpenCount() {
+		return --openCount;
 	}
 
 	/**
@@ -107,11 +94,7 @@ public class ReplicaTokenCacheEntry {
 		if (replicaNumber != null) {
 			builder.append("replicaNumber=").append(replicaNumber).append(", ");
 		}
-		builder.append("openCount=").append(openCount).append(", ");
-		if (lock != null) {
-			builder.append("lock=").append(lock);
-		}
-		builder.append("]");
+		builder.append("openCount=").append(openCount).append("]");
 		return builder.toString();
 	}
 }
