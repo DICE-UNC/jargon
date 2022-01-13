@@ -359,7 +359,7 @@ public interface IRODSFile {
 	String getReplicaToken();
 
 	/**
-	 * Set the replica token if one is available (dependant on iRODS version)
+	 * Set the replica token if one is available (dependent on iRODS version)
 	 * 
 	 * @param replicaToken {@code String} with the replica token value, if
 	 *                      available
