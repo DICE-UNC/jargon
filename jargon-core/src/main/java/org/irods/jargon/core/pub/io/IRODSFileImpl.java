@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import org.irods.jargon.core.apiplugin.ApiPluginConstants;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -1367,16 +1368,19 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		if (this.getReplicaToken() != null && this.coordinated) {
 			log.info("close with a replica token, see if this is the last close");
 
-			ReplicaTokenCacheManager.ReplicaTokenLock replicaLock = null;
+			final IRODSFileSystemAO fsys = this.getIrodsFileSystemAO();
+			final ReplicaTokenCacheManager cacheMgr = IRODSSession.replicaTokenCacheManager;
+			final String absPath = this.getAbsolutePath();
+			final String userName = fsys.getIRODSAccount().getUserName();
+
+			Lock replicaLock = null;
 			try {
-				replicaLock = IRODSSession.replicaTokenCacheManager.obtainReplicaTokenLock(
-				    this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
+				replicaLock = cacheMgr.obtainReplicaTokenLock(absPath, userName);
 
-                replicaLock.tryLock(this.getIrodsFileSystemAO().getJargonProperties().getReplicaTokenLockTimeoutSeconds(),
-                                    false /* incrementOnOpen */);
+				ReplicaTokenCacheManager.tryLock(replicaLock,
+						fsys.getJargonProperties().getReplicaTokenLockTimeoutSeconds());
 
-				boolean isFinalReplicaClose = IRODSSession.replicaTokenCacheManager.isFinalReferenceToReplicaToken(
-				    this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
+				boolean isFinalReplicaClose = cacheMgr.isFinalReferenceToReplicaToken(absPath, userName);
 				log.info("is this is the final replica close?:{}", isFinalReplicaClose);
 
 				ReplicaClose replicaClose = new ReplicaClose();
@@ -1400,21 +1404,18 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 				try {
 					String replicaCloseString = IRODSSession.objectMapper.writeValueAsString(replicaClose);
-					ApiPluginExecutor apiPluginExecutor = this.getIrodsFileSystemAO().getIRODSAccessObjectFactory()
-							.getApiPluginExecutor(this.getIrodsFileSystemAO().getIRODSAccount());
+					ApiPluginExecutor apiPluginExecutor = fsys.getIRODSAccessObjectFactory()
+							.getApiPluginExecutor(fsys.getIRODSAccount());
 					apiPluginExecutor.callPluggableApi(ApiPluginConstants.REPLICA_CLOSE_APN, replicaCloseString);
 
-					IRODSSession.replicaTokenCacheManager.removeReplicaToken(
-					        this.getAbsolutePath(), this.getIrodsFileSystemAO().getIRODSAccount().getUserName());
-
+					cacheMgr.removeReplicaToken(absPath, userName);
 				} catch (JsonProcessingException e) {
 					log.error("error writing json", e);
 					throw new JargonException("error writing replica close", e);
 				}
-
 			} finally {
 				if (replicaLock != null) {
-					replicaLock.unlock(true /* decrementOnClose */);
+					replicaLock.unlock();
 				}
 			}
 
@@ -1571,10 +1572,9 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	/**
-	 * Set the replica token if one is available (dependant on iRODS version)
+	 * Set the replica token if one is available (dependent on iRODS version)
 	 * 
-	 * @param replicaToken {@code String} with the replica token value, if
-	 *                      available
+	 * @param replicaToken {@code String} with the replica token value, if available
 	 */
 	@Override
 	public void setReplicaToken(String replicaToken) {
