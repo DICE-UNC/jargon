@@ -60,14 +60,11 @@ public class IRODSErrorScanner {
 	 * Scan the response for errors, and incorporate any message information that
 	 * might expand the error
 	 *
-	 * @param infoValue
-	 *            {@code int} with the iRODS info value from a packing instruction
-	 *            response header
-	 * @param message
-	 *            {@code String} with any additional error information coming from
-	 *            the response in the {@code msg} field of the header
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param infoValue {@code int} with the iRODS info value from a packing
+	 *                  instruction response header
+	 * @param message   {@code String} with any additional error information coming
+	 *                  from the response in the {@code msg} field of the header
+	 * @throws JargonException for iRODS error
 	 */
 	public static void inspectAndThrowIfNeeded(final int infoValue, String message) throws JargonException {
 
@@ -119,8 +116,8 @@ public class IRODSErrorScanner {
 	 * @param infoValue
 	 * @param message
 	 * @param errorEnum
-	 * @throws JargonException
-	 *             or specific child exception of {@code JargonException}
+	 * @throws JargonException or specific child exception of
+	 *                         {@code JargonException}
 	 */
 	private static void checkSpecificCodesAndThrowIfExceptionLocated(final int infoValue, final String message,
 			final ErrorEnum errorEnum) throws JargonException {
@@ -136,6 +133,8 @@ public class IRODSErrorScanner {
 			throw new NoAPIPrivException("User lacks privileges to invoke the given API");
 		case CAT_NO_ROWS_FOUND:
 			throw new DataNotFoundException("No data found");
+		case SYS_REPLICA_INACCESSIBLE:
+			throw new DataNotFoundException("Replica inaccessable");
 		case CAT_NAME_EXISTS_AS_COLLECTION:
 			throw new JargonFileOrCollAlreadyExistsException("Collection already exists", infoValue);
 		case CAT_NAME_EXISTS_AS_DATAOBJ:
@@ -288,10 +287,8 @@ public class IRODSErrorScanner {
 	 * Inspect the {@code info} value from an iRODS packing instruction response
 	 * header and throw an exception if an error was detected
 	 *
-	 * @param infoValue
-	 *            {@code int} with the iRODS error code
-	 * @throws JargonException
-	 *             for iRODS error
+	 * @param infoValue {@code int} with the iRODS error code
+	 * @throws JargonException for iRODS error
 	 */
 	public static void inspectAndThrowIfNeeded(final int infoValue) throws JargonException {
 

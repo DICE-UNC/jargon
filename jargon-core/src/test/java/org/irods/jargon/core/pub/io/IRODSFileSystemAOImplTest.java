@@ -784,7 +784,7 @@ public class IRODSFileSystemAOImplTest {
 	}
 
 	// https://github.com/DICE-UNC/jargon/issues/375
-	@Test(expected = JargonFileOrCollAlreadyExistsException.class)
+	@Test // create should now be idempotent
 	public void testCreateFileThatAlreadyExists() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);

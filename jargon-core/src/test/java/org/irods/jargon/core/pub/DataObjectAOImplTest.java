@@ -1572,7 +1572,7 @@ public class DataObjectAOImplTest {
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
 	}
 
-	@Test
+	@Test(expected = DataNotFoundException.class)
 	public final void testGetSpecifyingDifferentResource() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1604,9 +1604,6 @@ public class DataObjectAOImplTest {
 		irodsFile.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
-
-		assertionHelper.assertLocalFileNotExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/" + "GetResult" + testFileName);
-
 	}
 
 	@Test(expected = FileNotFoundException.class)

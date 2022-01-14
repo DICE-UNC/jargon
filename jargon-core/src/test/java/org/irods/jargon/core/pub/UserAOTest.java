@@ -249,7 +249,7 @@ public class UserAOTest {
 		Assert.assertEquals("should have updated info", testUser, updatedUser.getInfo());
 	}
 
-	@Test
+	@Test(expected = InvalidUserException.class)
 	public void testRemoveUserDNBadUser() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 

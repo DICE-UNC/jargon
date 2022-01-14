@@ -1302,11 +1302,6 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = sb.toString();
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
-
-		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		collFile.mkdirs();
-
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = accessObjectFactory
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
