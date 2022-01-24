@@ -1,9 +1,12 @@
 package org.irods.jargon.ticket.packinstr;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
+import org.irods.jargon.core.packinstr.KeyValuePair;
 import org.irods.jargon.core.packinstr.Tag;
 
 /**
@@ -46,8 +49,7 @@ public class TicketInp extends AbstractIRODSPackingInstruction {
 	 * and put operations in iRODS, and will typically be done on behalf of a caller
 	 * accomplishing a transfer when a ticket is provided.
 	 *
-	 * @param ticketString
-	 *            {@code String} (required) with a valid ticket
+	 * @param ticketString {@code String} (required) with a valid ticket
 	 * @return {@code TicketInp} instance suitable for initializing a ticket session
 	 */
 	public static TicketInp instanceForSetSessionWithTicket(final String ticketString) {
@@ -90,11 +92,12 @@ public class TicketInp extends AbstractIRODSPackingInstruction {
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
+		// FIXME: refactor for kvps
+		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(ARG1, arg1), new Tag(ARG2, arg2), new Tag(ARG3, arg3),
 				new Tag(ARG4, arg4), new Tag(ARG5, arg5), new Tag(ARG6, arg6) });
+		message.addTag(createKeyValueTag(kvps));
 
 		return message;
 	}
-	''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
 }
