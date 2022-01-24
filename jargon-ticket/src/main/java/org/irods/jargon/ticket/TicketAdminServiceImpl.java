@@ -817,6 +817,9 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		} catch (JargonException e) {
 			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CAT_TICKET_INVALID.getInt()) {
 				response = false;
+			} else {
+				log.error("invalid response to ticket modify", e);
+				throw e;
 			}
 		}
 

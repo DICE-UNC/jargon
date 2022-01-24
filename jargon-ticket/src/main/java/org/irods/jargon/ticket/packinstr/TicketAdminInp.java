@@ -140,7 +140,7 @@ public class TicketAdminInp extends TicketInp {
 			throw new IllegalArgumentException("illegal integer for write-byte - must be 0 or greater");
 		}
 
-		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "write-byte",
+		return new TicketAdminInp(TICKET_ADMIN_INP_API_NBR, "mod", ticketId, "write-bytes",
 				String.valueOf(byteWriteLimit), BLANK, BLANK);
 
 	}
@@ -168,10 +168,8 @@ public class TicketAdminInp extends TicketInp {
 	 * Create a packing instruction to modify the expiration date. Setting the date
 	 * to {@code null} removes the expiration
 	 *
-	 * @param ticketId
-	 *            {@code String} with the unique ticket string
-	 * @param expirationDate
-	 *            {@code Date} or {@code null} to remove
+	 * @param ticketId       {@code String} with the unique ticket string
+	 * @param expirationDate {@code Date} or {@code null} to remove
 	 * @return {@link TicketAdminInp}
 	 */
 	public static TicketAdminInp instanceForModifyExpiration(final String ticketId, final Date expirationDate) {

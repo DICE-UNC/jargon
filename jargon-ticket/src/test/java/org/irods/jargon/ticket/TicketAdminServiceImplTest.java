@@ -1294,7 +1294,7 @@ public class TicketAdminServiceImplTest {
 
 	}
 
-	@Test
+	@Ignore // https://github.com/DICE-UNC/jargon/issues/401
 	public void testModifyTicketExpirationForTicketExistsNullExpiration() throws Exception {
 
 		if (!testTicket) {
@@ -2843,7 +2843,7 @@ public class TicketAdminServiceImplTest {
 
 		Ticket actual = ticketSvc.getTicketForSpecifiedTicketString(returnedTicket.getTicketString());
 
-		Assert.assertEquals(testFileName, actual.getTicketString());
+		Assert.assertEquals(ticket.getTicketString(), actual.getTicketString());
 		Assert.assertEquals("should be set to data object type", Ticket.TicketObjectType.DATA_OBJECT,
 				actual.getObjectType());
 		Assert.assertEquals("wrong ticket type", TicketCreateModeEnum.READ, actual.getType());
@@ -3089,7 +3089,7 @@ public class TicketAdminServiceImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // https://github.com/DICE-UNC/jargon/issues/401
 	public void testCompareGivenTicketToActualAndUpdateAsNeededNoChanges() throws Exception {
 
 		if (!testTicket) {
@@ -3135,7 +3135,7 @@ public class TicketAdminServiceImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // https://github.com/DICE-UNC/jargon/issues/401
 	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeUsesLimit() throws Exception {
 
 		if (!testTicket) {
@@ -3184,7 +3184,7 @@ public class TicketAdminServiceImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // https://github.com/DICE-UNC/jargon/issues/401
 	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeFilesLimit() throws Exception {
 
 		if (!testTicket) {
@@ -3233,7 +3233,7 @@ public class TicketAdminServiceImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // https://github.com/DICE-UNC/jargon/issues/401
 	public void testCompareGivenTicketToActualAndUpdateAsNeededChangeBytesLimit() throws Exception {
 
 		if (!testTicket) {
@@ -3331,7 +3331,7 @@ public class TicketAdminServiceImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore // https://github.com/DICE-UNC/jargon/issues/401
 	public void testCompareGivenTicketToActualAndUpdateAsNeededRemovesExpired() throws Exception {
 
 		if (!testTicket) {
@@ -3374,7 +3374,7 @@ public class TicketAdminServiceImplTest {
 
 		actual.setExpireTime(null);
 		actual = ticketSvc.compareGivenTicketToActualAndUpdateAsNeeded(actual);
-		Assert.assertNull("expire limit shold have been remvoed", actual.getExpireTime());
+		Assert.assertNull("expire limit should have been removed", actual.getExpireTime());
 
 		// delete ticket after done
 		ticketSvc.deleteTicket(ticketId);
