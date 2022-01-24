@@ -114,12 +114,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 * @throws JargonException
 	 */
 	private void createCacheFileAndCacheDir(final IRODSFile cacheFile) throws JargonException {
-		try {
-			cacheFile.getParentFile().mkdirs();
-			cacheFile.createNewFile();
-		} catch (IOException e) {
-			throw new JargonException("error creating new cache file");
-		}
+		// try {
+		cacheFile.getParentFile().mkdirs();
+		// cacheFile.createNewFile();
+		// } catch (IOException e) {
+		// throw new JargonException("error creating new cache file");
+		// }
 	}
 
 	/*

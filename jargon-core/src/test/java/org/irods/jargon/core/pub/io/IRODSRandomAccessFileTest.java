@@ -12,7 +12,6 @@ import java.util.Properties;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -77,36 +76,6 @@ public class IRODSRandomAccessFileTest {
 		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory
 				.instanceIRODSRandomAccessFile(targetIrodsCollection + "/" + testFileName);
 		irodsRandomAccessFile.close();
-		irodsFileSystem.closeAndEatExceptions();
-
-	}
-
-	@Test
-	public final void testCoordinatedTwoFilesOpenAndClose() throws Exception {
-		// generate a local scratch file
-		String testFileName = "testCreateAndCloseNoDefResc.txt";
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		irodsAccount.setDefaultStorageResource("");
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
-
-		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
-		IRODSFile myFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-
-		IRODSRandomAccessFile irodsRandomAccessFile = irodsFileFactory.instanceIRODSRandomAccessFile(myFile,
-				OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS, true);
-
-		IRODSFile myFile2 = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-
-		IRODSRandomAccessFile irodsRandomAccessFile2 = irodsFileFactory.instanceIRODSRandomAccessFile(myFile2,
-				OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS, true);
-
-		irodsRandomAccessFile.close();
-		irodsRandomAccessFile2.close();
-
 		irodsFileSystem.closeAndEatExceptions();
 
 	}

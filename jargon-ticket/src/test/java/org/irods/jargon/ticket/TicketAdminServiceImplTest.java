@@ -2836,7 +2836,7 @@ public class TicketAdminServiceImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(accessObjectFactory, irodsAccount);
 
 		Ticket ticket = new Ticket();
-		ticket.setTicketString(testFileName);
+		ticket.setTicketString("createTicketFromTicketObjectF");
 		ticket.setIrodsAbsolutePath(targetFile.getAbsolutePath());
 		ticket.setType(TicketCreateModeEnum.READ);
 		Ticket returnedTicket = ticketSvc.createTicketFromTicketObject(ticket);

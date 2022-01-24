@@ -49,11 +49,10 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	 * Default constructor takes the objects necessary to communicate with iRODS via
 	 * Access Objects
 	 *
-	 * @param irodsAccessObjectFactory
-	 *            {@link IRODSAccessObjectFactory} that can create various access
-	 *            objects
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} with login information for the target grid
+	 * @param irodsAccessObjectFactory {@link IRODSAccessObjectFactory} that can
+	 *                                 create various access objects
+	 * @param irodsAccount             {@link IRODSAccount} with login information
+	 *                                 for the target grid
 	 * @throws JargonException
 	 */
 	TicketAdminServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)
@@ -217,7 +216,6 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 		}
 
 		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file.getAbsolutePath(), myTicketId);
-		log.info(EXECUTING_TICKET_PI);
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
@@ -1118,15 +1116,13 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	 * Given a result row from a ticket query, put the values into the provided
 	 * {@code Ticket} common to tickets for collections and data objects
 	 *
-	 * @param ticket
-	 *            {@link Ticket} object that will be initialized with values from
-	 *            the query result row. The provided {@code Ticket} in the method
-	 *            parameter will be updated by this method.
-	 * @param row
-	 *            {@link IRODSQueryResultRow} from a query for the ticket as
-	 *            specified by the methods internal to this object. This is not a
-	 *            generally applicable method,, rather it assumes the columns have
-	 *            been requested in a certain order.
+	 * @param ticket {@link Ticket} object that will be initialized with values from
+	 *               the query result row. The provided {@code Ticket} in the method
+	 *               parameter will be updated by this method.
+	 * @param row    {@link IRODSQueryResultRow} from a query for the ticket as
+	 *               specified by the methods internal to this object. This is not a
+	 *               generally applicable method,, rather it assumes the columns
+	 *               have been requested in a certain order.
 	 * @throws JargonException
 	 */
 	private void putResultDataIntoTicketCommonValues(final Ticket ticket, final IRODSQueryResultRow row)
@@ -1164,8 +1160,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	/**
 	 * Add the collection specific elements to a query
 	 *
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder}
+	 * @param builder {@link IRODSGenQueryBuilder}
 	 * @throws GenQueryBuilderException
 	 */
 	private void addQuerySelectsForListAllTicketsForCollections(final IRODSGenQueryBuilder builder)
@@ -1220,8 +1215,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	/**
 	 * Add the data object specific elements to a query
 	 *
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder}
+	 * @param builder {@link IRODSGenQueryBuilder}
 	 * @throws GenQueryBuilderException
 	 */
 	private void addQuerySelectsForListAllTicketsForDataObjects(final IRODSGenQueryBuilder builder)
@@ -1273,8 +1267,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	 * Add selects (which will be in the established order of the passed in builder)
 	 * which are the basics for tickets to use in a gen query
 	 *
-	 * @param builder
-	 *            {@link RIODSGenQueryBuilder} to which the fields will be added
+	 * @param builder {@link RIODSGenQueryBuilder} to which the fields will be added
 	 */
 	private void addSelectsForTicketsCommonToQueryBuilder(final IRODSGenQueryBuilder builder)
 			throws GenQueryBuilderException {

@@ -338,20 +338,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSF
 			throw new IllegalArgumentException("null irodsFile");
 		}
 
-		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(getIRODSSession(), getIRODSAccount());
 		try {
-			if (!file.exists()) {
-				log.info("file does not exist, creating a new file");
-				file.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
-			}
-
-			/*
-			 * else if (!file.canWrite()) {
-			 * log.info("this file is not writeable by the current user {}",
-			 * file.getAbsolutePath()); throw new JargonException("file is not writeable:" +
-			 * file.getAbsolutePath()); }
-			 */
-
+			FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(getIRODSSession(), getIRODSAccount());
 			return new SessionClosingIRODSFileOutputStream(file, fileIOOperations);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);

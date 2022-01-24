@@ -1,24 +1,19 @@
 #
 # iRODS Provider Image.
 #
-FROM ubuntu:14.04
+#
+# iRODS Provider Image.
+#
+FROM ubuntu:16.04
+
+# TODO: Remove this line when apt gets its stuff together
+RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
 
 # Install pre-requisites
 RUN apt-get update && \
-    apt-get install -y sudo \
-                       wget \
-                       lsb-release \
-                       apt-transport-https \
-                       python-pip \
-                       libfuse2 \
-                       netcat \
-                       super \
-                       python-jsonschema \
-                       lsof \
-                       python-psutil \
-                       curl \
-                       libjson-perl && \
+    apt-get install -y sudo wget lsb-release apt-transport-https postgresql vim python-pip libfuse2 unixodbc rsyslog less && \
     pip install xmlrunner
+
 
 # Grab .debs and install
 RUN wget https://files.renci.org/pub/irods/releases/4.1.12/ubuntu14/irods-runtime-4.1.12-ubuntu14-x86_64.deb && \

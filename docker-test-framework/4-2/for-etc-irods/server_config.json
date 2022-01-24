@@ -44,7 +44,7 @@
                 "plugin_name": "irods_rule_engine_plugin-irods_rule_language", 
                 "plugin_specific_configuration": {
                     "re_data_variable_mapping_set": [
-                        "core","jargon_extras"
+                        "core"
                     ], 
                     "re_function_name_mapping_set": [
                         "core"
