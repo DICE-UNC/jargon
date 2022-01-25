@@ -103,6 +103,22 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Is this server after 4.2.11, when cond input was added to the ticket admin
+	 * packing instruction?
+	 * 
+	 * @return {@code true} if server requires cond input in the ticket admin
+	 *         packing instruction
+	 */
+	public boolean isTicketAdminCondInput() {
+		boolean supports = false;
+
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.11")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Does the server (based on version) support composable resources
 	 *
 	 * @return <code>boolean</code> indicating whether composable resources are

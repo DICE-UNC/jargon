@@ -93,3 +93,13 @@ Added unit test to verify IRODSFile and DataObject dates agree as part of explai
 ####  Temporarily calm unit tests for tickets until resolved  #376
 
 Temporarily turned off certain ticket unit tests that are failing for follow up in a maintenance release
+
+#### fixed StringIndexOutOfBoundsException and allowed quota values to be 0 #395
+
+A pull request from Shane-Park to address string out of bounds exceptions
+
+#### Errors in ticket modification when date is set to 'none' or blank #401
+
+This appears to be a new error in iRODS, setting an expires date from a non-blank value to a blank value. The unit test failures have been quieted for this release and a follow up will be done with iRODS developers to discern whether this is a server regression.
+
+

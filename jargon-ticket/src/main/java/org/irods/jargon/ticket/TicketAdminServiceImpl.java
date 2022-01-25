@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.pub.CollectionAO;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.ProtocolExtensionPoint;
@@ -30,7 +31,9 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.ticket.Ticket.TicketObjectType;
 import org.irods.jargon.ticket.packinstr.TicketAdminInp;
+import org.irods.jargon.ticket.packinstr.TicketAdminInpNoCondInp;
 import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
+import org.irods.jargon.ticket.packinstr.TicketInp;
 import org.irods.jargon.ticket.packinstr.TicketModifyAddOrRemoveTypeEnum;
 import org.irods.jargon.ticket.utils.TicketRandomString;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	private static final String ERROR_IN_TICKET_QUERY = "error in ticket query";
 	private static final String TICKET_NOT_FOUND = "IRODS ticket not found";
 	public static final Logger log = LoggerFactory.getLogger(TicketAdminServiceImpl.class);
+	private final EnvironmentalInfoAO environmentalInfAO;
 
 	/**
 	 * Default constructor takes the objects necessary to communicate with iRODS via
@@ -59,6 +63,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 			throws JargonException {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
+		this.environmentalInfAO = irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 	}
 
 	/*
@@ -215,7 +220,12 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		}
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForCreate(mode, file.getAbsolutePath(), myTicketId);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForCreate(mode, file.getAbsolutePath(), myTicketId);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForCreate(mode, file.getAbsolutePath(), myTicketId);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		Tag ticketOperationResponse = pep.irodsFunction(ticketPI);
@@ -243,8 +253,12 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("deleting ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForDelete(ticketId);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForDelete(ticketId);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForDelete(ticketId);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -692,8 +706,12 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyNumberOfUses(ticketId, usesLimit);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyNumberOfUses(ticketId, usesLimit);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyNumberOfUses(ticketId, usesLimit);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -732,8 +750,12 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyFileWriteNumber(ticketId, fileWriteLimit);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyFileWriteNumber(ticketId, fileWriteLimit);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyFileWriteNumber(ticketId, fileWriteLimit);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -772,8 +794,12 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyByteWriteNumber(ticketId, byteWriteLimit);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyByteWriteNumber(ticketId, byteWriteLimit);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyByteWriteNumber(ticketId, byteWriteLimit);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -808,8 +834,12 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyExpiration(ticketId, expirationDate);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyExpiration(ticketId, expirationDate);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyExpiration(ticketId, expirationDate);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -851,9 +881,14 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
-				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyAddAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -894,9 +929,14 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
-				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyRemoveAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_USER, userId);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -937,9 +977,14 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
-				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyAddAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -980,9 +1025,14 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
-				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyRemoveAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_GROUP, groupId);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -1023,9 +1073,14 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
-				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyAddAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyAddAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
@@ -1066,9 +1121,14 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 
 		log.info("modifying ticket id/string:{}", ticketId);
 
-		TicketAdminInp ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
-				TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
-		log.info(EXECUTING_TICKET_PI);
+		TicketInp ticketPI = null;
+		if (this.environmentalInfAO.getIRODSServerProperties().isTicketAdminCondInput()) {
+			ticketPI = TicketAdminInp.instanceForModifyRemoveAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
+		} else {
+			ticketPI = TicketAdminInpNoCondInp.instanceForModifyRemoveAccess(ticketId,
+					TicketModifyAddOrRemoveTypeEnum.TICKET_MODIFY_HOST, host);
+		}
 
 		ProtocolExtensionPoint pep = irodsAccessObjectFactory.getProtocolExtensionPoint(irodsAccount);
 		try {
