@@ -102,4 +102,10 @@ A pull request from Shane-Park to address string out of bounds exceptions
 
 This appears to be a new error in iRODS, setting an expires date from a non-blank value to a blank value. The unit test failures have been quieted for this release and a follow up will be done with iRODS developers to discern whether this is a server regression.
 
+#### Add condinput to ticket api calls #400
+
+This is a partial fix for changes to the ticket admin API. A CondInput set of key/values pairs was added to the packing
+instruction. A backwards compatable patch was made that supplies this for iRODS post 4.2.11. A follow on task will
+expose the new admin ticket functions in the API.
+
 
