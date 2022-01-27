@@ -1351,7 +1351,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 		/*
 		 * If I'm calling this on iRODS when it doesn't support replica tokens, then
-		 * this is a usage error
+		 * usage error
 		 * 
 		 * if we're not holding a resource token we will go to the normal close,
 		 * otherwise we will process with the provided flags. This is a relaxed
@@ -1359,9 +1359,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		 * 
 		 */
 
-		if (!this.getIrodsFileSystemAO().getIRODSServerProperties().isSupportsReplicaTokens()) {
-			log.error("iRODS does not support replica tokens");
-			throw new UnsupportedOperationException("This version of iRODS does not support replica tokens");
+		if (this.coordinated && !this.getIrodsFileSystemAO().getIRODSServerProperties().isSupportsReplicaTokens()) {
+			log.warn("iRODS does not support replica tokens");
 		}
 
 		// check if I have a replica token, in which case you will do a replica close
