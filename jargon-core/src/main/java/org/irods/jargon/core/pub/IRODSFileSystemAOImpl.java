@@ -832,6 +832,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 		}
 
+		final IRODSAccount acct = this.getIRODSAccount();
+
+		// Set the target resource if it was provided, else default to targeting
+		// the resource defined in the iRODS account.
+		final String resourceTarget = (irodsFile.getResource() != null && !irodsFile.getResource().isEmpty())
+				? irodsFile.getResource()
+				: acct.getDefaultStorageResource();
+
 		int fileId;
 		if (this.getIRODSServerProperties().isSupportsReplicaTokens() && coordinated) {
 			log.info("open using replica token semantics");
@@ -841,7 +849,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 			 */
 
 			final ReplicaTokenCacheManager cacheMgr = IRODSSession.replicaTokenCacheManager;
-			final IRODSAccount acct = this.getIRODSAccount();
 			final String userName = acct.getUserName();
 
 			Lock replicaLock = null;
@@ -856,13 +863,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 				if (replicaTokenCacheEntry.getReplicaToken().isEmpty()) {
 					log.debug("need to obtain a replica token");
 					DataObjInp dataObjInp = DataObjInp.instanceForOpenReplicaToken(absPath, myOpenFlags);
-
-					// Set the target resource if it was provided, else default to targeting
-					// the resource defined in the iRODS account.
-					dataObjInp.setResource((irodsFile.getResource() != null && !irodsFile.getResource().isEmpty())
-							? irodsFile.getResource()
-							: acct.getDefaultStorageResource());
-
+					dataObjInp.setResource(resourceTarget);
 					ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
 							.getApiPluginExecutor(getIRODSAccount());
 					PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
@@ -916,6 +917,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 
 		} else {
 			DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, myOpenFlags);
+			dataObjInp.setResource(resourceTarget);
 
 			if (log.isInfoEnabled()) {
 				log.info("opening file:" + absPath);
