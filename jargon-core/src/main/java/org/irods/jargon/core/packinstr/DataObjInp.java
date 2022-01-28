@@ -847,7 +847,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		// instruction.
 		if (getResource().length() > 0) {
 			if (getApiNumber() == DataObjInp.GET_FILE_API_NBR || getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
-					|| getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
+					|| getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR
+					|| getApiNumber() == DataObjInp.REPLICA_OPEN_API_NBR) {
 				kvps.add(KeyValuePair.instance(RESC_NAME, getResource()));
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
@@ -1043,6 +1044,13 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public void setOperationType(final int operationType) {
 		this.operationType = operationType;
+	}
+
+	/**
+	 * @param resource the resource to target
+	 */
+	public void setResource(final String resource) {
+		this.resource = resource;
 	}
 
 }

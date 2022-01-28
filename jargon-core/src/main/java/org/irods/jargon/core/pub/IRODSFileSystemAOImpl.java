@@ -841,7 +841,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 			 */
 
 			final ReplicaTokenCacheManager cacheMgr = IRODSSession.replicaTokenCacheManager;
-			final String userName = this.getIRODSAccount().getUserName();
+			final IRODSAccount acct = this.getIRODSAccount();
+			final String userName = acct.getUserName();
 
 			Lock replicaLock = null;
 			try {
@@ -855,6 +856,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 				if (replicaTokenCacheEntry.getReplicaToken().isEmpty()) {
 					log.debug("need to obtain a replica token");
 					DataObjInp dataObjInp = DataObjInp.instanceForOpenReplicaToken(absPath, myOpenFlags);
+
+					// Set the target resource if it was provided, else default to targeting
+					// the resource defined in the iRODS account.
+					dataObjInp.setResource((irodsFile.getResource() != null && !irodsFile.getResource().isEmpty())
+							? irodsFile.getResource()
+							: acct.getDefaultStorageResource());
+
 					ApiPluginExecutor apiPluginExecutor = this.getIRODSAccessObjectFactory()
 							.getApiPluginExecutor(getIRODSAccount());
 					PluggableApiCallResult apiResponse = apiPluginExecutor.callPluggableApi(dataObjInp.getApiNumber(),
