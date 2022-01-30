@@ -1378,22 +1378,36 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 				ReplicaTokenCacheManager.tryLock(replicaLock,
 						fsys.getJargonProperties().getReplicaTokenLockTimeoutSeconds());
-
-				boolean isFinalReplicaClose = cacheMgr.isFinalReferenceToReplicaToken(absPath, userName);
-				log.info("is this is the final replica close?:{}", isFinalReplicaClose);
-
+				
 				ReplicaClose replicaClose = new ReplicaClose();
 				replicaClose.setFd(this.fileDescriptor);
 
-				if (isFinalReplicaClose) {
-					// TODO: what of these options are indicated on final close?
+				if (cacheMgr.isFirstStream(absPath, userName)) {
+					// Wait for all sibling streams to close first.
+					//
+					// The first stream is required to update the catalog on close.
+					// This is so that replication issue trigger correctly. See the
+					// following for more details:
+					//
+					//     https://github.com/irods/irods/issues/6142
+					//
+					while (!cacheMgr.isFinalReferenceToReplicaToken(absPath, userName)) {
+						replicaLock.unlock();
+						Thread.yield();
+						ReplicaTokenCacheManager.tryLock(replicaLock,
+								fsys.getJargonProperties().getReplicaTokenLockTimeoutSeconds());
+					}
+
+					log.info("is this is the final replica close?:true");
 
 					replicaClose.setPreserveReplicaStateTable(preserveReplicaStateTable);
 					replicaClose.setSendNotifications(sendNotifications);
 					replicaClose.setUpdateSize(updateSize);
 					replicaClose.setUpdateStatus(updateStatus);
 					replicaClose.setComputeChecksum(computeChecksum);
-				} else {
+				}
+				else {
+					log.info("is this is the final replica close?:false");
 					replicaClose.setPreserveReplicaStateTable(false);
 					replicaClose.setSendNotifications(false);
 					replicaClose.setUpdateSize(false);

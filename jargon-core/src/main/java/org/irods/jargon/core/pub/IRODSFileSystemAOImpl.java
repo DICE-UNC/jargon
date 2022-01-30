@@ -889,7 +889,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					int replicaNumber = Integer.parseInt(replicaTokenCacheEntry.getReplicaNumber());
 					DataObjInp dataObjInp = DataObjInp.instanceForOpenWithExistingReplicaToken(absPath, myOpenFlags,
 							replicaTokenCacheEntry.getReplicaToken(), replicaNumber);
-					DataObjInp.instanceForOpen(absPath, myOpenFlags);
 
 					if (log.isInfoEnabled()) {
 						log.info("opening file:" + absPath);

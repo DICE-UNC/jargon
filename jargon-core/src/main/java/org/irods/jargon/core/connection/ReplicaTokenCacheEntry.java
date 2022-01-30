@@ -25,6 +25,10 @@ public class ReplicaTokenCacheEntry {
 	 * Count of open files
 	 */
 	private int openCount = 0;
+	/**
+	 * The thread id of the first coordinated stream
+	 */
+	private long firstStreamThreadId = -1;
 
 	public ReplicaTokenCacheEntry(final String logicalPath) {
 
@@ -66,6 +70,14 @@ public class ReplicaTokenCacheEntry {
 	public int decrementOpenCount() {
 		return --openCount;
 	}
+	
+	public void setThreadIdOfFirstStream(long threadId) {
+		this.firstStreamThreadId = threadId;
+	}
+	
+	public long getThreadIdOfFirstStream() {
+		return firstStreamThreadId;
+	}
 
 	/**
 	 * @return the replicaNumber
@@ -94,7 +106,8 @@ public class ReplicaTokenCacheEntry {
 		if (replicaNumber != null) {
 			builder.append("replicaNumber=").append(replicaNumber).append(", ");
 		}
-		builder.append("openCount=").append(openCount).append("]");
-		return builder.toString();
+		builder.append("openCount=").append(openCount);
+		builder.append("threadId=").append(firstStreamThreadId);
+		return builder.append("]").toString();
 	}
 }
