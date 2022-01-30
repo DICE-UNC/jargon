@@ -131,6 +131,7 @@ public class ReplicaTokenCacheManager {
 
 		replicaTokenCacheEntry.setReplicaToken(replicaToken);
 		replicaTokenCacheEntry.setReplicaNumber(String.valueOf(replicaNumber));
+		replicaTokenCacheEntry.setThreadIdOfFirstStream(Thread.currentThread().getId());
 		replicaTokenCacheEntry.setOpenCount(1);
 
 	}
@@ -168,6 +169,41 @@ public class ReplicaTokenCacheManager {
 		ReplicaTokenCacheEntry cacheEntry = replicaTokenCache.get(cacheKey);
 
 		return cacheEntry.getOpenCount() == 1;
+
+	}
+
+	/**
+	 * This method requires the caller to acquire the lock returned from
+	 * {@code obtainReplicaTokenLock}.
+	 *
+	 * This method is called when a file is being closed, and where a replica token
+	 * was obtained. Checks if the first coordinated stream invoked this method.
+	 *
+	 * @param logicalPath {@code String} with the logical path to the file to be
+	 *                    closed
+	 * @param userName    {@code String} which is the user name
+	 * @return {@code boolean} with a value of {@code true} if the first coordinated
+	 *         stream invoked this method
+	 */
+	public boolean isFirstStream(final String logicalPath, final String userName) {
+
+		log.info("isFirstStream()");
+
+		if (logicalPath == null || logicalPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty logicalPath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		log.info("logicalPath:{}", logicalPath);
+		log.info("userName:{}", userName);
+
+		ReplicaTokenCacheKey cacheKey = ReplicaTokenCacheKey.instance(logicalPath, userName);
+		ReplicaTokenCacheEntry cacheEntry = replicaTokenCache.get(cacheKey);
+
+		return cacheEntry.getThreadIdOfFirstStream() == Thread.currentThread().getId();
 
 	}
 
