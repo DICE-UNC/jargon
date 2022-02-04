@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## UNRELEASED
+
+### Added
+
+### Changed
+
+#### First coordinated stream is required to close and update the catalog when doing parallel transfer #408
+
+Support for 'first stream closed last' semantics for NFSRods handling
+
+### Removed
+
+
+## [4.3.2.4-RELEASE]
 
 ### Added
 
