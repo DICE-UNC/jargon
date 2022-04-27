@@ -23,8 +23,6 @@
 			<id>mconway</id>
 			<name>Mike Conway</name>
 			<email>michael.c.conway@gmail.com</email>
-			<url>http://www.irods.org</url>
-			<organization>iRODS</organization>
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -101,15 +99,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<modules>
-		<module>jargon-core</module>
-		<module>jargon-user-tagging</module>
-		<module>jargon-data-utils</module>
-		<module>jargon-ticket</module>
-		<module>jargon-pool</module>
-		<module>jargon-ruleservice</module>
-		<module>data-profile</module>
-		<module>jargon-zipservice</module>
-		<module>jargon-mdquery</module>
-	</modules>
+	
 </project>
