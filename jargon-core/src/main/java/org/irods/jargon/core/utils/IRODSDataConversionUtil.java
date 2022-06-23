@@ -130,7 +130,7 @@ public class IRODSDataConversionUtil {
 	 * @param irodsValue {@code long} with the data value 
 	 * @return {@link Date}
 	 */
-	public static Date getDateFromIRODSValue(final long irodsValue) {
+	public static Date getDateFromIrodsValueAsLong(final long irodsValue) {
 		
 		TimeZone timeZone = TimeZone.getTimeZone("GMT");
 		DateFormat dateFormat = DateFormat.getDateTimeInstance();
