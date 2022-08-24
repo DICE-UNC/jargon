@@ -431,6 +431,9 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 			}
 			message.addTag(argBuilder.toString(), val);
 		}
+		
+		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+		message.addTag(super.createKeyValueTag(kvps));
 
 		// take the arg list and compact the params
 
