@@ -23,7 +23,7 @@ services:
         dockerfile: Dockerfile.testbuild
     volumes:
       - ../..:/usr/src/jargon
-      - ../../settings.xml:/root/.m2/settings.xml
+      - ../settings.xml:/root/.m2/settings.xml
     networks:
       irodsnet:
         aliases:

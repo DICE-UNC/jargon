@@ -124,6 +124,24 @@ public class IRODSDataConversionUtil {
 		Date computedDate = calendar.getTime();
 		return computedDate;
 	}
+	
+	/**
+	 * Get a Date from an iRODS long value, e.g. from an objStat
+	 * @param irodsValue {@code long} with the data value 
+	 * @return {@link Date}
+	 */
+	public static Date getDateFromIrodsValueAsLong(final long irodsValue) {
+		
+		TimeZone timeZone = TimeZone.getTimeZone("GMT");
+		DateFormat dateFormat = DateFormat.getDateTimeInstance();
+		dateFormat.setTimeZone(timeZone);
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.setTimeInMillis(irodsValue);
+		Date computedDate = calendar.getTime();
+		return computedDate;
+		
+	}
 
 	/**
 	 * Utility to determine the collection type contained in an iRODS value. Null
