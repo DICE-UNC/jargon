@@ -10,17 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+## UNRELEASED
+
+### Added
+
+### Changed
+
 #### First coordinated stream is required to close and update the catalog when doing parallel transfer #408
 
 Support for 'first stream closed last' semantics for NFSRods handling
 
 ### Removed
 
-## [4.3.2.5-RELEASE]
+## [4.3.3.0-RELEASE]
 
 #### First coordinated stream is required to close and update the catalog when doing parallel transfer #408
 
 Adjustments to close behavior for NFSRods in parallel transfer to close first stream last
+
+#### Additional options for file zipping/tarring
 
 ## [4.3.2.4-RELEASE]
 
