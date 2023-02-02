@@ -9,7 +9,7 @@ done
 
 # Set up iRODS.
 sed -i '5s/.*/'$topo_provider'/'
-python /var/lib/irods/scripts/setup_irods.py < /irods_consumer.input
+python3 /var/lib/irods/scripts/setup_irods.py < /irods_consumer.input
 
 # Keep container running if the test fails.
 tail -f /dev/null

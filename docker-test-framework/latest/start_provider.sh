@@ -11,7 +11,8 @@ done
 echo Postgres took approximately $counter seconds to fully start ...
 
 # Set up iRODS.
-python /var/lib/irods/scripts/setup_irods.py < /var/lib/irods/packaging/localhost_setup_postgres.input
+python3 /var/lib/irods/scripts/setup_irods.py < /var/lib/irods/packaging/localhost_setup_postgres.input
+service irods start
 
 echo Running Test Setup Script
 su irods -c '/testsetup-consortium.sh'
