@@ -1,15 +1,16 @@
 #
 # iRODS Provider Image.
 #
-FROM ubuntu:16.04
+FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
 
 # TODO: Remove this line when apt gets its stuff together
 RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
 
 # Install pre-requisites
 RUN apt-get update && \
-    apt-get install -y sudo wget lsb-release apt-transport-https postgresql vim python-pip libfuse2 unixodbc rsyslog less && \
-    pip install xmlrunner
+    apt-get install -y sudo wget lsb-release apt-transport-https postgresql vim python3-pip libfuse2 unixodbc rsyslog less gnupg2 && \
+    pip3 install xmlrunner
 
 # Setup catalog database
 ADD db_commands.txt /

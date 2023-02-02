@@ -1,13 +1,14 @@
 #
 # iRODS Consumer Image.
 #
-FROM ubuntu:16.04
+FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
 
 # TODO: Remove this line when apt gets its stuff together
 RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
 
 RUN apt-get update && \
-    apt-get install -y sudo wget less lsb-release apt-transport-https netcat
+    apt-get install -y sudo wget less lsb-release apt-transport-https netcat gnupg2
 
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -; \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/renci-irods.list; \
