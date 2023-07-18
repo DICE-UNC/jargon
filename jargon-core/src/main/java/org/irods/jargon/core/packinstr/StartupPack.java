@@ -7,13 +7,26 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "StartupPack_PI";
 	public static final String CHALLENGE = "challenge";
-	public static final String SP_OPTION_IINIT = "iinit";
 	public static final String protocolType = "1"; // 1 = xml protocol
 	private final IRODSAccount irodsAccount;
 	private int reconnFlag = 0;
 	private int connectCnt = 0;
-	private String option = "";
+	// "jargon" is the default name when reporting through sp_option/spOption; allows jargon
+	// applications to report with a name through ips
+	private static String option = "jargon";
 	public static final String NEGOTIATE_OPTION = "request_server_negotiation";
+
+	public static String getApplicationName() {
+		return option;
+	}
+
+	public static void setApplicationName(String name) {
+		if (null == name || name.trim().isEmpty()) {  // name can't contain only spaces
+			throw new IllegalArgumentException("null or empty name");
+		}
+
+		option = name;
+	}
 
 	public StartupPack(final IRODSAccount irodsAccount) {
 		super();
@@ -31,7 +44,6 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 		if (option == null) {
 			throw new IllegalArgumentException("null option");
 		}
-		this.option = option;
 	}
 
 	@Override
@@ -59,6 +71,7 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 				new Tag("apiVersion", IRODSAccount.IRODS_API_VERSION),
 				// new Tag("option", "0") });
 				new Tag("option", option) });
+
 		return startupPacket;
 	}
 
