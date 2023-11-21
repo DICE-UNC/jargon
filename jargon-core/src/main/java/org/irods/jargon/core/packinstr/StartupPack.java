@@ -11,13 +11,14 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 	private final IRODSAccount irodsAccount;
 	private int reconnFlag = 0;
 	private int connectCnt = 0;
+	private String option = "";
 	// "jargon" is the default name when reporting through sp_option/spOption; allows jargon
 	// applications to report with a name through ips
-	private static String option = "jargon";
+	private static String appName = "jargon";
 	public static final String NEGOTIATE_OPTION = "request_server_negotiation";
 
 	public static String getApplicationName() {
-		return option;
+		return appName;
 	}
 
 	public static void setApplicationName(String name) {
@@ -25,7 +26,7 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty name");
 		}
 
-		option = name;
+		appName = name;
 	}
 
 	public StartupPack(final IRODSAccount irodsAccount) {
@@ -44,6 +45,7 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 		if (option == null) {
 			throw new IllegalArgumentException("null option");
 		}
+		this.option = appName + option;
 	}
 
 	@Override
