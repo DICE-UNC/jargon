@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoAPIPrivException;
 import org.irods.jargon.core.pub.domain.Quota;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
@@ -11,6 +12,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -58,12 +60,17 @@ public class QuotaAOImplTest {
 
 	@Test
 	public void testSetUserResourceQuotaThenListAll() throws Exception {
-		long quotaVal = 653000L;
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
+
+		// Skip if pre iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not support user quotas", irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSServerProperties(irodsAccount).isAtLeastIrods430());
+
 		IRODSAccount adminAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 		QuotaAO quotaAO = irodsFileSystem.getIRODSAccessObjectFactory().getQuotaAO(adminAccount);
 
+		long quotaVal = 653000L;
 		quotaAO.setUserQuotaForResource(irodsAccount.getUserName(),
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), quotaVal);
 
@@ -94,13 +101,36 @@ public class QuotaAOImplTest {
 	}
 
 	@Test
-	public void testSetUserResourceQuotaThenListUser() throws Exception {
-		long quotaVal = 6893400L;
+	public void testSetUserResourceQuotaToValueOtherThanZeroIsNotAllowed() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
+
+		Assume.assumeTrue("iRODS 4.3.0 does not support user quotas", irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSServerProperties(irodsAccount).isAtLeastIrods430());
+
 		IRODSAccount adminAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 		QuotaAO quotaAO = irodsFileSystem.getIRODSAccessObjectFactory().getQuotaAO(adminAccount);
 
+		long quotaVal = 6893400L;
+		JargonException thrown = Assert.assertThrows(JargonException.class,
+				() -> quotaAO.setUserQuotaForResource(irodsAccount.getUserName(),
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), quotaVal));
+		Assert.assertEquals(thrown.getUnderlyingIRODSExceptionCode(), -169000); // SYS_NOT_ALLOWED
+	}
+
+	@Test
+	public void testSetUserResourceQuotaThenListUser() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
+
+		// Skip if pre iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not support user quotas", irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSServerProperties(irodsAccount).isAtLeastIrods430());
+
+		IRODSAccount adminAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		QuotaAO quotaAO = irodsFileSystem.getIRODSAccessObjectFactory().getQuotaAO(adminAccount);
+
+		long quotaVal = 6893400L;
 		quotaAO.setUserQuotaForResource(irodsAccount.getUserName(),
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), quotaVal);
 
@@ -124,8 +154,13 @@ public class QuotaAOImplTest {
 	@Test
 	public void testSetThenListGlobalQuotaForUser() throws Exception {
 
-		long quotaVal = 600000L;
 		IRODSAccount adminAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		// Skip if pre iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not support user quotas", irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSServerProperties(adminAccount).isAtLeastIrods430());
+
+		long quotaVal = 600000L;
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
@@ -147,6 +182,10 @@ public class QuotaAOImplTest {
 		IRODSAccount adminAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		// Skip if pre iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not support user quotas", irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSServerProperties(adminAccount).isAtLeastIrods430());
 
 		QuotaAO adminQuotaAO = irodsFileSystem.getIRODSAccessObjectFactory().getQuotaAO(adminAccount);
 		adminQuotaAO.setUserQuotaTotal(irodsAccount.getUserName(), quotaVal);

@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidUserException;
@@ -744,7 +745,6 @@ public class UserAOTest {
 		userAO.findByName(testUser);
 	}
 
-	@Test(expected = DuplicateDataException.class)
 	public void testAddDuplicateUser() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -766,7 +766,12 @@ public class UserAOTest {
 		addedUser.setName(testUser);
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
 		userAO.addUser(addedUser);
-		userAO.addUser(addedUser);
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods430()) {
+			Assert.assertThrows(CatalogSQLException.class, () -> userAO.addUser(addedUser));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class, () -> userAO.addUser(addedUser));
+		}
 	}
 
 	@Test
@@ -1030,13 +1035,20 @@ public class UserAOTest {
 		String testUnit = "";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		AvuData avuData = AvuData.instance(testAttrib, testValue, testUnit);
 
 		try {
 			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
-			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+
+			if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+				Assert.assertThrows(CatalogSQLException.class,
+						() -> userAO.addAVUMetadata(irodsAccount.getUserName(), avuData));
+			} else {
+				userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
+			}
 
 			List<AvuData> avuList = userAO.listUserMetadataForUserName(irodsAccount.getUserName());
 
@@ -1052,7 +1064,6 @@ public class UserAOTest {
 			Assert.assertTrue("did not find the expected AVU", avuFound);
 		} catch (DuplicateDataException dde) {
 			// this is post 3.1, will get the dde and that's expected
-			return;
 		}
 
 	}
