@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -50,6 +51,7 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -2815,24 +2817,33 @@ public class DataObjectAOImplTest {
 
 		String targetIrodsDataObject = targetIrodsCollection + "/" + testFileName;
 
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
-
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataTransferOperations(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not report an error on duplicate AVUs",
+				accessObjectFactory.getIRODSServerProperties(irodsAccount).isVersion("rods4.3.0"));
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
+
+		DataTransferOperations dataTransferOperationsAO = accessObjectFactory.getDataTransferOperations(irodsAccount);
 		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
 
 		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
-		try {
-			dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
-		} catch (DuplicateDataException dde) {
-			// expected post 3.1
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+			Assert.assertThrows(CatalogSQLException.class,
+					() -> dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData));
 		}
+
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -2846,7 +2857,6 @@ public class DataObjectAOImplTest {
 	/*
 	 * [#161] iRODS inconsistantly handles duplicate AVU data for data objects
 	 */
-	@Test(expected = DuplicateDataException.class)
 	public void testAddAVUMetadataToDataObjectTwiceIncludeUnitsVal() throws Exception {
 		String testFileName = "testAddAVUMetadataToDataObjectTwiceIncludeUnitsVal.txt";
 		String expectedAttribName = "testAddAVUMetadataToDataObjectTwice";
@@ -2871,7 +2881,16 @@ public class DataObjectAOImplTest {
 		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, expectedUnitsVal);
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
-		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods430()) {
+			Assert.assertThrows(CatalogSQLException.class,
+					() -> dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData));
+		}
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,

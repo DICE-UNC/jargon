@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
@@ -489,7 +490,6 @@ public class ResourceAOTest {
 
 	}
 
-	@Test(expected = DuplicateDataException.class)
 	public final void testAddDuplicateResource() throws Exception {
 
 		String rescName = "testAddDuplicateResource";
@@ -513,7 +513,12 @@ public class ResourceAOTest {
 		resource.setName(rescName);
 		resource.setType("deferred");
 		resourceAO.addResource(resource);
-		resourceAO.addResource(resource);
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods430()) {
+			Assert.assertThrows(CatalogSQLException.class, () -> resourceAO.addResource(resource));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class, () -> resourceAO.addResource(resource));
+		}
 
 	}
 

@@ -7,6 +7,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidGroupException;
 import org.irods.jargon.core.exception.InvalidUserException;
@@ -400,7 +401,6 @@ public class UserGroupAOImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expected = DuplicateDataException.class)
 	public final void testAddUserToGroupTwice() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
@@ -417,7 +417,14 @@ public class UserGroupAOImplTest {
 		userGroupAO.addUserGroup(userGroup);
 
 		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(), null);
-		userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(), null);
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods430()) {
+			Assert.assertThrows(CatalogSQLException.class,
+					() -> userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(), null));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> userGroupAO.addUserToGroup(testUserGroup, irodsAccount.getUserName(), null));
+		}
 
 	}
 
@@ -580,7 +587,6 @@ public class UserGroupAOImplTest {
 
 	}
 
-	@Test(expected = DuplicateDataException.class)
 	public final void testAddDuplicateUserGroup() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
@@ -595,7 +601,12 @@ public class UserGroupAOImplTest {
 
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
-		userGroupAO.addUserGroup(userGroup);
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods430()) {
+			Assert.assertThrows(CatalogSQLException.class, () -> userGroupAO.addUserGroup(userGroup));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class, () -> userGroupAO.addUserGroup(userGroup));
+		}
 
 	}
 

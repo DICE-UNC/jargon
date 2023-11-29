@@ -21,6 +21,7 @@ import org.irods.jargon.usertagging.tags.IRODSTaggingService;
 import org.irods.jargon.usertagging.tags.IRODSTaggingServiceImpl;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -340,6 +341,11 @@ public class IRODSTaggingServiceTest {
 				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testCollection);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("This test does not produce an exception when run against iRODS 4.3.0", irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSServerProperties(irodsAccount).isVersion("rods4.3.0"));
+
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 

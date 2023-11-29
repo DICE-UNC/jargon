@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -30,6 +31,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -680,6 +682,10 @@ public class CollectionAOImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not report an error on duplicate AVUs",
+				accessObjectFactory.getIRODSServerProperties(irodsAccount).isVersion("rods4.3.0"));
+
 		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
 		IRODSFile dirFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
@@ -690,32 +696,36 @@ public class CollectionAOImplTest {
 		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
 
 		listOfAvuData.add(AvuData.instance(expectedAttribName, expectedAttribValue, ""));
-
 		listOfAvuData.add(AvuData.instance(expectedAttribName, expectedAttribValue, ""));
 
-		List<BulkAVUOperationResponse> responses = collectionAO.addBulkAVUMetadataToCollection(targetIrodsCollection,
-				listOfAvuData);
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+			Assert.assertThrows(CatalogSQLException.class,
+					() -> collectionAO.addBulkAVUMetadataToCollection(targetIrodsCollection, listOfAvuData));
+		} else {
+			List<BulkAVUOperationResponse> responses = collectionAO
+					.addBulkAVUMetadataToCollection(targetIrodsCollection, listOfAvuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+			List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				QueryConditionOperators.EQUAL, expectedAttribName));
+			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+					QueryConditionOperators.EQUAL, expectedAttribName));
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.VALUE,
-				QueryConditionOperators.EQUAL, expectedAttribValue));
+			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, expectedAttribValue));
 
-		List<MetaDataAndDomainData> result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
-		Assert.assertFalse("no query result returned", result.isEmpty());
+			List<MetaDataAndDomainData> result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
+			Assert.assertFalse("no query result returned", result.isEmpty());
 
-		Assert.assertNotNull("no responses", responses);
-		Assert.assertFalse("no responses", responses.isEmpty());
-		Assert.assertEquals("should be 2 responses", 2, responses.size());
-		Assert.assertEquals("not success", BulkAVUOperationResponse.ResultStatus.OK,
-				responses.get(0).getResultStatus());
+			Assert.assertNotNull("no responses", responses);
+			Assert.assertFalse("no responses", responses.isEmpty());
+			Assert.assertEquals("should be 2 responses", 2, responses.size());
+			Assert.assertEquals("not success", BulkAVUOperationResponse.ResultStatus.OK,
+					responses.get(0).getResultStatus());
 
-		Assert.assertEquals("did not get the duplicate message", BulkAVUOperationResponse.ResultStatus.DUPLICATE_AVU,
-				responses.get(1).getResultStatus());
-		Assert.assertFalse("did not set a message for the duplicate", responses.get(1).getMessage().isEmpty());
+			Assert.assertEquals("did not get the duplicate message",
+					BulkAVUOperationResponse.ResultStatus.DUPLICATE_AVU, responses.get(1).getResultStatus());
+			Assert.assertFalse("did not set a message for the duplicate", responses.get(1).getMessage().isEmpty());
+		}
 	}
 
 	@Test
@@ -821,6 +831,10 @@ public class CollectionAOImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("iRODS 4.3.0 does not report an error on duplicate AVUs",
+				accessObjectFactory.getIRODSServerProperties(irodsAccount).isVersion("rods4.3.0"));
+
 		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 
 		IRODSFile dirFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
@@ -830,15 +844,17 @@ public class CollectionAOImplTest {
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName, expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
-		try {
-			collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
-		} catch (DuplicateDataException dde) {
-			// expected post 3.1, not a great test anymore...
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+			Assert.assertThrows(CatalogSQLException.class,
+					() -> collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd));
 		}
 
 	}
 
-	@Test(expected = DuplicateDataException.class)
 	public void testAddDuplicateAvuMetadataWithUnits() throws Exception {
 		String testDirName = "testAddDuplicateAvuMetadata";
 		String expectedAttribName = "testattrib1";
@@ -860,7 +876,14 @@ public class CollectionAOImplTest {
 
 		AvuData dataToAdd = AvuData.instance(expectedAttribName, expectedAttribValue, expectedUnitsValue);
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
-		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods430()) {
+			Assert.assertThrows(CatalogSQLException.class,
+					() -> collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd));
+		} else {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd));
+		}
 
 	}
 

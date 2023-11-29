@@ -16,6 +16,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -236,6 +237,10 @@ public class BulkFileOperationsAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("Bug in iRODS 4.3.0 discovered post release", irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSServerProperties(irodsAccount).isVersion("rods4.3.0"));
+
 		IRODSFile irodsFile = null;
 
 		String targetBunIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -357,6 +362,9 @@ public class BulkFileOperationsAOImplTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
+
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("Bug in iRODS 4.3.0 discovered post release", props.isVersion("rods4.3.0"));
 
 		IRODSFile irodsFile = null;
 
@@ -480,6 +488,9 @@ public class BulkFileOperationsAOImplTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
+
+		// Skip if iRODS 4.3.0.
+		Assume.assumeFalse("Bug in iRODS 4.3.0 discovered post release", props.isVersion("rods4.3.0"));
 
 		IRODSFile irodsFile = null;
 
