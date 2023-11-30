@@ -83,20 +83,38 @@ public enum FilePermissionEnum {
 			return OWN;
 		}
 
-		if (textPermission.equals("read")) {
+		if (textPermission.equals("read") || textPermission.equals("read object")
+				|| textPermission.equals("read_object")) {
 			return READ;
 		}
 
-		if (textPermission.equals("read object")) {
-			return READ;
-		}
-
-		if (textPermission.equals("write")) {
+		if (textPermission.equals("write") || textPermission.equals("modify object")
+				|| textPermission.equals("modify_object")) {
 			return WRITE;
 		}
 
-		if (textPermission.equals("modify object")) {
-			return WRITE;
+		if (textPermission.equals("create_metadata")) {
+			return CREATE_METADATA;
+		}
+
+		if (textPermission.equals("modify_metadata")) {
+			return MODIFY_METADATA;
+		}
+
+		if (textPermission.equals("delete_metadata")) {
+			return DELETE_METADATA;
+		}
+
+		if (textPermission.equals("create_object")) {
+			return CREATE_OBJECT;
+		}
+
+		if (textPermission.equals("delete_object")) {
+			return DELETE_OBJECT;
+		}
+
+		if (textPermission.equals("null")) {
+			return NULL;
 		}
 
 		if (textPermission.equals("none")) {
