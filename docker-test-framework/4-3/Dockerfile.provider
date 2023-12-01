@@ -16,10 +16,15 @@ RUN apt-get update && \
 ADD db_commands.txt /
 RUN service postgresql start && su - postgres -c 'psql -f /db_commands.txt'
 
+ARG irods_package_version=4.3.1-0~focal
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -; \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/renci-irods.list; \
     apt-get update && \
-    apt-get install -y irods-runtime irods-icommands irods-server irods-database-plugin-postgres
+    apt-get install -y \
+        irods-runtime=${irods_package_version} \
+        irods-icommands=${irods_package_version} \
+        irods-server=${irods_package_version} \
+        irods-database-plugin-postgres=${irods_package_version}
 
 EXPOSE 1247 1248
 
@@ -29,5 +34,3 @@ ADD testsetup-consortium.sh /
 RUN chmod +x /testsetup-consortium.sh
 RUN chmod u+x /start_provider.sh
 ENTRYPOINT ["./start_provider.sh"]
-
-
