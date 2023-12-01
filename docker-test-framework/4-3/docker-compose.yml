@@ -13,8 +13,8 @@ services:
       irodsnet:
         aliases:
           - icat.example.org
-    ports:
-      - "1247:1247"
+    #ports:
+      #- "1247:1247"
       #- "5432:5432"
       #- "20000-21999"
 
