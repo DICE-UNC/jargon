@@ -189,6 +189,22 @@ public class IRODSServerProperties {
 		}
 		return supports;
 	}
+	
+	/**
+	 * Handy method used to detect the exact version of the connected iRODS server.
+	 * 
+	 * @param releaseVersion {@code String} in standard iRODS version format that
+	 *                       will be checked against the currently-connected server.
+	 * @return {@code boolean} that will be {@code true} if the iRODS server is
+	 *         {@code releaseVersion}
+	 */
+	public boolean isVersion(final String releaseVersion) {
+		if (releaseVersion == null || releaseVersion.isEmpty()) {
+			throw new IllegalArgumentException("null or empty releaseVersion");
+		}
+
+		return getIrodsVersion().compareTo(new IrodsVersion(releaseVersion)) == 0;
+	}
 
 	/**
 	 * Handy method compares the iRODS release version of the target server, and
@@ -239,6 +255,24 @@ public class IRODSServerProperties {
 	 */
 	public boolean isAtLeastIrods420() {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.0");
+	}
+
+	/**
+	 * Is the server at least iRODS 4.3.0
+	 *
+	 * @return {@code boolean}
+	 */
+	public boolean isAtLeastIrods430() {
+		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.0");
+	}
+
+	/**
+	 * Is the server at least iRODS 4.3.1
+	 *
+	 * @return {@code boolean}
+	 */
+	public boolean isAtLeastIrods431() {
+		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.1");
 	}
 
 	public IrodsVersion getIrodsVersion() {
