@@ -1,6 +1,8 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,6 +33,7 @@ import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.domain.UserGroup;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSFileOutputStream;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -5041,6 +5044,212 @@ public class DataObjectAOImplTest {
 		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFile);
 		TestCase.assertNotNull("no data object found", dataObject);
 
+	}
+	
+	@Test
+	public void testReplicaTruncateNoTargetReplica() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+		
+		Assume.assumeTrue("Replica Truncate API requires a minimum version of iRODS 4.3.2",
+				aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods432());
+		
+		IRODSFileFactory ff = aof.getIRODSFileFactory(irodsAccount);
+
+		// Create a new data object.
+		String pathPrefix = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String logicalPath = Paths.get(pathPrefix, "testReplicaTruncate.txt").toString();
+		IRODSFile irodsFile = ff.instanceIRODSFile(logicalPath);
+		IRODSFileOutputStream fos = ff.instanceIRODSFileOutputStream(irodsFile);
+		String content = "hello, world";
+		fos.write(content.getBytes(StandardCharsets.UTF_8));
+		fos.close();
+
+		DataObjectAO dao = aof.getDataObjectAO(irodsAccount);
+
+		// Show that the newly created data object's size is what we expect.
+		ObjStat stat = dao.getObjectStatForAbsolutePath(logicalPath);
+		Assert.assertEquals(stat.getObjSize(), content.length());
+
+		// Truncate the data object to "hello".
+		String truncatedContent = content.substring(0, 5);
+		String json = dao.truncateReplica(logicalPath, truncatedContent.length());
+		Assert.assertNull(json);
+		stat = dao.getObjectStatForAbsolutePath(logicalPath);
+		Assert.assertEquals(stat.getObjSize(), truncatedContent.length());
+
+		// Truncate the data object to a size of 50 bytes.
+		final long newDataSize = 50;
+		json = dao.truncateReplica(logicalPath, newDataSize);
+		Assert.assertNull(json);
+		stat = dao.getObjectStatForAbsolutePath(logicalPath);
+		Assert.assertEquals(stat.getObjSize(), newDataSize);
+	}
+	
+	@Test
+	public void testReplicaTruncateUsingReplicaNumber() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		Assume.assumeTrue("Replica Truncate API requires a minimum version of iRODS 4.3.2",
+				aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods432());
+
+		IRODSFileFactory ff = aof.getIRODSFileFactory(irodsAccount);
+
+		// Create a new resource.
+		Resource resc = new Resource();
+		resc.setName("testReplicaTruncateUsingReplicaNumber");
+		resc.setType("unixfilesystem");
+		resc.setLocation("localhost");
+		resc.setVaultPath("/tmp/testReplicaTruncateUsingReplicaNumberVault");
+		ResourceAO rao = aof.getResourceAO(irodsAccount);
+		rao.addResource(resc);
+
+		String pathPrefix = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String logicalPath = Paths.get(pathPrefix, "testReplicaTruncateUsingReplicaNumber.txt").toString();
+
+		try {
+			// Create a new data object.
+			IRODSFile irodsFile = ff.instanceIRODSFile(logicalPath);
+			IRODSFileOutputStream fos = ff.instanceIRODSFileOutputStream(irodsFile);
+			String content = "hello, world";
+			fos.write(content.getBytes(StandardCharsets.UTF_8));
+			fos.close();
+
+			DataObjectAO dao = aof.getDataObjectAO(irodsAccount);
+
+			// Replicate the single replica data object to the new resource.
+			dao.replicateIrodsDataObject(logicalPath, resc.getName());
+
+			// Show that the newly created data object's size is what we expect.
+			ObjStat stat = dao.getObjectStatForAbsolutePath(logicalPath);
+			Assert.assertEquals(stat.getObjSize(), content.length());
+
+			// Truncate the data object to "hello".
+			String truncatedContent = content.substring(0, 5);
+			final int replicaNumber = 1;
+			String json = dao.truncateReplicaByReplicaNumber(logicalPath, replicaNumber, truncatedContent.length());
+			Assert.assertNull(json);
+			stat = dao.getObjectStatForAbsolutePath(logicalPath);
+			Assert.assertEquals(stat.getObjSize(), truncatedContent.length());
+
+			// Truncate the data object to a size of 50 bytes.
+			final long newDataSize = 50;
+			json = dao.truncateReplicaByReplicaNumber(logicalPath, replicaNumber, newDataSize);
+			Assert.assertNull(json);
+			stat = dao.getObjectStatForAbsolutePath(logicalPath);
+			Assert.assertEquals(stat.getObjSize(), newDataSize);
+		}
+		finally {
+			// Remove the data object.
+			try { ff.instanceIRODSFile(logicalPath).deleteWithForceOption(); } catch (JargonException e) {}
+
+			// Remove the resource.
+			try { rao.deleteResource(resc.getName()); } catch (JargonException e) {}
+		}
+	}
+	
+	@Test
+	public void testReplicaTruncateUsingResourceName() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		Assume.assumeTrue("Replica Truncate API requires a minimum version of iRODS 4.3.2",
+				aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods432());
+
+		IRODSFileFactory ff = aof.getIRODSFileFactory(irodsAccount);
+
+		// Create a new resource.
+		Resource resc = new Resource();
+		resc.setName("testReplicaTruncateUsingResourceName");
+		resc.setType("unixfilesystem");
+		resc.setLocation("localhost");
+		resc.setVaultPath("/tmp/testReplicaTruncateUsingResourceNameVault");
+		ResourceAO rao = aof.getResourceAO(irodsAccount);
+		rao.addResource(resc);
+
+		String pathPrefix = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String logicalPath = Paths.get(pathPrefix, "testReplicaTruncateUsingResourceName.txt").toString();
+
+		try {
+			// Create a new data object.
+			IRODSFile irodsFile = ff.instanceIRODSFile(logicalPath);
+			IRODSFileOutputStream fos = ff.instanceIRODSFileOutputStream(irodsFile);
+			String content = "hello, world";
+			fos.write(content.getBytes(StandardCharsets.UTF_8));
+			fos.close();
+
+			DataObjectAO dao = aof.getDataObjectAO(irodsAccount);
+
+			// Replicate the single replica data object to the new resource.
+			dao.replicateIrodsDataObject(logicalPath, resc.getName());
+
+			// Show that the newly created data object's size is what we expect.
+			ObjStat stat = dao.getObjectStatForAbsolutePath(logicalPath);
+			Assert.assertEquals(stat.getObjSize(), content.length());
+
+			// Truncate the data object to "hello".
+			String truncatedContent = content.substring(0, 5);
+			String json = dao.truncateReplicaByResource(logicalPath, resc.getName(), truncatedContent.length());
+			Assert.assertNull(json);
+			stat = dao.getObjectStatForAbsolutePath(logicalPath);
+			Assert.assertEquals(stat.getObjSize(), truncatedContent.length());
+
+			// Truncate the data object to a size of 50 bytes.
+			final long newDataSize = 50;
+			json = dao.truncateReplicaByResource(logicalPath, resc.getName(), newDataSize);
+			Assert.assertNull(json);
+			stat = dao.getObjectStatForAbsolutePath(logicalPath);
+			Assert.assertEquals(stat.getObjSize(), newDataSize);
+		}
+		finally {
+			// Remove the data object.
+			try { ff.instanceIRODSFile(logicalPath).deleteWithForceOption(); } catch (JargonException e) {}
+
+			// Remove the resource.
+			try { rao.deleteResource(resc.getName()); } catch (JargonException e) {}
+		}
+	}
+	
+	@Test
+	public void testReplicaTruncateInvalidInputs() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+		
+		Assume.assumeTrue("Replica Truncate API requires a minimum version of iRODS 4.3.2",
+				aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods432());
+		
+		IRODSFileFactory ff = aof.getIRODSFileFactory(irodsAccount);
+
+		// Create a new data object.
+		String pathPrefix = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		String logicalPath = Paths.get(pathPrefix, "testReplicaTruncateInvalidInputs.txt").toString();
+		IRODSFile irodsFile = ff.instanceIRODSFile(logicalPath);
+		IRODSFileOutputStream fos = ff.instanceIRODSFileOutputStream(irodsFile);
+		String content = "hello, world";
+		fos.write(content.getBytes(StandardCharsets.UTF_8));
+		fos.close();
+
+		DataObjectAO dao = aof.getDataObjectAO(irodsAccount);
+
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplica("", 0));
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplica(logicalPath, -1));
+		Assert.assertEquals(dao.getObjectStatForAbsolutePath(logicalPath).getObjSize(), content.length());
+
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByReplicaNumber("", 0, 0));
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByReplicaNumber(logicalPath, -1, 0));
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByReplicaNumber(logicalPath, 0, -1));
+		Assert.assertEquals(dao.getObjectStatForAbsolutePath(logicalPath).getObjSize(), content.length());
+
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByResource("", "demoResc", 0));
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByResource(logicalPath, null, 0));
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByResource(logicalPath, "", 0));
+		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByResource(logicalPath, "demoResc", -1));
+		Assert.assertEquals(dao.getObjectStatForAbsolutePath(logicalPath).getObjSize(), content.length());
 	}
 
 }

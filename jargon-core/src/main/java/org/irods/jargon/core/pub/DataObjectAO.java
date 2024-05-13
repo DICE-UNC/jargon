@@ -1110,4 +1110,38 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void modifyDataObjectSysTime(final Date time, final String dataObjectAbsolutePath)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * Truncate the size of the highest voted replica.
+	 * 
+	 * @param logicalPath The absolute path to a data object.
+	 * @param newDataSize The new size of the highest voted replica.
+	 * @return A JSON string on error, otherwise null.
+	 * @throws JargonException If an error occurs.
+	 */
+	String truncateReplica(final String logicalPath, final long newDataSize) throws JargonException;
+
+	/**
+	 * Truncate the size of the replica identified by the passed replica number.
+	 * 
+	 * @param logicalPath The absolute path to a data object.
+	 * @param replicaNumber The replica number of the replica to truncate.
+	 * @param newDataSize The new size of the replica.
+	 * @return A JSON string on error, otherwise null.
+	 * @throws JargonException If an error occurs.
+	 */
+	String truncateReplicaByReplicaNumber(final String logicalPath, final int replicaNumber,
+			final long newDataSize) throws JargonException;
+
+	/**
+	 * Truncate the size of the replica identified by the passed resource.
+	 * 
+	 * @param logicalPath The absolute path to a data object.
+	 * @param resource The resource containing the replica to truncate.
+	 * @param newDataSize The new size of the replica.
+	 * @return A JSON string on error, otherwise null.
+	 * @throws JargonException If an error occurs.
+	 */
+	String truncateReplicaByResource(final String logicalPath, final String resource, final long newDataSize)
+			throws JargonException;
+
 }

@@ -4265,4 +4265,83 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		log.info("complete!");
 
 	}
+	
+	@Override
+	public String truncateReplica(final String logicalPath, final long newDataSize) throws JargonException {
+		if (null == logicalPath || logicalPath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (newDataSize < 0) {
+			throw new IllegalArgumentException("Data size must be non-negative");
+		}
+
+		log.info("target logical path: {}, new data size: {}", logicalPath, newDataSize);
+
+		final DataObjInp dataObjInp = DataObjInp.instanceForReplicaTruncate(logicalPath, newDataSize);
+		final Tag tag = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		if (null == tag) {
+			return null;
+		}
+		
+		return tag.getTag(DataObjInp.MY_STR).getStringValue();
+	}
+
+	@Override
+	public String truncateReplicaByReplicaNumber(final String logicalPath, final int replicaNumber,
+			final long newDataSize) throws JargonException {
+		if (null == logicalPath || logicalPath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (replicaNumber < 0) {
+			throw new IllegalArgumentException("Replica number must be greater than or equal to zero");
+		}
+
+		if (newDataSize < 0) {
+			throw new IllegalArgumentException("Data size must be non-negative");
+		}
+
+		log.info("target logical path: {}, replica number: {}, new data size: {}", logicalPath, replicaNumber, newDataSize);
+
+		final DataObjInp dataObjInp = DataObjInp.instanceForReplicaTruncateByReplicaNumber(logicalPath, replicaNumber,
+				newDataSize);
+		final Tag tag = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		if (null == tag) {
+			return null;
+		}
+		
+		return tag.getTag(DataObjInp.MY_STR).getStringValue();
+	}
+
+	@Override
+	public String truncateReplicaByResource(final String logicalPath, final String resource, final long newDataSize)
+			throws JargonException {
+		if (null == logicalPath || logicalPath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (null == resource || resource.isEmpty()) {
+			throw new IllegalArgumentException("Resource is null or empty");
+		}
+
+		if (newDataSize < 0) {
+			throw new IllegalArgumentException("Data size must be non-negative");
+		}
+
+		log.info("target logical path: {}, resource: {}, new data size: {}", logicalPath, resource, newDataSize);
+
+		final DataObjInp dataObjInp = DataObjInp.instanceForReplicaTruncateByResource(logicalPath, resource,
+				newDataSize);
+		final Tag tag = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		if (null == tag) {
+			return null;
+		}
+		
+		return tag.getTag(DataObjInp.MY_STR).getStringValue();
+	}
+
 }
