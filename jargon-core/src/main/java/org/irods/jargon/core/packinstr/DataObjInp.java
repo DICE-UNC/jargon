@@ -60,6 +60,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 
 	public static final int REPLICA_OPEN_API_NBR = 20003;
+	public static final int REPLICA_TRUNCATE_API_NBR = 802;
 
 	public static final String DATA_TYPE_GENERIC = "generic";
 	public static final String DATA_TYPE_MSSO = "msso file";
@@ -761,6 +762,70 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		return dataObjInp;
 	}
 
+	/**
+	 * Create a packing instruction for truncating the size of the highest voted
+	 * replica.
+	 * 
+	 * @param logicalPath The absolute path to a data object.
+	 * @param newDataSize The new size of the replica.
+	 * @return {@link DataObjInp}
+	 * @throws JargonException If an error occurs.
+	 */
+	public static DataObjInp instanceForReplicaTruncate(final String logicalPath, final long newDataSize) {
+		DataObjInp input = new DataObjInp();
+		input.setApiNumber(DataObjInp.REPLICA_TRUNCATE_API_NBR);
+		input.fileAbsolutePath = logicalPath;
+		input.openFlags = OpenFlags.READ_WRITE; // No used, but needed to avoid exceptions.
+		input.dataSize = newDataSize;
+		return input;
+	}
+
+	/**
+	 * Create a packing instruction for truncating the size of the replica
+	 * identified by the passed replica number.
+	 * 
+	 * @param logicalPath   The absolute path to a data object.
+	 * @param replicaNumber The replica number of the replica to truncate.
+	 * @param newDataSize   The new size of the replica.
+	 * @return {@link DataObjInp}
+	 * @throws JargonException
+	 */
+	public static DataObjInp instanceForReplicaTruncateByReplicaNumber(final String logicalPath,
+			final int replicaNumber, final long newDataSize) {
+		DataObjInp input = new DataObjInp();
+		input.setApiNumber(DataObjInp.REPLICA_TRUNCATE_API_NBR);
+		input.fileAbsolutePath = logicalPath;
+		input.openFlags = OpenFlags.READ_WRITE; // No used, but needed to avoid exceptions.
+		input.dataSize = newDataSize;
+		input.replNum = String.valueOf(replicaNumber);
+		return input;
+	}
+
+	/**
+	 * Create a packing instruction for truncating the size of the replica
+	 * identified by the passed resource.
+	 * 
+	 * @param logicalPath The absolute path to a data object.
+	 * @param resource    The resource containing the replica to truncate.
+	 * @param newDataSize The new size of the replica.
+	 * @return {@link DataObjInp}
+	 * @throws JargonException
+	 */
+	public static DataObjInp instanceForReplicaTruncateByResource(final String logicalPath, final String resource,
+			final long newDataSize) {
+		DataObjInp input = new DataObjInp();
+		input.setApiNumber(DataObjInp.REPLICA_TRUNCATE_API_NBR);
+		input.fileAbsolutePath = logicalPath;
+		input.openFlags = OpenFlags.READ_WRITE; // No used, but needed to avoid exceptions.
+		input.dataSize = newDataSize;
+		input.resource = resource;
+		return input;
+	}
+	
+	private DataObjInp() {
+		super();
+	}
+
 	private DataObjInp(final String fileAbsolutePath, final int createMode, final OpenFlags openFlags,
 			final long offset, final long dataSize, final String resource, final TransferOptions transferOptions)
 			throws JargonException {
@@ -848,7 +913,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (getResource().length() > 0) {
 			if (getApiNumber() == DataObjInp.GET_FILE_API_NBR || getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
 					|| getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR
-					|| getApiNumber() == DataObjInp.REPLICA_OPEN_API_NBR) {
+					|| getApiNumber() == DataObjInp.REPLICA_OPEN_API_NBR
+					|| getApiNumber() == DataObjInp.REPLICA_TRUNCATE_API_NBR) {
 				kvps.add(KeyValuePair.instance(RESC_NAME, getResource()));
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));
