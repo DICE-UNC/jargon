@@ -47,6 +47,22 @@ LICENSE.txt   data-profile  docker-build.sh	  eclipse-formatting.xml  jargon-dat
 
 ```
 
+Here's a helpful command for running specific tests.
+
+```
+mvn test -Dtest='<class>#<method>,<class>#<method>, ...' -DfailIfNoTests=false -pl <module> -am
+```
+
+Below is an example demonstrating how to run two tests in the jargon-core module.
+
+```
+mvn test \
+    -Dtest='DataObjectAOImplTest#testReplicaTruncateNoTargetReplica,DataObjectAOImplTest#testReplicaTruncateInvalidInputs' \
+    -DfailIfNoTests=false \
+    -pl jargon-core \
+    -am
+```
+
 
 Note the settings.xml file is mounted that has the correct coordinates for the iRODS grid pre-configured with test accounts, resources, groups, etc as expected by the Jargon unit test framework.
 
