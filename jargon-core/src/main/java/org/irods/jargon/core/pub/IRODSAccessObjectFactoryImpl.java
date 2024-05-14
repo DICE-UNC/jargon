@@ -675,5 +675,9 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	public boolean isUsingDynamicServerPropertiesCache() {
 		return getIrodsSession().isUsingDynamicServerPropertiesCache();
 	}
+	
+	public IRODSGenquery2Executor getIRODSGenquery2Executor(final IRODSAccount irodsAccount) throws JargonException {
+		return new IRODSGenquery2ExecutorImpl(irodsSession, irodsAccount);
+	}
 
 }

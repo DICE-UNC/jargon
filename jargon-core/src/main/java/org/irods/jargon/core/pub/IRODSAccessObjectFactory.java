@@ -544,5 +544,15 @@ public interface IRODSAccessObjectFactory {
 	 * @throws JargonException {@link JargonExecutor}
 	 */
 	ApiPluginExecutor getApiPluginExecutor(final IRODSAccount irodsAccount) throws JargonException;
+	
+	/**
+	 * Get an instance of {@link IRODSGenquery2Executor} for querying the catalog
+	 * using GenQuery2.
+	 * 
+	 * @param irodsAccount {@link IRODSAccount}
+	 * @return {@link IRODSGenquery2Executor}
+	 * @throws JargonException {@link JargonException}
+	 */
+	IRODSGenquery2Executor getIRODSGenquery2Executor(final IRODSAccount irodsAccount) throws JargonException;
 
 }
