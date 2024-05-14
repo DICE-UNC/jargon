@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidGroupException;
 import org.irods.jargon.core.exception.InvalidUserException;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserGroup;
@@ -765,8 +766,16 @@ public class UserGroupAOImplTest {
 		userGroupAO.removeUserGroup(userGroup);
 		userGroupAO.addUserGroup(userGroup);
 
-		userGroupAO.removeUserFromGroup(testUserGroup,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), null);
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods432()) {
+			JargonException thrown = Assert.assertThrows(JargonException.class,
+					() -> userGroupAO.removeUserFromGroup(testUserGroup,
+							testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), null));
+			Assert.assertEquals(thrown.getUnderlyingIRODSExceptionCode(), -1830000); // USER_NOT_IN_GROUP
+		}
+		else {
+			userGroupAO.removeUserFromGroup(testUserGroup,
+					testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), null);
+		}
 	}
 
 	/**
