@@ -9,6 +9,13 @@ services:
         args:
             irods_package_version: 4.3.2-0~focal
     hostname: icat.example.org
+    healthcheck:
+      test: ["CMD", "su", "-", "irods", "-c", "ils"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+      start_interval: 2s
     networks:
       irodsnet:
         aliases:
@@ -17,19 +24,6 @@ services:
       #- "1247:1247"
       #- "5432:5432"
       #- "20000-21999"
-
-  maven:
-    container_name: maven
-    build:
-        context: .
-        dockerfile: Dockerfile.testbuild
-    volumes:
-      - ../..:/usr/src/jargon
-      - ../../settings.xml:/root/.m2/settings.xml
-    networks:
-      irodsnet:
-        aliases:
-          - maven.example.org
 
   irods-catalog-consumer-resource1:
     container_name: irods-catalog-consumer-resource1
@@ -44,7 +38,21 @@ services:
         aliases:
           - resource1.example.org
     depends_on:
-      - irods-catalog-provider
+      irods-catalog-provider:
+        condition: service_healthy
+
+  maven:
+    container_name: maven
+    build:
+        context: .
+        dockerfile: Dockerfile.testbuild
+    volumes:
+      - ../..:/usr/src/jargon
+      - ../../settings.xml:/root/.m2/settings.xml
+    networks:
+      irodsnet:
+        aliases:
+          - maven.example.org
 
 networks:
    irodsnet:
