@@ -30,10 +30,9 @@ CONTAINER ID        IMAGE                                  COMMAND              
 072086ac44e1        4-2_irods-catalog-provider             "./start_provider.sh"    22 minutes ago      Up 22 minutes       0.0.0.0:1247->1247/tcp, 1248/tcp   irods-catalog-provider
 c7e102bd061d        4-2_maven                              "/usr/local/bin/mvn-…"   22 minutes ago      Up 22 minutes                                          maven
 (base) ~/Documents/workspace-niehs-rel/jargon/docker-test-framework/4-2 @ ALMBP-02010755(conwaymc): 
-
-
-
 ```
+
+**NOTE (4-3 directory only)**: _"iRODS Consumer is ready."_ will be printed to the terminal when the framework is ready for use.
 
 To build and test, simply cd to /usr/src/jargon and run mvn commands after logging into the test container. This snippet illustrates logging in and positioning to the top of the Jargon project, ready to issue maven commands
 
@@ -43,11 +42,11 @@ To build and test, simply cd to /usr/src/jargon and run mvn commands after loggi
 # ls
 CHANGELOG.md  README.md     docker-build-test.sh  docker-test-framework   jargon-core	     jargon-mdquery  jargon-ruleservice  jargon-user-tagging  pom.xml	    target
 LICENSE.txt   data-profile  docker-build.sh	  eclipse-formatting.xml  jargon-data-utils  jargon-pool     jargon-ticket	 jargon-zipservice    settings.xml  user-guide
-# 
-
 ```
 
-Here's a helpful command for running specific tests.
+**NOTE**: The settings.xml file is mounted that has the correct coordinates for the iRODS grid pre-configured with test accounts, resources, groups, etc as expected by the Jargon unit test framework.
+
+## Running Specific Tests
 
 ```
 mvn test -Dtest='<class>#<method>,<class>#<method>, ...' -DfailIfNoTests=false -pl <module> -am
@@ -62,7 +61,3 @@ mvn test \
     -pl jargon-core \
     -am
 ```
-
-
-Note the settings.xml file is mounted that has the correct coordinates for the iRODS grid pre-configured with test accounts, resources, groups, etc as expected by the Jargon unit test framework.
-
