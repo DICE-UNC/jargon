@@ -7,7 +7,7 @@ services:
         context: .
         dockerfile: Dockerfile.provider
         args:
-            irods_package_version: 4.3.1-0~focal
+            irods_package_version: 4.3.2-0~focal
     hostname: icat.example.org
     networks:
       irodsnet:
@@ -37,7 +37,7 @@ services:
         context: .
         dockerfile: Dockerfile.consumer
         args:
-            irods_package_version: 4.3.1-0~focal
+            irods_package_version: 4.3.2-0~focal
     hostname: resource1.example.org
     networks:
       irodsnet:
