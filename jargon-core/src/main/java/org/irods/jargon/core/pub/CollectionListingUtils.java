@@ -790,7 +790,7 @@ class CollectionListingUtils {
 			files = listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath, false, partialStartIndex);
 		} else {
 
-			files = listDataObjectsUnderPathViaGenQuery(objStat, partialStartIndex, effectiveAbsolutePath);
+			files = listDataObjectsUnderPathViaGenQuery(objStat, partialStartIndex, effectiveAbsolutePath, "");
 		}
 
 		return files;
@@ -825,13 +825,14 @@ class CollectionListingUtils {
 		boolean complete = false;
 		int myOffset = partialStartIndex;
 
+		String lastPath = "";
 		while (!complete) {
 
 			if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
 					|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 				entries.addAll(listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath, false, myOffset));
 			} else {
-				entries.addAll(listDataObjectsUnderPathViaGenQuery(objStat, myOffset, effectiveAbsolutePath));
+				entries.addAll(listDataObjectsUnderPathViaGenQuery(objStat, myOffset, effectiveAbsolutePath, lastPath));
 			}
 
 			if (entries.isEmpty()) {
@@ -839,7 +840,9 @@ class CollectionListingUtils {
 			} else if (entries.get(entries.size() - 1).isLastResult()) {
 				complete = true;
 			} else {
-				myOffset = entries.get(entries.size() - 1).getCount();
+				CollectionAndDataObjectListingEntry lastEntry = entries.get(entries.size() - 1);
+				lastPath = lastEntry.getParentPath() + "/" + lastEntry.getPathOrName();
+				myOffset = lastEntry.getCount();
 			}
 		}
 
@@ -848,7 +851,7 @@ class CollectionListingUtils {
 	}
 
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathViaGenQuery(final ObjStat objStat,
-			final int partialStartIndex, final String effectiveAbsolutePath) throws JargonException {
+			final int partialStartIndex, final String effectiveAbsolutePath, String lastPath) throws JargonException {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false, true, null);
 
 		IRODSFileSystemAOHelper.buildQueryListAllDataObjectsWithSizeAndDateInfo(effectiveAbsolutePath, builder);
@@ -867,7 +870,6 @@ class CollectionListingUtils {
 		 * the query that gives the necessary data will cause duplication when there are
 		 * replicas, so discard duplicates. This is the nature of GenQuery.
 		 */
-		String lastPath = "";
 		String currentPath = "";
 		CollectionAndDataObjectListingEntry entry;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
