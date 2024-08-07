@@ -37,6 +37,8 @@ import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.ModDataObjMetaInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.packinstr.ModAvuMetadataInp.ActionType;
+import org.irods.jargon.core.packinstr.ModAvuMetadataInp.MetadataTargetType;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
@@ -4342,6 +4344,248 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 		
 		return tag.getTag(DataObjInp.MY_STR).getStringValue();
+	}
+
+	@Override
+	public void addAVUMetadata(final String absolutePath, final AvuData avuData, final boolean adminFlag)
+			throws OperationNotSupportedForCollectionTypeException, DataNotFoundException, DuplicateDataException,
+			JargonException {
+		log.info("addAVUMetadata()");
+
+		if (null == absolutePath || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (null == avuData) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
+
+		log.info("adding avu metadata to data object");
+		log.info("absolute path: {}", myPath);
+		log.info("avu: {}", avuData);
+		log.info("adminFlag: {}", adminFlag);
+
+		/*
+		 * Handle soft links by munging the path
+		 */
+
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(myPath);
+		} catch (Exception e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instance(absPath,
+				MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.ADD, adminFlag);
+
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException("Target data object was not found, could not add AVU");
+			} else if (je.getMessage().indexOf("-809000") > -1) {
+				throw new DuplicateDataException("Duplicate AVU exists, cannot add");
+			}
+
+			log.error("jargon exception adding AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata added");
+	}
+
+	@Override
+	public void deleteAVUMetadata(final String absolutePath, final AvuData avuData, final boolean adminFlag)
+			throws OperationNotSupportedForCollectionTypeException, DataNotFoundException, JargonException {
+		log.info("deleteAVUMetadata()");
+
+		if (null == absolutePath || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (null == avuData) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
+
+		log.info("deleting avu metadata on dataObject");
+		log.info("absolute path: {}", myPath);
+		log.info("avu: {}", avuData);
+		log.info("adminFlag: {}", adminFlag);
+
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(myPath);
+		} catch (FileNotFoundException e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instance(absPath,
+				MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.REMOVE, adminFlag);
+
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException("Target data object was not found, could not remove AVU");
+			}
+
+			log.error("jargon exception removing AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata removed");
+	}
+
+	@Override
+	public void setAVUMetadata(final String absolutePath, final AvuData avuData, final boolean adminFlag)
+			throws OperationNotSupportedForCollectionTypeException, DataNotFoundException, JargonException {
+		log.info("setAVUMetadata()");
+
+		if (null == absolutePath || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (null == avuData) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		if (!getIRODSServerProperties().isSupportsMetadataSet()) {
+			log.error("irods version does not support set avu");
+			throw new OperationNotSupportedByThisServerException("set avu not available on this iRODS version");
+		}
+
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
+
+		log.info("setting avu metadata on data object");
+		log.info("absolute path: {}", myPath);
+		log.info("avu: {}", avuData);
+		log.info("adminFlag: {}", adminFlag);
+
+		/*
+		 * Handle soft links by munging the path
+		 */
+
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (Exception e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instance(absPath,
+				MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.SET, adminFlag);
+
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException("Target data object was not found, could not add AVU");
+			}
+
+			log.error("jargon exception setting AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata set");
+	}
+
+	@Override
+	public void modifyAVUMetadata(final String absolutePath, final AvuData avuData, final AvuData newAvuData,
+			final boolean adminFlag)
+			throws OperationNotSupportedForCollectionTypeException, DataNotFoundException, JargonException {
+		log.info("modifyAVUMetadata()");
+
+		if (null == absolutePath || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (null == avuData) {
+			throw new IllegalArgumentException("target AVU data is null");
+		}
+
+		if (null == newAvuData) {
+			throw new IllegalArgumentException("new AVU data is null");
+		}
+
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
+
+		log.info("modifying avu metadata on data object");
+		log.info("absolute path: {}", myPath);
+		log.info("target avu: {}", avuData);
+		log.info("new avu: {}", newAvuData);
+		log.info("adminFlag: {}", adminFlag);
+
+		/*
+		 * Handle soft links by munging the path
+		 */
+
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(myPath);
+		} catch (Exception e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instance(absPath,
+				MetadataTargetType.DATA_OBJECT, avuData, newAvuData, ActionType.MOD, adminFlag);
+
+		log.debug("sending avu request");
+
+		try {
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+		} catch (JargonException je) {
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException("Target data object was not found, could not modify AVU");
+			}
+
+			log.error("jargon exception modifying AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata modified");
 	}
 
 }

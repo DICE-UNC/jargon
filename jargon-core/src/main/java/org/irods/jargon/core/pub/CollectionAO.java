@@ -892,4 +892,48 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	void setAccessPermissionInheritAsAdmin(String zone, String absolutePath, boolean recursive) throws JargonException;
 
+	/**
+	 * Add an AVU to a collection.
+	 * 
+	 * @param absolutePath The absolute path to a collection.
+	 * @param avuData      The AVU to add.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void addAVUMetadata(String absolutePath, AvuData avuData, boolean adminFlag) throws JargonException;
+
+	/**
+	 * Removes an AVU from a collection.
+	 * 
+	 * @param absolutePath The absolute path to a collection.
+	 * @param avuData      The AVU to remove.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void deleteAVUMetadata(String absolutePath, AvuData avuData, boolean adminFlag) throws JargonException;
+
+	/**
+	 * Sets an AVU on a collection.
+	 * 
+	 * All AVUs having an attribute name matching the new AVU will be removed from
+	 * the collection.
+	 * 
+	 * @param absolutePath The absolute path to a collection.
+	 * @param avuData      The AVU to set.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void setAVUMetadata(String absolutePath, AvuData avuData, boolean adminFlag) throws JargonException;
+
+	/**
+	 * Modifies an existing AVU on a collection.
+	 * 
+	 * @param absolutePath The absolute path to a collection.
+	 * @param avuData      The AVU to modify.
+	 * @param newAvuData   The AVU that will replace the target AVU.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void modifyAVUMetadata(String absolutePath, AvuData avuData, AvuData newAvuData, boolean adminFlag)
+			throws JargonException;
 }

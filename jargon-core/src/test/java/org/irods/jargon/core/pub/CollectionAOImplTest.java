@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -2311,6 +2312,113 @@ public class CollectionAOImplTest {
 		collectionAO.getPermissionForCollection(pathWithTrailingSlash, irodsAccount.getUserName(),
 				irodsAccount.getZone());
 
+	}
+
+	@Test
+	public void testRodsadminCanManipulateMetadataOnCollectionUsingAdminFlag() throws Exception {
+		IRODSAccount rodsadminAcct = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		Assume.assumeTrue(
+				"This test requires a minimum version of iRODS 4.2.12 (excluding 4.3.0 since it was released before 4.2.12)",
+				aof.getIRODSServerProperties(rodsadminAcct).isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						"rods4.2.12") && !aof.getIRODSServerProperties(rodsadminAcct).isVersion("rods4.3.0"));
+
+		IRODSAccount rodsuserAcct = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		String logicalPath = Paths.get("/", rodsuserAcct.getZone(), "home", rodsuserAcct.getUserName()).toString();
+
+		// Show the rodsadmin, identified by rodsadminAcct, does NOT have permission on
+		// the home collection of the rodsuser, identified by rodsuserAcct.
+		CollectionAO cao = aof.getCollectionAO(rodsadminAcct);
+		FilePermissionEnum perm = cao.getPermissionForCollection(logicalPath, rodsadminAcct.getUserName(),
+				rodsadminAcct.getZone());
+		Assert.assertEquals(perm, FilePermissionEnum.NONE);
+
+		// Show the rodsadmin cannot add metadata to the collection when the admin flag
+		// is false.
+		String attrName = "issue_420_a0";
+		String attrValue = "issue_420_v0";
+		String attrUnit = "";
+		final AvuData avu = AvuData.instance(attrName, attrValue, attrUnit);
+		boolean adminFlag = false;
+		Assert.assertThrows(JargonException.class, () -> cao.addAVUMetadata(logicalPath, avu, false /* adminFlag */));
+		Assert.assertTrue(cao.findMetadataValuesForCollection(logicalPath).isEmpty());
+
+		// Show the rodsadmin can add metadata to the collection when the admin flag is
+		// true.
+		adminFlag = true;
+		cao.addAVUMetadata(logicalPath, avu, adminFlag);
+		List<MetaDataAndDomainData> avus = cao.findMetadataValuesForCollection(logicalPath);
+		Assert.assertTrue(avus.size() == 1);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+		// Show the rodsadmin cannot modify metadata on the collection when the admin
+		// flag is false.
+		AvuData newAvu = AvuData.instance(attrName, attrValue + ".updated", "issue_420_u0");
+		Assert.assertThrows(JargonException.class,
+				() -> cao.modifyAVUMetadata(logicalPath, avu, newAvu, false /* adminFlag */));
+		Assert.assertTrue(avus.size() == 1);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+		// Show the rodsadmin can modify metadata on the collection when the admin flag
+		// is true.
+		adminFlag = true;
+		cao.modifyAVUMetadata(logicalPath, avu, newAvu, adminFlag);
+		avus = cao.findMetadataValuesForCollection(logicalPath);
+		Assert.assertTrue(avus.size() == 1);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(newAvu)));
+
+		// Add the original attribute to the collection.
+		// This will help prove the correctness of .setAVUMetadata().
+		cao.addAVUMetadata(logicalPath, avu, adminFlag);
+		avus = cao.findMetadataValuesForCollection(logicalPath);
+		Assert.assertTrue(avus.size() == 2);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(newAvu)));
+
+		// Capture the new attribute value and unit now that they have been modified in
+		// the catalog.
+		avu.setValue(newAvu.getValue());
+		avu.setUnit(newAvu.getUnit());
+
+		// At this point, the collection should have the following AVUs.
+		// - ("issue_420_a0", "issue_420_v0" , "" )
+		// - ("issue_420_a0", "issue_420_v0.updated", "issue_420_u0")
+
+		// Show the rodsadmin cannot set metadata on the collection when the admin flag
+		// is false.
+		Assert.assertThrows(JargonException.class, () -> cao.setAVUMetadata(logicalPath, avu, false /* adminFlag */));
+		avus = cao.findMetadataValuesForCollection(logicalPath);
+		Assert.assertTrue(avus.size() == 2);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(newAvu)));
+
+		// Show the rodsadmin can set metadata on the collection when the admin flag is
+		// true.
+		adminFlag = true;
+		cao.setAVUMetadata(logicalPath, avu, adminFlag);
+		avus = cao.findMetadataValuesForCollection(logicalPath);
+		Assert.assertTrue(avus.size() == 1);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+		// Show the rodsadmin cannot remove metadata on the collection when the admin
+		// flag is false.
+		Assert.assertThrows(JargonException.class,
+				() -> cao.deleteAVUMetadata(logicalPath, avu, false /* adminFlag */));
+		avus = cao.findMetadataValuesForCollection(logicalPath);
+		Assert.assertTrue(avus.size() == 1);
+		Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+		// Show the rodsadmin can remove metadata on the collection when the admin flag
+		// is true.
+		cao.deleteAVUMetadata(logicalPath, avu, adminFlag);
+		Assert.assertTrue(cao.findMetadataValuesForCollection(logicalPath).isEmpty());
 	}
 
 }
