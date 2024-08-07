@@ -1144,4 +1144,49 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	String truncateReplicaByResource(final String logicalPath, final String resource, final long newDataSize)
 			throws JargonException;
 
+	/**
+	 * Add an AVU to a data object.
+	 * 
+	 * @param absolutePath The absolute path to a data object.
+	 * @param avuData      The AVU to add.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void addAVUMetadata(String absolutePath, AvuData avuData, boolean adminFlag) throws JargonException;
+
+	/**
+	 * Removes an AVU from a data object.
+	 * 
+	 * @param absolutePath The absolute path to a data object.
+	 * @param avuData      The AVU to remove.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void deleteAVUMetadata(String absolutePath, AvuData avuData, boolean adminFlag) throws JargonException;
+
+	/**
+	 * Sets an AVU on a data object.
+	 * 
+	 * All AVUs having an attribute name matching the new AVU will be removed from
+	 * the data object.
+	 * 
+	 * @param absolutePath The absolute path to a data object.
+	 * @param avuData      The AVU to set.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void setAVUMetadata(String absolutePath, AvuData avuData, boolean adminFlag) throws JargonException;
+
+	/**
+	 * Modifies an existing AVU on a data object.
+	 * 
+	 * @param absolutePath The absolute path to a data object.
+	 * @param avuData      The AVU to modify.
+	 * @param newAvuData   The AVU that will replace the target AVU.
+	 * @param adminFlag    Execute operation using rodsadmin privileges.
+	 * @throws JargonException If an error occurs.
+	 */
+	void modifyAVUMetadata(String absolutePath, AvuData avuData, AvuData newAvuData, boolean adminFlag)
+			throws JargonException;
+
 }

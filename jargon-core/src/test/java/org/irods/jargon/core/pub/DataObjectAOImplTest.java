@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -5250,6 +5251,131 @@ public class DataObjectAOImplTest {
 		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByResource(logicalPath, "", 0));
 		Assert.assertThrows(IllegalArgumentException.class, () -> dao.truncateReplicaByResource(logicalPath, "demoResc", -1));
 		Assert.assertEquals(dao.getObjectStatForAbsolutePath(logicalPath).getObjSize(), content.length());
+	}
+	
+	@Test
+	public void testRodsadminCanManipulateMetadataOnDataObjectUsingAdminFlag() throws Exception {
+		IRODSAccount rodsadminAcct = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		Assume.assumeTrue(
+				"This test requires a minimum version of iRODS 4.2.12 (excluding 4.3.0 since it was released before 4.2.12)",
+				aof.getIRODSServerProperties(rodsadminAcct).isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						"rods4.2.12") && !aof.getIRODSServerProperties(rodsadminAcct).isVersion("rods4.3.0"));
+
+		IRODSAccount rodsuserAcct = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFileFactory ff = aof.getIRODSFileFactory(rodsuserAcct);
+
+		String logicalPath = Paths.get("/", rodsuserAcct.getZone(), "home", rodsuserAcct.getUserName(),
+				"testRodsadminCanManipulateMetadataOnDataObjectUsingAdminFlag.txt"
+						+ String.valueOf(new Random().nextInt()))
+				.toString();
+
+		try {
+			// As a rodsuser, create a new data object.
+			IRODSFile irodsFile = ff.instanceIRODSFile(logicalPath);
+			IRODSFileOutputStream fos = ff.instanceIRODSFileOutputStream(irodsFile);
+			String content = "hello, world";
+			fos.write(content.getBytes(StandardCharsets.UTF_8));
+			fos.close();
+
+			// Show the rodsadmin, identified by rodsadminAcct, does NOT have permission on
+			// the new data object.
+			DataObjectAO dao = aof.getDataObjectAO(rodsadminAcct);
+			FilePermissionEnum perm = dao.getPermissionForDataObject(logicalPath, rodsadminAcct.getUserName(),
+					rodsadminAcct.getZone());
+			Assert.assertEquals(perm, null);
+
+			// Show the rodsadmin cannot add metadata to the data object when the admin flag
+			// is false.
+			String attrName = "issue_420_a0";
+			String attrValue = "issue_420_v0";
+			String attrUnit = "";
+			final AvuData avu = AvuData.instance(attrName, attrValue, attrUnit);
+			boolean adminFlag = false;
+			Assert.assertThrows(JargonException.class,
+					() -> dao.addAVUMetadata(logicalPath, avu, false /* adminFlag */));
+			Assert.assertTrue(dao.findMetadataValuesForDataObject(logicalPath).isEmpty());
+
+			// Show the rodsadmin can add metadata to the data object when the admin flag is
+			// true.
+			adminFlag = true;
+			dao.addAVUMetadata(logicalPath, avu, adminFlag);
+			List<MetaDataAndDomainData> avus = dao.findMetadataValuesForDataObject(logicalPath);
+			Assert.assertTrue(avus.size() == 1);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+			// Show the rodsadmin cannot modify metadata on the data object when the admin
+			// flag is false.
+			AvuData newAvu = AvuData.instance(attrName, attrValue + ".updated", "issue_420_u0");
+			Assert.assertThrows(JargonException.class,
+					() -> dao.modifyAVUMetadata(logicalPath, avu, newAvu, false /* adminFlag */));
+			Assert.assertTrue(avus.size() == 1);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+			// Show the rodsadmin can modify metadata on the data object when the admin flag
+			// is true.
+			adminFlag = true;
+			dao.modifyAVUMetadata(logicalPath, avu, newAvu, adminFlag);
+			avus = dao.findMetadataValuesForDataObject(logicalPath);
+			Assert.assertTrue(avus.size() == 1);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(newAvu)));
+
+			// Add the original attribute to the data object.
+			// This will help prove the correctness of .setAVUMetadata().
+			dao.addAVUMetadata(logicalPath, avu, adminFlag);
+			avus = dao.findMetadataValuesForDataObject(logicalPath);
+			Assert.assertTrue(avus.size() == 2);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(newAvu)));
+
+			// Capture the new attribute value and unit now that they have been modified in
+			// the catalog.
+			avu.setValue(newAvu.getValue());
+			avu.setUnit(newAvu.getUnit());
+
+			// At this point, the data object should have the following AVUs.
+			// - ("issue_420_a0", "issue_420_v0" , "" )
+			// - ("issue_420_a0", "issue_420_v0.updated", "issue_420_u0")
+
+			// Show the rodsadmin cannot set metadata on the data object when the admin flag
+			// is false.
+			Assert.assertThrows(JargonException.class,
+					() -> dao.setAVUMetadata(logicalPath, avu, false /* adminFlag */));
+			avus = dao.findMetadataValuesForDataObject(logicalPath);
+			Assert.assertTrue(avus.size() == 2);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(newAvu)));
+
+			// Show the rodsadmin can set metadata on the data object when the admin flag is
+			// true.
+			adminFlag = true;
+			dao.setAVUMetadata(logicalPath, avu, adminFlag);
+			avus = dao.findMetadataValuesForDataObject(logicalPath);
+			Assert.assertTrue(avus.size() == 1);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+			// Show the rodsadmin cannot remove metadata on the data object when the admin
+			// flag is false.
+			Assert.assertThrows(JargonException.class,
+					() -> dao.deleteAVUMetadata(logicalPath, avu, false /* adminFlag */));
+			avus = dao.findMetadataValuesForDataObject(logicalPath);
+			Assert.assertTrue(avus.size() == 1);
+			Assert.assertTrue(avus.stream().anyMatch(e -> e.asAvu().equals(avu)));
+
+			// Show the rodsadmin can remove metadata on the data object when the admin flag
+			// is true.
+			dao.deleteAVUMetadata(logicalPath, avu, adminFlag);
+			Assert.assertTrue(dao.findMetadataValuesForDataObject(logicalPath).isEmpty());
+		} finally {
+			// Remove the data object.
+			ff.instanceIRODSFile(logicalPath).deleteWithForceOption();
+		}
 	}
 
 }

@@ -21,6 +21,8 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	public static final String ARG_PREFIX = "arg";
 
 	public static final int MOD_AVU_API_NBR = 706;
+	
+	public static final String ADMIN_KW = "irodsAdmin";
 
 	/**
 	 * Type of metadata to be modified
@@ -42,6 +44,27 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	private final AvuData avuData;
 	private final AvuData newAvuData;
 	private final ActionType actionType;
+	private boolean adminFlag;
+	
+	/**
+	 * Create an instance of the packing instruction.
+	 * 
+	 * Supports all use-cases.
+	 * 
+	 * @param targetIdentifier   The absolute logical path to the entity.
+	 * @param metadataTargetType The entity type.
+	 * @param avuData            An AVU. Depends on the operation.
+	 * @param newAvuData         An AVU. Depends on the operation. Set to null if
+	 *                           unused.
+	 * @param actionType         The AVU operation.
+	 * @param adminFlag          Execute operation using rodsadmin privileges.
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instance(final String targetIdentifier,
+			final MetadataTargetType metadataTargetType, final AvuData avuData, final AvuData newAvuData,
+			final ActionType actionType, boolean adminFlag) {
+		return new ModAvuMetadataInp(targetIdentifier, metadataTargetType, avuData, newAvuData, actionType, adminFlag);
+	}
 
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
@@ -335,6 +358,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	private ModAvuMetadataInp(final String targetIdentifier, final MetadataTargetType metadataTargetType,
 			final AvuData avuData, final AvuData newAvuData, final ActionType actionType) {
+		this(targetIdentifier, metadataTargetType, avuData, newAvuData, actionType, false);
+	}
+
+	private ModAvuMetadataInp(final String targetIdentifier, final MetadataTargetType metadataTargetType,
+			final AvuData avuData, final AvuData newAvuData, final ActionType actionType, final boolean adminFlag) {
 		super();
 
 		if (targetIdentifier == null || targetIdentifier.isEmpty()) {
@@ -358,6 +386,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 		this.avuData = avuData;
 		this.actionType = actionType;
 		this.newAvuData = newAvuData;
+		this.adminFlag = adminFlag;
 
 		setApiNumber(MOD_AVU_API_NBR);
 
@@ -433,6 +462,11 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 		}
 		
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+		
+		if (adminFlag) {
+			kvps.add(KeyValuePair.instance(ADMIN_KW, ""));
+		}
+
 		message.addTag(super.createKeyValueTag(kvps));
 
 		// take the arg list and compact the params
@@ -459,6 +493,10 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	public AvuData getNewAvuData() {
 		return newAvuData;
+	}
+	
+	public boolean isAdminFlagEnabled() {
+		return adminFlag;
 	}
 
 }
