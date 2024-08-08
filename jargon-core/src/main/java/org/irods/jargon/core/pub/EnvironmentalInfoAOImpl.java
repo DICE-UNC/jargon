@@ -246,5 +246,23 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 
 		return availableMicroservices;
 	}
+	
+	@Override
+	public String getServerLibraryFeatures() throws OperationNotSupportedByThisServerException, JargonException {
+		log.info("getServerLibraryFeatures()");
+
+		if (!getIRODSServerProperties().isAtLeastIrods431()) {
+			throw new OperationNotSupportedByThisServerException("service not available on servers prior to rods4.3.1");
+		}
+
+		Tag tag = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, "",
+				MiscApiConstants.LIBRARY_FEATURES_AN);
+
+		if (null == tag) {
+			return null;
+		}
+
+		return tag.getTag("myStr").getStringValue();
+	}
 
 }

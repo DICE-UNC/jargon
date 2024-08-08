@@ -4,6 +4,7 @@
 package org.irods.jargon.core.pub;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -12,13 +13,20 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -157,4 +165,27 @@ public class EnvironmentalInfoAOTest {
 		Assert.assertTrue("did not find any microservices", microservices.size() > 0);
 
 	}
+	
+	@Test
+	public void testGetServerLibraryFeatures() throws JargonException, JsonMappingException, JsonProcessingException {
+		IRODSFileSystem fs = IRODSFileSystem.instance();
+		IRODSAccessObjectFactory aof = fs.getIRODSAccessObjectFactory();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		Assume.assumeTrue("Requires a minimum version of iRODS 4.3.1",
+				aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods431());
+
+		EnvironmentalInfoAO eiao = aof.getEnvironmentalInfoAO(irodsAccount);
+
+		String featuresString = eiao.getServerLibraryFeatures();
+		Assert.assertNotNull(featuresString);
+
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Long> features = mapper.readValue(featuresString, new TypeReference<Map<String, Long>>() {});
+		Assert.assertFalse(features.isEmpty());
+		Assert.assertTrue(features.containsKey("IRODS_HAS_LIBRARY_TICKET_ADMINISTRATION"));
+		Assert.assertTrue(features.containsKey("IRODS_HAS_API_ENDPOINT_SWITCH_USER"));
+		Assert.assertTrue(features.containsKey("IRODS_HAS_API_ENDPOINT_CHECK_AUTH_CREDENTIALS"));
+	}
+
 }

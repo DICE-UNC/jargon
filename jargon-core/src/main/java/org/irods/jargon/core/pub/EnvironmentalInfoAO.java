@@ -98,4 +98,20 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 */
 	ClientHints retrieveClientHints(final boolean refresh) throws JargonException;
 
+	/**
+	 * Returns a JSON string containing information about the connected server's
+	 * library features.
+	 * 
+	 * Each entry contains the name of a feature and an integer representing its
+	 * version. Integer values may increase over time as features are improved.
+	 * 
+	 * The information returned is only representative of the "connected" server's
+	 * features.
+	 * 
+	 * Developers are encouraged to prefer this over version checking when needing
+	 * to make decisions (at runtime) about whether a particular feature is
+	 * supported.
+	 */
+	String getServerLibraryFeatures() throws OperationNotSupportedByThisServerException, JargonException;
+
 }
