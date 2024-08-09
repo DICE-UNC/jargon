@@ -10,6 +10,10 @@ do
 done
 echo Postgres took approximately $counter seconds to fully start ...
 
+# Rsyslog must be started before iRODS so that the log messages
+# are written to the correct file.
+rsyslogd
+
 # Set up iRODS.
 python3 /var/lib/irods/scripts/setup_irods.py < /var/lib/irods/packaging/localhost_setup_postgres.input
 su - irods -c './irodsctl -v start'

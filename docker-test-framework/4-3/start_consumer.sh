@@ -15,6 +15,10 @@ until nc -z $topo_provider 1247; do
     sleep 1
 done
 
+# Rsyslog must be started before iRODS so that the log messages
+# are written to the correct file.
+rsyslogd
+
 # Set up iRODS.
 python3 /var/lib/irods/scripts/setup_irods.py < /irods_consumer.input
 su - irods -c './irodsctl -v start'

@@ -21,6 +21,9 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -;
 
 EXPOSE 1247 1248
 
+# Configure rsyslog for iRODS.
+COPY irods.rsyslog /etc/rsyslog.d/00-irods.conf
+
 # Set command to execute when launching the container.
 ADD start_consumer.sh irods_consumer.input /
 RUN chmod u+x /start_consumer.sh
