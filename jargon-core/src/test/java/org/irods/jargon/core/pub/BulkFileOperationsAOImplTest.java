@@ -489,8 +489,7 @@ public class BulkFileOperationsAOImplTest {
 			return;
 		}
 
-		// Skip if iRODS 4.3.0.
-		Assume.assumeFalse("Bug in iRODS 4.3.0 discovered post release", props.isVersion("rods4.3.0"));
+		Assume.assumeFalse("Enable once issue #435 is resolved", props.isAtLeastIrods430());
 
 		IRODSFile irodsFile = null;
 
