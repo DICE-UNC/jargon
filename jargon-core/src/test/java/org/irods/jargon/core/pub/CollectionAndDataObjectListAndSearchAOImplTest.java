@@ -1,8 +1,10 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
@@ -12,6 +14,7 @@ import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
+import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -1912,6 +1915,109 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.listDataObjectsAndCollectionsUnderPath(publicCollection);
 		Assert.assertFalse("no entries returned", entries.isEmpty());
 
+	}
+	
+	@Test
+	public void testListDataObjectsUnderPathDoesNotContainDuplicatesAtPageBoundary() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory aof = irodsFileSystem.getIRODSAccessObjectFactory();
+		ResourceAO rao = aof.getResourceAO(irodsAccount);
+
+		//
+		// The following variables are defined outside the try-catch
+		// block for clean up purposes.
+		//
+
+		final String replRescName = "issue_437_repl_resc";
+		final String ufs0RescName = "issue_437_ufs0_resc";
+		final String ufs1RescName = "issue_437_ufs1_resc";
+
+		final int dataObjectCount = 2501;
+
+		String rootCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties,
+				IRODS_TEST_SUBDIR_PATH + "/testListDataObjectsUnderPathDoesNotContainDuplicatesAtPageBoundary");
+
+		try {
+			// Create a replication resource.
+			Resource replResc = new Resource();
+			replResc.setName(replRescName);
+			replResc.setType("replication");
+			rao.addResource(replResc);
+
+			// Create two unixfilesystem resources and attach them to
+			// the replication resource.
+			Resource ufs0Resc = new Resource();
+			ufs0Resc.setName(ufs0RescName);
+			ufs0Resc.setType("unixfilesystem");
+			ufs0Resc.setLocation(irodsAccount.getHost());
+			ufs0Resc.setVaultPath("/tmp/issue_437_ufs0_resc_vault");
+			rao.addResource(ufs0Resc);
+			rao.addChildToResource(replResc.getName(), ufs0Resc.getName(), "");
+
+			Resource ufs1Resc = new Resource();
+			ufs1Resc.setName(ufs1RescName);
+			ufs1Resc.setType("unixfilesystem");
+			ufs1Resc.setLocation(irodsAccount.getHost());
+			ufs1Resc.setVaultPath("/tmp/issue_437_ufs1_resc_vault");
+			rao.addResource(ufs1Resc);
+			rao.addChildToResource(replResc.getName(), ufs1Resc.getName(), "");
+
+			// Create a collection to hold all data objects.
+			IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(rootCollection);
+			irodsFile.mkdir();
+			irodsFile.close();
+
+			// Create an empty file.
+			String localFilename = "empty.bin";
+			String localDirPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+			FileGenerator.generateFileOfFixedLengthGivenName(localDirPath, localFilename, 0);
+
+			DataTransferOperations dto = aof.getDataTransferOperations(irodsAccount);
+
+			// Create enough data objects to trigger the boundary issue.
+			// Jargon defaults to a page size of 5000, so we create enough data
+			// objects to exceed the boundary (i.e. 2501 data objects + replication
+			// resource with two unixfilesystem resources = 5002 replicas).
+			String localFilePath = localDirPath + localFilename;
+			for (int i = 0; i < dataObjectCount; i++) {
+				dto.putOperation(localFilePath, rootCollection + "/data_object." + i, replResc.getName(), null, null);
+			}
+
+			// List the contents of the collection.
+			CollectionAndDataObjectListAndSearchAO lsao = irodsFileSystem.getIRODSAccessObjectFactory()
+					.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+			List<CollectionAndDataObjectListingEntry> entries = lsao.listAllDataObjectsUnderPath(rootCollection, 0);
+			Assert.assertNotNull(entries);
+
+			// Show there are no duplicate entries.
+			Set<String> s = new HashSet<>();
+			Assert.assertTrue(entries.stream().allMatch(e -> s.add(e.getPathOrName())));
+		} finally {
+			//
+			// Clean up
+			//
+
+			try {
+				// Remove all data objects.
+				for (int i = 0; i < dataObjectCount; i++) {
+					IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+							.instanceIRODSFile(rootCollection + "/data_object." + i);
+					irodsFile.deleteWithForceOption();
+					irodsFile.close();
+				}
+
+				// Remove resources.
+				rao.removeChildFromResource(replRescName, ufs0RescName);
+				rao.removeChildFromResource(replRescName, ufs1RescName);
+				rao.deleteResource(ufs0RescName);
+				rao.deleteResource(ufs1RescName);
+				rao.deleteResource(replRescName);
+			} catch (Exception e) {
+				// Print the error, but do not let it cause the test to fail.
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
