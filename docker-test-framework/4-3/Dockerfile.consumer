@@ -1,23 +1,49 @@
 #
 # iRODS Consumer Image.
 #
-FROM ubuntu:20.04
-ARG DEBIAN_FRONTEND=noninteractive
+FROM ubuntu:22.04
 
-# TODO: Remove this line when apt gets its stuff together
-RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && \
-    apt-get install -y sudo wget less lsb-release apt-transport-https netcat gnupg2
+# Re-enable apt caching for RUN --mount
+RUN rm -f /etc/apt/apt.conf.d/docker-clean && \
+    echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
-ARG irods_package_version=4.3.1-0~focal
+# Make sure we're starting with an up-to-date image
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get autoremove -y --purge && \
+    rm -rf /tmp/*
+# To mark all installed packages as manually installed:
+# #apt-mark showauto | xargs -r apt-mark manual
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y \
+        sudo \
+        wget \
+        less \
+        lsb-release \
+        apt-transport-https \
+        netcat \
+        gnupg2 \
+    && \
+    rm -rf /tmp/*
+
+ARG irods_package_version=4.3.3-0~jammy
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -; \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/renci-irods.list; \
     apt-get update && \
     apt-get install -y \
         irods-runtime=${irods_package_version} \
         irods-icommands=${irods_package_version} \
-        irods-server=${irods_package_version}
+        irods-server=${irods_package_version} \
+    && \
+    rm -rf /tmp/*
 
 EXPOSE 1247 1248
 
@@ -25,6 +51,5 @@ EXPOSE 1247 1248
 COPY irods.rsyslog /etc/rsyslog.d/00-irods.conf
 
 # Set command to execute when launching the container.
-ADD start_consumer.sh irods_consumer.input /
-RUN chmod u+x /start_consumer.sh
+COPY --chmod=755 start_consumer.sh irods_consumer.input /
 ENTRYPOINT ["./start_consumer.sh"]
