@@ -5076,14 +5076,23 @@ public class DataObjectAOImplTest {
 		// Truncate the data object to "hello".
 		String truncatedContent = content.substring(0, 5);
 		String json = dao.truncateReplica(logicalPath, truncatedContent.length());
-		Assert.assertNull(json);
+		final String expectedJson = "{\"message\":\"\",\"replica_number\":0,\"resource_hierarchy\":\"test1-resc\"}";
+		if (aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods433()) {
+			Assert.assertTrue(expectedJson.equals(json));
+		} else {
+			Assert.assertNull(json);
+		}
 		stat = dao.getObjectStatForAbsolutePath(logicalPath);
 		Assert.assertEquals(stat.getObjSize(), truncatedContent.length());
 
 		// Truncate the data object to a size of 50 bytes.
 		final long newDataSize = 50;
 		json = dao.truncateReplica(logicalPath, newDataSize);
-		Assert.assertNull(json);
+		if (aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods433()) {
+			Assert.assertTrue(expectedJson.equals(json));
+		} else {
+			Assert.assertNull(json);
+		}
 		stat = dao.getObjectStatForAbsolutePath(logicalPath);
 		Assert.assertEquals(stat.getObjSize(), newDataSize);
 	}
@@ -5132,14 +5141,23 @@ public class DataObjectAOImplTest {
 			String truncatedContent = content.substring(0, 5);
 			final int replicaNumber = 1;
 			String json = dao.truncateReplicaByReplicaNumber(logicalPath, replicaNumber, truncatedContent.length());
-			Assert.assertNull(json);
+			final String expectedJson = "{\"message\":\"\",\"replica_number\":1,\"resource_hierarchy\":\"testReplicaTruncateUsingReplicaNumber\"}";
+			if (aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods433()) {
+				Assert.assertTrue(expectedJson.equals(json));
+			} else {
+				Assert.assertNull(json);
+			}
 			stat = dao.getObjectStatForAbsolutePath(logicalPath);
 			Assert.assertEquals(stat.getObjSize(), truncatedContent.length());
 
 			// Truncate the data object to a size of 50 bytes.
 			final long newDataSize = 50;
 			json = dao.truncateReplicaByReplicaNumber(logicalPath, replicaNumber, newDataSize);
-			Assert.assertNull(json);
+			if (aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods433()) {
+				Assert.assertTrue(expectedJson.equals(json));
+			} else {
+				Assert.assertNull(json);
+			}
 			stat = dao.getObjectStatForAbsolutePath(logicalPath);
 			Assert.assertEquals(stat.getObjSize(), newDataSize);
 		}
@@ -5195,14 +5213,23 @@ public class DataObjectAOImplTest {
 			// Truncate the data object to "hello".
 			String truncatedContent = content.substring(0, 5);
 			String json = dao.truncateReplicaByResource(logicalPath, resc.getName(), truncatedContent.length());
-			Assert.assertNull(json);
+			final String expectedJson = "{\"message\":\"\",\"replica_number\":1,\"resource_hierarchy\":\"testReplicaTruncateUsingResourceName\"}";
+			if (aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods433()) {
+				Assert.assertTrue(expectedJson.equals(json));
+			} else {
+				Assert.assertNull(json);
+			}
 			stat = dao.getObjectStatForAbsolutePath(logicalPath);
 			Assert.assertEquals(stat.getObjSize(), truncatedContent.length());
 
 			// Truncate the data object to a size of 50 bytes.
 			final long newDataSize = 50;
 			json = dao.truncateReplicaByResource(logicalPath, resc.getName(), newDataSize);
-			Assert.assertNull(json);
+			if (aof.getIRODSServerProperties(irodsAccount).isAtLeastIrods433()) {
+				Assert.assertTrue(expectedJson.equals(json));
+			} else {
+				Assert.assertNull(json);
+			}
 			stat = dao.getObjectStatForAbsolutePath(logicalPath);
 			Assert.assertEquals(stat.getObjSize(), newDataSize);
 		}
