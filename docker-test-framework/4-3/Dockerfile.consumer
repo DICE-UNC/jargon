@@ -26,7 +26,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y \
         apt-transport-https \
         gnupg2 \
-        less \
         lsb-release \
         netcat \
         rsyslog \
