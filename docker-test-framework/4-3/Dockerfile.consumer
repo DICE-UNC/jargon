@@ -24,14 +24,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     apt-get install -y \
-        sudo \
-        wget \
+        apt-transport-https \
+        gnupg2 \
         less \
         lsb-release \
-        apt-transport-https \
         netcat \
-        gnupg2 \
         rsyslog \
+        sudo \
+        wget \
     && \
     rm -rf /tmp/*
 
