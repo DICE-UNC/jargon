@@ -4,8 +4,13 @@
 FROM maven:3.6.3-jdk-11
 
 RUN apt-get update && \
-    apt-get install -y sudo wget nano
+    apt-get install -y \
+        sudo \
+        wget \
+        nano \
+        vim \
+    && \
+    rm -rf /tmp/*
 
+CMD sleep 2147483647d
 
-
-CMD tail -f /dev/null

@@ -1,22 +1,51 @@
 #
 # iRODS Provider Image.
 #
-FROM ubuntu:20.04
-ARG DEBIAN_FRONTEND=noninteractive
+FROM ubuntu:22.04
 
-# TODO: Remove this line when apt gets its stuff together
-RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Re-enable apt caching for RUN --mount
+RUN rm -f /etc/apt/apt.conf.d/docker-clean && \
+    echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+
+# Make sure we're starting with an up-to-date image
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get autoremove -y --purge && \
+    rm -rf /tmp/*
+# To mark all installed packages as manually installed:
+# #apt-mark showauto | xargs -r apt-mark manual
 
 # Install pre-requisites
-RUN apt-get update && \
-    apt-get install -y sudo wget lsb-release apt-transport-https postgresql vim python3-pip libfuse2 unixodbc rsyslog less gnupg2 && \
-    pip3 install xmlrunner
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y \
+        sudo \
+        wget \
+        lsb-release \
+        apt-transport-https \
+        postgresql \
+        vim \
+        python3-pip \
+        libfuse2 \
+        unixodbc \
+        rsyslog \
+        less \
+        gnupg2 \
+    && \
+    pip3 install xmlrunner && \
+    rm -rf /tmp/*
 
 # Setup catalog database
-ADD db_commands.txt /
+COPY db_commands.txt /
 RUN service postgresql start && su - postgres -c 'psql -f /db_commands.txt'
 
-ARG irods_package_version=4.3.1-0~focal
+ARG irods_package_version=4.3.3-0~jammy
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -; \
     echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/renci-irods.list; \
     apt-get update && \
@@ -24,7 +53,9 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add -;
         irods-runtime=${irods_package_version} \
         irods-icommands=${irods_package_version} \
         irods-server=${irods_package_version} \
-        irods-database-plugin-postgres=${irods_package_version}
+        irods-database-plugin-postgres=${irods_package_version} \
+    && \
+    rm -rf /tmp/*
 
 EXPOSE 1247 1248
 
@@ -32,8 +63,6 @@ EXPOSE 1247 1248
 COPY irods.rsyslog /etc/rsyslog.d/00-irods.conf
 
 # Set command to execute when launching the container.
-ADD start_provider.sh /
-ADD testsetup-consortium.sh /
-RUN chmod +x /testsetup-consortium.sh
-RUN chmod u+x /start_provider.sh
+COPY --chmod=755 start_provider.sh /
+COPY --chmod=755 testsetup-consortium.sh /
 ENTRYPOINT ["./start_provider.sh"]
