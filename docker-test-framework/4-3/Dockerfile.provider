@@ -25,18 +25,18 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     apt-get install -y \
-        sudo \
-        wget \
-        lsb-release \
         apt-transport-https \
-        postgresql \
-        vim \
-        python3-pip \
-        libfuse2 \
-        unixodbc \
-        rsyslog \
-        less \
         gnupg2 \
+        less \
+        libfuse2 \
+        lsb-release \
+        postgresql \
+        python3-pip \
+        rsyslog \
+        sudo \
+        unixodbc \
+        vim \
+        wget \
     && \
     pip3 install xmlrunner && \
     rm -rf /tmp/*
