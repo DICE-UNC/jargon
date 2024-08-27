@@ -284,6 +284,15 @@ public class IRODSServerProperties {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.2");
 	}
 
+	/**
+	 * Is the server at least iRODS 4.3.3
+	 *
+	 * @return {@code boolean}
+	 */
+	public boolean isAtLeastIrods433() {
+		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.3");
+	}
+
 	public IrodsVersion getIrodsVersion() {
 		return irodsVersion;
 	}
