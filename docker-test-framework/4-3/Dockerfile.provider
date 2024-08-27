@@ -27,7 +27,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y \
         apt-transport-https \
         gnupg2 \
-        less \
         libfuse2 \
         lsb-release \
         postgresql \
@@ -35,7 +34,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         rsyslog \
         sudo \
         unixodbc \
-        vim \
         wget \
     && \
     pip3 install xmlrunner && \
