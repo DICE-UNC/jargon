@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.4.0-RELEASE] - 2024-08-30
+
+### Added
+
+- Add version detection functions [#471] [#445] [#432]
+- Add support for GenQuery2 API [#442]
+- Add support for library features API [#441]
+- Add support for replica truncate API [#440]
+- Add support for new permission levels [#428]
+- Add functions for manipulating metadata using rodsadmin level privileges [#420]
+- Add support for reporting application name to iRODS server [#407] [#352]
+
+### Changed
+
+- Modernize Docker test framework [#473] [#447] [#444] [#434] [#433] [#426] [#418]
+- Disable port mappings in Docker test framework [#431]
+- Temporarily skip broken tests [#435]
+
+### Fixed
+
+- Fix issues with iRODS Consumer server Docker container for testing [#474] [#446]
+- Fix failing tests for replica truncate function call [#472]
+- Fix duplicate entries appearing in large collection listing [#437]
+- Fix sending of incorrect option value in StartupPack [#429]
+- Fix test failure involving non-existent resource [#425]
+- Fix addAVUMetadata returning error when communicating with iRODS 4.3.0 server [#415]
+- Allow data object close operations with replica token to work when communicating with older iRODS versions [#402]
+
+### Security
+
+- Add wording about reporting security vulnerabilities [#480]
+
 ## [4.3.3.0-RELEASE]
 
 #### First coordinated stream is required to close and update the catalog when doing parallel transfer #408
