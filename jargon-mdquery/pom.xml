@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>jargon</artifactId>
 		<groupId>org.irods</groupId>
-		<version>4.3.4.0-SNAPSHOT</version>
+		<version>4.3.4.0-RELEASE</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-mdquery</artifactId>
