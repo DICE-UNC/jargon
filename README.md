@@ -1,6 +1,6 @@
 # Jargon
 
-The official iRODS client library for Java applications.
+The iRODS client library for Java.
 
 ## Requirements
 
@@ -10,9 +10,6 @@ The official iRODS client library for Java applications.
 
 ## Libraries
 
-Jargon uses Maven for dependency management. See the pom.xml file for references to various dependencies.
-
-This project consists of the following libraries:
 - jargon-core - Base libraries, implementation of the iRODS protocol
 - jargon-data-utils - Additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
 - jargon-user-tagging - Code for using free tagging and other metadata metaphors on top of iRODS
