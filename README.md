@@ -24,3 +24,7 @@ This project consists of the following libraries:
 ## Changes
 
 See [CHANGELOG](CHANGELOG.md) for updates.
+
+## Reporting Security Vulnerabilities
+
+See [SECURITY](SECURITY.md) for details.
