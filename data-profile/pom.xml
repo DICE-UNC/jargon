@@ -48,7 +48,7 @@
 						<id>0</id>
 						<phase>validate</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<delete file="${basedir}/src/test/resources/testing.properties" />
 								<touch file="${basedir}/src/test/resources/testing.properties"
 									mkdirs="true" />
@@ -76,7 +76,7 @@
 									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 								</echo>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
