@@ -25,7 +25,16 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 
 	public static final String READ_PERMISSION = "read";
 	public static final String WRITE_PERMISSION = "write";
+	public static final String READ_OBJECT_PERMISSION = "read_object";
+	public static final String MODIFY_OBJECT_PERMISSION = "modify_object";
 	public static final String OWN_PERMISSION = "own";
+	public static final String DELETE_OBJECT_PERMISSION = "delete_object";
+	public static final String CREATE_OBJECT_PERMISSION = "create_object";	
+	public static final String CREATE_METADATA_PERMISSION = "create_metadata";
+	public static final String READ_METADATA_PERMISSION = "read_metadata";
+	public static final String MODIFY_METADATA_PERMISSION = "modify_metadata";
+	public static final String DELETE_METADATA_PERMISSION = "delete_metadata";
+	
 	public static final String INHERIT_PERMISSION = "inherit";
 	public static final String NOINHERIT_PERMISSION = "noinherit";
 	public static final String NULL_PERMISSION = "null";
@@ -207,9 +216,14 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty permission");
 		}
 
-		if (permission.equals(OWN_PERMISSION) || permission.equals(READ_PERMISSION)
-				|| permission.equals(WRITE_PERMISSION) || permission.equals(INHERIT_PERMISSION)
-				|| permission.equals(NOINHERIT_PERMISSION) || permission.equals(NULL_PERMISSION)) {
+		if (permission.equals(OWN_PERMISSION) 
+				|| permission.equals(READ_PERMISSION) || permission.equals(READ_OBJECT_PERMISSION)
+				|| permission.equals(WRITE_PERMISSION) || permission.equals(MODIFY_OBJECT_PERMISSION) 
+				|| permission.equals(INHERIT_PERMISSION) || permission.equals(NOINHERIT_PERMISSION)
+				|| permission.equals(NULL_PERMISSION)
+				|| permission.equals(DELETE_OBJECT_PERMISSION) || permission.equals(CREATE_OBJECT_PERMISSION)
+				|| permission.equals(CREATE_METADATA_PERMISSION) || permission.equals(READ_METADATA_PERMISSION)
+				|| permission.equals(MODIFY_METADATA_PERMISSION) || permission.equals(DELETE_METADATA_PERMISSION)) {
 			// OK
 		} else {
 			throw new IllegalArgumentException("invalid permission");

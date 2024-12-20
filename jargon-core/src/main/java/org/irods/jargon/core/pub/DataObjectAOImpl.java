@@ -2907,8 +2907,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absPath,
-				userName, ModAccessControlInp.READ_PERMISSION);
+				userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2949,8 +2950,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
-				absPath, userName, ModAccessControlInp.READ_PERMISSION);
+				absPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2986,8 +2988,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absPath,
-				userName, ModAccessControlInp.WRITE_PERMISSION);
+				userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -3001,8 +3004,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	@Override
 	public void setAccessPermission(final String zone, final String absolutePath, final String userName,
 			final FilePermissionEnum filePermission) throws JargonException {
-
-		log.info("setAccessPermission()");
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3019,22 +3020,147 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (filePermission == null) {
 			throw new IllegalArgumentException("null filePermission");
 		}
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
-		// right now, own, read, write are only permission I can set
+		ModAccessControlInp modAccessControlInp;
 
-		if (filePermission == FilePermissionEnum.OWN) {
-			setAccessPermissionOwn(zone, absolutePath, userName);
-		} else if (filePermission == FilePermissionEnum.READ) {
-			setAccessPermissionRead(zone, absolutePath, userName);
-		} else if (filePermission == FilePermissionEnum.WRITE) {
-			setAccessPermissionWrite(zone, absolutePath, userName);
-		} else if (filePermission == FilePermissionEnum.NONE) {
-			removeAccessPermissionsForUser(zone, absolutePath, userName);
-		} else {
-			throw new JargonException(
-					"Cannot update permission, currently only READ, WRITE, and OWN, and NONE are supported");
+		switch (filePermission) {
+		case OWN:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.OWN_PERMISSION);
+			break;
+		case READ_OBJECT:
+		case READ:
+			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+			break;
+		case MODIFY_OBJECT:
+		case WRITE:
+			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+			break;
+		case NONE:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.NULL_PERMISSION);
+			break;
+		case CREATE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_METADATA_PERMISSION);
+			break;
+		case CREATE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_OBJECT_PERMISSION);
+			break;
+		case DELETE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_METADATA_PERMISSION);
+			break;
+		case DELETE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_OBJECT_PERMISSION);
+			break;
+		case MODIFY_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_METADATA_PERMISSION);
+			break;
+		case READ_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_METADATA_PERMISSION);
+			break;
+		default:
+			StringBuilder sb = new StringBuilder();
+			sb.append("Cannot update permission, invalid file permission - ");
+			sb.append(filePermission);
+			throw new JargonException(sb.toString());
+		}
+		
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionAsAdmin(java.lang.
+	 * String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.protovalues.FilePermissionEnum)
+	 */
+	@Override
+	public void setAccessPermissionAsAdmin(final String zone, final String absolutePath, final String userName,
+			final FilePermissionEnum filePermission) throws JargonException {
+
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
 		}
 
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (filePermission == null) {
+			throw new IllegalArgumentException("null filePermission");
+		}
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
+
+		ModAccessControlInp modAccessControlInp;
+		switch (filePermission) {
+		case OWN:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.OWN_PERMISSION);
+			break;
+		case READ_OBJECT:
+		case READ:
+			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+			break;
+		case MODIFY_OBJECT:
+		case WRITE:
+			// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+			break;
+		case NONE:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.NULL_PERMISSION);	
+			break;
+		case CREATE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_METADATA_PERMISSION);
+			break;
+		case CREATE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_OBJECT_PERMISSION);
+			break;
+		case DELETE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_METADATA_PERMISSION);
+			break;
+		case DELETE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_OBJECT_PERMISSION);
+			break;
+		case MODIFY_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_METADATA_PERMISSION);
+			break;
+		case READ_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_METADATA_PERMISSION);
+			break;
+		default:
+			StringBuilder sb = new StringBuilder();
+			sb.append("Cannot update permission, invalid file permission - ");
+			sb.append(filePermission);
+			throw new JargonException(sb.toString());
+		}
+		
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
 	@Override
@@ -3062,8 +3188,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
-				absPath, userName, ModAccessControlInp.WRITE_PERMISSION);
+				absPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 

@@ -2082,11 +2082,11 @@ public class CollectionAOImplTest {
 			} else if (permission.getUserName()
 					.equalsIgnoreCase(testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_USER_KEY))) {
 				tertiaryUserFound = true;
-				Assert.assertEquals("tertiary user should have read permissions", FilePermissionEnum.READ,
+				Assert.assertEquals("tertiary user should have read permissions", FilePermissionEnum.READ_OBJECT,
 						permission.getFilePermissionEnum());
 			} else if (permission.getUserName().equalsIgnoreCase(testGroupName)) {
 				groupFound = true;
-				Assert.assertEquals("group should have read permissions", FilePermissionEnum.READ,
+				Assert.assertEquals("group should have read permissions", FilePermissionEnum.READ_OBJECT,
 						permission.getFilePermissionEnum());
 			}
 
