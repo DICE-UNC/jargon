@@ -73,7 +73,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -91,7 +91,7 @@ public class IRODSSharingServiceImplTest {
 
 		for (ShareUser shareUser : actual.getShareUsers()) {
 			if (shareUser.getUserName().equals(secondaryAccount.getUserName())
-					&& shareUser.getFilePermission() == FilePermissionEnum.WRITE) {
+					&& shareUser.getFilePermission() == FilePermissionEnum.MODIFY_OBJECT) {
 				writeACLFound = true;
 			}
 		}
@@ -138,7 +138,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 
 		// coll1
 
@@ -192,7 +192,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -223,7 +223,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -255,7 +255,7 @@ public class IRODSSharingServiceImplTest {
 		irodsFile.mkdirs();
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -265,7 +265,7 @@ public class IRODSSharingServiceImplTest {
 		irodsFile.mkdirs();
 
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, irodsFile.getAbsolutePath(),
 				testDirName, irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
 		irodsSharingService.createShare(irodsSharedFile);
@@ -303,7 +303,7 @@ public class IRODSSharingServiceImplTest {
 		irodsFile.mkdirs();
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -313,7 +313,7 @@ public class IRODSSharingServiceImplTest {
 		irodsFile.mkdirs();
 
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION, irodsFile.getAbsolutePath(),
 				testDirName, irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
 		irodsSharingService.createShare(irodsSharedFile);
@@ -352,7 +352,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -380,7 +380,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -428,7 +428,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.DATA,
 				targetIrodsDataObject, testFileName, irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
 		irodsSharingService.createShare(irodsSharedFile);
@@ -445,7 +445,7 @@ public class IRODSSharingServiceImplTest {
 
 		for (ShareUser shareUser : actual.getShareUsers()) {
 			if (shareUser.getUserName().equals(secondaryAccount.getUserName())
-					&& shareUser.getFilePermission() == FilePermissionEnum.WRITE) {
+					&& shareUser.getFilePermission() == FilePermissionEnum.MODIFY_OBJECT) {
 				writeACLFound = true;
 			}
 		}
@@ -473,7 +473,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);
@@ -559,7 +559,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.DATA,
 				targetIrodsDataObject, testFileName, irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
 		irodsSharingService.createShare(irodsSharedFile);
@@ -602,7 +602,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.DATA,
 				targetIrodsDataObject, testFileName, irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
 		irodsSharingService.createShare(irodsSharedFile);
@@ -665,7 +665,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.DATA,
 				targetIrodsDataObject, testFileName, irodsAccount.getUserName(), irodsAccount.getZone(), shareUsers);
 
@@ -693,7 +693,7 @@ public class IRODSSharingServiceImplTest {
 
 		List<ShareUser> shareUsers = new ArrayList<ShareUser>();
 		shareUsers.add(
-				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.WRITE));
+				new ShareUser(secondaryAccount.getUserName(), secondaryAccount.getZone(), FilePermissionEnum.MODIFY_OBJECT));
 		IRODSSharedFileOrCollection irodsSharedFile = new IRODSSharedFileOrCollection(MetadataDomain.COLLECTION,
 				irodsFile.getAbsolutePath(), testDirName, irodsAccount.getUserName(), irodsAccount.getZone(),
 				shareUsers);

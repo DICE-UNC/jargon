@@ -1255,8 +1255,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
-				effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
+				effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1290,12 +1291,20 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(
-				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
+				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermission
+	 * (java.lang.String, java.lang.String, java.lang.String, boolean,
+	 * org.irods.jargon.core.protovalues.FilePermissionEnum)
+	 */
 	@Override
 	public void setAccessPermission(final String zone, final String absolutePath, final String userName,
 			final boolean recursive, final FilePermissionEnum filePermission) throws JargonException {
@@ -1315,22 +1324,154 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		if (filePermission == null) {
 			throw new IllegalArgumentException("null filePermission");
 		}
+		
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
 
-		// right now, own, read, write are only permission I can set
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
-		if (filePermission == FilePermissionEnum.OWN) {
-			setAccessPermissionOwn(zone, absolutePath, userName, recursive);
-		} else if (filePermission == FilePermissionEnum.READ) {
-			setAccessPermissionRead(zone, absolutePath, userName, recursive);
-		} else if (filePermission == FilePermissionEnum.WRITE) {
-			setAccessPermissionWrite(zone, absolutePath, userName, recursive);
-		} else if (filePermission == FilePermissionEnum.NONE) {
-			removeAccessPermissionForUser(zone, absolutePath, userName, recursive);
-		} else {
-			throw new JargonException(
-					"Cannot update permission, currently only READ, WRITE, and OWN, and NONE are supported");
+		ModAccessControlInp modAccessControlInp;
+		
+		switch (filePermission) {
+		case OWN:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.OWN_PERMISSION);
+			break;
+		case READ_OBJECT:
+		case READ:
+			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+			break;
+		case MODIFY_OBJECT:
+		case WRITE:
+			// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+			break;
+		case NONE:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.NULL_PERMISSION);
+			break;
+		case CREATE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_METADATA_PERMISSION);
+			break;
+		case CREATE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_OBJECT_PERMISSION);
+			break;
+		case DELETE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_METADATA_PERMISSION);
+			break;
+		case DELETE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_OBJECT_PERMISSION);
+			break;
+		case MODIFY_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_METADATA_PERMISSION);
+			break;
+		case READ_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_METADATA_PERMISSION);
+			break;
+		default:
+			StringBuilder sb = new StringBuilder();
+			sb.append("Cannot update permission, invalid file permission - ");
+			sb.append(filePermission);
+			throw new JargonException(sb.toString());
+		}
+		
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.irods.jargon.core.pub.CollectionAO#setAccessPermissionAsAdmin
+	 * (java.lang.String, java.lang.String, java.lang.String, boolean,
+	 * org.irods.jargon.core.protovalues.FilePermissionEnum)
+	 */
+	@Override
+	public void setAccessPermissionAsAdmin(final String zone, final String absolutePath, final String userName,
+			final boolean recursive, final FilePermissionEnum filePermission) throws JargonException {
+
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
 		}
 
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (filePermission == null) {
+			throw new IllegalArgumentException("null filePermission");
+		}
+		
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
+
+		ModAccessControlInp modAccessControlInp;
+		
+		switch (filePermission) {
+		case OWN:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.OWN_PERMISSION);
+			break;
+		case READ_OBJECT:
+		case READ:
+			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+			break;
+		case MODIFY_OBJECT:
+		case WRITE:
+			// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+			break;
+		case NONE:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.NULL_PERMISSION);
+			break;
+		case CREATE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_METADATA_PERMISSION);
+			break;
+		case CREATE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.CREATE_OBJECT_PERMISSION);
+			break;
+		case DELETE_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_METADATA_PERMISSION);
+			break;
+		case DELETE_OBJECT:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.DELETE_OBJECT_PERMISSION);
+			break;
+		case MODIFY_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_METADATA_PERMISSION);
+			break;
+		case READ_METADATA:
+			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
+					effectiveAbsPath, userName, ModAccessControlInp.READ_METADATA_PERMISSION);
+			break;
+		default:
+			StringBuilder sb = new StringBuilder();
+			sb.append("Cannot update permission, invalid file permission - ");
+			sb.append(filePermission);
+			throw new JargonException(sb.toString());
+		}
+
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
 	/*
@@ -1364,8 +1505,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
-				effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
+				effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1400,8 +1542,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		// children, then won't take
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
+		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(
-				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
+				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}

@@ -860,12 +860,6 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * are currently supported by this method. This may require more iRODS core
 	 * server updates to make this range of permissions meaningful.
 	 * </p>
-	 * <p>
-	 * For the current variant of this method, only READ, WRITE, and OWN are
-	 * supported, Other permission values will cause a {@code JargonException}. This
-	 * may be relaxed in the future. Also note that NONE is supported, and actually
-	 * causes the access permission to be removed.
-	 * </p>
 	 *
 	 * @param zone           {@code String} with the zone for the user. This method
 	 *                       will work cross-zone if appropriate permissions are in
@@ -1188,5 +1182,23 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	void modifyAVUMetadata(String absolutePath, AvuData avuData, AvuData newAvuData, boolean adminFlag)
 			throws JargonException;
+
+	/**
+	 * Method to set access permission to the desired state using the admin flag, this variant makes it
+	 * less necessary to stack 'if' tests in permission setting code.
+	 * <p>
+	 *
+	 * @param zone           {@code String} with the zone for the user. This method
+	 *                       will work cross-zone if appropriate permissions are in
+	 *                       place
+	 * @param absolutePath   {@code String} with the absolute path for the data
+	 *                       object
+	 * @param userName       {@code userName} (just the name, no name#zone format)
+	 *                       for the user
+	 * @param filePermission {@link FilePermissionEnum}
+	 * @throws JargonException {@link JargonException}
+	 */
+	void setAccessPermissionAsAdmin(String zone, String absolutePath, String userName,
+			FilePermissionEnum filePermission) throws JargonException;
 
 }
