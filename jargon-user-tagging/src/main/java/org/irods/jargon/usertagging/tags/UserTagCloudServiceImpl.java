@@ -20,8 +20,8 @@ import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagCloudEntry;
 import org.irods.jargon.usertagging.domain.UserTagCloudView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service for query and processing of a user tag cloud.
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService implements UserTagCloudService {
 
-	public static final Logger log = LoggerFactory.getLogger(UserTagCloudServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(UserTagCloudServiceImpl.class);
 
 	public static final String COMMA_SPACE = ", ";
 	public static final String EQUAL_QUOTE = " = '";

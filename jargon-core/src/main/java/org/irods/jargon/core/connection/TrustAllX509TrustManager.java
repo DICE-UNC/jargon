@@ -4,8 +4,8 @@ import java.security.cert.X509Certificate;
 
 import javax.net.ssl.X509TrustManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * DO NOT USE IN PRODUCTION!!!!
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TrustAllX509TrustManager implements X509TrustManager {
 
-	private static final Logger log = LoggerFactory.getLogger(TrustAllX509TrustManager.class);
+	private static final Logger log = LogManager.getLogger(TrustAllX509TrustManager.class);
 
 	@Override
 	public X509Certificate[] getAcceptedIssuers() {

@@ -4,8 +4,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handler for rejected executions of parallel threads
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RejectedParallelThreadExecutionHandler implements RejectedExecutionHandler {
 
-	public static final Logger log = LoggerFactory.getLogger(RejectedParallelThreadExecutionHandler.class);
+	public static final Logger log = LogManager.getLogger(RejectedParallelThreadExecutionHandler.class);
 
 	/**
 	 *

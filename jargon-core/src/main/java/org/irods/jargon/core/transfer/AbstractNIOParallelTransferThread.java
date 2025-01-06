@@ -6,8 +6,8 @@ import java.nio.channels.SocketChannel;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.Host;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract superclasss for a parallel file transfer operation via NIO
@@ -26,7 +26,7 @@ public class AbstractNIOParallelTransferThread {
 	public static final int PUT_OPR = 1;
 	public static final int GET_OPR = 2;
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractNIOParallelTransferThread.class);
+	public static final Logger log = LogManager.getLogger(AbstractNIOParallelTransferThread.class);
 
 	protected AbstractNIOParallelTransferThread() {
 		super();

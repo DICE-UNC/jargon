@@ -15,8 +15,8 @@ import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handle parallel file transfer get operation within Jargon. See
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ParallelGetFileTransferStrategy extends AbstractParallelFileTransferStrategy {
 
-	public static final Logger log = LoggerFactory.getLogger(ParallelGetFileTransferStrategy.class);
+	public static final Logger log = LogManager.getLogger(ParallelGetFileTransferStrategy.class);
 
 	/**
 	 * Create an instance of a strategy to accomplish a parallel file transfer.

@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.irods.jargon.core.pub.domain.ClientHints;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Somewhat experimental cache of discovered properties, these are aspects of
@@ -43,7 +43,7 @@ public class DiscoveredServerPropertiesCache {
 	private ConcurrentHashMap<String, ClientHints> cacheOfClientHints = new ConcurrentHashMap<String, ClientHints>(8,
 			0.9f, 1);
 
-	public static final Logger log = LoggerFactory.getLogger(DiscoveredServerPropertiesCache.class);
+	public static final Logger log = LogManager.getLogger(DiscoveredServerPropertiesCache.class);
 
 	/*
 	 * basic properties that can be cached

@@ -13,8 +13,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.utils.BinaryDataFormat;
 import org.irods.jargon.core.utils.Host;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Instances of this class support I/O on random-access binary files. Methods on
@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
-	private static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
+	private static Logger log = LogManager.getLogger(IRODSFileImpl.class);
 	private final FileIOOperations fileIOOperations;
 	private final IRODSFile irodsFile;
 	private long filePointer = 0;

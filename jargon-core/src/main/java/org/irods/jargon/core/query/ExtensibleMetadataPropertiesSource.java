@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Mike Conway - DICE (www.irods.org) Creates an
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ExtensibleMetadataPropertiesSource implements ExtensibleMetaDataSource {
 
-	private static Logger log = LoggerFactory.getLogger(ExtensibleMetadataPropertiesSource.class);
+	private static Logger log = LogManager.getLogger(ExtensibleMetadataPropertiesSource.class);
 
 	private Map<String, String> extensibleMetaDataProperties = null;
 	private String propertiesFileName = "";

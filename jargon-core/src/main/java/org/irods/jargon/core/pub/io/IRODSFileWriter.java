@@ -10,8 +10,8 @@ import java.io.Writer;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * iRODS specific implementation of a {@code java.io.Writer}
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class IRODSFileWriter extends Writer {
 
 	private final IRODSFileOutputStream irodsFileOutputStream;
-	public static Logger log = LoggerFactory.getLogger(IRODSFileWriter.class);
+	public static Logger log = LogManager.getLogger(IRODSFileWriter.class);
 	private final String connectionEncoding;
 
 	/**

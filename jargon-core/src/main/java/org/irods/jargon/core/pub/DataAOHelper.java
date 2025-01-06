@@ -45,8 +45,8 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This helper class encapsulates lower-level helper code for the
@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class DataAOHelper extends AOHelper {
-	public static final Logger log = LoggerFactory.getLogger(DataAOHelper.class);
+	public static final Logger log = LogManager.getLogger(DataAOHelper.class);
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;

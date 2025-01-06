@@ -28,8 +28,8 @@ import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagQuerySearchResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This object is a bridge between the typical user interface depiction of tags
@@ -51,7 +51,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService im
 	public final String EQUALS_QUOTE = " = '";
 	public final char QUOTE = '\'';
 
-	public static final Logger log = LoggerFactory.getLogger(FreeTaggingServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(FreeTaggingServiceImpl.class);
 
 	private final IRODSTaggingService irodsTaggingService;
 

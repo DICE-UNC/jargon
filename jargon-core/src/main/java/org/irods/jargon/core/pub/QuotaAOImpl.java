@@ -14,8 +14,8 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.SimpleQuery;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object to manage quota information for users and groups.
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
-	public static final Logger log = LoggerFactory.getLogger(QuotaAOImpl.class);
+	public static final Logger log = LogManager.getLogger(QuotaAOImpl.class);
 	private SimpleQueryExecutorAO simpleQueryExcecutor = null;
 
 	public static final String ALL_QUOTA_GLOBAL_QUERY = "select user_name, R_USER_MAIN.zone_name, quota_limit, quota_over, R_QUOTA_MAIN.modify_ts from R_QUOTA_MAIN, R_USER_MAIN where R_USER_MAIN.user_id = R_QUOTA_MAIN.user_id and R_QUOTA_MAIN.resc_id = 0";

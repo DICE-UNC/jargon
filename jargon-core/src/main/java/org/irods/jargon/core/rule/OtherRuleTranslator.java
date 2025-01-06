@@ -11,8 +11,8 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Rule translator for Other rules (e.g. JSON for quotas)
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OtherRuleTranslator extends AbstractRuleTranslator {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	Logger log = LogManager.getLogger(this.getClass());
 
 	public OtherRuleTranslator(final IRODSServerProperties irodsServerProperties,
 			final RuleInvocationConfiguration ruleInvocationConfiguration, final JargonProperties jargonProperties) {

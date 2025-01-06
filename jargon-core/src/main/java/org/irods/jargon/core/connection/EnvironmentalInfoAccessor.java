@@ -7,8 +7,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.MiscSvrInfo;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Obtain information about the connected irods server.
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class EnvironmentalInfoAccessor {
 
 	private IRODSMidLevelProtocol irodsProtocol = null;
-	private final Logger log = LoggerFactory.getLogger(EnvironmentalInfoAccessor.class);
+	private final Logger log = LogManager.getLogger(EnvironmentalInfoAccessor.class);
 
 	public EnvironmentalInfoAccessor(final IRODSMidLevelProtocol irodsProtocol) throws JargonException {
 		if (irodsProtocol == null) {

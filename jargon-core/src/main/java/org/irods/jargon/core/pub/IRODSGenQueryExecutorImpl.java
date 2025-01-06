@@ -8,8 +8,8 @@ import org.irods.jargon.core.query.GenQueryProcessor;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implementation class that can process iquest-like queries using the genquery
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements IRODSGenQueryExecutor {
 
-	private static final Logger log = LoggerFactory.getLogger(IRODSGenQueryExecutorImpl.class);
+	private static final Logger log = LogManager.getLogger(IRODSGenQueryExecutorImpl.class);
 
 	/**
 	 * enum describes how to handle closing of a query

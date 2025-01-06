@@ -13,8 +13,8 @@ import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiat
 import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.RequestTypes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Represents a type of authentication scheme, outlining a life cycle model of
@@ -32,7 +32,7 @@ abstract class AuthMechanism {
 
 	public String cachedChallenge = "";
 
-	public static final Logger log = LoggerFactory.getLogger(AuthMechanism.class);
+	public static final Logger log = LogManager.getLogger(AuthMechanism.class);
 
 	/**
 	 * Optional method that will be called before any startup pack is sent

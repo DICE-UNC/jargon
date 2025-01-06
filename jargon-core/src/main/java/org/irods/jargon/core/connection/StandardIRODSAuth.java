@@ -11,8 +11,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Standard iRODS challange/response mechanism
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StandardIRODSAuth extends AuthMechanism {
 
-	public static final Logger log = LoggerFactory.getLogger(StandardIRODSAuth.class);
+	public static final Logger log = LogManager.getLogger(StandardIRODSAuth.class);
 
 	/**
 	 * Do the normal iRODS password challenge/response sequence

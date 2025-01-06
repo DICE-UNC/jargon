@@ -14,8 +14,8 @@ import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is a simplified way of obtaining a connection and getting
@@ -68,7 +68,7 @@ public final class IRODSFileSystem {
 	private final IRODSSession irodsSession;
 	private transient IRODSAccessObjectFactory irodsAccessObjectFactory = null;
 
-	private static final Logger log = LoggerFactory.getLogger(IRODSFileSystem.class);
+	private static final Logger log = LogManager.getLogger(IRODSFileSystem.class);
 
 	/**
 	 * Create an instance based on a particular type of protocol manager (e.g. a

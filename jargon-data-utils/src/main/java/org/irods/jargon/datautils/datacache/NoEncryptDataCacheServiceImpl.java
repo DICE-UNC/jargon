@@ -16,8 +16,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to provide an insecure data cache. The data in the cache is not
@@ -35,7 +35,7 @@ public class NoEncryptDataCacheServiceImpl extends AbstractDataUtilsServiceImpl 
 	 */
 	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 
-	public static final Logger log = LoggerFactory.getLogger(NoEncryptDataCacheServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(NoEncryptDataCacheServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies

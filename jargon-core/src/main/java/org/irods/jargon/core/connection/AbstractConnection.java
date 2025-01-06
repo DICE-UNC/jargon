@@ -13,8 +13,8 @@ import java.nio.channels.ClosedChannelException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.Host;
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract connection to iRODS, representing the network layer of communication
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractConnection {
 
-	static final Logger log = LoggerFactory.getLogger(AbstractConnection.class);
+	static final Logger log = LogManager.getLogger(AbstractConnection.class);
 
 	protected IRODSProtocolManager irodsProtocolManager;
 	private String connectionInternalIdentifier;

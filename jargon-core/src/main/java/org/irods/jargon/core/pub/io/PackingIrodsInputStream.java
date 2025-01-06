@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Wrap an iRODS input stream in an accumulating buffer that will emulate reads
@@ -23,7 +23,7 @@ public class PackingIrodsInputStream extends InputStream {
 	private final IRODSFileInputStream irodsFileInputStream;
 	private ByteArrayInputStream byteArrayInputStream = null;
 	private final int bufferSizeForIrods;
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LogManager.getLogger(this.getClass());
 	private boolean done = false;
 
 	public PackingIrodsInputStream(final IRODSFileInputStream irodsFileInputStream) {

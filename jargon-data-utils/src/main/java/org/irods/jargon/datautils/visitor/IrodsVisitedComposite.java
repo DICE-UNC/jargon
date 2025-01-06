@@ -8,8 +8,8 @@ import java.io.File;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Concrete implementation of an iRODS directory as visited by a hierarchical
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IrodsVisitedComposite extends IrodsFileItem implements HierComposite {
 
-	public static final Logger log = LoggerFactory.getLogger(IrodsVisitedComposite.class);
+	public static final Logger log = LogManager.getLogger(IrodsVisitedComposite.class);
 
 	private static final long serialVersionUID = 2022187755904761797L;
 

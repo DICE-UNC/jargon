@@ -10,8 +10,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.datautils.visitor.IrodsVisitedComposite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to run an indexer
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IndexerServiceImpl extends AbstractJargonService {
 
-	public static final Logger log = LoggerFactory.getLogger(IndexerServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(IndexerServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

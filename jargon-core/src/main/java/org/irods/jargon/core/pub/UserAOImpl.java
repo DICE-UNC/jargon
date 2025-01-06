@@ -37,8 +37,8 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.security.IRODSPasswordUtilities;
 import org.irods.jargon.core.utils.FederationEnabled;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class to access underlying user information in IRODS.
@@ -57,7 +57,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	private static final int DEFAULT_REC_COUNT = 500;
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	Logger log = LogManager.getLogger(this.getClass());
 	private static final char COMMA = ',';
 	private static final String AND = " AND ";
 	private static final String EQUALS = " = ";

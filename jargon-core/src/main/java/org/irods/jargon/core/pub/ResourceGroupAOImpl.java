@@ -16,8 +16,8 @@ import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object that represents resource groups and related operations in
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ResourceGroupAOImpl extends IRODSGenericAO implements ResourceGroupAO {
 
-	private static Logger log = LoggerFactory.getLogger(ResourceGroupAOImpl.class);
+	private static Logger log = LogManager.getLogger(ResourceGroupAOImpl.class);
 
 	/**
 	 * @param irodsSession

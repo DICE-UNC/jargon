@@ -7,15 +7,15 @@ import java.util.StringTokenizer;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class AbstractRuleTranslator {
 
 	private static final String SPLAT = "*";
 	private final IRODSServerProperties irodsServerProperties;
 	private final RuleInvocationConfiguration ruleInvocationConfiguration;
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	Logger log = LogManager.getLogger(this.getClass());
 	private final JargonProperties jargonProperties;
 
 	/**

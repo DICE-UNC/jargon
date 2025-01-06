@@ -7,8 +7,8 @@ import java.util.StringTokenizer;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Translate an IRODSQuery posed as a {@code String} query statement (as in
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class IRODSGenQueryTranslator {
 
 	private IRODSServerProperties irodsServerProperties;
-	private static Logger log = LoggerFactory.getLogger(IRODSGenQueryTranslator.class);
+	private static Logger log = LogManager.getLogger(IRODSGenQueryTranslator.class);
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
 	public static final String[] operatorStrings = { "<>", "<=", ">=", "not in", "not between", "not like",

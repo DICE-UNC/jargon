@@ -18,15 +18,15 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.pub.io.IRODSRandomAccessFile;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Mike Conway - DICE
  */
 public class PutTransferRestartProcessor extends AbstractTransferRestartProcessor {
 
-	private static Logger log = LoggerFactory.getLogger(PutTransferRestartProcessor.class);
+	private static Logger log = LogManager.getLogger(PutTransferRestartProcessor.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

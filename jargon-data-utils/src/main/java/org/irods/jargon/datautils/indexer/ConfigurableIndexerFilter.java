@@ -6,8 +6,8 @@ package org.irods.jargon.datautils.indexer;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.datautils.visitor.HierComposite;
 import org.irods.jargon.datautils.visitor.HierLeaf;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Default indexer filter that in this implementation can be configured to index unless
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConfigurableIndexerFilter implements IndexerFilterInterface {
 
-	public static final Logger log = LoggerFactory.getLogger(ConfigurableIndexerFilter.class);
+	public static final Logger log = LogManager.getLogger(ConfigurableIndexerFilter.class);
 
 	/**
 	 * Standard AVU attribute that permits indexing on a collection and children

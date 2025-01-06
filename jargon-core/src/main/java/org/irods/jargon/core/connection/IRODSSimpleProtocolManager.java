@@ -2,8 +2,8 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This connection manager simply returns a stand-alone connection to IRODS.
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
-	private Logger log = LoggerFactory.getLogger(IRODSSimpleProtocolManager.class);
+	private Logger log = LogManager.getLogger(IRODSSimpleProtocolManager.class);
 
 	public static IRODSSimpleProtocolManager instance() {
 		return new IRODSSimpleProtocolManager();

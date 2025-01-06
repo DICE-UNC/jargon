@@ -18,8 +18,8 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Introduced as checksum operations became more complicated in
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements DataObjectChecksumUtilitiesAO {
 
-	public static final Logger log = LoggerFactory.getLogger(DataObjectChecksumUtilitiesAOImpl.class);
+	public static final Logger log = LogManager.getLogger(DataObjectChecksumUtilitiesAOImpl.class);
 	private final ChecksumManager checksumManager;
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 

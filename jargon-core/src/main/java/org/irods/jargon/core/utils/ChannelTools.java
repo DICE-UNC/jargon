@@ -5,15 +5,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
 public final class ChannelTools {
-	private static final Logger log = LoggerFactory.getLogger(ChannelTools.class);
+	private static final Logger log = LogManager.getLogger(ChannelTools.class);
 
 	public static void fastChannelCopy(final ReadableByteChannel src, final WritableByteChannel dest,
 			final int bufferSize) throws IOException {

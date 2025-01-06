@@ -5,8 +5,8 @@ package org.irods.jargon.core.rule;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utility to set the iRODS rule engine instance based on a provided rule as
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RuleEngineInstanceChooser {
 
-	private static final Logger log = LoggerFactory.getLogger(RuleEngineInstanceChooser.class);
+	private static final Logger log = LogManager.getLogger(RuleEngineInstanceChooser.class);
 	private final JargonProperties jargonProperties;
 	private final IRODSServerProperties irodsServerProperties;
 

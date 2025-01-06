@@ -13,8 +13,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.encrypt.EncryptionWrapperFactory;
 import org.irods.jargon.core.transfer.encrypt.ParallelDecryptionCipherWrapper;
 import org.irods.jargon.core.transfer.encrypt.ParallelEncryptionCipherWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract superclass for a parallel transfer controller. This will process
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractParallelFileTransferStrategy {
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractParallelFileTransferStrategy.class);
+	public static final Logger log = LogManager.getLogger(AbstractParallelFileTransferStrategy.class);
 
 	public enum TransferType {
 		GET_TRANSFER, PUT_TRANSFER

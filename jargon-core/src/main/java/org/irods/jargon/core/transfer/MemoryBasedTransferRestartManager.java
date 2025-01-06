@@ -6,8 +6,8 @@ package org.irods.jargon.core.transfer;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Simple restart manager that exists in an in-memory map. This version is
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
-	private static final Logger log = LoggerFactory.getLogger(MemoryBasedTransferRestartManager.class);
+	private static final Logger log = LogManager.getLogger(MemoryBasedTransferRestartManager.class);
 
 	private final ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo> cacheOfRestartInfo = new ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo>(
 			8, 0.9f, 1);

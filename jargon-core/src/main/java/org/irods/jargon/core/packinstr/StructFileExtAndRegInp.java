@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Translation of a StructFileExtAndRegInp operation into XML protocol format.
@@ -41,7 +41,7 @@ public final class StructFileExtAndRegInp extends AbstractIRODSPackingInstructio
 
 	private ForceOptions forceOption = ForceOptions.NO_FORCE;
 
-	private static final Logger LOG = LoggerFactory.getLogger(StructFileExtAndRegInp.class);
+	private static final Logger LOG = LogManager.getLogger(StructFileExtAndRegInp.class);
 
 	public enum ForceOptions {
 		FORCE, NO_FORCE

@@ -29,8 +29,8 @@ import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.transform.ClientHintsTransform;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object to access information about an IRODS Server
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements EnvironmentalInfoAO {
 
-	public static final Logger log = LoggerFactory.getLogger(EnvironmentalInfoAOImpl.class);
+	public static final Logger log = LogManager.getLogger(EnvironmentalInfoAOImpl.class);
 
 	private final EnvironmentalInfoAccessor environmentalInfoAccessor;
 

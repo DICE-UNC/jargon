@@ -10,8 +10,8 @@ import java.net.UnknownHostException;
 import javax.net.ssl.SSLSocket;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Wraps a connection to the iRODS server described by the given IRODSAccount.
@@ -51,7 +51,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 		super(irodsAccount, pipelineConfiguration, irodsProtocolManager, irodsSession);
 	}
 
-	static final Logger log = LoggerFactory.getLogger(IRODSBasicTCPConnection.class);
+	static final Logger log = LogManager.getLogger(IRODSBasicTCPConnection.class);
 
 	/**
 	 * Default constructor that gives the account and pipeline setup information.

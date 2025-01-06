@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Captures the client-server negotiation policy for iRODS. This can be tuned
@@ -24,7 +24,7 @@ public class ClientServerNegotiationPolicy {
 	 * interpolate with the negotiation table.
 	 */
 
-	private static Logger log = LoggerFactory.getLogger(ClientServerNegotiationPolicy.class);
+	private static Logger log = LogManager.getLogger(ClientServerNegotiationPolicy.class);
 
 	public enum SslNegotiationPolicy {
 		CS_NEG_REQUIRE, CS_NEG_DONT_CARE, CS_NEG_REFUSE, NO_NEGOTIATION, CS_NEG_FAILURE

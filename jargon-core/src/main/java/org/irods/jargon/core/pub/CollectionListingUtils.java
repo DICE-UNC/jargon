@@ -36,8 +36,8 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Generic utils (for the package) to do collection listings
@@ -51,7 +51,7 @@ class CollectionListingUtils {
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	public static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 
-	static final Logger log = LoggerFactory.getLogger(CollectionListingUtils.class);
+	static final Logger log = LogManager.getLogger(CollectionListingUtils.class);
 
 	/**
 	 * This is a compensating method used to deal with the top of the tree when

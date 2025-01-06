@@ -14,8 +14,8 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.query.PagingAwareCollectionListing.PagingStyle;
 import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Improved facility to list under a parent collection in a manner that supports
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionPagerAO {
 
-	public static final Logger log = LoggerFactory.getLogger(CollectionPagerAOImpl.class);
+	public static final Logger log = LogManager.getLogger(CollectionPagerAOImpl.class);
 
 	private CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 

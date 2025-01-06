@@ -15,8 +15,8 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 public final class FileIOOperationsAOImpl extends IRODSGenericAO implements FileIOOperations {
 
-	static Logger log = LoggerFactory.getLogger(FileIOOperationsAOImpl.class);
+	static Logger log = LogManager.getLogger(FileIOOperationsAOImpl.class);
 
 	public FileIOOperationsAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {

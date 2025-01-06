@@ -18,8 +18,8 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.ticket.io.CleanUpWhenClosedInputStream;
 import org.irods.jargon.ticket.io.FileStreamAndInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Client transfer and other operations that are ticket enabled, wrapped with
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TicketClientOperationsImpl extends AbstractTicketService implements TicketClientOperations {
 
-	public static final Logger log = LoggerFactory.getLogger(TicketClientOperationsImpl.class);
+	public static final Logger log = LogManager.getLogger(TicketClientOperationsImpl.class);
 
 	private DataTransferOperations dataTransferOperations = null;
 	private TicketClientSupport ticketClientSupport = null;

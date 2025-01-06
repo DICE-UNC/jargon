@@ -13,8 +13,8 @@ import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImpl.QueryCloseBehavior;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handles lower-level processing of GenQuery
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GenQueryProcessor {
 	private final IRODSMidLevelProtocol irodsCommands;
-	private static final Logger log = LoggerFactory.getLogger(GenQueryProcessor.class);
+	private static final Logger log = LogManager.getLogger(GenQueryProcessor.class);
 
 	/**
 	 * @param irodsCommands {@link IRODSMidLevelProtocol}

@@ -8,8 +8,8 @@ import javax.crypto.SecretKey;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.EncryptionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract superclass for a shared encryption key generator implementation of a
@@ -23,7 +23,7 @@ public abstract class AbstractKeyGenerator {
 	private PipelineConfiguration pipelineConfiguration;
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractKeyGenerator.class);
+	public static final Logger log = LogManager.getLogger(AbstractKeyGenerator.class);
 
 	protected PipelineConfiguration getPipelineConfiguration() {
 		return pipelineConfiguration;

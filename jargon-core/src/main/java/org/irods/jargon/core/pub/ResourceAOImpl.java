@@ -34,8 +34,8 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access to CRUD and query operations on IRODS Resource.
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LogManager.getLogger(this.getClass());
 	private final ZoneAO zoneAO;
 
 	/**

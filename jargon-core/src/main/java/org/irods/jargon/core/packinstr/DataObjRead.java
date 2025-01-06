@@ -5,8 +5,8 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Translation of a DataObjRead operation into XML protocol format.
@@ -22,7 +22,7 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 	public static final String LEN = "len";
 
 	public static final int READ_FILE_API_NBR = 603;
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LogManager.getLogger(this.getClass());
 
 	private final int fileDescriptor;
 	private final long length;

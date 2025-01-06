@@ -13,8 +13,8 @@ import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Support for PAM (plug-able authentication module) contributed by Chris Smith
@@ -30,7 +30,7 @@ public class PAMAuth extends AuthMechanism {
 
 	private boolean needToWrapWithSsl = false;
 
-	public static final Logger log = LoggerFactory.getLogger(PAMAuth.class);
+	public static final Logger log = LogManager.getLogger(PAMAuth.class);
 
 	@Override
 	protected IRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,

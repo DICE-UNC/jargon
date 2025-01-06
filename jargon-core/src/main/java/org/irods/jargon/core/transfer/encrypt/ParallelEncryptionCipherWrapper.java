@@ -6,8 +6,8 @@ package org.irods.jargon.core.transfer.encrypt;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.EncryptionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Wrapper for a cipher that will encrypt parallel transfer data
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ParallelEncryptionCipherWrapper extends ParallelCipherWrapper {
 
-	public static final Logger log = LoggerFactory.getLogger(ParallelEncryptionCipherWrapper.class);
+	public static final Logger log = LogManager.getLogger(ParallelEncryptionCipherWrapper.class);
 
 	ParallelEncryptionCipherWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {

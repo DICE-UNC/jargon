@@ -10,8 +10,8 @@ import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Helper functions for the {@code IRODSFileSystemAO}, essentially to make that
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileSystemAOHelper extends AOHelper {
 
-	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOHelper.class);
+	static Logger log = LogManager.getLogger(IRODSFileSystemAOHelper.class);
 
 	/**
 	 * List all directories under the path.

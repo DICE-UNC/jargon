@@ -16,8 +16,8 @@ import java.util.Random;
 
 import org.irods.jargon.testutils.TestConfigurationException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Helper methods to generate dummy files and directories useful for Jargon
@@ -34,7 +34,7 @@ public class FileGenerator {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 
-	private static Logger log = LoggerFactory.getLogger(FileGenerator.class);
+	private static Logger log = LogManager.getLogger(FileGenerator.class);
 
 	static {
 		fileExtensions.add(".doc");

@@ -23,8 +23,8 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Helper clas to support the {@link org.irods.jargon.core.pub.CollectionAO}.
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollectionAOHelper extends AOHelper {
 
-	public static final Logger log = LoggerFactory.getLogger(CollectionAOHelper.class);
+	public static final Logger log = LogManager.getLogger(CollectionAOHelper.class);
 
 	/**
 	 * Create a set of selects for a collection, used in general query

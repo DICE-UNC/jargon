@@ -19,8 +19,8 @@ import org.irods.jargon.datautils.visitor.HierComponent;
 import org.irods.jargon.datautils.visitor.HierComposite;
 import org.irods.jargon.datautils.visitor.HierLeaf;
 import org.irods.jargon.datautils.visitor.IrodsVisitedComposite;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract superclass for a filtering, metadata aware visitor used for
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorComponent {
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractIndexerVisitor.class);
+	public static final Logger log = LogManager.getLogger(AbstractIndexerVisitor.class);
 	private final CollectionAO collectionAO;
 	private final DataObjectAO dataObjectAO;
 	/**

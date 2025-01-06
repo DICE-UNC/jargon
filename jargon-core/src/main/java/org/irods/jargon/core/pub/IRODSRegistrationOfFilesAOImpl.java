@@ -16,8 +16,8 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access Object that manages the registration of files, as managed by the iRODS
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements IRODSRegistrationOfFilesAO {
 
-	static Logger log = LoggerFactory.getLogger(IRODSRegistrationOfFilesAOImpl.class);
+	static Logger log = LogManager.getLogger(IRODSRegistrationOfFilesAOImpl.class);
 
 	/**
 	 * @param irodsSession

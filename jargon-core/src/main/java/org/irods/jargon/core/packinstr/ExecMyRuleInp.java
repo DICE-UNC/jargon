@@ -10,8 +10,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Immutable object gives translation of an ExecMyRuleInp operation into XML
@@ -54,7 +54,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	private final String zone;
 	private boolean listAvailableRuleEnginesMode = false;
 
-	private static final Logger log = LoggerFactory.getLogger(ExecMyRuleInp.class);
+	private static final Logger log = LogManager.getLogger(ExecMyRuleInp.class);
 
 	/**
 	 * Create an instance of this packing instruction.

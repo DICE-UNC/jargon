@@ -15,8 +15,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to provide a secure data cache. This allows information to be
@@ -37,7 +37,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl implement
 	 */
 	CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
 
-	public static final Logger log = LoggerFactory.getLogger(DataCacheServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(DataCacheServiceImpl.class);
 
 	/**
 	 * Constructor with required dependencies

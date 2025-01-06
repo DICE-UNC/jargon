@@ -10,8 +10,8 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author mconway
@@ -24,7 +24,7 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 	 */
 	private JargonConnectionCache jargonConnectionCache;
 
-	private Logger log = LoggerFactory.getLogger(CachedIrodsProtocolManager.class);
+	private Logger log = LogManager.getLogger(CachedIrodsProtocolManager.class);
 
 	/**
 	 *

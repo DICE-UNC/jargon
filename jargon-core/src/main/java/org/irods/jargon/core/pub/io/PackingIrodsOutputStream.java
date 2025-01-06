@@ -7,8 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A stream that presents the normal api, but accumulates bytes written until at
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PackingIrodsOutputStream extends OutputStream {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LogManager.getLogger(this.getClass());
 
 	private int byteBufferSizeMax;
 	private ByteArrayOutputStream byteArrayOutputStream = null;

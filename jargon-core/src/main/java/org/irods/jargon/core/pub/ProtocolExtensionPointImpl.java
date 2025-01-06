@@ -6,8 +6,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This access object exposes a direct connection to iRODS such that protocol
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ProtocolExtensionPointImpl extends IRODSGenericAO implements ProtocolExtensionPoint {
 
-	private static Logger log = LoggerFactory.getLogger(ProtocolExtensionPointImpl.class);
+	private static Logger log = LogManager.getLogger(ProtocolExtensionPointImpl.class);
 
 	protected ProtocolExtensionPointImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {

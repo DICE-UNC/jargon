@@ -23,8 +23,8 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This abstract class handles common collection and data object functionality.
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 	protected final transient IRODSGenQueryExecutor irodsGenQueryExecutor;
-	public static final Logger log = LoggerFactory.getLogger(AbstractAuditAOImpl.class);
+	public static final Logger log = LogManager.getLogger(AbstractAuditAOImpl.class);
 
 	/**
 	 * Default constructor as invoked by {@link IRODSAccessObjectFactory}

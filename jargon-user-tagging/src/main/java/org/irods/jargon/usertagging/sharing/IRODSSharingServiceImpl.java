@@ -35,8 +35,8 @@ import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSSharedFileOrCollection;
 import org.irods.jargon.usertagging.domain.ShareUser;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A service to share Collections and Data Objects
@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService implements IRODSSharingService {
 
-	public static final Logger log = LoggerFactory.getLogger(IRODSSharingServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(IRODSSharingServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

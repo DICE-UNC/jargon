@@ -12,8 +12,8 @@ import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.irods.jargon.datautils.datacache.CacheServiceConfiguration;
 import org.irods.jargon.datautils.datacache.DataCacheService;
 import org.irods.jargon.datautils.datacache.DataCacheServiceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service for general shopping cart handling, including capability to cache the
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl implements ShoppingCartService {
 
-	public static final Logger log = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(ShoppingCartServiceImpl.class);
 
 	/**
 	 * Factory for {@code DataCacheService} creation, must be set via constructor or

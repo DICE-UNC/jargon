@@ -21,8 +21,8 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.protovalues.RequestTypes;
 import org.irods.jargon.core.pub.PluggableApiCallResult;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Encapsulates sending of messages and parsing of responses above the socket
@@ -80,7 +80,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSMidLevelProtocol {
 
-	Logger log = LoggerFactory.getLogger(IRODSMidLevelProtocol.class);
+	Logger log = LogManager.getLogger(IRODSMidLevelProtocol.class);
 
 	private AbstractConnection irodsConnection;
 	private AbstractConnection irodsConnectionNonEncryptedRef = null;

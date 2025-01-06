@@ -5,8 +5,8 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.StructFileExtAndRegInp;
 import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Object to handle bundled file operations. This object contains functionality
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BulkFileOperationsAOImpl extends IRODSGenericAO implements BulkFileOperationsAO {
 
-	public static final Logger log = LoggerFactory.getLogger(BulkFileOperationsAOImpl.class);
+	public static final Logger log = LogManager.getLogger(BulkFileOperationsAOImpl.class);
 
 	/**
 	 * Get the extension typically associated with a bundle type

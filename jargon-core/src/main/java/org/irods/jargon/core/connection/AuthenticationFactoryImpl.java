@@ -2,8 +2,8 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.connection.auth.AuthUnavailableException;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * An implementation of a factory that can create an implementation of
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AuthenticationFactoryImpl implements AuthenticationFactory {
 
-	private Logger log = LoggerFactory.getLogger(AuthenticationFactoryImpl.class);
+	private Logger log = LogManager.getLogger(AuthenticationFactoryImpl.class);
 
 	@Override
 	public AuthMechanism instanceAuthMechanism(final IRODSAccount irodsAccount)

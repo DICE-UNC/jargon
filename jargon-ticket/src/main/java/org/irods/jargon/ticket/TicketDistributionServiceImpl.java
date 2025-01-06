@@ -9,8 +9,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.utils.IRODSUriUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to assist in the distribution of tickets. This is meant to provide
@@ -32,7 +32,7 @@ public class TicketDistributionServiceImpl extends AbstractTicketService impleme
 	private final TicketServiceFactory ticketServiceFactory;
 	private final TicketDistributionContext ticketDistributionContext;
 
-	public static final Logger log = LoggerFactory.getLogger(TicketDistributionServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(TicketDistributionServiceImpl.class);
 
 	/**
 	 * Default constructor takes the objects necessary to communicate with iRODS via

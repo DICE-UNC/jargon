@@ -35,8 +35,8 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.pluggable.ReplicaClose;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -57,7 +57,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 
 public class IRODSFileImpl extends File implements IRODSFile {
-	static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
+	static Logger log = LogManager.getLogger(IRODSFileImpl.class);
 
 	private IRODSFileSystemAO irodsFileSystemAO = null;
 

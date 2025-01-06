@@ -19,8 +19,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileReader;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to sample a given file for previews, file format recogntion, and the
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl implements FileSamplerService {
 
-	public static final Logger log = LoggerFactory.getLogger(FileSamplerServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(FileSamplerServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

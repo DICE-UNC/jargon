@@ -9,8 +9,8 @@ import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AuditedAction;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Represents audit trail capabilities for collections
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollectionAuditAOImpl extends AbstractAuditAOImpl implements CollectionAuditAO {
 
-	public static final Logger log = LoggerFactory.getLogger(CollectionAuditAOImpl.class);
+	public static final Logger log = LogManager.getLogger(CollectionAuditAOImpl.class);
 	public static final char COMMA = ',';
 
 	/**

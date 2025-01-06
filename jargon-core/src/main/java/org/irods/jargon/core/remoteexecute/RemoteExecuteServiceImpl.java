@@ -14,8 +14,8 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStream;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service for running remote commands (scripts) on iRODS. This is equivalent to
@@ -39,7 +39,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	public static final String STREAMING_API_CUTOFF = "rods4.1";
 	private PathHandlingMode pathHandlingMode = PathHandlingMode.NONE;
 
-	private static final Logger log = LoggerFactory.getLogger(RemoteExecuteServiceImpl.class);
+	private static final Logger log = LogManager.getLogger(RemoteExecuteServiceImpl.class);
 	private static final String STATUS = "status";
 
 	@Override

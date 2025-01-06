@@ -9,8 +9,8 @@ import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Translates an iRODS user defined rule in plain text form into an
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	Logger log = LogManager.getLogger(this.getClass());
 
 	/**
 	 * Default constructor with required dependencies

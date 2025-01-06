@@ -54,8 +54,8 @@ import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.core.utils.RuleUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object handles various operations for an IRODS Collection.
@@ -76,7 +76,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	private final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(getIRODSSession(), getIRODSAccount());
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(getIRODSSession(),
 			getIRODSAccount());
-	public static final Logger log = LoggerFactory.getLogger(CollectionAOImpl.class);
+	public static final Logger log = LogManager.getLogger(CollectionAOImpl.class);
 
 	/**
 	 * Default constructor

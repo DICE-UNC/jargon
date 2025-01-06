@@ -5,8 +5,8 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory for creating the {@code AbstractIRODSMidLevelProtocol} object that
@@ -28,7 +28,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	private final IRODSConnectionFactory irodsConnectionFactory;
 	private final AuthenticationFactory authenticationFactory;
 
-	Logger log = LoggerFactory.getLogger(AbstractIRODSMidLevelProtocolFactory.class);
+	Logger log = LogManager.getLogger(AbstractIRODSMidLevelProtocolFactory.class);
 
 	/**
 	 * Create the factory that will produced connected 'mid level protocol

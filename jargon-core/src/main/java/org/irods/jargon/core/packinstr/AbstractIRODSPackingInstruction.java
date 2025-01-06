@@ -6,8 +6,8 @@ package org.irods.jargon.core.packinstr;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Generic representation of a packing instruction for the IRODS XML Protocol
@@ -32,7 +32,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public static final String INX = "inx";
 	private int apiNumber = 0;
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LogManager.getLogger(this.getClass());
 
 	public AbstractIRODSPackingInstruction() {
 	}
