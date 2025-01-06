@@ -26,8 +26,8 @@ import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IrodsRuleEngineRuleTranslator;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.service.AbstractJargonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service implementation to support composition of rules
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RuleCompositionServiceImpl extends AbstractJargonService implements RuleCompositionService {
 
-	public static final Logger log = LoggerFactory.getLogger(RuleCompositionServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(RuleCompositionServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)

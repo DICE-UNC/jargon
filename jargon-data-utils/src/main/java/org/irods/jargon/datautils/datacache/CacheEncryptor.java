@@ -13,12 +13,12 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CacheEncryptor {
 
-	private static final Logger log = LoggerFactory.getLogger(CacheEncryptor.class);
+	private static final Logger log = LogManager.getLogger(CacheEncryptor.class);
 
 	Cipher ecipher;
 	Cipher dcipher;

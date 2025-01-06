@@ -20,8 +20,8 @@ import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.utils.IRODSUriUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 //import org.perf4j.StopWatch;
 //import org.perf4j.slf4j.Slf4JStopWatch;
 
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public final class IRODSFileFactoryImpl extends IRODSGenericAO implements IRODSFileFactory {
 
 	public static final String PATH_SEPARATOR = "/";
-	static Logger log = LoggerFactory.getLogger(IRODSFileFactoryImpl.class);
+	static Logger log = LogManager.getLogger(IRODSFileFactoryImpl.class);
 
 	public IRODSFileFactoryImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {

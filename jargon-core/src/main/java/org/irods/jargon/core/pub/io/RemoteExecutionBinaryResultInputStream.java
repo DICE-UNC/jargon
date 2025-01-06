@@ -11,8 +11,8 @@ import org.irods.jargon.core.packinstr.ExecCmdStreamClose419;
 import org.irods.jargon.core.packinstr.FileReadInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Special subclass of {@code InputStream} meant to encapsulate binary data
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
-	public static final Logger log = LoggerFactory.getLogger(RemoteExecutionBinaryResultInputStream.class);
+	public static final Logger log = LogManager.getLogger(RemoteExecutionBinaryResultInputStream.class);
 
 	private final IRODSMidLevelProtocol irodsCommands;
 	private final int fileDescriptor;

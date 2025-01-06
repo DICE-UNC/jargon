@@ -6,6 +6,8 @@ package org.irods.jargon.core.checksum;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -15,8 +17,6 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Various methods to compute and determine checksums
@@ -33,7 +33,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 	private final IRODSAccount irodsAccount;
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 
-	public static final Logger log = LoggerFactory.getLogger(ChecksumManagerImpl.class);
+	public static final Logger log = LogManager.getLogger(ChecksumManagerImpl.class);
 
 	/**
 	 * @param irodsAccount

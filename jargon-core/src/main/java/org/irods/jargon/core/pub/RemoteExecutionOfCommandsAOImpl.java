@@ -10,8 +10,8 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.core.remoteexecute.RemoteExecutionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object implementation to remotely execute scripts and commands on
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements RemoteExecutionOfCommandsAO {
 
-	private static final Logger log = LoggerFactory.getLogger(RemoteExecutionOfCommandsAOImpl.class);
+	private static final Logger log = LogManager.getLogger(RemoteExecutionOfCommandsAOImpl.class);
 
 	/**
 	 * @param irodsSession

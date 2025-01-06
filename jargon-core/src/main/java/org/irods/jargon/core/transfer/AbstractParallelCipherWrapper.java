@@ -12,8 +12,8 @@ import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Wrapper for an implementation that can encrypt/decrypt bytes in a parallel
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 abstract class AbstractParallelCipherWrapper {
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractParallelCipherWrapper.class);
+	public static final Logger log = LogManager.getLogger(AbstractParallelCipherWrapper.class);
 
 	/**
 	 * @param pipelineConfiguration

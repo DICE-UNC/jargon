@@ -13,8 +13,8 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utility methods for processing various query operations for Jargon Access
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AccessObjectQueryProcessingUtils {
-	private static Logger log = LoggerFactory.getLogger(AccessObjectQueryProcessingUtils.class);
+	private static Logger log = LogManager.getLogger(AccessObjectQueryProcessingUtils.class);
 
 	/**
 	 * @param resultSet

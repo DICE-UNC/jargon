@@ -9,8 +9,8 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Special variant of the {@link IRODSProtocolManager} that caches a temporary
@@ -28,7 +28,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	private GenericObjectPool<IRODSMidLevelProtocol> objectPool = null;
 
-	private final Logger log = LoggerFactory.getLogger(TempPasswordCachingProtocolManager.class);
+	private final Logger log = LogManager.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
 	 *

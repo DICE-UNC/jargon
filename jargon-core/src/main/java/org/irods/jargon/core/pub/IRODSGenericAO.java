@@ -14,8 +14,8 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * General base class for objects that interact with IRODS through a connection.
@@ -30,7 +30,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	private final boolean instrumented;
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
-	private static final Logger log = LoggerFactory.getLogger(IRODSGenericAO.class);
+	private static final Logger log = LogManager.getLogger(IRODSGenericAO.class);
 
 	/**
 	 * Constructor that initializes the access object with a pointer to the

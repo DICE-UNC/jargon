@@ -7,8 +7,8 @@ import java.net.Socket;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.Host;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract superclasss for a parallel file transfer operation
@@ -32,7 +32,7 @@ public class AbstractParallelTransferThread {
 	 */
 	private final int threadNumber;
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractParallelTransferThread.class);
+	public static final Logger log = LogManager.getLogger(AbstractParallelTransferThread.class);
 
 	protected AbstractParallelTransferThread(final int threadNumber) {
 		super();

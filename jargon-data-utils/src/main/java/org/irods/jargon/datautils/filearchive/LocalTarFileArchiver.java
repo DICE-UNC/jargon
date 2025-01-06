@@ -17,8 +17,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Archiver that will tar a given local collection
@@ -31,7 +31,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	private File tarArchiveFile = null;
 	private TarArchiveOutputStream tarArchiveOutputStream = null;
 
-	public static final Logger log = LoggerFactory.getLogger(LocalTarFileArchiver.class);
+	public static final Logger log = LogManager.getLogger(LocalTarFileArchiver.class);
 
 	/**
 	 * @param sourceFileAbsolutePath

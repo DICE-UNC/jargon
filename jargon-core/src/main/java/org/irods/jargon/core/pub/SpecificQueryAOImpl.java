@@ -21,13 +21,13 @@ import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.core.utils.Overheaded;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SpecificQueryAOImpl extends IRODSGenericAO implements SpecificQueryAO {
 
 	private static final String EXECUTING_SQUERY_PI = "executing specific query PI";
-	public static final Logger log = LoggerFactory.getLogger(SpecificQueryAOImpl.class);
+	public static final Logger log = LogManager.getLogger(SpecificQueryAOImpl.class);
 
 	protected SpecificQueryAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws SpecificQueryException, JargonException {

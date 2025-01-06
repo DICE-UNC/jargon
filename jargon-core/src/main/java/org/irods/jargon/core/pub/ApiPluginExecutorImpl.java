@@ -7,8 +7,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.IRodsPI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author conwaymc
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 class ApiPluginExecutorImpl extends IRODSGenericAO implements ApiPluginExecutor {
 
-	private static Logger log = LoggerFactory.getLogger(ApiPluginExecutorImpl.class);
+	private static Logger log = LogManager.getLogger(ApiPluginExecutorImpl.class);
 
 	/**
 	 * @param irodsSession

@@ -10,8 +10,8 @@ import java.io.Reader;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * iRODS-specific implementation of the {@code java.io.Reader}.
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class IRODSFileReader extends Reader {
 
 	private final transient IRODSFileInputStream irodsFileInputStream;
-	public static Logger log = LoggerFactory.getLogger(IRODSFileReader.class);
+	public static Logger log = LogManager.getLogger(IRODSFileReader.class);
 	private final String connectionEncoding;
 
 	/**

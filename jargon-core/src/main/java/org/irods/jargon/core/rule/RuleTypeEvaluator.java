@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Tool to look at the contents of a rule and guess the language
@@ -22,7 +22,7 @@ public class RuleTypeEvaluator {
 	private final Pattern irodsRulePattern2;
 
 	private final Pattern pythonRulePattern;
-	private static final Logger log = LoggerFactory.getLogger(RuleTypeEvaluator.class);
+	private static final Logger log = LogManager.getLogger(RuleTypeEvaluator.class);
 
 	/**
 	 * annotation that can be added in a comment that can have a value of IRODS |

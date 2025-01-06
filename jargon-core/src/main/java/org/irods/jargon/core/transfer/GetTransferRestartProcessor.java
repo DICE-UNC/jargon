@@ -18,8 +18,8 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.pub.io.IRODSRandomAccessFile;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handle a restart of a get operation
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GetTransferRestartProcessor extends AbstractTransferRestartProcessor {
 
-	private static Logger log = LoggerFactory.getLogger(GetTransferRestartProcessor.class);
+	private static Logger log = LogManager.getLogger(GetTransferRestartProcessor.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

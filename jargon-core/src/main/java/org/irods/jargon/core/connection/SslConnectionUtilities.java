@@ -21,8 +21,8 @@ import javax.net.ssl.TrustManager;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.SSLStartInp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utilities to generate SSL connections for PAM and for general TLS support
@@ -35,7 +35,7 @@ class SslConnectionUtilities {
 	@SuppressWarnings("unused")
 	private final IRODSSession irodsSession;
 
-	private Logger log = LoggerFactory.getLogger(SslConnectionUtilities.class);
+	private Logger log = LogManager.getLogger(SslConnectionUtilities.class);
 
 	SslConnectionUtilities(final IRODSSession irodsSession) {
 		super();

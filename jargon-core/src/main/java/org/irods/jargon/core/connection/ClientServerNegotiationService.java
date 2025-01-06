@@ -15,8 +15,8 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.transfer.encrypt.AESKeyGenerator;
 import org.irods.jargon.core.transfer.encrypt.AbstractKeyGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Captures the client/server negotiation process in the client given a
@@ -29,7 +29,7 @@ class ClientServerNegotiationService {
 
 	private final IRODSMidLevelProtocol irodsMidLevelProtocol;
 
-	private Logger log = LoggerFactory.getLogger(ClientServerNegotiationService.class);
+	private Logger log = LogManager.getLogger(ClientServerNegotiationService.class);
 	public static final String NEGOTIATION_SHARED_SECRET = "SHARED_SECRET";
 
 	/*

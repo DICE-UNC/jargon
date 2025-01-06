@@ -19,8 +19,8 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.rule.UserRuleDefinition.RuleAproposTo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utilities to manage user defined rules in iRODS via a convention for a user
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UserRuleServiceImpl extends AbstractJargonService implements UserRuleService {
 
-	public static final Logger log = LoggerFactory.getLogger(UserRuleServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(UserRuleServiceImpl.class);
 
 	private static final String USER_RULE_UNIT = "iRODSUserTagging:UserRule";
 

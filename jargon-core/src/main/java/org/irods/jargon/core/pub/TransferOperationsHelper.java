@@ -15,8 +15,8 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener.FileStatusCallbackResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 final class TransferOperationsHelper {
 
-	static Logger log = LoggerFactory.getLogger(TransferOperationsHelper.class);
+	static Logger log = LogManager.getLogger(TransferOperationsHelper.class);
 	private final DataObjectAOImpl dataObjectAO;
 	private final CollectionAO collectionAO;
 

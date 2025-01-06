@@ -31,8 +31,8 @@ import org.irods.jargon.mdquery.MetadataQuery.QueryType;
 import org.irods.jargon.mdquery.MetadataQueryElement;
 import org.irods.jargon.mdquery.exception.MetadataQueryException;
 import org.irods.jargon.mdquery.serialization.MetadataQueryJsonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implementation of a service to generate metadata queries on iRODS. These are
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MetadataQueryServiceImpl extends AbstractJargonService implements MetadataQueryService {
 
-	static Logger log = LoggerFactory.getLogger(MetadataQueryServiceImpl.class);
+	static Logger log = LogManager.getLogger(MetadataQueryServiceImpl.class);
 
 	/**
 	 * Constructor takes dependencies

@@ -23,8 +23,8 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileOutputStream;
 import org.irods.jargon.core.utils.ChannelTools;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Helpful object for stream to stream copies, also handles byte arrays (as
@@ -41,7 +41,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2Stream
 	// private final int bufferSize = this.getJargonProperties().get
 	private static final int bufferSize = 32 * 1024; // FIXME: temp code
 
-	public static final Logger log = LoggerFactory.getLogger(Stream2StreamAOImpl.class);
+	public static final Logger log = LogManager.getLogger(Stream2StreamAOImpl.class);
 
 	public Stream2StreamAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {

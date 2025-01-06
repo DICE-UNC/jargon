@@ -12,8 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.ReplicaTokenLockException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author conwaymc
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReplicaTokenCacheManager {
 
-	static Logger log = LoggerFactory.getLogger(ReplicaTokenCacheManager.class);
+	static Logger log = LogManager.getLogger(ReplicaTokenCacheManager.class);
 
 	private Map<String, ReferenceCountedLockMap> replicaTokenLockCache = new ConcurrentHashMap<>();
 	private Map<ReplicaTokenCacheKey, ReplicaTokenCacheEntry> replicaTokenCache = new ConcurrentHashMap<>();

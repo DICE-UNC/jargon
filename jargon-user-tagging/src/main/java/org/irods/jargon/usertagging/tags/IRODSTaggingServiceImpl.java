@@ -24,8 +24,8 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service for processing IRODS free tags. This method provides services on top
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService implements IRODSTaggingService {
 
-	public static final Logger log = LoggerFactory.getLogger(IRODSTaggingServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(IRODSTaggingServiceImpl.class);
 
 	/**
 	 * Static initializer used to create instances of the service.

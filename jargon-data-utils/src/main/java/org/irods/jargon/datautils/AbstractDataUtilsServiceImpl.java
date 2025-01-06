@@ -3,12 +3,12 @@ package org.irods.jargon.datautils;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractDataUtilsServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(AbstractDataUtilsServiceImpl.class);
 	/**
 	 * Factory to create necessary Jargon access objects, which interact with the
 	 * iRODS server

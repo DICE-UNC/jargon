@@ -9,8 +9,8 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * IRODS-specific implementation of {@code java.io.FileOutputStream}
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileOutputStream extends OutputStream {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LogManager.getLogger(this.getClass());
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;

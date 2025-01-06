@@ -24,8 +24,8 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.irods.jargon.datautils.tree.FileOrDirFilter.FilterFor;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utility to create a diff between two file trees. These trees may be either
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl implements FileTreeDiffUtility {
 
-	private static Logger log = LoggerFactory.getLogger(FileTreeDiffUtilityImpl.class);
+	private static Logger log = LogManager.getLogger(FileTreeDiffUtilityImpl.class);
 
 	private DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO;
 

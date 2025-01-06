@@ -19,8 +19,8 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.datautils.metadatamanifest.MetadataManifest.FailureMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class MetadataManifestProcessorImpl extends AbstractJargonService implements MetadataManifestProcessor {
 
-	public static final Logger log = LoggerFactory.getLogger(MetadataManifestProcessorImpl.class);
+	public static final Logger log = LogManager.getLogger(MetadataManifestProcessorImpl.class);
 
 	/*
 	 * (non-Javadoc)

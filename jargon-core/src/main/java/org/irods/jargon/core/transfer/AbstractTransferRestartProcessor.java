@@ -11,8 +11,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.service.AbstractJargonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Mike Conway - (DICE) Restart processor abstract superclass. This
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractTransferRestartProcessor extends AbstractJargonService {
 
 	private final AbstractRestartManager restartManager;
-	private static Logger log = LoggerFactory.getLogger(AbstractTransferRestartProcessor.class);
+	private static Logger log = LogManager.getLogger(AbstractTransferRestartProcessor.class);
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private final TransferControlBlock transferControlBlock;
 

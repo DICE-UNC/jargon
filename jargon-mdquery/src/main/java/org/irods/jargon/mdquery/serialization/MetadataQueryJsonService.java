@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.irods.jargon.mdquery.MetadataQuery;
 import org.irods.jargon.mdquery.exception.MetadataQueryException;
 import org.irods.jargon.mdquery.exception.MetadataQueryRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class MetadataQueryJsonService {
 
-	public static final Logger log = LoggerFactory.getLogger(MetadataQueryJsonService.class);
+	public static final Logger log = LogManager.getLogger(MetadataQueryJsonService.class);
 
 	private final ObjectMapper objectMapper;
 

@@ -5,12 +5,12 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.ticket.packinstr.TicketInp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TicketClientSupport {
 
-	public static final Logger log = LoggerFactory.getLogger(TicketClientSupport.class);
+	public static final Logger log = LogManager.getLogger(TicketClientSupport.class);
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;

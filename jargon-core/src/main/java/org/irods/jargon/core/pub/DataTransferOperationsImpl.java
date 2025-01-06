@@ -23,8 +23,8 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This object centralizes data transfer operations for iRODS, and provides
@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DataTransferOperationsImpl extends IRODSGenericAO implements DataTransferOperations {
 
-	private static Logger log = LoggerFactory.getLogger(DataTransferOperationsImpl.class);
+	private static Logger log = LogManager.getLogger(DataTransferOperationsImpl.class);
 	private TransferOperationsHelper transferOperationsHelper = null;
 
 	private DataObjectAO dataObjectAO = null;

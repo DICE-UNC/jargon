@@ -36,8 +36,8 @@ import org.irods.jargon.core.exception.UnixFileMkdirException;
 import org.irods.jargon.core.exception.UnixFileRenameException;
 import org.irods.jargon.core.exception.ZoneUnavailableException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This object is interposed in the process of interpreting the iRODS responses
@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSErrorScanner {
 
-	public static final Logger log = LoggerFactory.getLogger(IRODSErrorScanner.class);
+	public static final Logger log = LogManager.getLogger(IRODSErrorScanner.class);
 
 	/**
 	 * Scan the response for errors, and incorporate any message information that

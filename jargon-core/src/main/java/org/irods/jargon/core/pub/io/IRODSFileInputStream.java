@@ -7,8 +7,8 @@ import java.io.InputStream;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * IRODS specific implementation of the {@code java.io.FileInputStream}. This
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileInputStream extends InputStream {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LogManager.getLogger(this.getClass());
 
 	private transient final IRODSFile irodsFile;
 	private transient final FileIOOperations fileIOOperations;

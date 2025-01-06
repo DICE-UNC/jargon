@@ -7,11 +7,11 @@ import java.io.FileNotFoundException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Compute an MD5 checksum on a local file
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MD5LocalChecksumComputerStrategy extends AbstractChecksumComputeStrategy {
 
-	public static final Logger log = LoggerFactory.getLogger(MD5LocalChecksumComputerStrategy.class);
+	public static final Logger log = LogManager.getLogger(MD5LocalChecksumComputerStrategy.class);
 
 	/*
 	 * (non-Javadoc)

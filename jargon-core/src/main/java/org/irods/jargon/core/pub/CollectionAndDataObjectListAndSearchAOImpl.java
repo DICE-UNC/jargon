@@ -36,8 +36,8 @@ import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.core.utils.Overheaded;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This access object contains methods that can assist in searching across
@@ -61,7 +61,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		implements CollectionAndDataObjectListAndSearchAO {
 
 	private SpecificQueryAO specificQueryAO;
-	public static final Logger log = LoggerFactory.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
+	public static final Logger log = LogManager.getLogger(CollectionAndDataObjectListAndSearchAOImpl.class);
 	private final CollectionListingUtils collectionListingUtils;
 
 	protected CollectionAndDataObjectListAndSearchAOImpl(final IRODSSession irodsSession,

@@ -51,8 +51,8 @@ import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.TagHandlingUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,7 +79,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	public static final String SVALUE = "svalue";
 	public static final String COMMA = ",";
 
-	private static final Logger log = LoggerFactory.getLogger(RuleProcessingAOImpl.class);
+	private static final Logger log = LogManager.getLogger(RuleProcessingAOImpl.class);
 
 	public static final String CL_PUT_ACTION = "CL_PUT_ACTION";
 	public static final String CL_GET_ACTION = "CL_GET_ACTION";

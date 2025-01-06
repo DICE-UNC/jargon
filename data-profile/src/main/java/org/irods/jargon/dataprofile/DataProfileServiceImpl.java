@@ -23,8 +23,8 @@ import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service that will gather data associated with a Data Object or Collection
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DataProfileServiceImpl extends AbstractJargonService implements DataProfileService {
 
-	public static final Logger log = LoggerFactory.getLogger(DataProfileServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(DataProfileServiceImpl.class);
 
 	private final DataTypeResolutionService dataTypeResolutionService;
 

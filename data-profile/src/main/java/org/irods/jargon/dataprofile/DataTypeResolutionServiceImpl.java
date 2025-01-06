@@ -19,8 +19,8 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to identify the data type of an iRODS file based on a series of
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class DataTypeResolutionServiceImpl extends AbstractJargonService implements DataTypeResolutionService {
 
 	public static final String APPLICATION_IRODS_RULE = "application/irods-rule";
-	public static final Logger log = LoggerFactory.getLogger(DataTypeResolutionServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(DataTypeResolutionServiceImpl.class);
 
 	@Override
 	public String resolveDataTypeWithProvidedAvuAndDataObject(final DataObject dataObject,

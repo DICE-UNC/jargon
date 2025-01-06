@@ -9,8 +9,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.service.AbstractJargonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service to run a crawl given a visitor and configuration. This is an example
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HierVisitorCrawlerServiceImpl extends AbstractJargonService {
 
-	public static final Logger log = LoggerFactory.getLogger(HierVisitorCrawlerServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(HierVisitorCrawlerServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

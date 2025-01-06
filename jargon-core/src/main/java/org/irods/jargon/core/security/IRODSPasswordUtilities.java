@@ -11,8 +11,8 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utilities for dealing with iRODS password (obfuscation, etc).
@@ -31,7 +31,7 @@ public class IRODSPasswordUtilities {
 	public static final String RAND_STRING_V2 = "A.ObfV2";
 	public static final int MAX_PWD_LENGTH = 50;
 
-	static final Logger log = LoggerFactory.getLogger(IRODSPasswordUtilities.class);
+	static final Logger log = LogManager.getLogger(IRODSPasswordUtilities.class);
 
 	static {
 

@@ -10,8 +10,8 @@ import java.util.Iterator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Superclass for a utility to create an archive from a directory (recursively)
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractArchiver {
 
-	public static final Logger log = LoggerFactory.getLogger(AbstractArchiver.class);
+	public static final Logger log = LogManager.getLogger(AbstractArchiver.class);
 
 	private final String sourceFileAbsolutePath;
 	private final String targetFileAbsolutePath;

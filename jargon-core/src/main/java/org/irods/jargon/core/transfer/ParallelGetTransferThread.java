@@ -18,8 +18,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.transfer.encrypt.ParallelDecryptionCipherWrapper;
 import org.irods.jargon.core.utils.Host;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handle parallel file transfer get operation within Jargon. See
@@ -39,7 +39,7 @@ public final class ParallelGetTransferThread extends AbstractParallelTransferThr
 	 */
 	private ParallelDecryptionCipherWrapper parallelDecryptionCipherWrapper;
 
-	public static final Logger log = LoggerFactory.getLogger(ParallelGetTransferThread.class);
+	public static final Logger log = LogManager.getLogger(ParallelGetTransferThread.class);
 
 	/**
 	 * Represents a thread used in a parallel file transfer. There will be multiple

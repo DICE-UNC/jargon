@@ -24,8 +24,8 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.zipservice.api.exception.ZipServiceConfigurationException;
 import org.irods.jargon.zipservice.api.exception.ZipServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract service to handle zipping and transferring a set of iRODS paths as
@@ -39,7 +39,7 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 	private ZipServiceConfiguration zipServiceConfiguration = null;
 	private final Random random;
 
-	public static final Logger log = LoggerFactory.getLogger(JargonZipServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(JargonZipServiceImpl.class);
 
 	public JargonZipServiceImpl() {
 		super();

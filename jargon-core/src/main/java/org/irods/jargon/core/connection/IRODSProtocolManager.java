@@ -2,8 +2,8 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class IRODSProtocolManager {
 
@@ -21,7 +21,7 @@ public abstract class IRODSProtocolManager {
 
 	private AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory;
 
-	private Logger log = LoggerFactory.getLogger(IRODSProtocolManager.class);
+	private Logger log = LogManager.getLogger(IRODSProtocolManager.class);
 
 	/**
 	 * Get the factory object that will create various authentication methods on

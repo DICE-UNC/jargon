@@ -18,8 +18,8 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.LocalFileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Archiver that will tar a given local collection
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalFileGzipCompressor {
 
-	public static final Logger log = LoggerFactory.getLogger(LocalFileGzipCompressor.class);
+	public static final Logger log = LogManager.getLogger(LocalFileGzipCompressor.class);
 
 	/**
 	 *

@@ -42,8 +42,8 @@ import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.MemoryBasedTransferRestartManager;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -123,7 +123,7 @@ public class IRODSSession {
 	 */
 	private ExecutorService parallelTransferThreadPool = null;
 	private IRODSProtocolManager irodsProtocolManager;
-	private static final Logger log = LoggerFactory.getLogger(IRODSSession.class);
+	private static final Logger log = LogManager.getLogger(IRODSSession.class);
 
 	/**
 	 * Trust manager (which can have a custom manager injected) for SSL

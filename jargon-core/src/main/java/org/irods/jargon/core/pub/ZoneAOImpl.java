@@ -22,8 +22,8 @@ import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access to CRUD and query operations on IRODS Zone.
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
-	private static final Logger log = LoggerFactory.getLogger(ZoneAOImpl.class);
+	private static final Logger log = LogManager.getLogger(ZoneAOImpl.class);
 
 	protected ZoneAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);

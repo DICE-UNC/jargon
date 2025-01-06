@@ -18,8 +18,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object representing the file catalog in iRODS. This object is the
@@ -33,7 +33,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 
 	protected transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
-	public static final Logger log = LoggerFactory.getLogger(FileCatalogObjectAOImpl.class);
+	public static final Logger log = LogManager.getLogger(FileCatalogObjectAOImpl.class);
 	public static final String STR_PI = "STR_PI";
 	public static final String MY_STR = "myStr";
 	/**

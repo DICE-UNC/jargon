@@ -7,8 +7,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Helpful utils for working with iRODS authentication in BasicAuthentication
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RestAuthUtils {
 
-	private static Logger log = LoggerFactory.getLogger(RestAuthUtils.class);
+	private static Logger log = LogManager.getLogger(RestAuthUtils.class);
 
 	/**
 	 * Given an {@link IRODSAccount} get the basic auth token value

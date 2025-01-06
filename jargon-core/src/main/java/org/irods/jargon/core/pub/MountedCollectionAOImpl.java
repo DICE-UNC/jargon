@@ -17,8 +17,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.Overheaded;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Manages soft links and mounted collections in iRODS. This access object can
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MountedCollectionAOImpl extends IRODSGenericAO implements MountedCollectionAO {
 
-	public static final Logger log = LoggerFactory.getLogger(MountedCollectionAOImpl.class);
+	public static final Logger log = LogManager.getLogger(MountedCollectionAOImpl.class);
 
 	/**
 	 * Default constructor to be called by the {@link IRODSAccessObjectFactory}

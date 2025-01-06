@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.core.rule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utilities for parsing rules for processing by Jargon.
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 class RuleParsingUtils {
 
-	private static Logger log = LoggerFactory.getLogger(RuleParsingUtils.class);
+	private static Logger log = LogManager.getLogger(RuleParsingUtils.class);
 
 	/**
 	 * Private constructor

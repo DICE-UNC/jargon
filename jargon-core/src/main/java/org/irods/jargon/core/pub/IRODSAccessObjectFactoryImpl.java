@@ -12,8 +12,8 @@ import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory to produce IRODS access objects. This is the key object which can be
@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFactory {
 
-	private static final Logger log = LoggerFactory.getLogger(IRODSAccessObjectFactoryImpl.class);
+	private static final Logger log = LogManager.getLogger(IRODSAccessObjectFactoryImpl.class);
 
 	private IRODSSession irodsSession;
 

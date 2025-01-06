@@ -9,8 +9,8 @@ import java.util.List;
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions.PutOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
@@ -78,7 +78,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	private boolean initialPutGetCall = true;
 
-	private static Logger log = LoggerFactory.getLogger(DataObjInp.class);
+	private static Logger log = LogManager.getLogger(DataObjInp.class);
 
 	public static final int DEFAULT_CREATE_MODE = 33188;
 	public static final int EXEC_CREATE_MODE = 33261;

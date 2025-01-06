@@ -17,8 +17,8 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implementation of trash operations
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperationsAO {
 
-	public static final Logger log = LoggerFactory.getLogger(TrashOperationsAOImpl.class);
+	public static final Logger log = LogManager.getLogger(TrashOperationsAOImpl.class);
 
 	/**
 	 * @param irodsSession {@link IRODSSession}

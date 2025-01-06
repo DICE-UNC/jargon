@@ -4,8 +4,8 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implementation of a connection factory for producing the default TCP/IP
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 
-	private static final Logger log = LoggerFactory.getLogger(IRODSTCPConnectionFactoryImpl.class);
+	private static final Logger log = LogManager.getLogger(IRODSTCPConnectionFactoryImpl.class);
 
 	@Override
 	protected AbstractConnection instance(final IRODSAccount irodsAccount, final IRODSSession irodsSession,

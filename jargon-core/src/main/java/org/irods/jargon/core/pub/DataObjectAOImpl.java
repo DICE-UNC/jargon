@@ -89,8 +89,8 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.core.utils.Overheaded;
 import org.irods.jargon.core.utils.RuleUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access Object provides 'DAO' operations on IRODS Data Objects (files).
@@ -113,7 +113,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	private static final String ERROR_IN_PARALLEL_TRANSFER = "error in parallel transfer";
 	private static final String NULL_LOCAL_FILE = "null local file";
 	private static final String NULL_OR_EMPTY_ABSOLUTE_PATH = "null or empty absolutePath";
-	public static final Logger log = LoggerFactory.getLogger(DataObjectAOImpl.class);
+	public static final Logger log = LogManager.getLogger(DataObjectAOImpl.class);
 	private transient final DataAOHelper dataAOHelper = new DataAOHelper(getIRODSAccessObjectFactory(),
 			getIRODSAccount());
 	private transient final IRODSGenQueryExecutor irodsGenQueryExecutor;

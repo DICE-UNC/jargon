@@ -7,8 +7,8 @@ import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Connection cache keeps a pool of managed iRODS connections
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JargonConnectionCache extends GenericKeyedObjectPool<IRODSAccount, IRODSMidLevelProtocol> {
 
-	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
+	public static final Logger log = LogManager.getLogger(JargonPooledObjectFactory.class);
 
 	public JargonConnectionCache(final KeyedPooledObjectFactory<IRODSAccount, IRODSMidLevelProtocol> factory,
 			final JargonKeyedPoolConfig config) {

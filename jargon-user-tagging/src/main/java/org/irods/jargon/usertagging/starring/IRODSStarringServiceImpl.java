@@ -28,8 +28,8 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A service to star or favorite files or folders
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implements IRODSStarringService {
 
-	public static final Logger log = LoggerFactory.getLogger(IRODSStarringServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(IRODSStarringServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory

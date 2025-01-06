@@ -18,8 +18,8 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.IRODSSimpleQueryResultSet;
 import org.irods.jargon.core.query.SimpleQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Access object to execute queries using the iRODS Simple Query facility. This
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements SimpleQueryExecutorAO {
 
-	private static final Logger log = LoggerFactory.getLogger(SimpleQueryExecutorAOImpl.class);
+	private static final Logger log = LogManager.getLogger(SimpleQueryExecutorAOImpl.class);
 
 	public static final String OUT_BUF = "outBuf";
 

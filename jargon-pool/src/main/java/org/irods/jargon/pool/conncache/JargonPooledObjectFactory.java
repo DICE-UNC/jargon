@@ -8,8 +8,8 @@ import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory for pooled iRODS connections. Note that the key of the pool is the
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JargonPooledObjectFactory extends BaseKeyedPooledObjectFactory<IRODSAccount, IRODSMidLevelProtocol> {
 
-	public static final Logger log = LoggerFactory.getLogger(JargonPooledObjectFactory.class);
+	public static final Logger log = LogManager.getLogger(JargonPooledObjectFactory.class);
 
 	/**
 	 * Expected injected dependency {@link IRODSSimpleProtocolManager} that will be

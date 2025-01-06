@@ -36,8 +36,8 @@ import org.irods.jargon.ticket.packinstr.TicketCreateModeEnum;
 import org.irods.jargon.ticket.packinstr.TicketInp;
 import org.irods.jargon.ticket.packinstr.TicketModifyAddOrRemoveTypeEnum;
 import org.irods.jargon.ticket.utils.TicketRandomString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class TicketAdminServiceImpl extends AbstractTicketService implements TicketAdminService {
 
@@ -46,7 +46,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService implemen
 	private static final String COMMA_SPACE = ", ";
 	private static final String ERROR_IN_TICKET_QUERY = "error in ticket query";
 	private static final String TICKET_NOT_FOUND = "IRODS ticket not found";
-	public static final Logger log = LoggerFactory.getLogger(TicketAdminServiceImpl.class);
+	public static final Logger log = LogManager.getLogger(TicketAdminServiceImpl.class);
 	private final EnvironmentalInfoAO environmentalInfAO;
 
 	/**

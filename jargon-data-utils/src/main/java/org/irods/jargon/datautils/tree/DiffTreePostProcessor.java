@@ -7,8 +7,8 @@ import java.util.Enumeration;
 
 import javax.swing.tree.TreeNode;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Post-processor for a diff tree will roll up counts of diffs in children and
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DiffTreePostProcessor {
 
-	private static Logger log = LoggerFactory.getLogger(DiffTreePostProcessor.class);
+	private static Logger log = LogManager.getLogger(DiffTreePostProcessor.class);
 
 	/**
 	 *

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Contains an index of extensible meta-data attributes for this query. This
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ExtensibleMetaDataMapping {
 
-	private static Logger log = LoggerFactory.getLogger(ExtensibleMetaDataMapping.class);
+	private static Logger log = LogManager.getLogger(ExtensibleMetaDataMapping.class);
 
 	// Map will be wrapped immutable at construction time
 	private Map<String, String> extensibleMappings = new HashMap<String, String>();

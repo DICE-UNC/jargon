@@ -17,8 +17,8 @@ import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.EncryptionException;
 import org.irods.jargon.core.utils.RandomUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Generate an AES key based on pipeline config, assumes using salt and other
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AESKeyGenerator extends AbstractKeyGenerator {
 
-	public static final Logger log = LoggerFactory.getLogger(AESKeyGenerator.class);
+	public static final Logger log = LogManager.getLogger(AESKeyGenerator.class);
 
 	/**
 	 * @param pipelineConfiguration

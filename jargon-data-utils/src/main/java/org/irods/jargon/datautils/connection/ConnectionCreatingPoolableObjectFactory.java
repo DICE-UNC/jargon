@@ -8,8 +8,8 @@ import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory for a pool-able object that is an iRODS connection. In the current
@@ -31,7 +31,7 @@ public class ConnectionCreatingPoolableObjectFactory implements PooledObjectFact
 	private final IRODSSession irodsSession;
 	private final PipelineConfiguration pipelineConfiguration;
 
-	private Logger log = LoggerFactory.getLogger(ConnectionCreatingPoolableObjectFactory.class);
+	private Logger log = LogManager.getLogger(ConnectionCreatingPoolableObjectFactory.class);
 
 	/**
 	 * Constructor will build a connection source based on the given

@@ -2,8 +2,8 @@ package org.irods.jargon.core.transfer;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Default transfer control block that will by default return true for every
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultTransferControlBlock implements TransferControlBlock {
 
-	private static final Logger log = LoggerFactory.getLogger(DefaultTransferControlBlock.class);
+	private static final Logger log = LogManager.getLogger(DefaultTransferControlBlock.class);
 
 	private String restartAbsolutePath = "";
 	private boolean cancelled = false;

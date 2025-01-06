@@ -26,8 +26,8 @@ import java.util.zip.CheckedInputStream;
 import org.apache.commons.codec.binary.Hex;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.RuleProcessingAOImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utilities for working with the local file system.
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalFileUtils {
 
-	public static final Logger log = LoggerFactory.getLogger(LocalFileUtils.class);
+	public static final Logger log = LogManager.getLogger(LocalFileUtils.class);
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
