@@ -30,7 +30,7 @@
 						<id>0</id>
 						<phase>validate</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<delete file="${basedir}/src/test/resources/testing.properties" />
 								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
 								<echo file="${basedir}/src/test/resources/testing.properties" append="true">
@@ -58,8 +58,8 @@
 									test.option.exercise.ticket=${jargon.test.option.exercise.ticket}
 									test.option.python=${test.option.python}
 
-		</echo>
-							</tasks>
+								</echo>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>

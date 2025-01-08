@@ -66,7 +66,7 @@
 						<id>0</id>
 						<phase>validate</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<delete file="${basedir}/src/test/resources/testing.properties" />
 								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
 								<echo file="${basedir}/src/test/resources/testing.properties" append="true"> 
@@ -116,7 +116,7 @@
 								test.option.gsi.user=${test.option.gsi.user}
 								test.option.gsi.file=${test.option.gsi.file}
 								</echo>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
