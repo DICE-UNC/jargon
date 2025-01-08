@@ -4,6 +4,7 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,12 +96,11 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			protocol = authenticate(protocol, irodsAccount, irodsSession, irodsProtocolManager);
 			log.debug("..authenticated...now decorate and return...");
 			return decorate(protocol, irodsAccount, irodsSession);
-		} catch (AuthenticationException e) {
+		} catch (InvalidUserException | AuthenticationException e) {
 			log.warn("auth failure, be sure to abandon agent)", e);
 			protocol.disconnectWithForce();
 			throw e;
-		}
-
+		} 
 	}
 
 	/**
