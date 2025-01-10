@@ -620,7 +620,7 @@ public class IRODSFileImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test
 	public final void testDeleteACollectionWithAmpInTheNameBug170() throws Exception {
 		String testCollectionSubdir = "testDeleteACollectionWithAmpInTheNameBug170 && hail hail rock & roll  &";
 
