@@ -935,7 +935,6 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	/**
 	 * Method to set access permission to the desired state with the admin flag,
 	 * this variant makes it less necessary to stack 'if' tests in permission setting code.
-	 * <p>
 	 *
 	 * @param zone           {@code String} with the zone for the user. This method
 	 *                       will work cross-zone if appropriate permissions are in

@@ -2907,9 +2907,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absPath,
-				userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+				userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2950,9 +2949,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
-				absPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+				absPath, userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2988,9 +2986,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone, absPath,
-				userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+				userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -3031,15 +3028,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			break;
 		case READ_OBJECT:
 		case READ:
-			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
 			break;
 		case MODIFY_OBJECT:
 		case WRITE:
-			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 			break;
 		case NONE:
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(false, zone,
@@ -3115,15 +3110,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			break;
 		case READ_OBJECT:
 		case READ:
-			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
 			break;
 		case MODIFY_OBJECT:
 		case WRITE:
-			// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 			break;
 		case NONE:
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
@@ -3188,9 +3181,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
-		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(false, zone,
-				absPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+				absPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -3484,6 +3476,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throws JargonException {
 
 		UserFilePermission userFilePermission;
+		
 		userFilePermission = new UserFilePermission(row.getColumn(0), row.getColumn(1),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(2))),
 				UserTypeEnum.findTypeByString(row.getColumn(3)), row.getColumn(4));

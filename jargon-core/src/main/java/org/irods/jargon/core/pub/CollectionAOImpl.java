@@ -1255,9 +1255,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
-				effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+				effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1291,9 +1290,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(
-				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1338,15 +1336,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			break;
 		case READ_OBJECT:
 		case READ:
-			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
 			break;
 		case MODIFY_OBJECT:
 		case WRITE:
-			// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 			break;
 		case NONE:
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
@@ -1426,15 +1422,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			break;
 		case READ_OBJECT:
 		case READ:
-			// TODO issue 498 - backwards compatibility for 4.2 (READ_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.READ_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.READ_PERMISSION);
 			break;
 		case MODIFY_OBJECT:
 		case WRITE:
-			// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
-					effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+					effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 			break;
 		case NONE:
 			modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(collNeedsRecursive, zone,
@@ -1505,9 +1499,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermission(collNeedsRecursive, zone,
-				effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+				effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
@@ -1542,9 +1535,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		// children, then won't take
 		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath, recursive);
 
-		// TODO issue 498 - backwards compatibility for 4.2 (WRITE_PERMISSION)
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp.instanceForSetPermissionInAdminMode(
-				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.MODIFY_OBJECT_PERMISSION);
+				collNeedsRecursive, zone, effectiveAbsPath, userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}
