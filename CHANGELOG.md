@@ -5,17 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.5.0-RELEASE] - 2025-02-11
+
+This release is primarily in support of the [Metalnx](https://github.com/irods-contrib/metalnx-web) web application.
+
+Jargon now depends on log4j 2. Users of this library will need to adjust log4j configuration and recompile applications accordingly.
+
+### Changed
+
+- Improve support for 10-level iRODS permission model (irods-contrib/metalnx-web#342).
+- Update log4j from v1 to v2 (#451).
+- Replace `<tasks>` with `<target>` in pom.xml files (#486, #496).
+
+### Removed
+
+- Remove dependency on slf4j (#484).
+
+### Fixed
+
+- Catch `InvalidUserException` and cleanly disconnect from iRODS server (irods-contrib/metalnx-web#133).
+
 ## [4.3.4.0-RELEASE] - 2024-08-30
 
-### Added
+### Security
 
-- Add version detection functions [#471] [#445] [#432]
-- Add support for GenQuery2 API [#442]
-- Add support for library features API [#441]
-- Add support for replica truncate API [#440]
-- Add support for new permission levels [#428]
-- Add functions for manipulating metadata using rodsadmin level privileges [#420]
-- Add support for reporting application name to iRODS server [#407] [#352]
+- Add wording about reporting security vulnerabilities [#480]
 
 ### Changed
 
@@ -33,9 +47,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix addAVUMetadata returning error when communicating with iRODS 4.3.0 server [#415]
 - Allow data object close operations with replica token to work when communicating with older iRODS versions [#402]
 
-### Security
+### Added
 
-- Add wording about reporting security vulnerabilities [#480]
+- Add version detection functions [#471] [#445] [#432]
+- Add support for GenQuery2 API [#442]
+- Add support for library features API [#441]
+- Add support for replica truncate API [#440]
+- Add support for new permission levels [#428]
+- Add functions for manipulating metadata using rodsadmin level privileges [#420]
+- Add support for reporting application name to iRODS server [#407] [#352]
 
 ## [4.3.3.0-RELEASE]
 
