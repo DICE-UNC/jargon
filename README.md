@@ -1,6 +1,12 @@
+> [!IMPORTANT]
+> Jargon is now deprecated. For new development, use the following library:
+> - [https://github.com/irods/irods4j](https://github.com/irods/irods4j)
+>
+> Applications relying on Jargon should migrate to irods4j.
+
 # Jargon
 
-The iRODS client library for Java.
+A Java client library for iRODS.
 
 ## Requirements
 
