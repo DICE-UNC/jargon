@@ -27,7 +27,7 @@ public class ZipServiceConfiguration {
 	/**
 	 * Maximum total bytes that can be processed by this service
 	 */
-	private long maxTotalBytesForZip = 5 * 1024 * 1024 * 1024; // default to 5GB
+	private long maxTotalBytesForZip = 5L * 1024 * 1024 * 1024; // default to 5GB
 	/**
 	 * Treat the temp bundle creation dir as a relative path in user home currently
 	 * defaults to true
