@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.6.0-RELEASE] - 2025-03-26
+
+This release is primarily in support of the [Metalnx](https://github.com/irods-contrib/metalnx-web) web application.
+
+### Fixed
+
+- Use correct data type when calculating max total bytes for zip service configuration (#504).
+
 ## [4.3.5.0-RELEASE] - 2025-02-11
 
 This release is primarily in support of the [Metalnx](https://github.com/irods-contrib/metalnx-web) web application.
