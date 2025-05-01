@@ -11,7 +11,7 @@ This release is primarily in support of the [Metalnx](https://github.com/irods-c
 
 ### Fixed
 
-- Use correct data type when calculating max total bytes for zip service configuration (#504).
+- Use correct data type when calculating max total bytes for zip service configuration (#505, irods-contrib/metalnx-web#392).
 
 ## [4.3.5.0-RELEASE] - 2025-02-11
 
