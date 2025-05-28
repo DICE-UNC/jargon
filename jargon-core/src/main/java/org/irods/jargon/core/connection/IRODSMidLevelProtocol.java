@@ -442,6 +442,17 @@ public class IRODSMidLevelProtocol {
 			throw new JargonException(e);
 		}
 
+		// This branch exists for situations where Jargon may receive information
+		// via the RError stack. Error codes in the RError stack are purely advisory
+		// and MUST NOT be treated as an error.
+		//
+ 		// rcExecMyRule (i.e. 625) is the only known API to deliver the wanted information
+		// via the RError stack.
+		if (625 == intInfo) {
+			return readMessageWithRErrorStack(true);
+		}
+
+		// APIs which take this code path will always ignore the RError stack information.
 		return readMessage();
 	}
 
@@ -1078,6 +1089,62 @@ public class IRODSMidLevelProtocol {
 		return readMessage(true);
 	}
 
+	public synchronized Tag readMessageWithRErrorStack(final boolean decode) throws JargonException {
+		log.debug("reading message from irods");
+		Tag header = readHeader();
+		Tag message = null;
+
+		int messageLength = header.getTags()[1].getIntValue();
+		int errorLength = header.getTags()[2].getIntValue();
+		int bytesLength = header.getTags()[3].getIntValue();
+		int info = header.getTags()[4].getIntValue();
+
+		if (log.isDebugEnabled()) {
+			log.debug("message length:{}", messageLength);
+			log.debug("error length:{}", errorLength);
+			log.debug("bytesLength:{}", bytesLength);
+			log.debug("info value:{}", info);
+		}
+
+		// Reports iRODS errors, throw exception if appropriate
+		if (info < 0) {
+			processMessageInfoLessThanZero(messageLength, errorLength, info);
+			log.debug("returning null, no results");
+			// query with no results
+			return null;
+		}
+
+		if (messageLength > 0) {
+			log.debug("message length greater than zero");
+			message = readMessageBody(messageLength, decode);
+
+			// squelch genqueryout data for nicer logs
+			if (log.isDebugEnabled()) {
+				String messageAsString = message.parseTag();
+				int idx = messageAsString.indexOf("GenQueryOut");
+				if (idx == -1 || ConnectionConstants.DUMP_GEN_QUERY_OUT) {
+					log.debug("message from IRODS read back:{}", messageAsString);
+				}
+			}
+		}
+		// previous will have returned or thrown exception
+
+		if (errorLength != 0) {
+			return processMessageRErrorStack(errorLength);
+		}
+
+		if (bytesLength != 0 || info > 0) {
+			log.debug("bytes length is not zero");
+			if (message == null) {
+				message = new Tag(IRodsPI.MSG_HEADER_PI_TAG);
+			}
+
+			message.addTag(header);
+		}
+
+		return message;
+	}
+
 	/**
 	 * Read a message from iRODS in response to a protocol operation. This method
 	 * will decode the response using the configured encoding based on the
@@ -1503,6 +1570,32 @@ public class IRODSMidLevelProtocol {
 		}
 		try {
 			return Tag.readNextTag(body, decode, getEncoding());
+		} catch (UnsupportedEncodingException e) {
+			log.error("Unsupported encoding for:{}", getEncoding());
+			throw new JargonException("Unsupported encoding for:" + getEncoding());
+		}
+	}
+
+	Tag processMessageRErrorStack(final int errorLength) throws JargonException {
+		log.debug("error length is not zero, process error");
+		byte[] errorMessage = new byte[errorLength];
+		try {
+			irodsConnection.read(errorMessage, 0, errorLength);
+		} catch (ClosedChannelException e) {
+			log.error("closed channel", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		} catch (InterruptedIOException e) {
+			log.error("interrupted io", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		} catch (IOException e) {
+			log.error("io exception", e);
+			disconnectWithForce();
+			throw new JargonException(e);
+		}
+		try {
+			return Tag.readNextTag(errorMessage, getEncoding());
 		} catch (UnsupportedEncodingException e) {
 			log.error("Unsupported encoding for:{}", getEncoding());
 			throw new JargonException("Unsupported encoding for:" + getEncoding());
