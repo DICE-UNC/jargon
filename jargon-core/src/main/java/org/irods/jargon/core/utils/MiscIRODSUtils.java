@@ -64,7 +64,7 @@ public class MiscIRODSUtils {
 		StringBuilder sb = new StringBuilder();
 		char[] chars = password.toCharArray();
 		for (char c : chars) {
-			if (c == '@' || c == '=' || c == '&' || c == ';') {
+			if (c == '@' || c == '=' || c == '&' || c == ';' || c == '\\') {
 				sb.append('\\');
 			}
 
