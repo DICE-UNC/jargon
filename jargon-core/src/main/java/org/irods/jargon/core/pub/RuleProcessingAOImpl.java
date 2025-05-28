@@ -395,17 +395,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instanceForListAvailableRuleEngines();
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
-		/*
-		 * For some reason this operation returns the list of rule engines as an error
-		 * response, so that tag is shoved back into the response and I will need to
-		 * parse it here
-		 */
-		if (!response.getName().equals("RErrMsg_PI")) {
-			log.error("did not get RErrMsg_PI from list rule engines");
+
+		if (!response.getName().equals("RError_PI")) {
+			log.error("did not get RError_PI from list rule engines");
 			throw new JargonRuntimeException("unexpected protocol response encountered when listing rule engines");
 		}
 
-		String message = response.getTag("msg").getStringValue();
+		Tag rErrMsg = response.getTag("RErrMsg_PI");
+		String message = rErrMsg.getTag("msg").getStringValue();
 		log.info("rule listing tag response:{}", message);
 		List<String> ruleEngines = new ArrayList<String>();
 
