@@ -57,3 +57,31 @@ mvn test \
     -pl jargon-core \
     -am
 ```
+
+## Running PAM Tests
+
+The certificates and PAM configuration must be set up manually to test PAM.  The following steps outline how to do this.
+
+1. Before starting the docker containers, update settings.xml:
+
+```
+<test.option.pam>true</test.option.pam>
+<test.option.ssl.configured>true</test.option.ssl.configured>
+```
+
+2. Start the containers as described above. 
+3. Create the certificates on the catalog provider and configure SSL in the ~irods/.irods/irods_environment.json.
+4. Create the "pam" user in iRODS.
+5. Create the "pam" user on the catalog provider.  Give this user the unix password of "pam=;!\pam" to match the value in the test.
+6. Copy the cert (server.crt) to the maven container and import this into the cacerts file using the following (cacerts password is "changeit").
+
+```
+keytool -import -file /path/to/server.crt -keystore /usr/local/openjdk-11/lib/security/cacerts
+```
+
+7. At this point you should be able to run the PAM authentication tests:
+
+```
+cd /usr/src/jargon
+mvn test -Dtest='PAMAuthTest' -DfailIfNoTests=false -pl jargon-core -am
+```

@@ -61,7 +61,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 		this.authScheme = authScheme;
 		this.userName = userName;
-		this.password = password.replaceAll(";", "\\\\;");
+		this.password = password;
 
 		setApiNumber(AUTH_REQ_API_NBR);
 		this.timeToLive = timeToLive;

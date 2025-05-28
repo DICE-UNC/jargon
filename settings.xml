@@ -39,7 +39,7 @@ as the operative profile to be used in building and testing jargon against a cho
 				<jargon.test.option.exercise.filesystem.mount>false</jargon.test.option.exercise.filesystem.mount>
 				<test.option.mount.basedir>/var/basedir</test.option.mount.basedir>
 				<jargon.test.pam.user>pam</jargon.test.pam.user>
-				<jargon.test.pam.password>pam=!pam</jargon.test.pam.password>
+				<jargon.test.pam.password>pam=;!\\pam</jargon.test.pam.password>
 				<test.option.pam>false</test.option.pam>
 				<test.option.ssl.configured>false</test.option.ssl.configured>
 				<test.option.distributed.resources>false</test.option.distributed.resources>
