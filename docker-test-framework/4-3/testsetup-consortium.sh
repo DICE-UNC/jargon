@@ -29,3 +29,5 @@ iadmin atg jargonTestUg test1
 
 iadmin atg jargonTestUg test3
 
+# iRODS 4.3.4 made the hello script a template. Restore it to avoid test failures.
+[ -f /var/lib/irods/msiExecCmd_bin/hello.template ] && cp /var/lib/irods/msiExecCmd_bin/hello.template /var/lib/irods/msiExecCmd_bin/hello
