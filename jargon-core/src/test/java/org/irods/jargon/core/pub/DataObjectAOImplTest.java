@@ -2840,7 +2840,10 @@ public class DataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
 
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.4")) {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData));
+		} else if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
 			Assert.assertThrows(CatalogSQLException.class,
 					() -> dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData));
 		} else {

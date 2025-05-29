@@ -699,7 +699,8 @@ public class CollectionAOImplTest {
 		listOfAvuData.add(AvuData.instance(expectedAttribName, expectedAttribValue, ""));
 		listOfAvuData.add(AvuData.instance(expectedAttribName, expectedAttribValue, ""));
 
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+		IRODSServerProperties svrProps = accessObjectFactory.getIRODSServerProperties(irodsAccount);
+		if (svrProps.isAtLeastIrods431() && !svrProps.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.4")) {
 			Assert.assertThrows(CatalogSQLException.class,
 					() -> collectionAO.addBulkAVUMetadataToCollection(targetIrodsCollection, listOfAvuData));
 		} else {
@@ -846,7 +847,10 @@ public class CollectionAOImplTest {
 		AvuData dataToAdd = AvuData.instance(expectedAttribName, expectedAttribValue, "");
 		collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd);
 
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.4")) {
+			Assert.assertThrows(DuplicateDataException.class,
+					() -> collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd));
+		} else if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
 			Assert.assertThrows(CatalogSQLException.class,
 					() -> collectionAO.addAVUMetadata(targetIrodsCollection, dataToAdd));
 		} else {
