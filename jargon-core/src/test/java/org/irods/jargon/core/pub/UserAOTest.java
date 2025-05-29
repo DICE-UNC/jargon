@@ -1043,7 +1043,10 @@ public class UserAOTest {
 		try {
 			userAO.addAVUMetadata(irodsAccount.getUserName(), avuData);
 
-			if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
+			if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.3.4")) {
+				Assert.assertThrows(DuplicateDataException.class,
+						() -> userAO.addAVUMetadata(irodsAccount.getUserName(), avuData));
+			} else if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods431()) {
 				Assert.assertThrows(CatalogSQLException.class,
 						() -> userAO.addAVUMetadata(irodsAccount.getUserName(), avuData));
 			} else {
