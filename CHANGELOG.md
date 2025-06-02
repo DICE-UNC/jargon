@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.7.0-RELEASE] - 2025-06-02
+
+This is a bug fix release which resolves issues with passwords and the RError stack.
+
+### Fixed
+
+- Escape backslashes in passwords (#510).
+- Do not include extra backslash when escaping semicolons in passwords (#220, #510).
+- Do not interpret RError stack messages as errors (#513).
+
 ## [4.3.6.0-RELEASE] - 2025-03-26
 
 This release is primarily in support of the [Metalnx](https://github.com/irods-contrib/metalnx-web) web application.
