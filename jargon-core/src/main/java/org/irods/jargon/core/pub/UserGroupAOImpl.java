@@ -79,10 +79,16 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		}
 
 		try {
-			GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserGroup(userGroup);
-			log.debug("executing admin PI");
-			getIRODSProtocol().irodsFunction(adminPI);
-
+			IRODSAccessObjectFactory accessObjectFactory = IRODSFileSystem.instance().getIRODSAccessObjectFactory();
+			
+			// In iRODS 4.3.4 and later, the add group command changed.
+			if (accessObjectFactory.getIRODSServerProperties(this.getIRODSAccount()).isAtLeastIrods434()) {
+				GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddGroup(userGroup);
+				getIRODSProtocol().irodsFunction(adminPI);
+			} else {
+				GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserGroup(userGroup);
+				getIRODSProtocol().irodsFunction(adminPI);
+			}
 		} catch (NoMoreRulesException nmr) {
 			log.warn(
 					"no more rules exception will be treated as duplicate user to normalize behavior for pre-2.5 iRODS servers");
